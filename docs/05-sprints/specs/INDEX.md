@@ -1,11 +1,12 @@
 # MudMaker — Sprint Specifications (agent navigation)
 
-**Execution order:** [Dependency roadmap](../INDEX.md) — early S08 and S09C are required *before* S06/S06Q/S07 playable gameplay, even though their numeric IDs are later. **Architecture:** ONE overarching [repo-native tracker](../../SPRINT-TRACKING.md) for status, and ONE implementation spec per sprint below. **No per-phase files or duplicate checkboxes.** S00 documentation phases require no Auditor; implementation phases do. Phases should be narrow enough for multiple independently audited concrete deliverables in a normal Claude usage window; never require a Builder/Auditor to research technology. Read **only the active sprint's spec** plus its exact contract files, not this whole folder.
+**Execution order:** [Dependency roadmap](../INDEX.md) — S09 provides the real application shell directly after S01. S08/S09C then provide actual connected gameplay before S06/S06Q/S07. Numeric IDs are legacy references; the canonical tracker orders execution. **Architecture:** ONE overarching [repo-native tracker](../../SPRINT-TRACKING.md) for status, and ONE implementation spec per sprint below. **No per-phase files or duplicate checkboxes.** S00 documentation phases require no Auditor; implementation phases do. Phases should be narrow enough for multiple independently audited concrete deliverables in a normal Claude usage window; never require a Builder/Auditor to research technology. Read **only the active sprint's spec** plus its exact contract files, not this whole folder.
 
 | Sprint | Focused spec |
 |---|---|
 | S00 | [S00](./S00.md) |
 | S01 | [S01](./S01.md) |
+| S09 | [S09](./S09.md) — first launchable app, theme and navigation |
 | S02 | [S02](./S02.md) |
 | S03 | [S03](./S03.md) |
 | S04 | [S04](./S04.md) |
@@ -14,7 +15,6 @@
 | S06Q | [S06Q](./S06Q.md) |
 | S07 | [S07](./S07.md) |
 | S08 | [S08](./S08.md) |
-| S09 | [S09](./S09.md) |
 | S09C | [S09C](./S09C.md) — standalone player Client and third-party MUD toolkit |
 | S10 | [S10](./S10.md) |
 | S11 | [S11](./S11.md) |
