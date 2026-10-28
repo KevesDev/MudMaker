@@ -1,6 +1,6 @@
 # MudMaker Technical Documentation Index
 
-**Version:** design contract set, 2026-10-28. **Authority:** this repository. **Implementation:** primarily not built. **REQUIRED/BINDING DESIGN** identifies the expected implementation and verification behavior, not a shipping feature. **RESEARCH** documents external comparisons. **OPEN** applies only to documented implementation/technology decision gates; no Builder may silently choose missing contract semantics. `TODO` in the tracker is a truthful implementation status, not an unspecified feature. Start here; open only relevant pages.
+**Version:** design contract set, 2026-10-28. **Authority:** this repository. **Implementation:** primarily not built. **REQUIRED/BINDING DESIGN** identifies the expected implementation and verification behavior, not a shipping feature. **RESEARCH** documents external comparisons. The v1 ADR register records selected choices with implementation and performance verification still pending; no Builder may silently reinterpret binding contract semantics. `TODO` in the tracker is a truthful implementation status, not an unspecified feature. Start here; open only relevant pages.
 
 | Need | Authority | Status |
 |---|---|---|
@@ -17,8 +17,8 @@
 | Player-visible room/train/interactions narration and audiences | [Narration/observers](03-contracts/narration-and-observers.md) | REQUIRED behavior; PROPOSED contract |
 | Quest condition evaluator, dialogue, typed objective event | [Quest conditions/dialogue](03-contracts/quest-conditions-and-dialogue.md) | PROPOSED |
 | Modern Code & Visual Graph scripting UI (indexed tabs) | [Scripting UX](04-features/scripting/INDEX.md) | REQUIRED modes; PROPOSED UI |
-| Native engine vs C# vs DSL technical comparison | [Engine/scripting architecture research](08-research/engine-and-scripting-architecture-comparison.md) | RESEARCH / OPEN |
-| Script language, API references, # @ {} shorthand proposals | [Language and syntax](03-contracts/script-languages-shortcuts-and-symbols.md) | PROPOSED / OPEN |
+| Native engine vs C# vs DSL technical comparison | [Engine/scripting architecture research](08-research/engine-and-scripting-architecture-comparison.md) | RESEARCH / CHOICE RECORDED |
+| Script language, API references, # @ {} shorthand proposals | [Language and syntax](03-contracts/script-languages-shortcuts-and-symbols.md) | HISTORICAL / CHOICE RECORDED |
 | Memory ownership, C++ handles and script isolation | [Memory and script safety](03-contracts/script-memory-ownership-and-safety.md) | REQUIRED safety; PROPOSED contract |
 | Unified code/graph runtime and API | [Scripting runtime/ABI](03-contracts/scripting-runtime-and-capabilities.md) | PROPOSED |
 | Nodes, custom scripts, execution and APIs | [Scripting + graph](03-contracts/scripting-and-graph.md) | REQUIRED capability; PROPOSED interfaces |
