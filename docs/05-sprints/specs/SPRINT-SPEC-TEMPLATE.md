@@ -3,7 +3,7 @@
 **Status:** DRAFT / APPROVED / IN PROGRESS / AUDIT / VERIFIED
 **Owner:** <one authoritative subsystem>
 **Approved TDDs:** <exact authoritative paths and revisions; avoid broad index references>
-**ADRs:** <approved IDs; list OPEN blockers>
+**Authoritative decisions:** <exact approved design contracts and technical ADR IDs; any unapproved implementation choice fails preflight and cannot be assigned to Builder>
 **Predecessors:** <IDs + exact verified evidence links>
 **Phase tracker:** <docs/SPRINT-TRACKING.md#sxx, exact phase ID>
 **Assigned Builder:** <one Builder for this phase>
