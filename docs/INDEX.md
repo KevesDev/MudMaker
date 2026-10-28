@@ -62,3 +62,6 @@
 - [Visual Scripting tabs and subtabs](04-features/scripting/visual/INDEX.md)
 - [Scripting symbol, variable and safe references contract](03-contracts/scripting-language-and-references.md)
 - [Native C++ and C# scripting architecture research](08-research/native-engine-and-scripting-options.md)
+
+## Technical case studies (read only when the task requires the full vertical slice)
+- [Midnight Express: exact proposed ECS data types, four C#-style scripts, C++ ECS world actor, script-worker protocol, graph equivalence, transactional outbox, diagrams and tests](04-features/scripting/07-midnight-express-technical-case-study.md) — PROPOSED technical example, not implemented code.

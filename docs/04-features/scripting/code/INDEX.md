@@ -17,3 +17,6 @@
 **Do not confuse:** C# attribute, `@` identifier or `#` directive with an invented MudMaker macro. UI reference pickers provide typed insertion without changing C# grammar.
 
 **Companion:** [Visual Scripting](../visual/INDEX.md) for graphs and [Quest Hooks](../../quests/09-custom-scripts-and-event-hooks.md) for custom stage bindings.
+
+## Complete code execution example
+- [Midnight Express: four proposed C# hook handlers, worker invocation, effect plan, C++ transaction and hosted game](../07-midnight-express-technical-case-study.md). Read only when implementing/refining this vertical slice; it is pseudocode, not shipped APIs.

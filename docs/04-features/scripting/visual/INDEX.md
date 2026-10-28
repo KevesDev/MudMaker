@@ -18,3 +18,6 @@
 **Visual stance:** sleek professional visual tool, purposeful color/shape and hover-independent readable names, contextual tooltips and progressive disclosure. No old-fashioned unstyled boxes and arbitrary spaghetti wires.
 
 **Companion:** [Code Scripting](../code/INDEX.md); code functions exposed as nodes inherit their typed signatures and capability manifests.
+
+## Complete visual-graph execution example
+- [Midnight Express: Conductor quiz graph, code-to-graph equivalence, bindings, compiler plan and live effects](../07-midnight-express-technical-case-study.md). This example includes authoritative quiz correctness and quest credit.

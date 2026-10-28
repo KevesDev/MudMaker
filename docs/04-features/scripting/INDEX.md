@@ -29,3 +29,6 @@
 
 ## Focused scripting subsystems (separate tabs)
 Open only the appropriate indexed subsection: **[Code Scripting](code/INDEX.md)** or **[Visual Scripting](visual/INDEX.md)**. Both share the authoritative ECS runtime, and [this full process diagram](00-end-to-end-lifecycle.md) explains how an authored behavior becomes a running hosted game feature. For `@/#/{}`, state ownership and safe engine pointers, see [references and syntax](06-syntax-variables-and-references.md). Do not load both authoring manuals by default.
+
+## Engineering-level worked example
+- [Midnight Express: technical architecture diagrams, C#-style script, C++ ECS executor and runtime failure paths](07-midnight-express-technical-case-study.md). This is deliberately the single detailed case study; do not load it for unrelated UI editing.

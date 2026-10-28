@@ -123,3 +123,6 @@ No UI-only script execution used as proof of live behavior; no workers changing 
 
 ## Acceptance
 Both authoring paths independently pass this lifecycle, plus a graph calling a typed custom script node. Validate broken asset and forbidden API cases; verify test world vs hosted world separation, draft/live version separation, real player action plus bystander message, Linux headless parity, persistence across actual restart, and no duplicate reward/event on retry. See [scripting UX test matrix](05-scripting-ux-test-matrix.md).
+
+## Technical depth / code-level example
+These lifecycle diagrams show stages. For the **real engineering contract** (complete quest/train data model, four C#-style hook handlers, C++-style command/write path, worker IPC, event and transactional outbox boundaries, two-player sequence and negative tests) read [Technical Case Study 01 — Midnight Express](07-midnight-express-technical-case-study.md). Do not treat high-level lifecycle blocks alone as an implementation specification.
