@@ -82,7 +82,7 @@
 ## Current editor appearance and sprint execution authority
 - [Central ThemeManager and dark graph-paper canvas](03-contracts/editor-theme-manager.md) — **DECIDED visual contract**, user-editable themes, one source for font/color/spacing and grid tokens. No dotted node canvas or per-screen styles.
 - [118 small, testable phases across 17 sprints](05-sprints/specs/INDEX.md) and [current 0/N tracker](SPRINT-TRACKING.md) — **one Builder + one independent scoped Auditor per phase**, actual user-testable milestone and evidence before checkoff.
-- [S02 UI/theme deliverables](05-sprints/specs/S03.md); [S13 C#/Proto/dispatch deliverables](05-sprints/specs/S17.md); [S17 startup/recovery deliverables](05-sprints/specs/S17.md).
+- [S02 UI/theme deliverables](05-sprints/specs/S04.md); [S13 C#/Proto/dispatch deliverables](05-sprints/specs/S17.md); [S17 startup/recovery deliverables](05-sprints/specs/S17.md).
 
 ## Whole product UI/UX, external MUD client and machine control inventory (current)
 | Need | Open exactly |
@@ -92,7 +92,7 @@
 | Play non-MudMaker MUDs safely with a real client | [Client toolkit](03-contracts/ui-ux/05-player-client-workspace.md), [protocol adapters](03-contracts/ui-ux/06-external-mud-protocols.md) |
 | Local mini mapper, hotkeys, aliases, triggers, timers | [Client mapper/automation](03-contracts/ui-ux/07-mapper-and-automation.md) |
 | Common ThemeManager with independent client/editor preferences | [UI theme scopes](03-contracts/ui-ux/03-theme-and-preferences.md), [original theme rules](03-contracts/editor-theme-manager.md) |
-| Small scoped implementation after S07 + S02 | [S08 Player Client sprint](05-sprints/specs/S07.md) |
+| Small scoped implementation after S07 + S02 | [S08 Player Client sprint](05-sprints/specs/S12.md) |
 
 
 ## Prompt and map integration
