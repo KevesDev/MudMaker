@@ -24,12 +24,12 @@
 | [S01](#s01) | Architecture gates and native launch smoke | **0/8** | S00 + owner ADRs | PLANNED |
 | [S02](#s02) | Launchable application shell and shared UI | **0/10** | S01 UI/platform choice | PLANNED |
 | [S03](#s03) | Native ECS | **0/11** | S01 | PLANNED |
-| [S04](#s04) | Assets and persistence | **0/20** | S03 | PLANNED |
+| [S04](#s04) | Assets and persistence | **0/21** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/13** | S03,S04 | PLANNED |
 | [S06](#s06) | Command harness | **0/20** | S04,S05 | PLANNED |
 | [S07](#s07) | Loopback host and secure input | **0/22** | S04,S06 | PLANNED |
 | [S08](#s08) | Playable client and toolkit | **0/24** | S07.9,S02.2–4 | PLANNED |
-| [S09](#s09) | Creator tools, real map and Data Manager | **0/27** | S04–S06,S02 | PLANNED |
+| [S09](#s09) | Creator tools, real map and Data Manager | **0/29** | S04–S06,S02 | PLANNED |
 | [S10](#s10) | World events | **0/7** | S08.6 | PLANNED |
 | [S11](#s11) | Quests | **0/7** | S08.6 | PLANNED |
 | [S12](#s12) | Transit | **0/5** | S10,S08.6 | PLANNED |
@@ -38,7 +38,7 @@
 | [S15](#s15) | World authoring | **0/9** | S10,S12,S13 | PLANNED |
 | [S16](#s16) | Quest authoring | **0/6** | S11,S13 | PLANNED |
 | [S17](#s17) | Public hosting | **0/20** | S07,S08,S13 | PLANNED |
-| [S18](#s18) | Release audit | **0/18** | All preceding | PLANNED |
+| [S18](#s18) | Release audit | **0/19** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -146,6 +146,7 @@
 | **S04.18 S04.18 Durable item stacks and inventory state** | Persist item definitions/instances, quantities, parent/version, container/equipment bindings, recovery and indexed paged contents | TODO | — |
 | **S04.19 S04.19 Inventory explorer UI** | Open a world and move test items between real generic ECS containers; verify inventory persists across restart in app | TODO | — |
 | **S04.20 NPC Blueprint and controller persistence** | Save template inheritance/overrides, NPC instance state, spawn origin, patrol index, scheduled state and service inventory with restart verification | TODO | — |
+| **S04.21 Universal template persistence and index** | Persist every eligible Blueprint/template, pinned parent revision, variations, folders/tags, override lineage and where-used index in embedded project DB; verify reopen/restart | TODO | — |
 
 ## S05 — Spatial containment
 
@@ -310,6 +311,8 @@
 | **S09.25 Appearance and LOOK authoring** | Existing Creator inspector edits description variants, named virtual details, relations, conditional views, layout and per-role visibility with live View-as-Character preview | TODO | — |
 | **S09.26 NPC Studio presets and combined roles** | One-click Idle/Wanderer/Guard/Enemy/Flee/Quest/Merchant/Trader/Auctioneer/Banker/Custom assets via existing Blueprint inspector | TODO | — |
 | **S09.27 NPC Studio live preview** | In-app route/aggro/hearing overlays, trigger inspector, NPC state view, service transactions and two-player test UI | TODO | — |
+| **S09.28 Project Template Library UI** | Save any creator-authored asset as template; rename, search, filter, group/tag, duplicate, archive/restore, Where Used and safe referenced-delete controls | TODO | — |
+| **S09.29 Template variations and live roundtrip** | Create child variations, pinned parent revisions, field overrides and explicit rebase preview; test project close/reopen and 100k indexed templates in real Creator | TODO | — |
 
 ## S10 — World systems
 
@@ -518,6 +521,7 @@
 | **S18.16 S18.16 Inventory integrity audit** | Audit duplicate custody, loops, stack overflow, theft/permissions, deadlock/races, reconnect, equip conflicts, moving transport and million-item paging | TODO | — |
 | **S18.17 LOOK security and performance audit** | Fuzz hidden names, private containers, duplicate aliases, phasing, quest/time variants, stale reconnect, 10k room targets and accessibility | TODO | — |
 | **S18.18 NPC behavior and service audit** | Stress many idle/active NPCs, patrol locks, phased targets, quest split states, merchant/auction/bank custody, crash/restart, low-end CPU and privilege isolation | TODO | — |
+| **S18.19 Template management audit** | Test all asset-kind coverage, rename/reference stability, variation cycles, pinned releases, guarded delete, concurrent editing, project recovery and high-volume indexed search | TODO | — |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
