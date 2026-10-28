@@ -42,3 +42,7 @@ Each cell/NPC/entity inspector links to the shared quest/condition asset, and ca
 
 ## Acceptance
 Recorded desktop+tablet user journeys demonstrate all above with project roundtrip, accessibility keyboard route, invalid exits and locks reporting, undo/redo correctness, multi-cell operations and non-destructive deletion preview. No fake click targets or in-memory-only save.
+
+## Exit and object UX integration
+
+[Universal ECS Objects and Exits](../03-contracts/ecs-objects-and-exits.md) defines the same reusable Map/Exit Inspector for Passage, One-Way Exit, Shared Door, Locked Door, Slow Exit, Portal, Train Door and Secret Passage templates. No separate Door/Lever/Furniture type-specific editors: the Blueprint Inspector shows whatever components exist and may add/remove them. Explicit controls: one-way/return link, linked shared door state, appearance, permission and destination rule, delay/cancel, source/destination simulation and authoritative preview. The global Template Library saves any composition and its variations. Add live tests for shared door state across both sides, canceled delayed traversal, restart recovery, locked/hidden exit and moving train docking, using actual world authority.
