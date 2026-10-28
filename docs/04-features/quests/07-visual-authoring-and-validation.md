@@ -1,6 +1,6 @@
 # 07 | Visual Quest Authoring: Beginner UX, Graph Editor and Validation
 
-**Status:** Owner-confirmed visual accessibility REQUIRED; interaction details PROPOSED. **Owner:** Quest/Dialogue Editor UI + shared typed graph/condition assets. **Related:** [objective palette](02-objective-catalog-and-credit.md), [chain graph](03-chains-and-dependencies.md), [dialogue stages](04-dialogue-stages.md), [reward form](05-rewards-and-loot.md), [visibility](06-eligibility-phasing-and-parties.md).
+**Status:** Owner-confirmed visual accessibility REQUIRED; binding visual authoring details. **Owner:** Quest/Dialogue Editor UI + shared typed graph/condition assets. **Related:** [objective palette](02-objective-catalog-and-credit.md), [chain graph](03-chains-and-dependencies.md), [dialogue stages](04-dialogue-stages.md), [reward form](05-rewards-and-loot.md), [visibility](06-eligibility-phasing-and-parties.md).
 
 ## Two levels, one exact runtime
 **Guided Create Quest** wizard can build common quests without showing technical terms. Advanced graphical editing exposes every typed field, branching and custom registered node without modifying the runtime rules. The wizard and node canvas write the same versioned QuestDefinition; do not create a "simple quest engine" separate from the real ECS quest runtime.
