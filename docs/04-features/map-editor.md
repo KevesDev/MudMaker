@@ -1,6 +1,6 @@
 # Visual Cell-Grid Map and World Builder
 
-**Status:** user requested map design CONFIRMED; workflow detail PROPOSED. **Owner:** map editor UI + world authoring commands. **Dependencies:** spatial contract, ECS schemas, input, persistence.
+**Status:** user requested map design CONFIRMED; binding map/exit authoring workflow. **Owner:** map editor UI + world authoring commands. **Dependencies:** spatial contract, ECS schemas, input, persistence.
 
 ## Primary model
 The world builder displays a configurable 2D cell grid (and optional multiple layers/maps), with each cell optionally linked to a playable Location entity/room. The creator arranges cells to make geography legible. Each cell supports color, icon, title, notes/tags, region visual grouping and deliberate relationship edges. **A grid cell is authoring metadata, not the Location entity and not automatically an exit.** The same location may have a stable ID while moving its cell.
