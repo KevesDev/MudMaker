@@ -30,7 +30,7 @@ public readonly record struct ScopeRef(Guid Id, uint Revision);
 public readonly record struct ErrorCode(string Value);
 
 public readonly record struct FieldRef(Guid ComponentTypeId, Guid FieldId, uint SchemaRevision);
-public enum StateScope { World, Region, Entity, Player, QuestAttempt }
+public enum StateScope { World, Region, Entity, Player, QuestAttempt, Encounter }
 public readonly record struct StateSlotRef(
     StateScope Scope, Guid WorldId, Guid SchemaId, string Key,
     EntityRef? EntityOwner = null, Guid? ScopedOwnerId = null);
