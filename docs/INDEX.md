@@ -108,3 +108,5 @@
 **Combat and encounters:** [Configurable rulesets, aggression, fleeing, hearing, timing and UI](03-contracts/combat-and-encounters.md) · [Tollbridge Ambush technical case with visual graphs and illustrative C#/C++](04-features/scripting/08-combat-technical-case-study.md).
 
 **Generic inventories:** [Any-entity storage, containers, stacks, equipment, access, trades and Creator presets](03-contracts/inventory-and-containers.md) · [Traveling Merchant's Chest worked example](04-features/scripting/09-inventory-technical-case-study.md). One containment model for every entity, with visual nodes and C# bindings.
+
+**LOOK and perception:** [Canonical LOOK/LOOK AT/LOOK IN/EXAMINE, virtual details, authorized appearance and Creator UX](03-contracts/look-and-perception.md) · [Midnight Express LOOK technical case](04-features/scripting/10-look-technical-case-study.md).
