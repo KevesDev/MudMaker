@@ -9,7 +9,7 @@ message AssetRef { string id = 1; uint32 revision = 2; }
 message EntityRef { string world_id = 1; uint64 entity_id = 2; uint32 generation = 3; }
 message ScopeRef { string id = 1; uint32 revision = 2; }
 message FieldRef { string component_type_id = 1; string field_id = 2; uint32 schema_revision = 3; }
-enum StateScope { STATE_SCOPE_UNSPECIFIED = 0; SCOPE_WORLD = 1; SCOPE_REGION = 2; SCOPE_ENTITY = 3; SCOPE_PLAYER = 4; SCOPE_QUEST_ATTEMPT = 5; }
+enum StateScope { STATE_SCOPE_UNSPECIFIED = 0; SCOPE_WORLD = 1; SCOPE_REGION = 2; SCOPE_ENTITY = 3; SCOPE_PLAYER = 4; SCOPE_QUEST_ATTEMPT = 5; SCOPE_ENCOUNTER = 6; }
 message StateSlotRef {
   StateScope scope = 1;
   string world_id = 2;
