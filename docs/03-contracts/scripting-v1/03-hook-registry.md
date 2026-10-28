@@ -163,3 +163,7 @@ For each ID: `[MudHook("entity.copied.after")] public HookDecision Method(HookCo
 ## Planned account/character lifecycle hook extension (not registered)
 
 [Account/character lifecycle contract](../account-character-lifecycle.md) specifies proposed lifecycle coverage and an Evennia-method comparison. Existing `player.login.after` and `player.logout.after` **already exist**; their exact session/account meaning and compatibility must be resolved before adding overlapping event IDs. Proposed new account, session, character puppet and creation workflow hooks are **not valid v1 bindings** until the canonical `hooks.v1.json`, `Contracts.cs`, Protobuf wire, typed SDK methods, catalog examples and security tests are versioned in one reviewed change. No credentials, secret auth fields or client-selected AccountId may reach a creator callback. Auth, ownership and host permission invariants are never cancellable by scripts. S13.14–14 owns the ABI integration; S14.8 exercises the finalized contract.
+
+## Optional nearby NPC speech extension (not registered)
+
+[Local NPC dialogue contract](../optional-local-npc-dialogue.md) proposes triggering on observer-authorized nearby speech/visible world events. Existing NPC interaction hooks remain valid; new 'heard speech' hooks are **not** registered in v1 and must receive exact typed event, visibility guarantees, binding owner, JSON/CLR/Protobuf parity and audited permission tests before use. A generated response is a proposed NPC utterance, not a script command or world mutation. S13.17 is the implementation gate.
