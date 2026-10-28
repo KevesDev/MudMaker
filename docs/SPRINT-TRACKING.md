@@ -72,7 +72,7 @@
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | TODO | — |
 | **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | TODO | — |
 | **S01.7 Platform launch smoke test** | Build and launch a minimal real native MudMaker app window on the selected platform; verify packaged startup and shutdown, with no fake engine state | TODO | — |
-| **S01.8 Optional inference ADR** | Lead decides bundled inference backend, exact redistributable model artifacts, CPU/RAM budgets, licensing and benchmark oracles before Builder implementation | TODO | — |
+| **S01.8 Optional inference ADR** | Lead decides bundled inference backend, exact redistributable model artifacts, CPU/RAM budgets, download URLs/checksums, licensing and benchmark oracles before Builder implementation; no manual model installation | TODO | — |
 
 ## S02 — Editor and shared UI foundation
 
@@ -216,7 +216,7 @@
 | **S07.17 Reconnect** | Dedupe receipts and restore session safely | TODO | — |
 | **S07.18 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
 | **S07.19 CPU NPC inference supervisor** | Bundle CPU native model worker with process/resource isolation, bounded queue, timeouts, shared model, live host status and deterministic fallback; off unless installed/enabled | TODO | — |
-| **S07.20 First local NPC speech demo** | Visible real loopback world NPC replies to nearby authorized speech using persona and short room context; run actual model, no cloud/API or extra runtime; Lead provisions verified test model | TODO | — |
+| **S07.20 First local NPC speech demo** | Visible real loopback world NPC replies to nearby authorized speech using persona and short room context; run actual model installed and verified through S04.17 wizard, no cloud/API, manual model provisioning or extra runtime | TODO | — |
 
 ## S08 — Standalone Player Client (native + external MUDs)
 
