@@ -14,7 +14,7 @@ A managed language solves some memory hazards in its own process, but **does not
 - `GCHandle`, `IntPtr`, unsafe C# compilation, arbitrary P/Invoke, direct reflection/host assembly load, unmanaged function pointers;
 - DB connections, credentials, network sockets, filesystem locations, world scheduler internals or unrestricted per-world globals.
 
-## Proposed object/handle model
+## Canonical object/handle model
 EntityRef fields: worldInstanceId, opaqueEntityId, generation/version (or equivalent stale reuse guard), optional capability/ref restriction. Serialized over process boundary by value. Script reads immutable typed component snapshot or bounded query result. No pointer to live ECS storage; no ref-counted C++ object crossing as borrowed pointer.
 - Every returned handle validated at use and commit: live? same world/instance? visible/targetable to actor? capability allows read/write? component version still expected?
 - Snapshot reads can be stale; effect plan includes precondition/expected revision and is rejected/retried according to documented command contract, not silently written.
