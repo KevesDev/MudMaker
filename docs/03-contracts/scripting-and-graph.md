@@ -8,7 +8,7 @@
 - [Exact script/graph APIs](../../contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs), [hooks registry](../../contracts/scripting/v1/hooks.v1.json), [effect registry](../../contracts/scripting/v1/effects.v1.json).
 - [Central ThemeManager + dark graph paper](editor-theme-manager.md): **one** appearance authority. Every Blueprint, visual script, dialogue, quest and world event graph uses the shared renderer, with continuous square lines rather than dots, no local fonts/colors.
 - [Graph editor interactions](../04-features/scripting/02-visual-graph-editor.md).
-- [S11 phase deliverables](../05-sprints/phases/S11.md) for compiler/runtime validation and [S09](../05-sprints/phases/S09.md) for graph-paper/ThemeManager component.
+- [S11 phase deliverables](../05-sprints/specs/S11.md) for compiler/runtime validation and [S09](../05-sprints/specs/S09.md) for graph-paper/ThemeManager component.
 
 ## Behavior
 Editor stores a versioned GraphAsset with node schema, typed ports, stable identifiers, edges, layout and a capability manifest. Compiler rejects unknown node types, incompatible ports, cycles requiring unbounded execution, dangling script functions, forbidden effects or missing releases. Graph execution never mutates ECS directly; it constructs the same typed effect/query result the C# bridge uses.

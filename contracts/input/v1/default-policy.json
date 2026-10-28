@@ -1,0 +1,125 @@
+{
+  "schema": "mudmaker.input-policy.v1",
+  "version": 1,
+  "status": "SELECTED_STARTING_DEFAULTS_NOT_PERFORMANCE_VERIFIED",
+  "transport": {
+    "maxFrameBytes": 65536,
+    "maxUncompressedBytes": 65536,
+    "websocketCompressionEnabled": false,
+    "maxJsonNesting": 12,
+    "maxObjectFields": 48,
+    "maxArrayElements": 128,
+    "unauthenticatedHandshakeTimeoutSeconds": 10,
+    "authenticationTimeoutSeconds": 20,
+    "heartbeatSeconds": 30,
+    "idleTimeoutSeconds": 180,
+    "maxUnauthenticatedConnectionsGlobal": 128,
+    "maxConnectionsGlobal": 2048,
+    "maxConnectionsIpSoft": 8
+  },
+  "textKinds": {
+    "command.text": {
+      "maxUtf8Bytes": 49152,
+      "maxGraphemes": 30000,
+      "maxLines": 800,
+      "maxSingleLineUtf8Bytes": 49152,
+      "allowNewline": true,
+      "rateClass": "interaction",
+      "note": "Hard safety ceiling, not default command syntax; command definition chooses accepted text size, typed args and multiline policy."
+    },
+    "chat.quick": {
+      "maxUtf8Bytes": 4096,
+      "maxGraphemes": 2500,
+      "maxLines": 1,
+      "allowNewline": false,
+      "rateClass": "chat"
+    },
+    "roleplay.post": {
+      "maxUtf8Bytes": 24576,
+      "maxGraphemes": 18000,
+      "maxLines": 250,
+      "maxSingleLineUtf8Bytes": 4096,
+      "allowNewline": true,
+      "rateClass": "rp_post",
+      "note": "Text kind is set by explicit client operation, never inferred from body length. A one-character post is valid."
+    },
+    "character.description": {
+      "maxUtf8Bytes": 32768,
+      "maxGraphemes": 24000,
+      "maxLines": 400,
+      "maxSingleLineUtf8Bytes": 4096,
+      "allowNewline": true,
+      "rateClass": "profile_edit"
+    },
+    "profile.biography": {
+      "maxUtf8Bytes": 32768,
+      "maxGraphemes": 24000,
+      "maxLines": 400,
+      "maxSingleLineUtf8Bytes": 4096,
+      "allowNewline": true,
+      "rateClass": "profile_edit"
+    }
+  },
+  "operatorHardCeilings": {
+    "maxFreeformTextUtf8Bytes": 49152,
+    "maxTextLines": 800,
+    "maxFrameBytes": 65536,
+    "minRateProtectionEnabled": true,
+    "maxCommandTextUtf8Bytes": 49152
+  },
+  "rateClasses": {
+    "navigation": {
+      "tokensPerSecond": 6,
+      "burst": 12
+    },
+    "interaction": {
+      "tokensPerSecond": 4,
+      "burst": 8
+    },
+    "chat": {
+      "tokensPerSecond": 1,
+      "burst": 4
+    },
+    "rp_post": {
+      "tokensPerSecond": 0.1,
+      "burst": 2
+    },
+    "profile_edit": {
+      "tokensPerSecond": 0.05,
+      "burst": 2
+    },
+    "search": {
+      "tokensPerSecond": 0.5,
+      "burst": 3
+    }
+  },
+  "byteWork": {
+    "tokensPerMinuteAuthenticated": 262144,
+    "burstBytes": 131072
+  },
+  "authentication": {
+    "maxAttemptsIpPerMinute": 10,
+    "burst": 5,
+    "avoidAccountEnumeration": true
+  },
+  "queues": {
+    "maxPendingPerSession": 32,
+    "maxPendingPerWorld": 2048,
+    "maxOutboundBytesPerSession": 262144,
+    "maxOutboundMessagesPerSession": 256
+  },
+  "decoder": {
+    "strictUtf8": true,
+    "allowUnknownMessageTypes": false,
+    "rejectNonFiniteNumbers": true,
+    "rejectDuplicateJsonKeys": true,
+    "maxProtocolStringUtf8Bytes": 49152
+  },
+  "notes": [
+    "Message kind is EXPLICIT and authenticated; length is never used to infer whether input is a command, RP post, or description.",
+    "A command may have long or multiline typed arguments when its host-published grammar explicitly allows them; the server parses ONE command and never executes embedded lines as commands.",
+    "All command and prose paths are subject to per-field/command budgets and the same hard frame and resource ceilings.",
+    "These are selected initial defaults, not Evennia/OWASP prescribed numbers; benchmark S08/S13/S14 before declaring safe operational capacity.",
+    "The host can change per-command and per-field limits within non-disableable protective hard ceilings."
+  ]
+}

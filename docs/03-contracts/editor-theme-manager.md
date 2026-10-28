@@ -1,6 +1,6 @@
 # Central ThemeManager and Graph-Paper Visual Contract
 
-**Status: DECIDED design; implementation pending.** **Owner: editor ThemeManager**, shared by all Map, Code, Visual Graph, Blueprint, Quest, Dialogue and world-system editing surfaces. No feature may define its own palette, fonts, theme rules or duplicated theme settings. [S09 implementation phases](../05-sprints/phases/S09.md).
+**Status: DECIDED design; implementation pending.** **Owner: editor ThemeManager**, shared by all Map, Code, Visual Graph, Blueprint, Quest, Dialogue and world-system editing surfaces. No feature may define its own palette, fonts, theme rules or duplicated theme settings. [S09 implementation phases](../05-sprints/specs/S09.md).
 
 ## Required default
 The visual graph canvas uses a **quiet dark graph-paper background** with continuous horizontal/vertical minor square lines and subtly stronger lines every `grid.majorEvery` cells. **No dotted grid, stars, noise, checkerboard or decorative gradients.** Nodes, connections, selection, focus, labels and errors remain visually dominant. This is a view renderer, not graph semantics or the Map editor's world cells.
@@ -25,4 +25,4 @@ The central theme bundle provides **all actual values** and type constraints. Ea
 - Map's authored region colors remain authored **content** while UI chrome responds to theme.
 - One ThemeManager owns values; no feature-specific style managers and no arbitrary visual constants in feature docs.
 
-**Source of truth:** this page controls appearance. [Graph interaction design](../04-features/scripting/02-visual-graph-editor.md) controls graph UX; [S09](../05-sprints/phases/S09.md) delivers ThemeManager; S10/S11/S12/S12Q use it; S14 audits accessibility.
+**Source of truth:** this page controls appearance. [Graph interaction design](../04-features/scripting/02-visual-graph-editor.md) controls graph UX; [S09](../05-sprints/specs/S09.md) delivers ThemeManager; S10/S11/S12/S12Q use it; S14 audits accessibility.

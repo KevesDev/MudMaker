@@ -31,4 +31,4 @@ Only **local game owner** authors/compiles/publishes executable scripts. Connect
 Text strings are localized resources; do not hardcode them in many different screens.
 
 ## Acceptance
-All essentials accessible without hover, keyboard/touch/pen affordances, type-aware suggestions and human-readable diagnostics. Theming is user-owned, centralized and applied instantly. Tests: [S09](../../05-sprints/phases/S09.md) UI/theme, [S11](../../05-sprints/phases/S11.md) exact language and trace, [S14](../../05-sprints/phases/S14.md) accessibility.
+All essentials accessible without hover, keyboard/touch/pen affordances, type-aware suggestions and human-readable diagnostics. Theming is user-owned, centralized and applied instantly. Tests: [S09](../../05-sprints/specs/S09.md) UI/theme, [S11](../../05-sprints/specs/S11.md) exact language and trace, [S14](../../05-sprints/specs/S14.md) accessibility.

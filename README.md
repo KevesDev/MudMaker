@@ -1,25 +1,33 @@
 # MudMaker
 
-MudMaker is an ECS-native, game-agnostic toolkit for visually creating, extending, playing, administering, and hosting persistent multiplayer text-based worlds. Its benchmark is the capability and extensibility of mature MUD frameworks such as Evennia, with a significantly more approachable creator experience. An easy user interface must never imply a restricted engine.
+MudMaker is a graphical **game creator, self-hostable multiplayer game server, and player client** for extensible text-based worlds. Every user can create and host their own games or connect to games hosted by others. Its goal is Evennia-class flexibility with approachable no-code authoring and optional advanced scripting.
 
-## Current status
-**Architecture specification / documentation-first restart.** The repository currently contains a minimal Spring Boot bootstrap, not an implemented MUD engine. Do not claim that features documented below are implemented. Prior Java Swing/socket/SQL prototype code was intentionally removed. This documentation is a proposed, reviewable technical baseline, not a claim of working code.
+## Repository status
 
-## Documentation entry points
-- [Docs index](docs/INDEX.md): exact subject-to-file map and requirement status.
-- [Agent instructions](AGENTS.md): mandatory read sequence, ownership and change rules.
-- [Product vision](docs/01-product/vision-and-scenarios.md): required workflows and acceptance stories.
-- [Sprint dependency graph](docs/05-sprints/INDEX.md): implementation order and gates.
-- [Open architectural decisions](docs/07-decisions/OPEN_DECISIONS.md): unresolved decisions that agents must not decide silently.
+**Design and source-level contracts — not yet a running game engine.** The obsolete Spring Boot/Maven/Java bootstrap has been removed. The intended platform is a native authoritative ECS host with C# 14/.NET 10 scripts in a **host-local worker**, plus typed visual graphs. Those source-level C# examples exist, but C++ integration, networking, persistence and complete runtime tests are not yet implemented or verified. Do not mistake SDK examples or design documents for a functional hosted game.
 
-## Fundamental commitments
-- Real ECS foundation and dynamic custom game mechanics.
-- Hierarchical, moving worlds (vehicles with passengers, inventory and exits).
-- Visual cell-grid world authoring and Blueprint-style, typed graph editing.
-- Extensible event-driven and scheduled world-level systems.
-- One-click creator hosting and equivalent documented headless/server CLI.
-- Browser/tablet/desktop usability, including touch-first interaction.
-- Authoritative multiplayer runtime, protected scripting, durable game state.
-- No fake tests, no placeholder releases, no magic numbers or duplicate system owners.
+Remote players send **authenticated gameplay commands, actions and bounded text**; they do not send executable scripts or graph definitions. Host owners edit local project scripts, stop their server, publish a validated release and restart the hosted game.
 
-See the individual specifications for exact contracts and constraints. No project source code is changed as part of this documentation update.
+## Start here
+
+| Task | Read |
+|---|---|
+| Find the technical authority for a subsystem | [Documentation index](docs/INDEX.md) |
+| Track small, testable implementation phases | [Single sprint tracker](docs/SPRINT-TRACKING.md) |
+| Implement a specific sprint | [One focused spec per sprint](docs/05-sprints/specs/INDEX.md) |
+| Work as Lead, Builder or Auditor | [Agent rules](AGENTS.md) and [Claude instructions](CLAUDE.md) |
+| Implement secure client input, typed commands and long RP text | [Client-input v1 index](docs/03-contracts/client-input-v1/INDEX.md) |
+| Implement C# / visual scripting and the host worker | [Scripting v1 index](docs/03-contracts/scripting-v1/INDEX.md) |
+| Research / decisions requiring owner review | [Decision gates](docs/07-decisions/OPEN_DECISIONS.md) |
+
+## Project commitments
+
+- Native ECS authority, type-checked command/effect execution and persistent world state.
+- World rooms, moving nested locations, trains, exits, quests, phased NPCs and events.
+- Out-of-box commands and **a built-in visual command editor**, with typed advanced C#/graph hooks.
+- Roleplay posts and character descriptions treated as **explicit text submissions**, not inferred from input length. Long moderator commands remain commands when declared by the host.
+- User-customizable ThemeManager and a subtle dark graph-paper canvas across editors.
+- Validated local script publishing and real self-hosted multiplayer security.
+- Small checkable phases, one Builder and one scoped independent Auditor per phase; research and open decisions belong to the owner before dispatch.
+
+The repo contains specifications, schemas, C# examples and developer/agent instructions. Build and verification must be completed before features can be called functional.

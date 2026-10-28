@@ -5,7 +5,7 @@
 **Approved TDDs:** <exact authoritative paths and revisions; avoid broad index references>
 **ADRs:** <approved IDs; list OPEN blockers>
 **Predecessors:** <IDs + exact verified evidence links>
-**Phase tracker:** <docs/05-sprints/phases/SXX.md, exact phase ID>
+**Phase tracker:** <docs/SPRINT-TRACKING.md#sxx, exact phase ID>
 **Assigned Builder:** <one Builder for this phase>
 **Assigned Auditor:** <one *different* scoped Auditor for this phase>
 **User-testable milestone:** <concrete click/tap/runnable-harness proof>

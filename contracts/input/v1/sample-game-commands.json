@@ -1,0 +1,242 @@
+{
+  "schema": "mudmaker.sample-commands.v1",
+  "version": 1,
+  "status": "EXAMPLES_NOT_PUBLISHED_OR_RUNTIME_TESTED",
+  "commands": [
+    {
+      "schema": "mudmaker.command.v1",
+      "status": "host-published-asset",
+      "id": "ae000001-0000-4000-8000-000000000001",
+      "revision": 1,
+      "key": "look",
+      "aliases": [
+        "l",
+        "examine"
+      ],
+      "scope": "Character",
+      "priority": 0,
+      "merge": "Union",
+      "availability": {
+        "op": "always",
+        "value": true
+      },
+      "args": {
+        "style": "restText"
+      },
+      "handler": {
+        "kind": "nativeAction",
+        "nativeActionId": "World.Look"
+      },
+      "rateClass": "interaction",
+      "help": {
+        "category": "Gameplay",
+        "summary": "Look at the room or target",
+        "usage": "look [object]"
+      },
+      "visibleToPlayer": true
+    },
+    {
+      "schema": "mudmaker.command.v1",
+      "status": "host-published-asset",
+      "id": "ae000001-0000-4000-8000-000000000002",
+      "revision": 1,
+      "key": "say",
+      "aliases": [
+        "'"
+      ],
+      "scope": "Character",
+      "priority": 0,
+      "merge": "Union",
+      "availability": {
+        "op": "always",
+        "value": true
+      },
+      "args": {
+        "style": "restText"
+      },
+      "handler": {
+        "kind": "nativeAction",
+        "nativeActionId": "World.Say"
+      },
+      "rateClass": "chat",
+      "help": {
+        "category": "Gameplay",
+        "summary": "Say one short message",
+        "usage": "say your message"
+      },
+      "visibleToPlayer": true
+    },
+    {
+      "schema": "mudmaker.command.v1",
+      "status": "host-published-asset",
+      "id": "ae000001-0000-4000-8000-000000000003",
+      "revision": 1,
+      "key": "emote",
+      "aliases": [
+        ":"
+      ],
+      "scope": "Character",
+      "priority": 0,
+      "merge": "Union",
+      "availability": {
+        "op": "always",
+        "value": true
+      },
+      "args": {
+        "style": "restText"
+      },
+      "handler": {
+        "kind": "nativeAction",
+        "nativeActionId": "World.Emote"
+      },
+      "rateClass": "chat",
+      "help": {
+        "category": "Gameplay",
+        "summary": "Describe a brief action",
+        "usage": "emote smiles"
+      },
+      "visibleToPlayer": true
+    },
+    {
+      "schema": "mudmaker.command.v1",
+      "status": "host-published-asset",
+      "id": "ae000001-0000-4000-8000-000000000004",
+      "revision": 1,
+      "key": "post",
+      "aliases": [
+        "roleplay"
+      ],
+      "scope": "Character",
+      "priority": 0,
+      "merge": "Union",
+      "availability": {
+        "op": "always",
+        "value": true
+      },
+      "args": {
+        "style": "none"
+      },
+      "handler": {
+        "kind": "nativeAction",
+        "nativeActionId": "Text.BeginRoleplay"
+      },
+      "rateClass": "rp_post",
+      "help": {
+        "category": "Gameplay",
+        "summary": "Open a multiline roleplay composer",
+        "usage": "post"
+      },
+      "visibleToPlayer": true
+    },
+    {
+      "schema": "mudmaker.command.v1",
+      "status": "host-published-asset",
+      "id": "ae000001-0000-4000-8000-000000000005",
+      "revision": 1,
+      "key": "desc",
+      "aliases": [
+        "description"
+      ],
+      "scope": "Character",
+      "priority": 0,
+      "merge": "Union",
+      "availability": {
+        "op": "always",
+        "value": true
+      },
+      "args": {
+        "style": "none"
+      },
+      "handler": {
+        "kind": "nativeAction",
+        "nativeActionId": "Text.BeginDescription"
+      },
+      "rateClass": "profile_edit",
+      "help": {
+        "category": "Gameplay",
+        "summary": "Edit your character description",
+        "usage": "desc"
+      },
+      "visibleToPlayer": true
+    },
+    {
+      "schema": "mudmaker.command.v1",
+      "status": "host-published-asset",
+      "id": "ae000001-0000-4000-8000-000000000006",
+      "revision": 1,
+      "key": "ring bell",
+      "aliases": [
+        "bell"
+      ],
+      "scope": "NearbyObjects",
+      "priority": 0,
+      "merge": "Union",
+      "availability": {
+        "op": "all",
+        "rules": [
+          {
+            "op": "withinRegion",
+            "value": "harbor-station"
+          },
+          {
+            "op": "hasComponent",
+            "value": "StationBellVisible"
+          }
+        ]
+      },
+      "args": {
+        "style": "none"
+      },
+      "handler": {
+        "kind": "nativeAction",
+        "nativeActionId": "World.EmitDomainEvent"
+      },
+      "rateClass": "interaction",
+      "help": {
+        "category": "Gameplay",
+        "summary": "Ring the station bell",
+        "usage": "ring bell"
+      },
+      "visibleToPlayer": true
+    },
+    {
+      "schema": "mudmaker.command.v1",
+      "status": "host-published-asset",
+      "id": "ae000001-0000-4000-8000-000000000007",
+      "revision": 1,
+      "key": "give",
+      "aliases": [],
+      "scope": "Character",
+      "priority": 0,
+      "merge": "Union",
+      "availability": {
+        "op": "always",
+        "value": true
+      },
+      "args": {
+        "style": "split",
+        "left": {
+          "name": "item",
+          "type": "inventoryItemSelector",
+          "required": true
+        },
+        "right": {
+          "name": "recipient",
+          "type": "visibleCharacterSelector",
+          "required": true
+        }
+      },
+      "handler": {
+        "kind": "nativeAction",
+        "nativeActionId": "World.GiveItem"
+      },
+      "rateClass": "interaction",
+      "help": {
+        "category": "Gameplay",
+        "summary": "Give a held item to someone you can see",
+        "usage": "give \"silver key\" = \"Joe Smith\""
+      },
+      "visibleToPlayer": true
+    }
+  ]
+}

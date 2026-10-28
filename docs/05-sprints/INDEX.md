@@ -1,49 +1,29 @@
-# Sprint Index — Dependency-Ordered Recovery Roadmap
+# MudMaker Sprint Roadmap
 
-**Status:** PROPOSED plan, NOT a declaration of implementation. **Owner:** lead architect. Last reviewed: 2026-10-28.
-Agent kickoff reads [SPRINT-TRACKING](../SPRINT-TRACKING.md), **one active [checkable phase](phases/INDEX.md)** and its exact sprint spec, not every TDD. [CLAUDE.md](../../CLAUDE.md) assigns Lead/Builder/Auditor; author individual specs from [template](specs/SPRINT-SPEC-TEMPLATE.md), and log rationale in [SPRINT-HISTORY](../SPRINT-HISTORY.md).
+**Repo-native source of truth:** [Sprint Tracker](../SPRINT-TRACKING.md) — all phases, current status, evidence and progress in one readable table. [One implementation spec per sprint](specs/INDEX.md) — exact approved contracts, narrow Builder scope, real user test and independent Auditor checks.
 
-All sprints are *complete owned vertical/architectural capabilities* with real test proof. Do not use "MVP" as permission to deliver stubs. Parallel work is permitted only when owner contracts and prerequisites are stable.
+## Execution policy
+- Each phase is independently testable and intentionally small enough that **multiple Builder → scoped Auditor → user-demo handoffs** can normally complete during a Claude session.
+- Builder and Auditor **do not perform research** or choose libraries/architecture. Unanswered research is owner/documentation work and blocks dispatch.
+- The tracker is the **only place to change TODO/BUILD/AUDIT/BLOCKED/DONE or progress**. No per-phase files; these were removed.
+- Native/technical architecture decisions precede implementation. A source example, documentation or green mock is not evidence of a running engine.
+- Run targeted tests for each phase, with a larger independent sprint closeout when explicitly authorized.
 
-## Critical dependency chain
-00 Documentation baseline -> 01 ADR/design freeze -> 02 ECS core -> 03 Schema/persistence -> 04 Spatial/exit graph -> 05 Commands/events/clock -> 07 Transit -> 09 Map editor -> 10 Blueprint authoring -> 11 Graph/script runtime -> 12 Visual world systems -> 13 Hosting -> 14 Release verification.
-Parallel gates: 05 -> 06 World systems; 05 + 03 -> 08 Network/auth; 08 + 04 -> 09 Editor shell. 06 feeds 07, 11 and 12. 08 feeds 13.
+## Dependency order
 
-| Sprint | Scope | Required predecessors | Exit proof |
-|---|---|---|---|
-| S00 | Source audit, indexes, product contracts | None | Baseline evidence + index links |
-| S01 | Evaluate C++ ECS and script runtime against managed options; ADR/interface freeze, memory/thread/sandbox test plan | S00 | Reviewed evidence-backed decisions, no OPEN blockers for S02 |
-| S02 | Real ECS identity, registry, schemas hooks, queries, writes, scheduling interfaces | S01 | ECS behavior/invariant tests + benchmarks |
-| S03 | Project assets, schema versions, blueprint core, persistent world snapshots/migrations | S02 | Save/restore/migration fixtures |
-| S04 | Spatial/containment, room/exits, locks, region/location topology | S03 | Nested containment and traversal tests |
-| S05 | Central commands, actor/session model, typed events, observer narration contract, world clock, scheduler | S04 | Deterministic commands and audience event projection |
-| S06 | World behaviors: weather, spawning, triggers and region scope | S05 | Durable scheduled regional systems |
-| S06Q | Complete ECS quest engine: objective provenance, conditions, dialogue lifecycle, branching, rewards, phasing, instances | S03–S05 | Comprehensive quest runtime oracles and Bob/Joe state invariants |
-| S07 | Vehicles, tracks, docking, moving interiors, dynamic exits | S04–S06 | Train scenarios T-01..T-10 at engine level |
-| S08 | Gateway protocol, sessions, authorization, multi-client runtime, phase-filtered observer events | S03, S05, S06Q for quest-aware projection | Two-client/auth/reconnect + visibility/narration tests |
-| S09 | Cross-device editor shell and cell-grid/map interaction | S04, S08 | Touch/keyboard and map roundtrip |
-| S10 | Component/Blueprint visual editor and reusable asset authoring | S03, S09 | New custom blueprint from UI + versioned instance |
-| S11 | Typed graph runtime, code script compiler/worker, validated ECS bridge, exposed functions and custom events | S05, S06, S10, S06Q for quest nodes | Graph/code parity, security isolation, memory and script UX tests |
-| S12 | Visual authoring for world systems, spawners, weather, transit, observer rules | S06, S07, S09–S11 | No-code authoring of integrated world |
-| S12Q | Full visual quest editor: objective palette, chains, eight dialogue stages, rewards, party/instances | S06Q, S08–S11 | Creator authors all quest families without code and tests real sessions |
-| S13 | One-click and headless hosting, deployment, ops, backup/rollback | S03, S08, S11–S12, S12Q | GUI/CLI parity and crash restore incl. quests |
-| S14 | Full cross-platform, accessibility, security, performance and release audit | S02–S13, S12Q | Named measurable release thresholds |
+| Area | Prerequisite | Sprint |
+|---|---|---|
+| Baseline and approved native architecture | Owner decisions and measured proofs | S00–S01 |
+| ECS, assets, persistence, rooms and exits | S01, then S02–S04 | S02–S04 |
+| Typed native commands, parser and hooks | S03–S04 | S05 |
+| Regional/world events and quest runtime | S05 and durable state | S06, S06Q |
+| Moving train and nested locations | S04, S06 | S07 |
+| Hardened remote input, long RP text and sessions | S03, S05 | S08 |
+| Shared editor shell, central ThemeManager | S03 | S09 |
+| Blueprint and no-code command editor | S03, S05, S09 | S10 |
+| Native C# / typed graph bindings | S05, S08, S10 | S11 |
+| World event and quest visual authoring | Runtime/editor dependencies | S12, S12Q |
+| Self-hosting, network edge, durability and recovery | S03, S08, S11 | S13 |
+| Complete security, load, accessibility and release audit | All earlier areas | S14 |
 
-## Small-phase delivery (selected execution policy)
-The [phase tracker](phases/INDEX.md) splits all 17 sprints into **74 independently checkable phases**. **One Builder, one independent scoped Auditor per phase**, with a real test/demo and recorded evidence before a checkbox is checked. Main tracker keeps progress 0/N. Each phase is limited to one demonstrable deliverable slice; later phases are not marked done merely because classes or diagrams exist. User-testable milestones happen early and repeatedly. Full-suite Auditor only at true sprint close if Lead explicitly authorizes; no re-running entire suite on each phase.
-
-**S09** creates central user-customizable ThemeManager and dark continuous **graph-paper** canvas. **S11** compiles C# and Protobuf, validates hooks, executes native effects, persists registered overrides and tests Graph/C# parity. **S13** verifies real GUI/headless boot, script preflight, restart and recovery. All selected scripting decisions live at [Scripting v1](../03-contracts/scripting-v1/INDEX.md); no hot reload requirement.
-
-## Sprint gating rules
-- Start only when predecessor exit evidence exists or lead documents a safe parallel contract, with its regression coverage.
-- Tests run in CI/local environment with actual integration, not mocked behavior that proves only the mock. Claims of completion require stdout/test reports and a changed-behavior demonstration.
-- A sprint must not silently break higher-level invariants from earlier sprints; its regression suite includes relevant upstream scenarios.
-- An unresolved ADR relevant to the sprint is a STOP, not a license for agent guessing.
-- Independent auditor may veto on correctness, architecture, integration, security, performance or documentation drift.
-- Quest requirements have additional dependency gates in [quest implementation plan](quest-implementation-dependencies.md); owner approval of phase/instance/reward/party semantics is required before S06Q.
-- Language runtime and core C++ decisions must pass [engine research](../08-research/engine-and-scripting-architecture-comparison.md), [language and shortcuts](../03-contracts/script-languages-shortcuts-and-symbols.md), [memory safety](../03-contracts/script-memory-ownership-and-safety.md) and approved ADRs before any compilation/integration implementation.
-- The [token/dispatch policy](../06-quality/token-and-dispatch-policy.md) governs scoped runs, Builder prohibition on full suites, optional Auditor-only final suite, and delta-only re-audits.
-- Each sprint's complete acceptance cases and evidence live in [sprint specifications](sprint-specifications.md), with cross-feature oracle [train scenario](../04-features/train-reference-scenario.md).
-
-## Maintenance
-The lead records status as Planned / In Progress / Blocked / In Review / Verified; never use "Done" without objective verification. Link PR, commit SHA, test commands/results, benchmarks and audit findings. Avoid speculative sprint dates.
+Use [technical docs index](../INDEX.md) to locate exact field/protocol/feature contracts. **Input type is explicit**, never inferred from a post or command's length; see [secure client-input v1](../03-contracts/client-input-v1/INDEX.md). Local game hosts own scripts; external clients send gameplay input only.
