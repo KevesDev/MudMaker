@@ -1,6 +1,6 @@
 # Spatial Model, Nested Containers, Moving Rooms and Dynamic Exits
 
-**Status:** REQUIRED train/world scenario; PROPOSED formal model. **Owner:** spatial + navigation + transit ECS systems. **Dependencies:** ecs-core, command protocol, scheduler.
+**Status:** REQUIRED train/world scenario; binding spatial invariants. **Owner:** spatial + navigation + transit ECS systems. **Dependencies:** ecs-core, command protocol, scheduler.
 
 ## Three distinct coordinate systems
 1. **Authoring grid:** editor's user-arranged cells (x,y,layer, optional visual groups/color/icon). May place multiple logical room references or visually omit nonspatial entities. It is NOT authoritative physical distance nor an implicit exit.
@@ -26,7 +26,7 @@
 ## Trains and moving vehicles
 **Track graph:** creator-defined directed/bidirectional track segments/junctions and platform/station attachment rules. Distinct from playable room exits; tracks are transport routing edges and can be modeled as ECS entities or graph assets.
 **Train entity:** route plan, current segment/progress, motion state, stop/docking bindings, schedule, occupancy capacity/constraints and contained location graph (cars/corridors). Train car rooms are stable entity IDs throughout motion.
-**Lifecycle states (PROPOSED):** ParkedUnassigned -> Scheduled -> Departing -> InTransit -> Approaching -> Docked -> Departing, with Faulted/Stopped variants. Each transition has entry/exit guards and emits typed events. Route changes require validation. No teleport at intermediate step disguised as motion.
+**Canonical transit lifecycle states:** ParkedUnassigned -> Scheduled -> Departing -> InTransit -> Approaching -> Docked -> Departing, with Faulted/Stopped variants. Each transition has entry/exit guards and emits typed events. Route changes require validation. No teleport at intermediate step disguised as motion.
 
 **Travel while moving:**
 - Passenger inside TrainCarA can move to TrainCarB via internal exit while train has InTransit state; dynamic reachability is local to train interior, not tied to station.
