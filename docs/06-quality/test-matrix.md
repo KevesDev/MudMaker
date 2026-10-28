@@ -1,6 +1,6 @@
 # Test Matrix — Observable Requirements, Not Superficial Green Checks
 
-**Status:** PROPOSED test policy. **Owner:** QA + subsystem owners. **Dependencies:** each architecture and feature contract.
+**Status:** binding acceptance and independent audit policy. **Owner:** QA + subsystem owners. **Dependencies:** each architecture and feature contract.
 
 ## Levels
 - **Unit:** real ECS identity, component schema, graph parser, lock evaluator and scheduler functions; use known input + meaningful assertions.
