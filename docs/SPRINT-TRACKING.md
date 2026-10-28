@@ -220,7 +220,7 @@
 | **S07.18 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
 | **S07.19 CPU NPC inference supervisor** | Bundle CPU native model worker with process/resource isolation, bounded queue, timeouts, shared model, live host status and deterministic fallback; off unless installed/enabled | TODO | — |
 | **S07.20 First local NPC speech demo** | Visible real loopback world NPC replies to nearby authorized speech using persona and short room context; run actual model installed and verified through S04.17 wizard, no cloud/API, manual model provisioning or extra runtime | TODO | — |
-| **S07.21 Combat clocks and encounter service** | Host-owned pulse/round/real-time/hybrid clock modes, participation, cooldown/cast interruption, persistence and bounded event queues | TODO | — |
+| **S07.21 Combat clocks and encounter service** | Per-encounter pulse/round/real-time/hybrid clock state on shared indexed WorldClock deadline service; hundreds of simultaneous encounters, fair due-job batches, cooldown/cast interruption, persistence, stale cancellation and no private threads | TODO | — |
 | **S07.22 Local hosted combat playtest** | In existing host test UI control NPC target, live turn/tick, abilities, status and failure states over actual loopback transport | TODO | — |
 
 ## S08 — Standalone Player Client (native + external MUDs)
