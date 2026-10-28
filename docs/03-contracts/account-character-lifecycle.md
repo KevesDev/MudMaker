@@ -1,6 +1,6 @@
 # Account, character, session, access and creation workflow contract
 
-**Status:** REQUIRED product goals, PROPOSED exact design pending owner review/ADR. NOT implemented. Source of truth for implementation phase dispatch: [tracker](../SPRINT-TRACKING.md). One visual workflow graph, **no competing form designer**.
+**Status:** binding account/character lifecycle design; runtime pending. NOT implemented. Source of truth for implementation phase dispatch: [tracker](../SPRINT-TRACKING.md). One visual workflow graph, **no competing form designer**.
 
 ## Evennia source comparison (research, not MudMaker code)
 
