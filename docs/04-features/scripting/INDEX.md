@@ -32,3 +32,6 @@ Open only the appropriate indexed subsection: **[Code Scripting](code/INDEX.md)*
 
 ## Engineering-level worked example
 - [Midnight Express: technical architecture diagrams, C#-style script, C++ ECS executor and runtime failure paths](07-midnight-express-technical-case-study.md). This is deliberately the single detailed case study; do not load it for unrelated UI editing.
+
+## Current v1 scripting contract (read FIRST)
+[Single agent-facing v1 index](../../03-contracts/scripting-v1/INDEX.md) is the authoritative technical SDK/hook/reference/wire specification. The detailed editor pages here remain the UX design; illustrative SDK names in older workflow pages do not override source contracts. Host runs only **locally authored published scripts**; connected players send game commands, not scripts.

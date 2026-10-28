@@ -61,3 +61,6 @@ Never discard unrelated dirty or untracked work; never hard-delete files; do not
 
 ## Session report
 Give sprint status, completed deliverables, actual verification, audit outcome, unresolved ADRs/blockers, changes to dependencies, and any token-saving choices applied. Do not start another sprint automatically.
+
+## Scripting authority and local-host rule
+For scripting work, read **[v1 scripting index](docs/03-contracts/scripting-v1/INDEX.md)** and only the needed subfile, not the older open-ended research/proposal documents. v1 SDK and wire definitions are source contracts; do not invent hook IDs or API names. **Only game host locally authors/publishes executable scripts. Remote players send authenticated gameplay commands only.** Creator scripts may override registered writable ECS fields and persistent state slots through validated, logged native state transitions. This is a decided spec, not proof of a running runtime.

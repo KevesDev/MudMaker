@@ -65,3 +65,6 @@
 
 ## Technical case studies (read only when the task requires the full vertical slice)
 - [Midnight Express: exact proposed ECS data types, four C#-style scripts, C++ ECS world actor, script-worker protocol, graph equivalence, transactional outbox, diagrams and tests](04-features/scripting/07-midnight-express-technical-case-study.md) — PROPOSED technical example, not implemented code.
+
+## Scripting v1 — current agent authority
+- [Scripting API v1: indexed technical contracts, local-host deployment, hooks, refs, persistent engine overrides, C# source, protobuf, test gates](03-contracts/scripting-v1/INDEX.md) — **DECIDED CONTRACT / NOT IMPLEMENTED**. Begin here for scripting work; preceding proposal pages are historical context.

@@ -52,3 +52,6 @@ An editable draft may have compile errors; published release cannot. No "script 
 ## Deployment/recovery/operational rules
 Every published release includes verified script/graph manifests, checksums, API version and dependency allowlist. Host performs preflight compile/security checks, starts supervised workers and records readiness. Crash/timeout doesn't take down other tenants; failed hooks use specified fail-closed behavior and alert admin. Restore resumes durable event/question/dialogue/reward state without repeating grants; world/worker configs allow documented resource limits.
 **OPEN before implementation:** C# vs custom DSL, Java-core vs .NET-core vs worker, ABI/IPC, sandbox, execution planner, graph IR, versions/hot reload, tenant isolation and deterministic effect order.
+
+## Current implementation authority
+The v1 [indexed scripting SDK contract](scripting-v1/INDEX.md), normative C# declarations and protobuf **supersede SDK method/field-name proposals on this page**. Game hosts compile/publish their own local scripts; other players connect and send gameplay commands, never scripts. Persistent script-approved component-field overrides and scoped state slots are now selected capabilities; see [v1 reference/state contract](scripting-v1/04-references-and-state.md).

@@ -1,15 +1,15 @@
 # Visual Scripting | Tabs / Subtabs
 
-**Status:** Required no-code authoring, PROPOSED detailed UX and execution. **Read budget:** open ONE subtab + relevant compiler contract; don't load all code-editor pages.
+**Status:** v1 typed effect semantics DECIDED; graph editor UX and compiler implementation pending. Begin at [v1 graph contract](../../../03-contracts/scripting-v1/06-graph-parity-and-publishing.md). **Read budget:** open ONE subtab + relevant compiler contract; don't load all code-editor pages.
 
 | Tab | Subtab | Read |
 |---|---|---|
 | Visual A | Modern node canvas, toolbar, palette, ports, shortcuts, drag/pan, inspector and tooltips | [Node editor UX](../02-visual-graph-editor.md) |
-| Visual B | Graph type/typed nodes, execution order, event/data/action and compile rules | [Graph execution contract](../../../03-contracts/scripting-and-graph.md) |
+| Visual B | Typed event/data/flow/effect nodes and compiler plan | [v1 Graph Contract](../../../03-contracts/scripting-v1/06-graph-parity-and-publishing.md) |
 | Visual C | Visual Blueprint composition, exposed properties and instance overrides | [Blueprint editor](../../blueprint-editor.md) |
 | Visual D | Quest chain, dialogue, condition, multiple-choice and reward graphs | [Quest feature index](../../quests/INDEX.md) |
 | Visual E | Attach visual graph to ECS item, NPC, room, exit, quest or world system | [Bindings and live behavior](../03-authoring-to-live-runtime.md) |
-| Visual F | Custom script functions as typed nodes, graph/code interplay | [Runtime and callable nodes](../../../03-contracts/scripting-runtime-and-capabilities.md) |
+| Visual F | Custom typed C# callable nodes and engine field overrides | [v1 SDK](../../../03-contracts/scripting-v1/02-code-sdk.md) and [references](../../../03-contracts/scripting-v1/04-references-and-state.md) |
 | Visual G | Full create-to-host process and test failure path | [Lifecycle diagrams](../00-end-to-end-lifecycle.md) |
 | Visual H | Visual editor/graph acceptance, touch and accessibility | [Verification](../05-scripting-ux-test-matrix.md) |
 

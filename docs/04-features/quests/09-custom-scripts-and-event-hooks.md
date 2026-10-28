@@ -104,3 +104,6 @@ Test real ECS quest, event state, dialogue session, inventory/reward receipt and
 
 ## Open architecture decisions
 HOOK-ABI node names and phase ordering, before/after effect-plan representation, atomic vs durable outbox semantics, failure/fallback requirements, script execution limits and sandbox, name normalization/source, quiz retry/session lifetime/answer secrecy, world event lifecycle and scoped recipients. See [ADR register](../../07-decisions/OPEN_DECISIONS.md). No agent guesses final values or skips scenarios.
+
+## Current exact hook names
+For implementation, **use** [scripting v1 hook registry](../../03-contracts/scripting-v1/03-hook-registry.md) and [SDK source contracts](../../../contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs). Earlier prose and examples here remain requirement/behavior examples, not alternative hook signatures. Only local host-published code can bind these; player input cannot select arbitrary handler names.

@@ -39,3 +39,6 @@ Browser/tablet uses hosted runtime; does not require Java process on tablet. Des
 
 ## Tests
 Run exact same sample project via desktop Host and headless CLI; multiple clients connect; session reconnect/idempotency; invalid port/script gives actionable failure; restart recovers train and players; unauthorized admin actions fail; public internet claim only when actual network test proves it.
+
+## Host-owned local scripts and game-client protocol (selected)
+Every user can make and host their own MudMaker game or join another host's game as a player. The hosting server reads **only that host's locally authored and explicitly published scripts**, from an immutable local release. Remote player connections may send authenticated typed gameplay actions and dialogue choices; **never** script source, compiled modules, executable graph plans, paths instructing the server to load code, or hook names granting arbitrary dispatch. The native host chooses applicable hooks from its installed binding registry after command authentication/target/phase checks. GUI and headless hosts run the same local release. Full technical contract: [local host integration](scripting-v1/08-local-host-integration.md).

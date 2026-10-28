@@ -431,3 +431,6 @@ sequenceDiagram
 ## 9. Open decisions before implementation
 
 The exact C++ ECS framework, scheduling and transaction model; code language/runtime and worker isolation; effect-plan serialization; version migrations; snapshot/event ordering and script retry; quiz persistence and random-number seeding; producer/consumer idempotency; optional after-hook atomicity; and public-host privilege model. These are identified in [OPEN_DECISIONS](../../07-decisions/OPEN_DECISIONS.md). Implementers must not silently resolve them merely because pseudocode shows one possible interface.
+
+## Current executable-shape contracts supersede the earlier illustrative method names
+This page is an illustrative **scenario and architecture walkthrough**, not the normative creator SDK. Use [v1 exact method signatures, hook IDs, typed references, state overrides and wire protocol](../../03-contracts/scripting-v1/INDEX.md), [real C# interface declarations](../../../contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs) and [host-authored Midnight Express C# source example](../../../examples/scripting/MidnightExpressHooks.cs). **Only locally authored host-published scripts execute.** External player clients send authenticated gameplay input; they do not send scripts. Do not implement methods named in this earlier pseudocode when they differ from the v1 SDK.
