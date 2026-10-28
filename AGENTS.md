@@ -1,6 +1,6 @@
 # MudMaker — Mandatory AI Agent Contract
 
-For Claude Code sessions, start with [CLAUDE.md](CLAUDE.md) and the assigned role file. Otherwise start with [docs/INDEX.md](docs/INDEX.md), then read **only** the authoritative documents listed for the task. Read [docs/07-decisions/OPEN_DECISIONS.md](docs/07-decisions/OPEN_DECISIONS.md) before proposing new interfaces or technologies. Read [docs/06-quality/agent-policy.md](docs/06-quality/agent-policy.md) for all implementation work.
+For Claude Code sessions, start with [CLAUDE.md](CLAUDE.md) and the assigned role file. Otherwise start with [docs/INDEX.md](docs/INDEX.md), then read **only** the authoritative documents listed for the task. Read [docs/02-architecture/architecture-decisions.md](docs/02-architecture/architecture-decisions.md) before changing system boundaries, interfaces or technologies. Read [docs/06-quality/agent-policy.md](docs/06-quality/agent-policy.md) for all implementation work.
 
 ## Status model
 - **REQUIRED**: confirmed product behavior from the project owner. Never delete or dilute.
