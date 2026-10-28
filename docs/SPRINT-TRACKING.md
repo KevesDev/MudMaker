@@ -1,36 +1,46 @@
 # MudMaker Sprint Tracker
 
-**Canonical repo-local tracker** · Each sprint has **one detailed specification** under [specs](05-sprints/specs/INDEX.md); the tracker below owns all status and evidence. Phases are small, outcome-oriented deliverables. The Lead defines verification and scoped audit instructions during dispatch; no mandatory hands-on exercise or predetermined negative test per phase. `TODO` does **not** mean implemented.
+**Canonical repo-native dashboard.** One tracker owns every status; [one focused spec per sprint](05-sprints/specs/INDEX.md) provides engineering contracts. Sprint IDs are stable; this file is arranged in **actual execution order**, which is not alphabetical/numeric. Each phase is small enough for scoped Builder → independent Auditor handoffs and, when possible, multiple phases per Claude usage window.
 
-**Current:** S00 (active documentation architecture). S00.1–S00.3 have source drafts ready for **independent documentation review**, not yet DONE. S00.4 handoff remains in progress; no fictional S00 user-app tests. All implementation phases are planned. Research is completed by the owner/documentation work **before** dispatch; missing research/ADR blocks the phase, never becomes a Builder/Auditor investigation.
+**Current:** S00 documentation review. S00.1–S00.5 are in AUDIT awaiting independent verification; **no S00 phase is DONE**. All implementation remains TODO. Missing research, implementation platform decisions and test oracles go to the owner **before** dispatch, not to Builder/Auditor.
 
-## Sprint overview
+## Evidence levels and first playable gate
 
-| Sprint | Focus | Verified | Prerequisite | Status |
+| Level | Actual proof | Earliest checkpoint |
+|---|---|---|
+| **E1 — Native harness** | ECS, rooms, commands, persistence exercised by real focused tests; no graphical Player Client claimed | S02–S05 |
+| **E2 — Local playable game** | Real Player Client connects to a running loopback world, moves through rooms, receives real authorized events | **S09C.5**, after S08.7 and S09.1–4 |
+| **E3 — Creator/public host** | Owner safely starts a durable hosted world with remote joins and host-facing operational controls | S13, after input security, recovery and hosting prerequisites |
+
+**Critical path:** S00 → S01 → S02 → S03 → S04 → S05 → S08.1–7 plus parallel S09.1–4 → **S09C.1–5 (FIRST PLAYABLE)** → S06/S06Q/S07 gameplay → Creator feature work → S13 public hosting → S14 release. S09's UI foundations can start after S03 and proceed alongside S04/S05. **Never represent E1 as E2 or E2 as E3.**
+
+## Sprint overview — in actual work order
+
+| Sprint | Focus | Verified | Depends on | Status |
 |---|---|---:|---|---|
-| [S00 spec](05-sprints/specs/S00.md) | Documentation baseline | **0/4** | — | ACTIVE |
-| [S01 spec](05-sprints/specs/S01.md) | Native decisions | **0/5** | S00 + owner ADRs | PLANNED |
-| [S02 spec](05-sprints/specs/S02.md) | ECS foundation | **0/7** | S01 | PLANNED |
-| [S03 spec](05-sprints/specs/S03.md) | Assets and persistence | **0/8** | S02 | PLANNED |
-| [S04 spec](05-sprints/specs/S04.md) | Spatial containment | **0/6** | S02,S03 | PLANNED |
-| [S05 spec](05-sprints/specs/S05.md) | Command runtime | **0/10** | S03,S04 | PLANNED |
-| [S06 spec](05-sprints/specs/S06.md) | World systems | **0/3** | S05 | PLANNED |
-| [S06Q spec](05-sprints/specs/S06Q.md) | Quests | **0/5** | S03–S05 | PLANNED |
-| [S07 spec](05-sprints/specs/S07.md) | Transit | **0/3** | S04,S06 | PLANNED |
-| [S08 spec](05-sprints/specs/S08.md) | Remote player input | **0/12** | S03,S05 | PLANNED |
-| [S09 spec](05-sprints/specs/S09.md) | Editor/shared UI foundation | **0/10** | S03 | PLANNED |
-| [S09C spec](05-sprints/specs/S09C.md) | Standalone Player Client | **0/15** | S08,S09.1–S09.4 | PLANNED |
-| [S10 spec](05-sprints/specs/S10.md) | Visual command editor | **0/9** | S03,S05,S09 | PLANNED |
-| [S11 spec](05-sprints/specs/S11.md) | C# and graphs | **0/12** | S05,S08,S10 | PLANNED |
-| [S12 spec](05-sprints/specs/S12.md) | World-system editing | **0/4** | S06,S07,S09–S11 | PLANNED |
-| [S12Q spec](05-sprints/specs/S12Q.md) | Quest editing | **0/5** | S06Q,S09–S11 | PLANNED |
-| [S13 spec](05-sprints/specs/S13.md) | Self-hosting | **0/13** | S03,S08,S09C,S11 | PLANNED |
-| [S14 spec](05-sprints/specs/S14.md) | Release audit | **0/8** | S05–S13 incl. S09C | PLANNED |
+| [S00](#s00) | Documents and decisions | **0/5** | — | ACTIVE |
+| [S01](#s01) | Architecture gates | **0/5** | S00 + owner ADRs | PLANNED |
+| [S02](#s02) | Native ECS | **0/7** | S01 | PLANNED |
+| [S03](#s03) | Assets and persistence | **0/8** | S02 | PLANNED |
+| [S04](#s04) | Rooms and exits | **0/6** | S02,S03 | PLANNED |
+| [S05](#s05) | Command harness | **0/10** | S03,S04 | PLANNED |
+| [S09](#s09) | Shared UI foundation | **0/10** | S03 | PLANNED |
+| [S08](#s08) | Loopback host and secure input | **0/14** | S03,S05 | PLANNED |
+| [S09C](#s09c) | Playable client and toolkit | **0/16** | S08.7,S09.1–4 | PLANNED |
+| [S06](#s06) | World events | **0/3** | S09C.5 | PLANNED |
+| [S06Q](#s06q) | Quests | **0/5** | S09C.5 | PLANNED |
+| [S07](#s07) | Transit | **0/3** | S06,S09C.5 | PLANNED |
+| [S10](#s10) | Creator command/Blueprint UI | **0/9** | S05,S09 | PLANNED |
+| [S11](#s11) | Scripts and graphs | **0/12** | S08,S09C.5,S10 | PLANNED |
+| [S12](#s12) | World authoring | **0/4** | S06,S07,S11 | PLANNED |
+| [S12Q](#s12q) | Quest authoring | **0/5** | S06Q,S11 | PLANNED |
+| [S13](#s13) | Public hosting | **0/13** | S08,S09C,S11 | PLANNED |
+| [S14](#s14) | Release audit | **0/8** | All preceding | PLANNED |
 
-## Agent operating rule
-For implementation phases, the Lead reads the [matching sprint spec](05-sprints/specs/INDEX.md) and only applicable contracts, chooses the specific Builder scope, relevant test/verification method, and independent Auditor scope. **A user-checkable milestone is encouraged when naturally available—not required for every phase.** The Builder reports actual results; the Auditor independently evaluates that dispatched scope against contracts. `TODO → BUILD → AUDIT → DONE` only after the required evidence and independent PASS are recorded. `BLOCKED` if owner research/decisions are missing. No compulsory negative test, demo or whole-suite run for every phase; the Lead decides proportionate verification and authorizes suite checks at sprint close. Never invent results.
+## Agent process
+Lead selects one phase from this table and its one sprint spec. One Builder implements the bounded deliverable and runs approved focused checks; one different scoped Auditor reviews real implementation and evidence. `TODO → BUILD → AUDIT → DONE` only with independent PASS, not merely a documented proposal. Record test command, build commit, audit result and any real user demo in **Evidence**. No agent research tasks or broad test-suite loops. `BLOCKED` means the owner must resolve the missing decision. Full suite at sprint closure only by explicit Lead approval.
 
-**Input classification:** authenticated message kind determines command vs post, **never text length**. `SubmitText` may contain one word; a long moderator command uses an authorized CommandText/InvokeAction grammar. [Input contract](03-contracts/client-input-v1/INDEX.md).
+**Input is explicit:** command/action versus RP/description is identified by authenticated message kind, **never text length**.
 
 ## S00 — Research, design contracts and agent-ready documentation
 
@@ -41,9 +51,10 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 | **S00.1 Authority & indexed contracts** | Indexed ECS, scripting, input and UI decisions with exact agent read paths | AUDIT | [Technical index](INDEX.md), [UI index](03-contracts/ui-ux/INDEX.md), [UI catalog](../contracts/ui/v1/INDEX.md); independent docs review pending |
 | **S00.2 Workspace/security boundaries** | Separate Editor, Player Client, Host; safe input and concurrent host/view lifetimes | AUDIT | [Ownership](03-contracts/ui-ux/01-workspaces-and-ownership.md), [navigation](03-contracts/ui-ux/00-launch-and-workspace-navigation.md), [remote input](03-contracts/client-input-v1/01-ingress-threat-boundary.md); review pending |
 | **S00.3 UI/UX architecture & decision gates** | Central ThemeManager, cataloged controls, Editor/Client workflows, sourced client research and unresolved platform ADRs | AUDIT | [UI contract](03-contracts/ui-ux/INDEX.md), [controls](../contracts/ui/v1/INDEX.md), [client research](03-contracts/ui-ux/09-client-research.md), [open decisions](07-decisions/OPEN_DECISIONS.md); review pending |
-| **S00.4 Implementable sprint handoffs** | One tracker, one spec/sprint and phase dependency map with no agent research tasks | BUILD | [Sprint specs](05-sprints/specs/INDEX.md), [agent rules](../CLAUDE.md), [tracker](SPRINT-TRACKING.md); final handoff check pending |
+| **S00.4 Implementable sprint handoffs** | One tracker, one spec/sprint and phase dependency map with no agent research tasks | AUDIT | [Sprint specs](05-sprints/specs/INDEX.md), [agent rules](../CLAUDE.md), [tracker](SPRINT-TRACKING.md); final handoff check pending |
+| **S00.5 First-playable dependency review** | Verify engine-only, local-play and public-host gates, plus phased sprint prerequisites | AUDIT | [Tracker](SPRINT-TRACKING.md), [roadmap](05-sprints/INDEX.md); independent review pending |
 
-**S00 is active; 0/4 independently closed.** Drafting a contract permits `AUDIT`, not `DONE`; S00 requires an independent document review, not an imaginary app demo. If review finds ambiguity, keep phase open until the owner resolves it. After S00, real Builder/Auditor milestones include actual user-testable builds.
+**S00 remains active; no independent documentation audit has passed.** Drafting a contract permits `AUDIT`, not `DONE`; S00 requires an independent document review, not an imaginary app demo. If review finds ambiguity, keep phase open until the owner resolves it. After S00, real Builder/Auditor milestones include actual user-testable builds.
 
 ## S01 — Native decisions
 
@@ -101,7 +112,9 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 
 ## S05 — Command runtime
 
-**Implementation spec:** [S05.md](05-sprints/specs/S05.md) · **Prerequisites:** S03,S04
+**Spec:** [S05](05-sprints/specs/S05.md) · **Requires:** S03,S04
+
+**Proof:** E1 only: native command harness, not a playable MUD.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -116,60 +129,11 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 | **S05.9 Event commit** | Idempotent command/outbox | TODO | — |
 | **S05.10 Narration** | Observer-projected committed output | TODO | — |
 
-## S06 — World systems
-
-**Implementation spec:** [S06.md](05-sprints/specs/S06.md) · **Prerequisites:** S05
-
-| Phase | Deliverable | Status | Evidence |
-|---|---|---|---|
-| **S06.1 World event state** | Regional/world event definitions and lifecycle | TODO | — |
-| **S06.2 Spawner** | Timed/entity spawning and despawning | TODO | — |
-| **S06.3 World interaction** | Conditional world systems and environmental effects | TODO | — |
-
-## S06Q — Quests
-
-**Implementation spec:** [S06Q.md](05-sprints/specs/S06Q.md) · **Prerequisites:** S03–S05
-
-| Phase | Deliverable | Status | Evidence |
-|---|---|---|---|
-| **S06Q.1 Quest state** | Per-actor quest attempts, scope and eligibility | TODO | — |
-| **S06Q.2 Objective credit** | Evidence-based objective types and chain prerequisites | TODO | — |
-| **S06Q.3 Dialogue stages** | Validated dialogue choices, sessions and quiz | TODO | — |
-| **S06Q.4 Rewards/phasing** | Atomic claim, bonus roll and phased NPC | TODO | — |
-| **S06Q.5 Quest recovery** | Persist and resume quest/session after restart | TODO | — |
-
-## S07 — Transit
-
-**Implementation spec:** [S07.md](05-sprints/specs/S07.md) · **Prerequisites:** S04,S06
-
-| Phase | Deliverable | Status | Evidence |
-|---|---|---|---|
-| **S07.1 Transit route** | Route progression with persistent train state | TODO | — |
-| **S07.2 Moving interiors** | Nested carriage rooms and their passengers/items | TODO | — |
-| **S07.3 Dynamic exits** | Dock-time door to station, closed en route | TODO | — |
-
-## S08 — Remote player input
-
-**Implementation spec:** [S08.md](05-sprints/specs/S08.md) · **Prerequisites:** S03,S05
-
-| Phase | Deliverable | Status | Evidence |
-|---|---|---|---|
-| **S08.1 Frame admission** | TLS/Origin/handshake and message caps | TODO | — |
-| **S08.2 Session identity** | Authenticate actor and expiry | TODO | — |
-| **S08.3 Typed decoding** | Strict protocol and UTF-8 validation | TODO | — |
-| **S08.4 Short posts** | Explicit SubmitText routing | TODO | — |
-| **S08.5 Long posts** | Multiline RP with emoji | TODO | — |
-| **S08.6 Descriptions** | Authorized persistent bio revision | TODO | — |
-| **S08.7 Long commands** | Per-command typed long arguments | TODO | — |
-| **S08.8 Rate limits** | Principal/action/byte budgets | TODO | — |
-| **S08.9 Backpressure** | Session/world/output queue caps | TODO | — |
-| **S08.10 Safe output** | GUI/terminal/log encoding | TODO | — |
-| **S08.11 Visibility** | Per-actor audience filtering | TODO | — |
-| **S08.12 Reconnect** | Resumable receipt and dedupe | TODO | — |
-
 ## S09 — Editor and shared UI foundation
 
-**Implementation spec:** [S09.md](05-sprints/specs/S09.md) · **Prerequisites:** S03
+**Spec:** [S09](05-sprints/specs/S09.md) · **Requires:** S03; S09.1–4 may proceed before S08
+
+**Proof:** S09.1–4 enable first Player Client; later Editor work can proceed independently.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -184,31 +148,97 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 | **S09.9 Responsive inputs** | Support tablet/pen/touch and keyboard workspace navigation | TODO | — |
 | **S09.10 Control registration** | Bind implemented Editor widgets to UI catalog, action ownership and accessible states | TODO | — |
 
+## S08 — Remote player input
+
+**Spec:** [S08](05-sprints/specs/S08.md) · **Requires:** S03–S05, approved ingress and identity contracts
+
+**E1→E2 bridge:** loopback developer host only; no public exposure or production hosting. S08.7 proves the engine can receive and reply to an authenticated test client.
+
+| Phase | Small deliverable | Status | Evidence |
+|---|---|---|---|
+| **S08.1 Frame admission** | Bounded handshake, origin rules, framing and timeouts | TODO | — |
+| **S08.2 Session identity** | Authenticate and bind actor; revoke stale sessions | TODO | — |
+| **S08.3 Typed decoding** | Versioned envelope, strict UTF-8, explicit message kind | TODO | — |
+| **S08.4 Local test host** | Boot actual world on loopback only for connected development testing | TODO | — |
+| **S08.5 Safe output** | Encode actual committed text and errors without control injection | TODO | — |
+| **S08.6 Actor visibility** | Deliver only authorized room/event output | TODO | — |
+| **S08.7 Loopback roundtrip** | Test client sends look and move, host commits and replies | TODO | — |
+| **S08.8 Short RP** | One-word SubmitText handled as post, never command | TODO | — |
+| **S08.9 Long RP** | Bounded multiline Unicode prose submission | TODO | — |
+| **S08.10 Descriptions** | Owner-authenticated character text revision | TODO | — |
+| **S08.11 Long commands** | Authorized multiline command args remain commands | TODO | — |
+| **S08.12 Rate limits** | Per-actor, action and byte budgets | TODO | — |
+| **S08.13 Backpressure** | Bounded fair input and output queues | TODO | — |
+| **S08.14 Reconnect** | Dedupe receipts and restore session safely | TODO | — |
+
 ## S09C — Standalone Player Client (native + external MUDs)
 
-**Implementation spec:** [S09C.md](05-sprints/specs/S09C.md) · **Prerequisites:** S08 and S09.1–S09.4 (shared UI, native protocol)
+**Spec:** [S09C](05-sprints/specs/S09C.md) · **Requires:** S08.7 + S09.1–4
+
+**E2 FIRST PLAYABLE is S09C.5:** genuine interactive client connected to real game host, not a simulated terminal. Public hosting and full protections are later milestones.
+
+| Phase | Small deliverable | Status | Evidence |
+|---|---|---|---|
+| **S09C.1 Player shell** | Separate Play workspace, transcript, composer and tabs | TODO | — |
+| **S09C.2 World profiles** | Save native/third-party connection profiles | TODO | — |
+| **S09C.3 Native adapter** | Connect to real S08 loopback game host | TODO | — |
+| **S09C.4 Basic composer** | Send explicit action/command and display response | TODO | — |
+| **S09C.5 FIRST PLAYABLE** | Two real players can look, move and receive scoped output | TODO | — |
+| **S09C.6 Navigation retention** | Keep session and drafts on safe workspace switch | TODO | — |
+| **S09C.7 Text rendering** | Bounded ANSI/UTF-8 spans and safe output | TODO | — |
+| **S09C.8 Transcript tools** | Scrollback, search, copy, timestamps and wrapping | TODO | — |
+| **S09C.9 Appearance** | Independent Client theme and font settings | TODO | — |
+| **S09C.10 Telnet adapter** | Connect to unrelated MUD with bounded Telnet | TODO | — |
+| **S09C.11 Layouts and hotkeys** | Save per-world panes and quick commands | TODO | — |
+| **S09C.12 Aliases and triggers** | Declarative profile-local command and output rules | TODO | — |
+| **S09C.13 Timers** | Bounded timers and explicitly trusted automation | TODO | — |
+| **S09C.14 Mini mapper** | Personal rooms/exits, notes and source confidence | TODO | — |
+| **S09C.15 Metadata** | Optional GMCP/CHARSET/NAWS and mapping hints | TODO | — |
+| **S09C.16 Autowalk** | Opt-in one-step navigation and accessible route list | TODO | — |
+
+## S06 — World systems
+
+**Spec:** [S06](05-sprints/specs/S06.md) · **Requires:** S05, S08.7, S09C.5
+
+**Proof:** Real Player Client interaction is required to verify actual event gameplay; engine-only tests alone are insufficient.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S09C.1 Player shell** | Build independent Play workspace with world tabs, transcript and composer | TODO | — |
-| **S09C.2 World profiles** | Save server/character profiles, protocol selection and secure settings | TODO | — |
-| **S09C.3 Telnet transport** | Connect to third-party MUDs using bounded text Telnet adapter | TODO | — |
-| **S09C.4 Navigation retention** | Keep or disconnect Client connections when using Go To; retain drafts and unread output | TODO | — |
-| **S09C.5 Text rendering** | Decode ANSI/UTF-8 safely into bounded terminal display spans | TODO | — |
-| **S09C.6 MudMaker protocol** | Connect native Player Client to authenticated MudMaker game server | TODO | — |
-| **S09C.7 Transcript tools** | Provide scrollback, copy/search, timestamps, wrapping and follow control | TODO | — |
-| **S09C.8 Composer** | Add explicit input mode, multiline drafts, history, send and pending state | TODO | — |
-| **S09C.9 Player appearance** | Use independent Client theme, font/ANSI mapping and persistence | TODO | — |
-| **S09C.10 Layouts and shortcuts** | Save per-world docking, hotkeys and customizable buttons | TODO | — |
-| **S09C.11 Aliases and triggers** | Create declarative local alias/highlight/routing rules without code | TODO | — |
-| **S09C.12 Timers and safety** | Support bounded timers, approvals and local macro management | TODO | — |
-| **S09C.13 Mini mapper** | Create private room/exit graph, manual notes and confidence indicators | TODO | — |
-| **S09C.14 Structured metadata** | Decode optional GMCP, charset/window metadata and map hints | TODO | — |
-| **S09C.15 Navigation tools** | Offer opt-in sequential pathing, stop controls and accessible map presentation | TODO | — |
+| **S06.1 World event state** | Regional/world event definitions and lifecycle | TODO | — |
+| **S06.2 Spawner** | Timed/entity spawning and despawning | TODO | — |
+| **S06.3 World interaction** | Conditional world systems and environmental effects | TODO | — |
+
+## S06Q — Quests
+
+**Spec:** [S06Q](05-sprints/specs/S06Q.md) · **Requires:** S03–S05, S08.7, S09C.5
+
+**Proof:** Player-connected quest acceptance, dialogue, reward and observer tests are required in addition to native unit tests.
+
+| Phase | Deliverable | Status | Evidence |
+|---|---|---|---|
+| **S06Q.1 Quest state** | Per-actor quest attempts, scope and eligibility | TODO | — |
+| **S06Q.2 Objective credit** | Evidence-based objective types and chain prerequisites | TODO | — |
+| **S06Q.3 Dialogue stages** | Validated dialogue choices, sessions and quiz | TODO | — |
+| **S06Q.4 Rewards/phasing** | Atomic claim, bonus roll and phased NPC | TODO | — |
+| **S06Q.5 Quest recovery** | Persist and resume quest/session after restart | TODO | — |
+
+## S07 — Transit
+
+**Spec:** [S07](05-sprints/specs/S07.md) · **Requires:** S04, S06, S09C.5
+
+**Proof:** Board, travel and exit from a real Player Client; mocked command traces cannot close gameplay acceptance.
+
+| Phase | Deliverable | Status | Evidence |
+|---|---|---|---|
+| **S07.1 Transit route** | Route progression with persistent train state | TODO | — |
+| **S07.2 Moving interiors** | Nested carriage rooms and their passengers/items | TODO | — |
+| **S07.3 Dynamic exits** | Dock-time door to station, closed en route | TODO | — |
 
 ## S10 — Visual command editor
 
-**Implementation spec:** [S10.md](05-sprints/specs/S10.md) · **Prerequisites:** S03,S05,S09
+**Spec:** [S10](05-sprints/specs/S10.md) · **Requires:** S03,S05,S09
+
+**Proof:** Visual command editor reuses native gameplay command service. First-playable S09C.5 is available for user tests.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -224,7 +254,9 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 
 ## S11 — C# and graphs
 
-**Implementation spec:** [S11.md](05-sprints/specs/S11.md) · **Prerequisites:** S05,S08,S10
+**Spec:** [S11](05-sprints/specs/S11.md) · **Requires:** S05,S08,S09C.5,S10
+
+**Proof:** C# and graph runtime must execute inside real playable host/client integration.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -243,7 +275,9 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 
 ## S12 — World-system editing
 
-**Implementation spec:** [S12.md](05-sprints/specs/S12.md) · **Prerequisites:** S06,S07,S09–S11
+**Spec:** [S12](05-sprints/specs/S12.md) · **Requires:** S06,S07,S09,S10,S11
+
+**Proof:** The visual authoring test must result in playable world-system output.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -254,7 +288,9 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 
 ## S12Q — Quest editing
 
-**Implementation spec:** [S12Q.md](05-sprints/specs/S12Q.md) · **Prerequisites:** S06Q,S09–S11
+**Spec:** [S12Q](05-sprints/specs/S12Q.md) · **Requires:** S06Q,S09,S10,S11
+
+**Proof:** Verify no-code quests through Player Client, not only an editor-only graph preview.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -266,7 +302,9 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 
 ## S13 — Self-hosting
 
-**Implementation spec:** [S13.md](05-sprints/specs/S13.md) · **Prerequisites:** S03,S08,S11
+**Spec:** [S13](05-sprints/specs/S13.md) · **Requires:** S03,S08,S09C,S11
+
+**Proof:** E3 public/creator hosting: host startup, recovery, external joins and operations. Different from S08 loopback developer host.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -286,7 +324,9 @@ For implementation phases, the Lead reads the [matching sprint spec](05-sprints/
 
 ## S14 — Release audit
 
-**Implementation spec:** [S14.md](05-sprints/specs/S14.md) · **Prerequisites:** S05–S13
+**Spec:** [S14](05-sprints/specs/S14.md) · **Requires:** All sprints
+
+**Proof:** Final security/accessibility/performance on real supported configurations.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|

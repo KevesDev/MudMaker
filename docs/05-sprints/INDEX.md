@@ -1,30 +1,30 @@
-# MudMaker Sprint Roadmap
+# MudMaker Sprint Roadmap — gates and execution order
 
-**Repo-native source of truth:** [Sprint Tracker](../SPRINT-TRACKING.md) — all phases, current status, evidence and progress in one readable table. [One implementation spec per sprint](specs/INDEX.md) — exact approved contracts, narrow Builder scope and Lead-selected verification with independent Auditor approval.
+The [single canonical Sprint Tracker](../SPRINT-TRACKING.md) records all phase status, evidence and dependencies. Each sprint has [one implementation spec](specs/INDEX.md). **Sprint IDs remain stable; numerical ID order is not implementation order.** Do not assign a user-facing gameplay sprint before the real player loop exists.
 
-## Execution policy
-- Each phase is independently testable and intentionally small enough that **multiple Builder → scoped Auditor handoffs** can normally complete during a Claude session.
-- Builder and Auditor **do not perform research** or choose libraries/architecture. Unanswered research is owner/documentation work and blocks dispatch.
-- The tracker is the **only place to change TODO/BUILD/AUDIT/BLOCKED/DONE or progress**. No per-phase files; these were removed.
-- Native/technical architecture decisions precede implementation. A source example, documentation or green mock is not evidence of a running engine.
-- Lead chooses focused verification for each phase, including a user-facing check when naturally useful. No mandatory demo or negative-test recipe per phase; full suite only when explicitly authorized at sprint close.
-
-## Dependency order
-
-| Area | Prerequisite | Sprint |
+| Gate | Real verification | Phase |
 |---|---|---|
-| Baseline and approved native architecture | Owner decisions and measured proofs | S00–S01 |
-| ECS, assets, persistence, rooms and exits | S01, then S02–S04 | S02–S04 |
-| Typed native commands, parser and hooks | S03–S04 | S05 |
-| Regional/world events and quest runtime | S05 and durable state | S06, S06Q |
-| Moving train and nested locations | S04, S06 | S07 |
-| Hardened remote input, long RP text and sessions | S03, S05 | S08 |
-| Shared UI primitives, central ThemeManager and Editor shell | S03 | S09 |
-| Standalone Player Client, third-party MUD adapters/mapper | S08 and shared S09 foundation | S09C |
-| Blueprint and no-code command editor | S03, S05, S09 | S10 |
-| Native C# / typed graph bindings | S05, S08, S10 | S11 |
-| World event and quest visual authoring | Runtime/editor dependencies | S12, S12Q |
-| Self-hosting, network edge, durability and recovery | S03, S08, S09C, S11 | S13 |
-| Complete security, load, accessibility and release audit | All earlier areas | S14 |
+| E1 — Native harness | ECS, storage, room/exits and command unit/integration tests; **not a playable MUD** | S02–S05 |
+| E2 — First local playable | Actual Player Client connects to a loopback game host, commands move a character and committed scoped messages appear | **S09C.5**, needs S08.7 and S09.1–4 |
+| E3 — Public/creator hosting | Approved owner GUI/headless server, durable state, access controls and remote players, safe restart/backup | S13 |
 
-Use [technical docs index](../INDEX.md) to locate exact field/protocol/feature contracts. **Input type is explicit**, never inferred from a post or command's length; see [secure client-input v1](../03-contracts/client-input-v1/INDEX.md). Local game hosts own scripts; external clients send gameplay input only.
+## Correct dependency waves
+
+| Wave | Work | Proof |
+|---|---|---|
+| 0 | S00 (docs) → S01 (owner-approved architecture) | Index, decisions and verifiable implementation contracts |
+| 1 | S02 → S03 → S04 → S05 | Native authoritative ECS and commands (E1) |
+| 2 | S09.1–4 **in parallel with** S08.1–7 | Reusable UI foundation; loopback-only native command ingress |
+| 3 | S09C.1–5 | **FIRST PLAYABLE (E2)** |
+| 4 | S06/S06Q, then S07 | Actual event, quest, and train gameplay validated through Client |
+| 5 | Finish S09/S09C, then S10, S11, S12, S12Q as their individual gates allow | Full creator/client tooling and advanced code/graph execution |
+| 6 | Complete S08 protective limits, then S13 | Real creator/public hosting and restart/recovery (E3) |
+| 7 | S14 | Real release security, accessibility, performance, recovery |
+
+S09 UI foundation may begin after S03 and overlap S04/S05. S08.4 is a **loopback developer test host only**, not a safe internet-facing host or an installer. Before exposing a public port, the remaining S08 admission, quotas, backpressure and security must be audited and S13 owner hosting/operations must be ready.
+
+## Dispatch rules
+
+One small phase per Builder and one different scoped Auditor; multiple independently verifiable deliverables should ordinarily fit within a Claude usage window. Lead chooses focused test/harness proof for each phase. For gameplay-level acceptance at E2, a real Client and live host must be used; a headless harness is not an acceptable substitute. Only the tracker gets DONE/evidence/status. Owner resolves external research, undecided stack, network and persistence ADRs **before** dispatch; agents never go researching those choices. No invented tests or passing claims.
+
+**Next owner topic after this cleanup:** hosting/network deployment and bundled managed database decisions, presently **not selected or implemented**. Do not preemptively assume a database engine or external deployment model.

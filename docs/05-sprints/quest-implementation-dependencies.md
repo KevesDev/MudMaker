@@ -1,13 +1,13 @@
 # Quest and Phase Implementation Dependency Plan
 
-**Status:** PROPOSED; integrates with existing sprint ordering rather than allowing a massive quest feature to appear as a small late patch.
+**Status:** dependency order clarified; source contracts only, NOT implemented. Follow [execution roadmap](INDEX.md) and [canonical tracker](../SPRINT-TRACKING.md).
 
 ## Dependencies
-**S03 world/schema/persistence** -> **S04 containment/exits** -> **S05 authoritative commands/events/clock** -> **S06Q quest engine and conditions** -> **S08 network/session observer projection** and **S09 map editor** -> **S10 blueprint editor** -> **S11 typed graphs/scripts** -> **S12Q quest/dialogue/phase visual authoring** -> **S13 hosting** -> **S14 release.** S06Q can be developed in parallel with S06 world systems once S05 is VERIFIED, using the same registries and event gateway. S12Q may begin once S09–S11 are VERIFIED, not as a substitute for finishing their owners.
+**S03 world/schema/persistence** -> **S04 containment/exits** -> **S05 authoritative commands/events/clock** -> **S08.7 real loopback server** and **S09.1–4 shared UI** -> **S09C.5 FIRST PLAYABLE** -> **S06Q quest engine and conditions** -> **S09 map editor** -> **S10 blueprint editor** -> **S11 typed graphs/scripts** -> **S12Q quest/dialogue/phase visual authoring** -> **S13 hosting** -> **S14 release.** S06Q can be developed in parallel with S06 world systems once S05 and S09C.5 are VERIFIED, using the same registries and event gateway. S12Q may begin once S09–S11 are VERIFIED, not as a substitute for finishing their owners.
 
 ## S06Q — Quest Runtime, Conditions and Phased Projection
-**Owner:** Quest Progression + shared Condition Registry + Observer Projection + Instance Manager interfaces. **Prerequisites:** S03–S05 VERIFIED; approved ADRs for per-owner quest state, event semantics, group scope and phase vs instance rules.
-**Complete deliverable:** durable quest definitions/attempts/lifecycle, typed objectives and event subscriptions, prerequisites/branches, atomic reward/next-quest transitions, central reusable condition evaluation, observer-relative targetability/visibility, phase invalidation, private encounter instance API and persistence, command/auth integration, error codes/trace. Test Q-01..Q-19 at engine level with two sessions as soon as networking is available; no claiming network/visual tests from headless-only proof.
+**Owner:** Quest Progression + shared Condition Registry + Observer Projection + Instance Manager interfaces. **Prerequisites:** S03–S05, S08.7 and S09C.5 VERIFIED for actual player-facing gameplay; approved ADRs for per-owner quest state, event semantics, group scope and phase vs instance rules.
+**Complete deliverable:** durable quest definitions/attempts/lifecycle, typed objectives and event subscriptions, prerequisites/branches, atomic reward/next-quest transitions, central reusable condition evaluation, observer-relative targetability/visibility, phase invalidation, private encounter instance API and persistence, command/auth integration, error codes/trace. Test Q-01..Q-19 in engine harness AND through two real Client sessions after S09C.5; no claiming network/visual tests from headless-only proof.
 **Quality:** no O(players×quests×entities) tick scans. Index relevant watches, confirm cache invalidation, benchmark representative workloads once targets approved. Must reject hidden entity target by ID.
 
 ## S12Q — Visual Quest/Dialogue/Phase Authoring
