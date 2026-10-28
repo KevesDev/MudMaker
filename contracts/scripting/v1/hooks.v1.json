@@ -1,0 +1,248 @@
+{
+  "schema": "mudmaker.hook-registry.v1",
+  "version": 1,
+  "origin": "host-local-published-release",
+  "notes": "Server maps registered hook ID to class/event and bound method. Remote player input contains no hook IDs or script contents.",
+  "hooks": [
+    {
+      "id": "npc.interact.before",
+      "phase": "Before",
+      "eventClrType": "NpcInteractEvent",
+      "ownerKind": "Npc"
+    },
+    {
+      "id": "npc.interact.after",
+      "phase": "After",
+      "eventClrType": "NpcInteractEvent",
+      "ownerKind": "Npc"
+    },
+    {
+      "id": "dialogue.choice.before",
+      "phase": "Before",
+      "eventClrType": "DialogueChoiceEvent",
+      "ownerKind": "Dialogue"
+    },
+    {
+      "id": "dialogue.choice.after",
+      "phase": "After",
+      "eventClrType": "DialogueChoiceEvent",
+      "ownerKind": "Dialogue"
+    },
+    {
+      "id": "quiz.evaluated.before",
+      "phase": "Before",
+      "eventClrType": "QuizEvaluatedEvent",
+      "ownerKind": "QuestionSet"
+    },
+    {
+      "id": "quiz.evaluated.after",
+      "phase": "After",
+      "eventClrType": "QuizEvaluatedEvent",
+      "ownerKind": "QuestionSet"
+    },
+    {
+      "id": "quest.offer.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.accept.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.accept.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.objective.credit.before",
+      "phase": "Before",
+      "eventClrType": "ObjectiveCreditEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.objective.credit.after",
+      "phase": "After",
+      "eventClrType": "ObjectiveCreditEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.turn_in.before",
+      "phase": "Before",
+      "eventClrType": "QuestTurnInEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.turn_in.after",
+      "phase": "After",
+      "eventClrType": "QuestTurnInEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.completed.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.fail.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.fail.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.abandon.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.abandon.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.reset.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.reset.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.reward.claim.before",
+      "phase": "Before",
+      "eventClrType": "RewardClaimEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "quest.reward.claim.after",
+      "phase": "After",
+      "eventClrType": "RewardClaimEvent",
+      "ownerKind": "Quest"
+    },
+    {
+      "id": "exit.traverse.before",
+      "phase": "Before",
+      "eventClrType": "EntityMoveEvent",
+      "ownerKind": "Exit"
+    },
+    {
+      "id": "exit.traverse.after",
+      "phase": "After",
+      "eventClrType": "EntityMoveEvent",
+      "ownerKind": "Exit"
+    },
+    {
+      "id": "entity.move.after",
+      "phase": "After",
+      "eventClrType": "EntityMoveEvent",
+      "ownerKind": "World"
+    },
+    {
+      "id": "transit.departed.after",
+      "phase": "After",
+      "eventClrType": "TransitEvent",
+      "ownerKind": "Vehicle"
+    },
+    {
+      "id": "transit.arrived.after",
+      "phase": "After",
+      "eventClrType": "TransitEvent",
+      "ownerKind": "Vehicle"
+    },
+    {
+      "id": "world_event.started.after",
+      "phase": "After",
+      "eventClrType": "WorldEventLifecycleEvent",
+      "ownerKind": "WorldEvent"
+    },
+    {
+      "id": "world_event.stopped.after",
+      "phase": "After",
+      "eventClrType": "WorldEventLifecycleEvent",
+      "ownerKind": "WorldEvent"
+    },
+    {
+      "id": "item.use.before",
+      "phase": "Before",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item"
+    },
+    {
+      "id": "item.use.after",
+      "phase": "After",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item"
+    },
+    {
+      "id": "item.pickup.before",
+      "phase": "Before",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item"
+    },
+    {
+      "id": "item.pickup.after",
+      "phase": "After",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item"
+    },
+    {
+      "id": "item.transfer.before",
+      "phase": "Before",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item"
+    },
+    {
+      "id": "item.transfer.after",
+      "phase": "After",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item"
+    },
+    {
+      "id": "entity.spawn.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleEvent",
+      "ownerKind": "World"
+    },
+    {
+      "id": "entity.despawn.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleEvent",
+      "ownerKind": "World"
+    },
+    {
+      "id": "timer.fired.after",
+      "phase": "After",
+      "eventClrType": "TimerFiredEvent",
+      "ownerKind": "Timer"
+    },
+    {
+      "id": "player.login.after",
+      "phase": "After",
+      "eventClrType": "PlayerSessionEvent",
+      "ownerKind": "World"
+    },
+    {
+      "id": "player.logout.after",
+      "phase": "After",
+      "eventClrType": "PlayerSessionEvent",
+      "ownerKind": "World"
+    }
+  ]
+}

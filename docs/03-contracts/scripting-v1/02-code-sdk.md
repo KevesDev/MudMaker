@@ -2,6 +2,8 @@
 
 **Implementation source of truth:** [Contracts.cs](../../../contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs); worked use [MidnightExpressHooks.cs](../../../examples/scripting/MidnightExpressHooks.cs). **Status:** decided public interface, source-level declarations written; runtime/worker/compiler not implemented. SDK ABI version = `MudMaker.Scripting.V1`.
 
+**Machine contracts:** [hook registry JSON](../../../contracts/scripting/v1/hooks.v1.json), [effect-to-capability JSON](../../../contracts/scripting/v1/effects.v1.json). The authoring compiler and native dispatcher must consume or verify these exact IDs, never duplicate hardcoded allowlists independently.
+
 ## Toolchain and module shape
 - Project asset: `ScriptAsset { asset GUID, revision, source files, entrypoint types, API major = 1, published content hash, compiler options, capability manifest, dependencies }`. User writes **valid C#**; no DSL, new meanings for `#`/`@`/`{}` or preprocessing.
 - Compiler: Roslyn C# compilation with .NET 10 pinned reference assemblies, SDK reference and **approved allowlisted dependencies only**; `unsafe` forbidden and P/Invoke/reflection/process/thread/file/network APIs rejected by policy analyzer. Compiler plus analyzer is defense in depth, never sandbox substitute. Dynamic compilation service isolated from public host. Build output signed/hashed and manifest-validated before worker load.

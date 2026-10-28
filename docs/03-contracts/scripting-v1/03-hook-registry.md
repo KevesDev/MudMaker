@@ -1,6 +1,6 @@
 # 03 — Hook Registry v1: Canonical IDs and Typed Events
 
-**Authority:** This table is the **only** source of registered creator-facing hook IDs. Host-created local releases own every registered binding; a remote player cannot supply hook names or script code. SDK `[MudHook]` strings must match exactly. Event classes are in [Contracts.cs](../../../contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs). Status: decided v1 interface, not implemented.
+**Authority:** [hooks.v1.json](../../../contracts/scripting/v1/hooks.v1.json) is the canonical machine-readable hook registry, and this table is the human-readable mirror. Host-created local releases own every registered binding; a remote player cannot supply hook names or script code. SDK `[MudHook]` strings must match exactly. Event classes are in [Contracts.cs](../../../contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs). Status: decided v1 interface, not implemented.
 
 ## Registry and typed event mapping
 Each listed pair is **one v1 hook ID**, not an English suggestion. `before` is cancel/replace/append/defer where permitted, `after` is read-only with independently queued effects only. Platform-originated facts cannot be forged by clients or creator code.
