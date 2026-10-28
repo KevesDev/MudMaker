@@ -38,3 +38,5 @@ Open only the appropriate indexed subsection: **[Code Scripting](code/INDEX.md)*
 
 ## Decided visual theme and verified phased delivery
 Visual Graph Editor: **dark, subtle continuous graph-paper lines, no dotted grid**; all color, font, spacing, node/port and grid tokens come exclusively from [central, user-customizable ThemeManager](../../03-contracts/editor-theme-manager.md). The [S02 phases](../../05-sprints/specs/S02.md) build it; [S13 phases](../../05-sprints/specs/S13.md) compile C#/Protobuf and implement native hooks/Graph parity; [S17 phases](../../05-sprints/specs/S17.md) verify host restart/recovery. Each phase gets one Builder, independent scoped Auditor and user-testable result before its checkbox is checked.
+
+[**Technical Case Study 02 — Tollbridge Ambush / combat**](08-combat-technical-case-study.md): timed, turn-based and hybrid encounters, NPC aid cry/hearing/fleeing, graph authoring, proposed C# hooks, native commit, sequence diagram and acceptance matrix.
