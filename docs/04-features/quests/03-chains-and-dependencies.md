@@ -49,5 +49,8 @@ A creator can intentionally end an arc with no next quest; not every dead end is
 Chain canvas: small named quest cards with colored status/phase nodes, labeled transition lines ("When A is rewarded", "After B or C", "Only for Mage", "Offer D"), zoom/group/chapter/subgraph, search and impact analysis. New creator sees guided choices: **What starts this quest?**, **What should happen when it ends?**, **Must another quest be finished first?**, **Can players choose different paths?**. Advanced typed conditions remain inspectable, with preview by character state and path reachability diagnostics.
 Graph layout coordinates are authoring-only metadata. Runtime uses compiled typed graph, not drag positions.
 
+## Custom scripted transitions
+Creator may bind a script or behavior graph to a conditional edge, branch evaluation, quest exit, follow-up offer or timed world event. The handler can replace a default next quest, defer to a multiple-choice dialogue or combine follow-up with a world event. Chain state and exclusivity still pass through Quest Progression and typed Condition Evaluator; a script cannot directly mark an incompatible branch rewarded. For hooks and transaction ordering see [09 — Hooks](09-custom-scripts-and-event-hooks.md).
+
 ## Testing
 A->B on completion vs turn-in timing; A/B AND/OR; one-of-many exclusive conflicts; skipped breadcrumb; delayed restart; class branch; party mismatch; fast consecutive events; failure alternate route; replay reset/reward; rejoin preserves choice history; inaccessible required NPC warns before publishing. See [verification](08-quest-verification-matrix.md).

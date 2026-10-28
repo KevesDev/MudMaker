@@ -31,6 +31,10 @@
 | ADR-023 | Eight-stage dialogue precedence, random pools, concurrent sessions, interruption/turn-in | OPEN: S06Q / S12Q |
 | ADR-024 | Guaranteed/choice/random rewards, rarity weights, class/level gating, reveal/claim and overflow policy | OPEN: S06Q / S12Q |
 
+| ADR-025 | Shared quest Hook Registry ABI: stage hooks/modes, handler precedence, validator timing, invocation/effect types and fail-closed policy | OPEN: S06Q/S11/S12Q |
+| ADR-026 | Durable custom world event lifecycle; start/stop atomic vs async outbox, rollback and restart; script/graph workflow session handling | OPEN: S06/S06Q/S11 |
+| ADR-027 | Character name predicate source/normalization/visibility, quiz answer secrecy/retry/idempotency, script resource/capability limits | OPEN: S06Q/S11/S12Q |
+
 ## Confirmed non-negotiables
 ECS-native engine; nontrivial systems like moving trains with interiors and dynamic exits; visually created ECS blueprints/graphs and optional custom scripts; user-defined global/region weather/spawner/trigger systems; interactive cell map with color/icons, searchable pallet, room contents and exit editing including descriptions/locks; quest chains with conditional NPC visibility/interactivity, branching dialogue, solo/party/instance workflows and robust progression; action-dependent room/vehicle observer messages; nontechnical one-click hosting plus headless CLI; professional rather than mock implementations; deliberate performance, maintainability and multi-OS/tablet support.
 

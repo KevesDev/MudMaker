@@ -44,6 +44,9 @@ Click a room cell -> contents -> NPC Bob -> **Quests & Conversation**: select ex
 ## Tablet and accessibility acceptance
 Large touch-friendly actions for adding/connecting/expanding nodes, not relying on right-click or hover, responsive bottom drawer/side inspector, pointer capture and focused text entry; keyboard shortcuts don't fire while typing quest/dialogue text. Screen reader can traverse node labels/edges/objectives and read conditions; color-only labels insufficient. Drag-and-drop has button-based equivalent. State preview remains navigable without canvas gestures.
 
+## Visible per-stage script and event actions
+Every dialogue, objective, reward, chain and NPC interaction editor exposes a **When this happens...** action list. Creator chooses **Use normal**, **Before**, **After**, **Replace**, **Only when condition**, or **Both**, then attaches a visual graph or versioned custom script. Default beginner actions include **Ask a multiple-choice question**, **Grant a reward to characters matching rule**, **Start world event**, **Stop world event**, **Show dialogue**, and **Advance or defer quest**. Preview shows exact quest state, event state, reward and observer effects in each branch; the map/NPC inspector edits the same HookBinding asset. Complete capability schema: [09 — Custom hooks](09-custom-scripts-and-event-hooks.md).
+
 ## Advanced creators
 Expose a registered custom objective/condition/reward/script node through typed schemas and explicit capability requirements. It must still plug into same graph verifier, authoring palette, instance/world permission checks, deterministic scheduler and persistence. "Custom script" is an escape hatch for novel mechanics, never the only way to handle mainstream quest variants.
 

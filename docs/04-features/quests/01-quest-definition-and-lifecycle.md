@@ -19,6 +19,7 @@
 | Dialogue | phase-specific dialogue bindings and per-actor conversation state; see [04](04-dialogue-stages.md) |
 | Chains | prerequisite/dependency expression, next quest(s), optional branches/exclusive groups, auto-grant or offer, replay/repeat semantics; see [03](03-chains-and-dependencies.md) |
 | Rewards | guaranteed/choice/chance/group, eligibility and visibility policies, item/currency/XP/unlocks/reputation/script effects, grant/claim timing; see [05](05-rewards-and-loot.md) |
+| Hooks and overrides | Versioned script/graph callback bindings for all dialogue/quest/objective/reward/world-event stages, with pre/post/replace/default modes, guard, allowed capabilities and failure policy. See [09 Hooks](09-custom-scripts-and-event-hooks.md) |
 | World effects | start/step/failure/completion/reward actions: NPC phase changes, exits, weather, spawners, global flags, private encounter creation, announcements, track/vehicle state |
 | Recurrence | once, repeatable, daily/weekly, cooldown, event/season/window, per-attempt/reset period, account/character restrictions |
 | Failure/recovery | timeout, death, escort loss, quest item destruction, loss of eligibility, abandon, pause, reconnect, restart, fail/retry/recover/re-offer policies |
@@ -44,4 +45,4 @@ Reject missing targets/assets, invalid objective graph, impossible level range, 
 Exactly one authoritative attempt transition per idempotent event; numeric progress not negative/overflowed; reward claim idempotent; quest states consistent with active objective graph; mutually exclusive branches cannot both become completed; public UI visibility filtered by owner; after restart no changed state solely from rerunning setup callbacks; no world-wide tick scan per active objective.
 
 ## Adjacent authoritative subtabs
-[Objectives](02-objective-catalog-and-credit.md) · [Chains](03-chains-and-dependencies.md) · [Dialogue](04-dialogue-stages.md) · [Rewards](05-rewards-and-loot.md) · [Eligibility/phase](06-eligibility-phasing-and-parties.md).
+[Objectives](02-objective-catalog-and-credit.md) · [Chains](03-chains-and-dependencies.md) · [Dialogue](04-dialogue-stages.md) · [Rewards](05-rewards-and-loot.md) · [Eligibility/phase](06-eligibility-phasing-and-parties.md) · [Custom stage hooks](09-custom-scripts-and-event-hooks.md).

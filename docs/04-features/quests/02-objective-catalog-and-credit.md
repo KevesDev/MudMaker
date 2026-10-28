@@ -49,6 +49,9 @@ Select escort target entity/blueprint, path checkpoints or destination condition
 - Real ECS movement and exits determine position; quest does not own its own private NPC movement subsystem.
 - World events like TrainDocked, CharacterEnteredCar or NPCReachedWaypoint feed one shared objective registry.
 
+## Scripts and custom objective transitions
+Any quest objective can attach a typed custom graph/script to its availability, interaction, credited, satisfied or failed stage. Scripts may produce named, authenticated domain events and propose objective effects through ECS commands, but cannot create arbitrary credited progress by client assertion. Optional quiz/dialogue gate can be an objective that advances only on verified server-side choice. For full hooks, failure/retry and custom world event semantics, read [09 — Hooks](09-custom-scripts-and-event-hooks.md); objective credit/provenance remains owned here.
+
 ## Requirement for every new objective provider
 Define typed inputs, independently verifiable committed event/snapshot, owner/actor attribution, condition flags, progress serialization, idempotency, invalidation, UI forms and labels, error code, and tests for success+false positive. Unsupported behavior is blocked at authoring, not silently approximated.
 

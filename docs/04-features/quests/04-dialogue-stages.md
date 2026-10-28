@@ -19,6 +19,9 @@ One NPC can offer more than one quest, and the same player may have one active, 
 
 **Also first-class:** quest-failed dialogue, abandonment/reoffer, replay, interrupted/resumed conversation, hidden/secret dialogue, branch-specific NPC response, world-state/phase changes, no-eligible-quest default and author-defined custom phases. All use one condition + graph system.
 
+## Custom behavior at all dialogue stages
+Every one of the eight stages above supports developer-defined **before / after / conditional / replace / run-both** graph and script bindings through one Hook Registry. A stage can run an interactive multi-choice question, show custom lines, grant a conditional reward, emit an event, start/stop a persistent world event, or defer completion. Replacing the turn-in/completion stage must explicitly declare whether the quest remains active, completes without normal rewards, or completes plus a script result; no implicit quest completion on an absent callback. Failed required hooks cannot emit a success line. The complete handler modes, invocation payload, ordering and quiz authority are defined only in [09 — Quest hooks and custom scripts](09-custom-scripts-and-event-hooks.md).
+
 ## Dialogue Asset structure
 - Stable dialogue asset ID, schema/version and localization; target NPC/object/quest/chain optional and priority, scopes and context.
 - Nodes: Line, Option/Choice, Condition, Random/Weighted Line Pool, Set Context Variable, Quest Offer, Confirm Accept, Submit Objective Action, TurnIn, Claim Reward, Complete Quest, Start/Offer Next, Set Flag, Trigger Typed Event, Jump/Subgraph, Wait/Resume, End, Script/Custom Registered Action.

@@ -78,6 +78,9 @@ UXQ-08 Tablet and desktop hands-on: add node, connect, edit text without shortcu
 UXQ-09 Error diagnostics explain missing source, impossible completion, no eligible reward, unreachable quest giver and incompatible instance context.
 UXQ-10 Full two-client restart with mixed quest states and per-player differences, no silent incorrect visibility or reward.
 
+## Custom hooks / dialogue questions / world event tests
+Use [HOOK-01 through HOOK-10](09-custom-scripts-and-event-hooks.md) as specialized oracles: name-based conditional reward, server-checked quiz answers, quest-active NPC script, replace-normal turn-in, default-plus-custom-event with exactly-once semantics, stop/cleanup persistent event, before-veto/post-action boundaries, editor roundtrip, sandbox denial and no fake callback success. Tests assert authoritative quest/reward/event ECS state and per-player messages, not just a printed string. Run only relevant test filters per sprint; no padded near-identical cases.
+
 ## Cross-feature fixtures
 [Bob/Joe](../bob-joe-quest-scenario.md) proves conditional NPC presence/dialogue and basic chain. [Moving train](../train-reference-scenario.md) proves location, transport and observer narration. A combined scenario should allow quest credit for riding train to Harbor and talking to a phase-visible NPC there; players with different quest states see different NPCs while sharing a physical train. Do not use these two fixtures to avoid testing other quest families.
 
