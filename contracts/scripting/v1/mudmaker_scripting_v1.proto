@@ -172,6 +172,12 @@ message CombatManagerSnapshot { string manager_instance_id = 1; AssetRef manager
 message CombatLifecycleEvent { string event_id = 1; string encounter_id = 2; string manager_instance_id = 3; EntityRef actor = 4; EntityRef target = 5; string action_key = 6; string lifecycle_code = 7; uint64 expected_revision = 8; string occurred_at_utc = 9; string causation_key = 10; CombatManagerSnapshot manager = 11; repeated ComponentFieldSnapshot visible_fields = 12; repeated StateSlotSnapshot visible_state = 13; }
 message CombatManagerEffect { string manager_instance_id = 1; string encounter_id = 2; string action_code = 3; EntityRef actor = 4; EntityRef target = 5; AssetRef asset = 6; string argument_key = 7; PropertyValue value = 8; uint64 expected_revision = 9; }
 
+// LOOK: viewer-scoped pure queries and post-observation events.
+enum LookMode { LOOK_MODE_UNSPECIFIED = 0; LOOK_LOCATION = 1; LOOK_TARGET = 2; LOOK_CONTENTS = 3; LOOK_DETAIL = 4; LOOK_DETAIL_RELATION = 5; LOOK_EXAMINE = 6; }
+enum LookTargetKind { LOOK_TARGET_KIND_UNSPECIFIED = 0; LOOK_LOCATION_TARGET = 1; LOOK_ENTITY_TARGET = 2; LOOK_EXIT_TARGET = 3; LOOK_DETAIL_TARGET = 4; }
+message LookQueryEvent { string event_id = 1; EntityRef viewer = 2; EntityRef target = 3; LookMode mode = 4; LookTargetKind target_kind = 5; string query = 6; string relation_key = 7; string authorized_text = 8; uint64 snapshot_revision = 9; }
+message LookObservedEvent { string event_id = 1; EntityRef viewer = 2; EntityRef target = 3; LookMode mode = 4; LookTargetKind target_kind = 5; string detail_key = 6; uint64 snapshot_revision = 7; bool succeeded = 8; string result_code = 9; }
+
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -205,6 +211,8 @@ message HookEvent {
     InventoryEquipmentEvent inventory_equipment = 29;
     InventoryTradeEvent inventory_trade = 30;
     CombatLifecycleEvent combat_lifecycle = 31;
+    LookQueryEvent look_query = 32;
+    LookObservedEvent look_observed = 33;
   }
 }
 enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
