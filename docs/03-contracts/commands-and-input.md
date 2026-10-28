@@ -36,3 +36,7 @@ Game authors can declare commands with aliases, typed parameters, visibility/hel
 - Replay duplicated requestId does not perform a second transfer/spawn.
 - Unknown command returns structured help/error, not bare println/log.
 - All client types call the exact same server command service and ECS executor.
+
+## Ordinary ECS object interactions and exits
+
+[Universal ECS object/exit contract](ecs-objects-and-exits.md) requires scoped `InteractableCapability` for arbitrary object verbs (lever, chair, machine) and `ExitConnectionComponent` plus `TraversalCapability` for traversable objects (passages, doors, portals). `north`, `go north`, `enter doorway` and native exit clicks submit the same authorized traversal intent; `open/close/lock/unlock` are separate validated object interaction actions. No hard-coded object subclass or duplicate movement path. Delay and cancellation are persistent scheduler operations.
