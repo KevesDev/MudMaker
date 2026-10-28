@@ -4,24 +4,24 @@
 
 | Earliest sprint/phase | Creator can actually demonstrate | Independent Auditor rejects when |
 |---|---|---|
-| S00 docs gate | Find named UI screen, action, owner, tooltip, permission and S09C phase by index in under two docs | broken links, absent command owner, unfixed contradictions |
-| S09 SharedUI | One themed button/field/dialog, focus, enable/error and pending state | duplicate widget/theme service; mislabeled or inert button |
-| S09 Theme | Switch theme in Editor and Client-preview separately | Client theme forced from Editor; imported data changes scripts |
-| S09 Editor navigation | Open map/Blueprint/graph from Project Hub; return preserving selection | focus crossover, dirty change silently lost |
-| S09 tablet | Map action menu works without hover/right-click and respects IME | inaccessible tool, touch pan accidentally edits world |
-| S09C Player library | Save Telnet/TLS and native profiles; connect via two adapters | wrong protocol selected, insecure silent downgrade |
-| S09C Transcript | Scroll up while new output arrives, search/copy; theme/font changes live | forced jump, DOM growth or ANSI/OSC execution |
-| S09C Composer | Send one-word RP in MudMaker native mode and long builder command; third-party fallback sends opaque text only | length-based route, newline command injection, duplicate send |
-| S09C Global/per-world keymap | Bind same keys separately in Editor and Client, restart | shortcut leaks, IME collision, accidental remote send |
-| S09C Mini mapper | Use authoritative native location; third-party GMCP room; plain telnet text-only/manual | unsupported map falsely shown complete or hidden-room leaked |
-| S09C Automation | Create no-code alias, trigger highlight, timer and hotbutton; dry-run imported rules | imported package auto-sends or executes scripts |
-| S09C Adapter security | Receive malformed IAC/ANSI/MXP/GMCP and compressed abuse fixtures | memory growth, raw HTML execution, unsafe URL/open file |
-| S10 No-code commands | Create 'ring bell' with scope/access and inspect help | UI bypasses native command service, unknown asset publish |
-| S11 Code/graph | Bind C# and graph to same world effect; observe actual results | source-only fake run or second Ecs write path |
-| S12/Q Authoring | Draw weather/quest/branch and test with two actor perspectives | duplicated Editor graph renderer or player UI permission leak |
-| S13 Hosting | Start hosted world in Host panel then join from separate Player Client | Host controls visible to remote client or unvalidated release |
-| S14 Accessibility | Keyboard, tablet, screen reader, high contrast/reduced motion across all active surfaces | unlabeled control, focus trap, insufficient contrast |
-| S14 Registry parity | Enumerate all rendered controls and check UI registry reverse mappings | any unregistered JSX/widget, orphan ActionId, untranslated copy |
+| S00 docs gate | Find named UI screen, action, owner, tooltip, permission and S08 phase by index in under two docs | broken links, absent command owner, unfixed contradictions |
+| S02 SharedUI | One themed button/field/dialog, focus, enable/error and pending state | duplicate widget/theme service; mislabeled or inert button |
+| S02 Theme | Switch theme in Editor and Client-preview separately | Client theme forced from Editor; imported data changes scripts |
+| S02 Editor navigation | Open map/Blueprint/graph from Project Hub; return preserving selection | focus crossover, dirty change silently lost |
+| S02 tablet | Map action menu works without hover/right-click and respects IME | inaccessible tool, touch pan accidentally edits world |
+| S08 Player library | Save Telnet/TLS and native profiles; connect via two adapters | wrong protocol selected, insecure silent downgrade |
+| S08 Transcript | Scroll up while new output arrives, search/copy; theme/font changes live | forced jump, DOM growth or ANSI/OSC execution |
+| S08 Composer | Send one-word RP in MudMaker native mode and long builder command; third-party fallback sends opaque text only | length-based route, newline command injection, duplicate send |
+| S08 Global/per-world keymap | Bind same keys separately in Editor and Client, restart | shortcut leaks, IME collision, accidental remote send |
+| S08 Mini mapper | Use authoritative native location; third-party GMCP room; plain telnet text-only/manual | unsupported map falsely shown complete or hidden-room leaked |
+| S08 Automation | Create no-code alias, trigger highlight, timer and hotbutton; dry-run imported rules | imported package auto-sends or executes scripts |
+| S08 Adapter security | Receive malformed IAC/ANSI/MXP/GMCP and compressed abuse fixtures | memory growth, raw HTML execution, unsafe URL/open file |
+| S09 No-code commands | Create 'ring bell' with scope/access and inspect help | UI bypasses native command service, unknown asset publish |
+| S13 Code/graph | Bind C# and graph to same world effect; observe actual results | source-only fake run or second Ecs write path |
+| S15/Q Authoring | Draw weather/quest/branch and test with two actor perspectives | duplicated Editor graph renderer or player UI permission leak |
+| S17 Hosting | Start hosted world in Host panel then join from separate Player Client | Host controls visible to remote client or unvalidated release |
+| S18 Accessibility | Keyboard, tablet, screen reader, high contrast/reduced motion across all active surfaces | unlabeled control, focus trap, insufficient contrast |
+| S18 Registry parity | Enumerate all rendered controls and check UI registry reverse mappings | any unregistered JSX/widget, orphan ActionId, untranslated copy |
 
 ## UI registry static gates
 1. IDs unique across all catalog partitions, all nonempty tooltip/accessibility descriptions, action or passive role, owning router/workspace, enabled/hidden predicate, test ID; every ActionId resolves exactly once in action table.
