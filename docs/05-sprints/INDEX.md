@@ -32,3 +32,7 @@ One small phase per Builder and one different scoped Auditor; multiple independe
 ## Database dependency and phase ownership
 
 S01 approves the local storage and durability ADR. S03 owns automated database creation, migration, local access and typed data API, plus the consistent backup/restore foundation. S09 and S10 own the navigable Creator Data Manager and safe browsing/editing for thousands of records. S13 owns Host-side database lifecycle, optional backup scheduling, restore selection and recovery UX. S14 audits disaster recovery and cross-platform data safety. See [the binding local database specification](../03-contracts/local-database-and-data-manager.md) and [the canonical phase tracker](../SPRINT-TRACKING.md). Do not imply that a planned phase is implemented.
+
+## Account / character dependencies
+
+S01–S03 implement immutable AccountId and durable ownership; S04/S05 authorize character location and commands; S08 authenticates and binds sessions before E2; S09C provides login/character choice; S10 provides visual UI controls; S11 implements typed lifecycle hook/graph integration; **S10A** is the cohesive Creator workflow/role editor sprint after these foundations, before final hosting/release. [Account lifecycle specification](../03-contracts/account-character-lifecycle.md). Status remains in [tracker](../SPRINT-TRACKING.md).
