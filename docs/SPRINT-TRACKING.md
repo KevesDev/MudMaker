@@ -2,7 +2,7 @@
 
 **Canonical repo-native dashboard.** Sprints are large self-contained milestones, each broken into small independently auditable Builder/Auditor phases. The sprint sections follow dependency order; phase rows within each sprint follow implementation order, even when stable phase IDs are not numerical. Multiple phase handoffs should ordinarily fit a five-hour Claude session. Do not fragment a sprint into separate roadmap waves.
 
-**Current:** S00 documentation review. S00.1–S00.5 are in AUDIT awaiting independent verification; **no S00 phase is DONE**. All implementation remains TODO. Missing research, implementation platform decisions and test oracles go to the owner **before** dispatch, not to Builder/Auditor.
+**Current:** S00 documentation and owner decision review. Documentation deliverables may be marked DONE once written and linked; **no independent documentation audit is required**. This does not claim implementation or executable tests. All implementation remains TODO. Missing research, implementation platform decisions and test oracles go to the owner **before** dispatch, not to Builder/Auditor.
 
 ## Evidence levels and first playable gate
 
@@ -18,7 +18,7 @@
 
 | Sprint | Focus | Verified | Depends on | Status |
 |---|---|---:|---|---|
-| [S00](#s00) | Documents and decisions | **0/5** | — | ACTIVE |
+| [S00](#s00) | Documents and decisions | **9/9** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates | **0/6** | S00 + owner ADRs | PLANNED |
 | [S02](#s02) | Native ECS | **0/8** | S01 | PLANNED |
 | [S03](#s03) | Assets and persistence | **0/14** | S02 | PLANNED |
@@ -39,7 +39,7 @@
 | [S14](#s14) | Release audit | **0/11** | All preceding | PLANNED |
 
 ## Agent process
-Lead selects one phase from this table and its one sprint spec. One Builder implements the bounded deliverable and runs approved focused checks; one different scoped Auditor reviews real implementation and evidence. `TODO → BUILD → AUDIT → DONE` only with independent PASS, not merely a documented proposal. Record test command, build commit, audit result and any real user demo in **Evidence**. No agent research tasks or broad test-suite loops. `BLOCKED` means the owner must resolve the missing decision. Full suite at sprint closure only by explicit Lead approval.
+**S00 documentation phases do not require independent audits.** For implementation work after S00, Lead selects one phase from this tracker and its scoped sprint spec. One Builder implements the bounded deliverable and runs approved focused checks; one different scoped Auditor reviews real implementation and evidence. `TODO → BUILD → AUDIT → DONE` only with independent PASS, not merely a documented proposal. Record test command, build commit, audit result and any real user demo in **Evidence**. No agent research tasks or broad test-suite loops. `BLOCKED` means the owner must resolve the missing decision. Full suite at sprint closure only by explicit Lead approval.
 
 **Prompt and mapping contract:** [Evennia-inspired server prompt, status HUD, authoritative map projections and Creator/Player customization](03-contracts/prompt-and-world-map.md). Map fields and status snapshots are per-observer and permission-filtered; client personalization never becomes world authority.
 
@@ -49,20 +49,20 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 
 ## S00 — Research, design contracts and agent-ready documentation
 
-**Sprint spec:** [S00.md](05-sprints/specs/S00.md) · **Prerequisite:** none · **S00 is document review, not implementation testing.** Review scope and approval are selected independently by the Lead. S00 records owner research, settled design, unresolved ADRs and link/consistency verification only.
+**Sprint spec:** [S00.md](05-sprints/specs/S00.md) · **Prerequisite:** none. S00 is documentation and owner decisions, **not an independent documentation audit or an implementation test**. A documentation phase is DONE when its source, links and open decisions are recorded; unresolved owner ADRs remain visible and block relevant S01+ implementation.
 
 
-**Checkpoints:** Independently audit documents, no application test claimed.
+**Checkpoint:** documentation is authored and indexed. Owner can review or refine it without a mandatory Auditor handoff. No executable app or runtime PASS is implied.
 
 | Phase | Document deliverable | Status | Evidence |
 |---|---|---|---|
-| **S00.1 Authority & indexed contracts** | Indexed ECS, scripting, input and UI decisions with exact agent read paths | AUDIT | [Technical index](INDEX.md), [UI index](03-contracts/ui-ux/INDEX.md), [UI catalog](../contracts/ui/v1/INDEX.md); independent docs review pending |
-| **S00.2 Workspace/security boundaries** | Separate Editor, Player Client, Host; safe input and concurrent host/view lifetimes | AUDIT | [Ownership](03-contracts/ui-ux/01-workspaces-and-ownership.md), [navigation](03-contracts/ui-ux/00-launch-and-workspace-navigation.md), [remote input](03-contracts/client-input-v1/01-ingress-threat-boundary.md); review pending |
-| **S00.3 UI/UX architecture & decision gates** | Central ThemeManager, cataloged controls, Editor/Client workflows, sourced client research and unresolved platform ADRs | AUDIT | [UI contract](03-contracts/ui-ux/INDEX.md), [controls](../contracts/ui/v1/INDEX.md), [client research](03-contracts/ui-ux/09-client-research.md), [open decisions](07-decisions/OPEN_DECISIONS.md); review pending |
-| **S00.4 Implementable sprint handoffs** | One tracker, one spec/sprint and phase dependency map with no agent research tasks | AUDIT | [Sprint specs](05-sprints/specs/INDEX.md), [agent rules](../CLAUDE.md), [tracker](SPRINT-TRACKING.md); final handoff check pending |
-| **S00.5 First-playable dependency review** | Verify engine-only, local-play and public-host gates, plus phased sprint prerequisites | AUDIT | [Tracker](SPRINT-TRACKING.md), [roadmap](05-sprints/INDEX.md); independent review pending |
+| **S00.1 Authority & indexed contracts** | Indexed ECS, scripting, input and UI decisions with exact agent read paths | DONE | [Technical index](INDEX.md), [UI index](03-contracts/ui-ux/INDEX.md), [UI catalog](../contracts/ui/v1/INDEX.md); authored and indexed |
+| **S00.2 Workspace/security boundaries** | Separate Editor, Player Client, Host; safe input and concurrent host/view lifetimes | DONE | [Ownership](03-contracts/ui-ux/01-workspaces-and-ownership.md), [navigation](03-contracts/ui-ux/00-launch-and-workspace-navigation.md), [remote input](03-contracts/client-input-v1/01-ingress-threat-boundary.md); authored and indexed |
+| **S00.3 UI/UX architecture & decision gates** | Central ThemeManager, cataloged controls, Editor/Client workflows, sourced client research and unresolved platform ADRs | DONE | [UI contract](03-contracts/ui-ux/INDEX.md), [controls](../contracts/ui/v1/INDEX.md), [client research](03-contracts/ui-ux/09-client-research.md), [open decisions](07-decisions/OPEN_DECISIONS.md); authored and indexed |
+| **S00.4 Implementable sprint handoffs** | One tracker, one spec/sprint and phase dependency map with no agent research tasks | DONE | [Sprint specs](05-sprints/specs/INDEX.md), [agent rules](../CLAUDE.md), [tracker](SPRINT-TRACKING.md); authored and indexed |
+| **S00.5 First-playable dependency review** | Verify engine-only, local-play and public-host gates, plus phased sprint prerequisites | DONE | [Tracker](SPRINT-TRACKING.md), [roadmap](05-sprints/INDEX.md); independent review pending |
 
-**S00 remains active; no independent documentation audit has passed.** Drafting a contract permits `AUDIT`, not `DONE`; S00 requires an independent document review, not an imaginary app demo. If review finds ambiguity, keep phase open until the owner resolves it. After S00, real Builder/Auditor milestones include actual user-testable builds.
+**S00 written deliverables are complete.** S00 remains ACTIVE only for owner decision review and unresolved ADRs; those questions must be decided before their dependent implementation phases. **No documentation AUDIT status, separate docs Auditor, or imaginary app demo is required.**
 
 ## S01 — Native decisions
 
