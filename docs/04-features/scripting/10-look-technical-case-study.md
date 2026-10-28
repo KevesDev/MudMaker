@@ -60,7 +60,7 @@ public sealed class TrainLookHooks
     public HookQueryResult WindowDetail(HookContext ctx, LookQueryEvent e)
     {
         if (e.Mode != LookMode.DetailRelation || e.RelationKey != "through")
-            return HookQueryResult.KeepDefault();
+            return HookQueryResult.Keep();
 
         // Context is already filtered to permitted world state and allowed detail.
         // The script can restyle the authorized detail; it cannot read hidden scenery.
