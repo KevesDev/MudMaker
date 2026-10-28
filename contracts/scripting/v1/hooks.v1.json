@@ -1,6 +1,6 @@
 {
   "schema": "mudmaker.hook-registry.v1",
-  "version": 7,
+  "version": 8,
   "origin": "host-local-published-release",
   "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
   "hooks": [
@@ -2095,6 +2095,60 @@
       "ownerKind": "Npc",
       "returnClrType": "HookDecision",
       "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.traverse.denied.after",
+      "phase": "After",
+      "eventClrType": "ExitTraversalEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "committed observer-scoped event, enqueue validated follow-up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.traverse.cancelled.after",
+      "phase": "After",
+      "eventClrType": "TraversalOperationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "committed observer-scoped event, enqueue validated follow-up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.door.state_changed.after",
+      "phase": "After",
+      "eventClrType": "DoorStateEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "committed observer-scoped event, enqueue validated follow-up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.door.action.before",
+      "phase": "Before",
+      "eventClrType": "DoorStateEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "authorization first, deny or bounded proposed effects only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.traverse.started.after",
+      "phase": "After",
+      "eventClrType": "TraversalOperationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "committed observer-scoped event, enqueue validated follow-up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.traverse.due.after",
+      "phase": "After",
+      "eventClrType": "TraversalOperationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "committed observer-scoped event, enqueue validated follow-up only",
       "runtimeImplemented": false
     }
   ]
