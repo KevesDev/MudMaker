@@ -10,20 +10,32 @@
 | Entity/component/system/query semantics | [ECS core](02-architecture/ecs-core.md) | REQUIRED architecture; PROPOSED contract |
 | Rooms, containers, moving trains, exits, spatial graph | [Spatial / containment / transit](02-architecture/spatial-containment-transit.md) | REQUIRED scenario; PROPOSED invariants |
 | Weather, spawners, events, time and scheduling | [Time / events / world systems](02-architecture/time-events-world-systems.md) | REQUIRED features; PROPOSED mechanics |
+| Quest runtime, progression, phased NPCs, private instances | [Quest progression and phasing](02-architecture/quest-progression-and-phasing.md) | REQUIRED behavior; PROPOSED engine contract |
 | Durable state, prototypes, versions, save/restore | [State / persistence](02-architecture/state-persistence.md) | PROPOSED |
 | Keyboard/touch/text input and game command pipeline | [Commands + input](03-contracts/commands-and-input.md) | REQUIRED ownership; PROPOSED contract |
+| Player-visible room/train/interactions narration and audiences | [Narration/observers](03-contracts/narration-and-observers.md) | REQUIRED behavior; PROPOSED contract |
+| Quest condition evaluator, dialogue, typed objective event | [Quest conditions/dialogue](03-contracts/quest-conditions-and-dialogue.md) | PROPOSED |
 | Nodes, custom scripts, execution and APIs | [Scripting + graph](03-contracts/scripting-and-graph.md) | REQUIRED capability; PROPOSED interfaces |
 | Remote protocol, sessions, hosting runtime | [Protocol + hosting](03-contracts/protocol-and-hosting.md) | PROPOSED |
 | Clickable color/icon cells; room panel; exits | [Map editor](04-features/map-editor.md) | REQUIRED behavior; PROPOSED interaction detail |
 | ECS object/Blueprint graphs and inspectors | [Blueprint editor](04-features/blueprint-editor.md) | REQUIRED behavior; PROPOSED graph semantics |
+| Quest and dialogue visual graph editor | [Quest editor](04-features/quest-and-dialogue-editor.md) | REQUIRED UX; PROPOSED mechanics |
+| Bob -> Joe quest visibility/party/instance test oracle | [Bob/Joe scenario](04-features/bob-joe-quest-scenario.md) | REQUIRED story; PROPOSED test matrix |
 | One-click / CLI launch and operations | [Hosting + admin](04-features/hosting-and-admin.md) | REQUIRED behavior; PROPOSED operations |
 | Cross-feature train example and end-to-end oracle | [Train station reference scenario](04-features/train-reference-scenario.md) | REQUIRED story; PROPOSED exact cases |
 | Dependency graph and sprint gate list | [Sprint index](05-sprints/INDEX.md) | PROPOSED |
+| Quest sprint gates and order | [Quest dependencies](05-sprints/quest-implementation-dependencies.md) | PROPOSED |
+| Live sprint tracking checklist | [Sprint tracking](SPRINT-TRACKING.md) | LIVE |
+| Completed sprint history, rationale | [Sprint history](SPRINT-HISTORY.md) | HISTORY |
+| Per-sprint spec template | [Sprint template](05-sprints/specs/SPRINT-SPEC-TEMPLATE.md) | PROPOSED |
 | Sprint scope, deliverables and acceptance | [Sprint specifications](05-sprints/sprint-specifications.md) | PROPOSED |
+| Project Lead/Builder/Auditor governance | [CLAUDE.md](../CLAUDE.md), [Builder](../.claude/agents/builder.md), [Auditor](../.claude/agents/auditor.md) | PROPOSED based on supplied agent rules |
+| Token and dispatch limits | [Token and dispatch policy](06-quality/token-and-dispatch-policy.md) | PROPOSED |
 | Rules for AI builders/reviewers | [Agent policy](06-quality/agent-policy.md) | REQUIRED prohibitions; PROPOSED enforcement |
 | Verifiable behavior matrix and test policy | [Test matrix](06-quality/test-matrix.md) | PROPOSED |
 | Trust boundaries, script sandbox, permissions | [Security policy](06-quality/security-policy.md) | PROPOSED |
 | Decisions intentionally not guessed | [Open decisions](07-decisions/OPEN_DECISIONS.md) | OPEN |
+| Source-backed quest / WoW / Evennia / dialogue research | [Quest research](08-research/quest-design-research.md) | RESEARCH |
 | Legacy source audit and earlier v1.1 concept | [Baseline](08-research/legacy-baseline.md) | FACTS |
 
 ## Cross-document rules
@@ -31,4 +43,6 @@
 - When a document proposes a choice, add a decision entry; do not silently promote it to confirmed.
 - Each owning subsystem should have one mutation boundary. The map editor, command parser, scripts and network are clients of the same authority.
 - Paths are case-sensitive; ensure all links resolve and index entries are updated for added/renamed files.
+- Quest eligibility, dialogue, visibility and targetability reuse [one condition evaluator](03-contracts/quest-conditions-and-dialogue.md). Phasing is per-viewer filtering; private instances are distinct world/room copies.
+- Actor/location-specific narration is derived from committed events using [one observer projection](03-contracts/narration-and-observers.md), never from duplicate UI/script broadcasts.
 - The original Google Doc “MudMaker” records the earlier v1.1 design; use these versioned specifications for current planning.

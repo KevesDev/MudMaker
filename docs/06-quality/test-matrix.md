@@ -25,6 +25,14 @@
 | SC-01 script parity | Script action passes same engine validation as graph | Script cannot bypass locks, sandbox or resource budgets |
 | WS-01 time | Weather schedule persists/replays | Pause/crash/restart no duplicate time event |
 | WS-02 spawn | NPC/resource spawn matches region and cap | Duplicate/spatially invalid/no-eligible-location behavior |
+| NAR-01 room observers | Car A sees Joe leave; Car B sees Joe enter | Station does not see inside-train action; failed move has no message |
+| NAR-02 arrival observers | Harbor sees train arrive north, then disembark | Northgate no phantom updates; unauthorized actor redaction |
+| QUEST-01 lifecycle | Q1 active -> Bob dialogue -> Q1 completed, Q2 granted once | No quest -> generic only; invalid choice no progress |
+| QUEST-02 phasing | Q2-active sees/targets Joe in shared room | Q2-absent cannot look/examine/target/interact; guessed ID denied |
+| QUEST-03 post-completion | Show/remind/hide/replace obeys author rule | No stale phase cache, no contradictory simultaneous state |
+| QUEST-04 group/instance | Party policy and private copied encounter isolate progress | No wrong-party reward, wrong-instance leakage or duplicate objects |
+| QUEST-05 branching/rewards | AND/OR/ordered/time/repeat/choice work and survive restart | Invalid branch, double reward, stale version or loop rejected |
+| QUEST-06 visual editor | Author Bob -> Joe with graph and room inspector no code | Invalid references/softlock warning; touch alternatives |
 | UX-01 map | Cell selection, palette, color/icon, exit inspector | Undo/redo, deletion impact, save failure truthful |
 | UX-02 tablets | Tap/edit/drag/pan and keyboard alternatives | No hover-only or unintended scroll-as-edit |
 | PS-01 persistence | Actual restart with train+inventory+script state | Corrupt/mismatched schema refuses unsafe restore |
@@ -33,6 +41,12 @@
 
 ## Required train oracle
 Use [T-01 through T-12](../04-features/train-reference-scenario.md) as shared end-to-end fixture. Tests must assert concrete component states, events and runtime output after each command and restart. A dummy command that prints "train moved" cannot pass unless authoritative RouteFollower/MotionState, dynamic exit visibility and containment are correct.
+
+## Cross-feature quest oracle
+Use [Q-01 through Q-22](../04-features/bob-joe-quest-scenario.md): independent state/visibility/interact/narration assertions across two players, quest versions and actual restart. A printed line or frontend-hidden component is not proof. See [quest design research](../08-research/quest-design-research.md) for sourced feature categories.
+
+## Cost guardrails
+Builder **never** runs the unfiltered full suite. Auditor may run it once at actual full sprint close only when Lead explicitly names it. Prefer relevant exact test filters; repeat only for real nondeterminism; regression checks only where shared behavior is modified. Use runtime structured errors/diagnostics instead of padding tests, while preserving tests for silent wrong ECS state or information leaks. On re-audit, check repaired diff and directly impacted tests. See [token policy](token-and-dispatch-policy.md).
 
 ## Explicit no-fake-test verification
 - Tests initially fail against absent/malformed behavior; provide at least one behavior mutation proving specific test catches regression.

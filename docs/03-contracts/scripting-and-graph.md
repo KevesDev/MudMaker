@@ -8,7 +8,8 @@ Creators may build complete gameplay mechanics without programming, and advanced
 ## Three graph categories (distinct editor contexts)
 1. **Entity Blueprint composition graph:** entity root, components, configured field values, child slots, references, instance overrides, exposed parameters and template inheritance/composition policy. Data/authoring graph, not necessarily runtime execution.
 2. **Behavior/event graph:** hooks (OnInteract, OnEnter, OnLeave, OnTick, OnWeatherChanged, OnArrive, OnDepart, OnSpawn), typed condition/data nodes and action/flow nodes that execute through command gateway.
-3. **World System graph:** global/region scope, query selectors, scheduling rules, state transitions, spawn/weather control, triggers and cross-system events. Registration is centralized, not a private timer per node.
+3. **Quest / Dialogue graph:** typed objective sequences and branches, player choices, conditional NPC visibility, conversation and reward actions, quest prerequisites and followups, replay state, custom typed quest events. Reuse the same Condition Registry and ECS mutation gateway; no second quest runtime. See [quest contract](quest-conditions-and-dialogue.md).
+4. **World System graph:** global/region scope, query selectors, scheduling rules, state transitions, spawn/weather control, triggers and cross-system events. Registration is centralized, not a private timer per node.
 
 ## Graph schema
 Every graph asset MUST have stable graphId, graphKind, formatVersion, owning asset/system ID, named inputs/outputs, nodes, edges, exposed parameters, dependencies, permission/capability manifest, validation diagnostics and dependency version pins.
@@ -43,5 +44,7 @@ Given a graph and text script performing the same approved action under the same
 
 ## Diagnostics, safety and versioning
 Invalid node type, missing template, broken port, schema mismatch, prohibited capability, recursive run-away and missing event handler produce typed diagnostics at authoring and runtime. Deprecated node versions need migration paths or clear refusal. No "success with no-op" placeholders. Run behavior graph tests in deterministic isolated world, with event trace and state assertions.
+
+See [quest and dialogue editor](../04-features/quest-and-dialogue-editor.md) and [quest runtime](../02-architecture/quest-progression-and-phasing.md).
 
 See [blueprint editor](../04-features/blueprint-editor.md), [world systems](../02-architecture/time-events-world-systems.md), [security](../06-quality/security-policy.md).

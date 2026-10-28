@@ -21,8 +21,13 @@
 | ADR-015 | Default product game template/command set, onboarding, traditional telnet/SSH clients | OPEN: design and release documentation |
 | ADR-016 | Multi-world tenant/resource isolation, threat model for untrusted creator scripts | OPEN: blocks publicly exposed S11/S13 |
 
+| ADR-017 | Event narration template precedence, audience snapshot timing, idempotent message delivery, visibility/hidden identities | OPEN: blocks observer delivery implementation |
+| ADR-018 | Quest state scopes and lifecycle / objective attribution; prerequisite and reward atomicity; repeat policies | OPEN: blocks S06Q |
+| ADR-019 | Phasing vs private instance rules, observer filtering, cache invalidation, group sync/replay, private instance ownership/persistence | OPEN: blocks S06Q/S08 |
+| ADR-020 | Quest dialogue session semantics, branch precedence, condition schema and post-completion visibility | OPEN: blocks S06Q/S12Q |
+
 ## Confirmed non-negotiables
-ECS-native engine; nontrivial systems like moving trains with interiors and dynamic exits; visually created ECS blueprints/graphs and optional custom scripts; user-defined global/region weather/spawner/trigger systems; interactive cell map with color/icons, searchable pallet, room contents and exit editing including descriptions/locks; nontechnical one-click hosting plus headless CLI; professional rather than mock implementations; deliberate performance, maintainability and multi-OS/tablet support.
+ECS-native engine; nontrivial systems like moving trains with interiors and dynamic exits; visually created ECS blueprints/graphs and optional custom scripts; user-defined global/region weather/spawner/trigger systems; interactive cell map with color/icons, searchable pallet, room contents and exit editing including descriptions/locks; quest chains with conditional NPC visibility/interactivity, branching dialogue, solo/party/instance workflows and robust progression; action-dependent room/vehicle observer messages; nontechnical one-click hosting plus headless CLI; professional rather than mock implementations; deliberate performance, maintainability and multi-OS/tablet support.
 
 ## Decision process
 For each ADR: describe problem, constraints, alternatives, security/performance/UX tradeoffs, source-backed research or measurement, recommended choice, owner approval, dependencies, rollback/migration and specific tests. Update row to APPROVED only after decision record lands. A developer/agent may suggest a default but may not turn it into silent implementation.

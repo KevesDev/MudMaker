@@ -1,5 +1,7 @@
 # Mandatory AI Builder, Investigator and Auditor Policy
 
+**Primary operational contract:** [CLAUDE.md](../../CLAUDE.md), [Builder](../../.claude/agents/builder.md), [Auditor](../../.claude/agents/auditor.md), and [token controls](token-and-dispatch-policy.md). This file supplies technical quality gates rather than duplicating complete role prompts.
+
 **Status:** REQUIRED prohibitions (user) and PROPOSED enforcement workflow. **Applies:** all contributors, including AI agents.
 
 ## Roles
@@ -38,6 +40,13 @@
 - No undocumented change to graph schema, component schema, exit semantics, persisted format or protocol.
 - Accurate commit tests/results, OS/platform and benchmark provenance, not fabricated.
 - Docs synchronized, requirements fulfilled or explicit blockers, PR can be rejected.
+
+## Quest and observer-specific hard gates
+- Quest progress has one ECS owner per declared owner scope; Bob/Joe dialogue, visibility, phase, targetability and rewards use shared typed conditions and authoritative commands.
+- Narration derives from committed events and is filtered per observer. A hidden Joe cannot be discovered by guessed ID, room list, conversation broadcast or client event stream.
+- Never equate a filtered shared-world NPC with a true private instance; instance IDs, membership and persistence must be explicit.
+- No first-class quest capability claim from a hardcoded Bob/Joe handler; the scenario is an integration oracle, not the scope limit.
+- Audit test fixture must check per-character quest states and server-side interaction denial, not only visible text.
 
 ## Completion
 Only mark VERIFIED when code, executed tests, runtime demonstration and independent audit agree. A plan or green smoke test alone never qualifies. Relevant red flags block merge; don't lower requirements to clear the sprint.

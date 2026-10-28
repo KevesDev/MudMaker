@@ -30,6 +30,10 @@
 **Deliver:** region-scoped weather controller, spawner definition, capacity and placement policy, typed event triggers and configurable object interactions. Extend via components/registered capabilities rather than hardcoding special cases.
 **Accept:** deterministic weather/spawn lifecycle, capacity enforcement under concurrency, safe reload and restart, missing-room no-op with typed status and trace. All systems use same clock/command gateway.
 
+## S06Q — Quest Progression, Shared Conditions, Phasing and Private Instances
+**Deliver:** ECS-based durable quest attempt state, event-driven objectives, branching/rewards, conditions reused by NPC visibility/interaction, phase-aware world projection and explicit private encounter instancing.
+**Accept:** [Bob/Joe Q-01..Q-19](../04-features/bob-joe-quest-scenario.md) engine semantics, invalid-ID/permission checks, observer separation and restart. Network-specific two-client tests complete in S08, visual in S12Q; do not mislabel S06Q as the completed quest authoring feature.
+
 ## S07 — Moving objects, trains and dynamic exits
 **Deliver:** track graph, routing, motion/docking state, interiors as stable locations, dynamic platform and door bindings, transferable players/NPCs/items, persistence of route progress.
 **Accept:** actual runtime tests T-01–T-10; locked departure/boarding race; script/trigger processing during transit; no per-passenger coordinate rewriting and no static exit corruption.
@@ -54,6 +58,10 @@
 **Deliver:** system palette, weather editor, NPC/resource spawner region assignments, schedule and caps forms, interactive object trigger editor, transit/route editor, simulation preview and inspections.
 **Accept:** complete P-01..P-06 world built visually including train, station, weather, spawners, scripted interaction; no uncategorized manual configuration for standard flows.
 
+## S12Q — Visual Quest, Dialogue and Phase Authoring
+**Deliver:** searchable quest/chain library, full typed branches/objectives, conditional dialogue with random generic pools, NPC visibility/interaction conditions, configurable after-completion options, group/instance decisions, version validation and state/observer preview.
+**Accept:** creator builds Talk to Bob -> Find Joe entirely through visual UI, plus branching/repeat/group cases; [Q-20..Q-22](../04-features/bob-joe-quest-scenario.md), desktop/tablet hands-on evidence, real multiplayer conditional NPC behavior and no independent quest-engine duplicate.
+
 ## S13 — Hosting and operations
 **Deliver:** same versioned world artifact loaded by GUI and headless CLI; preflight, logging, diagnostics, health, join details, session administration, consistent backup/restore and rollback, graceful stop.
 **Accept:** real process/service launches on supported targets, real remote joining per advertised scope, restart/restore tests T-09/T-12; failure/rollback tests with bad schema, port and script.
@@ -63,9 +71,9 @@
 **Accept:** no unapproved critical findings; predetermined benchmarks meet agreed thresholds, complete train fixture passes across targets; no unresolved release-blocking ADR.
 
 ## Per-sprint evidence template
-- Change/commit/PR reference; scope/spec version; owner; affected interfaces.
+- Change/commit/PR reference; scope/spec version; owner; affected interfaces. Author exact sprint doc from [template](specs/SPRINT-SPEC-TEMPLATE.md).
 - Positive, negative and concurrency scenarios with actual initial input and expected outputs.
-- Commands executed and raw summaries of pass/fail counts; integration evidence; benchmark hardware/environment when relevant.
+- Commands executed and concise summaries of pass/fail counts; no wall-of-logs. Builder runs targeted tests ONLY; Auditor runs a full suite ONLY at full sprint close and when Lead explicitly names it. Re-audit fixes with changed-delta scope. Regression is situational. Integration evidence and benchmark hardware/environment when relevant.
 - Architecture auditor findings, corrected regressions, known limitations explicitly NOT labeled complete.
 - Revised docs and next sprint dependency impacts.
 
