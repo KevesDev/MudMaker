@@ -64,4 +64,4 @@ These are **implementation-phase** acceptance gates. In S00, only check that thi
 9. Accessibility: tab/keyboard/screen reader reaches Go To, splash choices and modal options; Escape means Cancel, focus returns to invoking control.
 
 ## Phase ownership
-S00: decide/record and index (DOCUMENT REVIEW only); S09: splash/top Go To/common guard UI + Editor session retention; S09C: Play connection/draft background retention; S13: exclusive host lease and real background hosting, correct stop confirmation/restart; S14: 3-workspace end-to-end and race/accessibility test. Exact small tasks and status: [tracker](../../SPRINT-TRACKING.md).
+S00: decide/record and index (DOCUMENT REVIEW only); S02: splash/top Go To/common guard UI + Editor session retention; S08: Play connection/draft background retention; S17: exclusive host lease and real background hosting, correct stop confirmation/restart; S18: 3-workspace end-to-end and race/accessibility test. Exact small tasks and status: [tracker](../../SPRINT-TRACKING.md).

@@ -30,4 +30,4 @@
 
 ## Account and character lifecycle hooks
 
-[Account/character/permissions design and proposed hook extensions](../account-character-lifecycle.md) documents Evennia's account and puppet events, durable AccountId, graph continuation, secure before/after restrictions, and tests. It is **not** an additional SDK authority: proposed IDs/signatures must first pass reviewed registry + CLR + Protobuf parity (S11.13–14) before compiled owner scripts can bind them. [Current exact registered IDs](03-hook-registry.md) retain precedence.
+[Account/character/permissions design and proposed hook extensions](../account-character-lifecycle.md) documents Evennia's account and puppet events, durable AccountId, graph continuation, secure before/after restrictions, and tests. It is **not** an additional SDK authority: proposed IDs/signatures must first pass reviewed registry + CLR + Protobuf parity (S13.14–14) before compiled owner scripts can bind them. [Current exact registered IDs](03-hook-registry.md) retain precedence.
