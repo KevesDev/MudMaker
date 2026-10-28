@@ -5,10 +5,10 @@
 | Order | Cohesive sprint | Milestone |
 |---|---|---|
 | 1 | S00 → S01 | Documentation, architecture, and first native launch check (S01.7) |
-| 2 | **S02** | **Real launchable Create/Play/Host application shell**, ThemeManager, navigation and reusable canvas |
-| 3 | S03 → S04 → S05 → S06 | ECS, durable data, rooms and command runtime (E1 native harness) |
-| 4 | S07 → S08 | Authenticated loopback host and independent Player Client (**E2 at S08.6**) |
-| 5 | S09 | Creator Blueprint/command tools, real map editing and Data Manager |
+| 2 | **S02** | Launchable Create/Play/Host shell, shared UI, hardware-aware optional model wizard |
+| 3 | S03 → S04 → S05 → S06 | ECS, embedded storage, verified in-app optional model downloads, rooms and commands (E1) |
+| 4 | S07 → S08 | Local host, first real CPU NPC conversation, independent Player Client (**E2 at S08.6**) |
+| 5 | S09 | Creator Blueprints, rooms, Data Manager and accessible NPC personality/trigger nodes |
 | 6 | S10 → S11 → S12 | World events, quests and transit, playable through the real Client |
 | 7 | S13 → S14 | Typed C# hooks/graph runtime, account and character creation Studio |
 | 8 | S15 → S16 | Visual world systems and quest authoring |
