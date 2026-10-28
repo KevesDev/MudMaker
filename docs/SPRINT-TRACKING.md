@@ -50,9 +50,9 @@
 | **S00.3 UI/UX architecture & decision gates** | ThemeManager, cataloged controls, Creator/Client workflows and open platform ADRs | DONE | [UI contract](03-contracts/ui-ux/INDEX.md), [controls](../contracts/ui/v1/INDEX.md), [client research](03-contracts/ui-ux/09-client-research.md), [open decisions](07-decisions/OPEN_DECISIONS.md) |
 | **S00.4 Implementable sprint handoffs** | One tracker, one spec/sprint and phase dependency map | DONE | [Sprint specs](05-sprints/specs/INDEX.md), [agent rules](../CLAUDE.md), [tracker](SPRINT-TRACKING.md) |
 | **S00.5 First-playable dependency review** | Distinguish engine harness, local playable and public host gates, and phase prerequisites | DONE | [Tracker](SPRINT-TRACKING.md), [roadmap](05-sprints/INDEX.md) |
-| **S00.6 Local databases and data management** | Automatic local provisioning, authenticated data API, searchable large-world records, optional backups, staged restoration and host operations | DONE | [Database/Data Manager](03-contracts/local-database-and-data-manager.md), [S04](05-sprints/specs/S05.md), [S17](05-sprints/specs/S17.md) |
+| **S00.6 Local databases and data management** | Automatic local provisioning, authenticated data API, searchable large-world records, optional backups, staged restoration and host operations | DONE | [Database/Data Manager](03-contracts/local-database-and-data-manager.md), [S04](05-sprints/specs/S06.md), [S17](05-sprints/specs/S17.md) |
 | **S00.7 Prompt, status HUD and mapping** | Evennia-inspired prompt/status updates, Creator/Host map support, Player mini map and customizable layouts | DONE | [Prompt and map](03-contracts/prompt-and-world-map.md), [Player Client](03-contracts/ui-ux/05-player-client-workspace.md), [mapper](03-contracts/ui-ux/07-mapper-and-automation.md) |
-| **S00.8 Account, character and security lifecycle** | AccountId vs SessionId vs CharacterId, registration, login/logout, character ownership, Telnet credential security, custom roles and visual character-creation workflows | DONE | [Account/character contract](03-contracts/account-character-lifecycle.md), [Account & Character Studio](05-sprints/specs/S18.md), [S07](05-sprints/specs/S12.md) |
+| **S00.8 Account, character and security lifecycle** | AccountId vs SessionId vs CharacterId, registration, login/logout, character ownership, Telnet credential security, custom roles and visual character-creation workflows | DONE | [Account/character contract](03-contracts/account-character-lifecycle.md), [Account & Character Studio](05-sprints/specs/S18.md), [S07](05-sprints/specs/S15.md) |
 | **S00.9 C# lifecycle scripting hooks and sprint integration** | Document versioned account/character/creation hook extensions, graph integration and cross-sprint prerequisites without claiming unregistered hooks work | DONE | [Scripting v1 index](03-contracts/scripting-v1/INDEX.md), [hook registry](03-contracts/scripting-v1/03-hook-registry.md), [S13](05-sprints/specs/S17.md), [tracker](SPRINT-TRACKING.md) |
 | **S00.10 Embedded storage and optional ambient NPC AI** | Pin no-external-software database requirement and CPU-first optional NPC dialogue research/experiments and sprint gates | DONE | [Local DB contract](03-contracts/local-database-and-data-manager.md), [NPC dialogue](03-contracts/optional-local-npc-dialogue.md) |
 
@@ -67,14 +67,14 @@
 |---|---|---|---|
 | **S01.1 ECS identities** | Finalize world+generation handle ADR | TODO | — |
 | **S01.2 Writer model** | Finalize one authoritative writer | TODO | — |
-| **S01.3 Persistence ADR** | Approve embedded local DB engine, isolation/locking, transaction/outbox, migration, recovery and backup ADR | TODO | — |
+| **S01.3 Persistence ADR** | Approve bundled embedded database (no Docker, service install or external runtime), isolation, transactions, migration, recovery and backups | TODO | — |
 | **S01.4 Wire ABI** | Freeze versioned SDK/proto rules | TODO | — |
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | TODO | — |
 | **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | TODO | — |
 
 ## S02 — Editor and shared UI foundation
 
-**Spec:** [S02](05-sprints/specs/S03.md) · **Requires:** S01 UI/platform decision; application shell starts before ECS implementation
+**Spec:** [S02](05-sprints/specs/S04.md) · **Requires:** S01 UI/platform decision; application shell starts before ECS implementation
 
 **Proof:** MudMaker launches with real Create/Play/Host workspace shells, ThemeManager, navigation, responsive controls and persistent preferences; no fake ECS/editor data.
 
@@ -95,7 +95,7 @@
 
 ## S03 — ECS foundation
 
-**Implementation spec:** [S04.md](05-sprints/specs/S04.md) · **Prerequisites:** S01
+**Implementation spec:** [S04.md](05-sprints/specs/S05.md) · **Prerequisites:** S01
 
 
 **Checkpoints:** After S03.3 run entity creation/mutation tests; after S03.8 exercise the full native ECS harness. **Hands-on:** S03.4 runs in the existing S02 shell with actual engine results, not mocks.
@@ -114,7 +114,7 @@
 
 ## S04 — Assets and persistence
 
-**Implementation spec:** [S05.md](05-sprints/specs/S05.md) · **Prerequisites:** S03
+**Implementation spec:** [S05.md](05-sprints/specs/S06.md) · **Prerequisites:** S03
 
 
 **Checkpoints:** After S04.5 save/reopen a real test world; after S04.9 verify asset revisions and rollback. **Hands-on:** S04.6 runs in the existing S02 shell with actual engine results, not mocks.
@@ -139,7 +139,7 @@
 
 ## S05 — Spatial containment
 
-**Implementation spec:** [S06.md](05-sprints/specs/S06.md) · **Prerequisites:** S03,S04
+**Implementation spec:** [S06.md](05-sprints/specs/S10.md) · **Prerequisites:** S03,S04
 
 
 **Checkpoints:** After S05.3 traverse room/exits in the native harness; after S05.7 test lock/visibility rules. **Hands-on:** S05.4 runs in the existing S02 shell with actual engine results, not mocks.
@@ -158,7 +158,7 @@
 
 ## S06 — Command runtime
 
-**Spec:** [S06](05-sprints/specs/S10.md) · **Requires:** S04,S05
+**Spec:** [S06](05-sprints/specs/S09.md) · **Requires:** S04,S05
 
 **Proof:** E1 only: native command harness, not a playable MUD.
 
@@ -183,7 +183,7 @@
 
 ## S07 — Remote player input
 
-**Spec:** [S07](05-sprints/specs/S12.md) · **Requires:** S04–S06, approved ingress and identity contracts
+**Spec:** [S07](05-sprints/specs/S15.md) · **Requires:** S04–S06, approved ingress and identity contracts
 
 **E1→E2 bridge:** loopback developer host only; no public exposure or production hosting. S07.9 proves the engine can receive and reply to an authenticated test client.
 
@@ -213,7 +213,7 @@
 
 ## S08 — Standalone Player Client (native + external MUDs)
 
-**Spec:** [S08](05-sprints/specs/S07.md) · **Requires:** S07.9 + S02.2–4
+**Spec:** [S08](05-sprints/specs/S12.md) · **Requires:** S07.9 + S02.2–4
 
 **E2 FIRST PLAYABLE is S08.6:** genuine interactive client connected to real game host, not a simulated terminal. Public hosting and full protections are later milestones.
 
@@ -244,7 +244,7 @@
 
 ## S09 — Visual command editor
 
-**Spec:** [S09](05-sprints/specs/S02.md) · **Requires:** S04,S06,S02
+**Spec:** [S09](05-sprints/specs/S03.md) · **Requires:** S04,S06,S02
 
 **Proof:** Visual command editor reuses native gameplay command service. First-playable S08.6 is available for user tests.
 
@@ -274,7 +274,7 @@
 
 ## S10 — World systems
 
-**Spec:** [S10](05-sprints/specs/S09.md) · **Requires:** S06, S07.9, S08.6
+**Spec:** [S10](05-sprints/specs/S02.md) · **Requires:** S06, S07.9, S08.6
 
 **Proof:** Real Player Client interaction is required to verify actual event gameplay; engine-only tests alone are insufficient.
 
@@ -290,7 +290,7 @@
 
 ## S11 — Quests
 
-**Spec:** [S11](05-sprints/specs/S13.md) · **Requires:** S04–S06, S07.9, S08.6
+**Spec:** [S11](05-sprints/specs/S17.md) · **Requires:** S04–S06, S07.9, S08.6
 
 **Proof:** Player-connected quest acceptance, dialogue, reward and observer tests are required in addition to native unit tests.
 
