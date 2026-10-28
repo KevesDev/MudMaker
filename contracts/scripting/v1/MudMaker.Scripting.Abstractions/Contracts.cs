@@ -378,6 +378,13 @@ public sealed record SocialRelationshipEffect(EntityRef Subject, EntityRef Targe
     string RelationshipKind, string ActionCode, long? Value,
     ulong ExpectedRevision, string Key) : GameEffect(Key);
 
+// Gameplay tags are project-defined stable IDs; organizational tags are never script-mutable.
+public readonly record struct TagRef(Guid ProjectId, Guid TagId);
+public sealed record TagAssignmentEvent(Guid EventId, EntityRef Actor, EntityRef Subject,
+    TagRef Tag, string OperationCode, ulong ExpectedRevision) : MudEvent(EventId);
+public sealed record TagMutationEffect(EntityRef Actor, EntityRef Subject,
+    TagRef Tag, bool Add, ulong ExpectedRevision, string Key) : GameEffect(Key);
+
 // AUTHORING CONTRACT: every entrypoint must be a public instance method
 // HookDecision Handler(HookContext ctx, TEvent evt) for before/after hooks;
 // HookQueryResult Handler(HookContext ctx, TEvent evt) for read-only query hooks.
