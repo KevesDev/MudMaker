@@ -6,7 +6,7 @@
 
 ## Real application and testing milestones
 
-**First launchable UI: S02.3**, immediately after S01 platform decisions and before the ECS. Create/Play/Host shell navigation becomes testable in S02.4; S02.6 tests the real editor canvas without claiming a saved world. Native world/command testing is an executable harness (S03–S06), not a fake GUI. S09.16 introduces **real Creator map editing** only after room topology and persistence exist. S08.6 demonstrates real connected play after S07.9. No mock world counts as a gameplay checkpoint.
+**First platform launch: S01.7**. **Full Create/Play/Host shell: S02.3**, before the ECS. Create/Play/Host shell navigation becomes testable in S02.4; S02.6 tests the real editor canvas without claiming a saved world. Native world/command testing is an executable harness (S03–S06), not a fake GUI. S09.16 introduces **real Creator map editing** only after room topology and persistence exist. S08.6 demonstrates real connected play after S07.9. No mock world counts as a gameplay checkpoint.
 
 ## Evidence levels and first playable gate
 
@@ -21,7 +21,7 @@
 | Sprint | Focus | Verified | Depends on | Status |
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
-| [S01](#s01) | Architecture gates | **0/6** | S00 + owner ADRs | PLANNED |
+| [S01](#s01) | Architecture gates and native launch smoke | **0/7** | S00 + owner ADRs | PLANNED |
 | [S02](#s02) | Launchable application shell and shared UI | **0/9** | S01 UI/platform choice | PLANNED |
 | [S03](#s03) | Native ECS | **0/9** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/15** | S03 | PLANNED |
@@ -71,6 +71,7 @@
 | **S01.4 Wire ABI** | Freeze versioned SDK/proto rules | TODO | — |
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | TODO | — |
 | **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | TODO | — |
+| **S01.7 Platform launch smoke test** | Build and launch a minimal real native MudMaker app window on the selected platform; verify packaged startup and shutdown, with no fake engine state | TODO | — |
 
 ## S02 — Editor and shared UI foundation
 
