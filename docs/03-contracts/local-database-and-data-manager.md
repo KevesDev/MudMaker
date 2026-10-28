@@ -1,6 +1,6 @@
 # Local database lifecycle, storage API, recovery and Creator Data Manager
 
-**Status:** REQUIRED product/UX/security constraints; PROPOSED engineering design until S01 persistence ADR and implementation audit. **No database functionality is claimed implemented.** This specification complements [state persistence](../02-architecture/state-persistence.md), [ECS authority](../02-architecture/ecs-core.md), [hosting](../04-features/hosting-and-admin.md), and [scripting state](scripting-v1/04-references-and-state.md).
+**Status:** REQUIRED product/UX/security constraints; binding embedded storage and data management contract; actual engine/transaction implementation pending. **No database functionality is claimed implemented.** This specification complements [state persistence](../02-architecture/state-persistence.md), [ECS authority](../02-architecture/ecs-core.md), [hosting](../04-features/hosting-and-admin.md), and [scripting state](scripting-v1/04-references-and-state.md).
 
 ## 1. Owner experience and non-negotiables
 
