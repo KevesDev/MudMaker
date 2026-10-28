@@ -1,6 +1,6 @@
 # Prompt/status HUD and authoritative world mapping
 
-**Status:** REQUIRED product behavior; proposed versioned wire/schema contracts awaiting S01/S08 ABI decision. **No functionality implemented.** Applies to Creator, Host and standalone Player Client (native and unrelated MUD profiles). References: [Evennia Adding a Command Prompt](https://www.evennia.com/docs/latest/Howtos/Howto-Command-Prompt.html), [Evennia Basic Map](https://www.evennia.com/docs/latest/Contribs/Contrib-Ingame-Map-Display.html), [Evennia XYZGrid](https://www.evennia.com/docs/latest/Contribs/Contrib-XYZGrid.html), [Evennia Health Bar](https://www.evennia.com/docs/latest/Contribs/Contrib-Health-Bar.html). Cross-reference [Player Client](ui-ux/05-player-client-workspace.md), [personal mapper](ui-ux/07-mapper-and-automation.md), [spatial ECS](../02-architecture/spatial-containment-transit.md), [S09C](../05-sprints/specs/S09C.md).
+**Status:** REQUIRED product behavior; proposed versioned wire/schema contracts awaiting S01/S07 ABI decision. **No functionality implemented.** Applies to Creator, Host and standalone Player Client (native and unrelated MUD profiles). References: [Evennia Adding a Command Prompt](https://www.evennia.com/docs/latest/Howtos/Howto-Command-Prompt.html), [Evennia Basic Map](https://www.evennia.com/docs/latest/Contribs/Contrib-Ingame-Map-Display.html), [Evennia XYZGrid](https://www.evennia.com/docs/latest/Contribs/Contrib-XYZGrid.html), [Evennia Health Bar](https://www.evennia.com/docs/latest/Contribs/Contrib-Health-Bar.html). Cross-reference [Player Client](ui-ux/05-player-client-workspace.md), [personal mapper](ui-ux/07-mapper-and-automation.md), [spatial ECS](../02-architecture/spatial-containment-transit.md), [S08](../05-sprints/specs/S08.md).
 
 ## 1. Terminology and ownership
 
@@ -10,13 +10,13 @@ Evennia can send a distinct prompt with `msg(prompt=...)`, optionally with text,
 
 ## 2. Creator world mapping foundation
 
-Every world has canonical versioned region/room/exit topology from S04 and authored cell/coordinate/layer hints from S09. No UI-specific parallel topology database. Stable room/region/exit keys, directional and custom exits, one-way links, locked/conditional exits, portals, elevation, moving parent interiors and region boundaries survive save/restore and published revisions. The map renderer queries an authoritative room graph through bounded, scoped APIs; it does not infer structure by parsing room description text. Map symbols, color, label, zone/region layers, category and visibility rules have typed, versioned metadata. Graph-based rooms without coordinates must render as connection diagrams/list; visual cell grid is optional, not a forced world layout.
+Every world has canonical versioned region/room/exit topology from S05 and authored cell/coordinate/layer hints from S02. No UI-specific parallel topology database. Stable room/region/exit keys, directional and custom exits, one-way links, locked/conditional exits, portals, elevation, moving parent interiors and region boundaries survive save/restore and published revisions. The map renderer queries an authoritative room graph through bounded, scoped APIs; it does not infer structure by parsing room description text. Map symbols, color, label, zone/region layers, category and visibility rules have typed, versioned metadata. Graph-based rooms without coordinates must render as connection diagrams/list; visual cell grid is optional, not a forced world layout.
 
 Creator map editor provides: drag/add room and exit; assign location/area, icon/name/layer and map position hints; mark whether a field is discoverable; preview as selected player/role; publish validated map/projection changes. A Host can configure world defaults for mapping (enabled, disclosed fields, discovery policy, public region overview, visible exits, player annotation policy) and prompt presets. Changes are versioned and validated against topology and rights; preview does not leak hidden exits.
 
 ## 3. Server projection API and security
 
-At authenticated join/reconnect and after relevant committed movement, visibility, stat, inventory, quest, weather, or transit changes, server computes **per-observer** projections from committed ECS state; avoid client access to raw database. Proposed typed capabilities, to freeze in S08 protocol ADR:
+At authenticated join/reconnect and after relevant committed movement, visibility, stat, inventory, quest, weather, or transit changes, server computes **per-observer** projections from committed ECS state; avoid client access to raw database. Proposed typed capabilities, to freeze in S07 protocol ADR:
 - `StatusSchema`: widget/key descriptors, stable IDs, labels, units, ranges, format, priority, accessibility text, optional icons, visibility grants; creator-defined extensible numeric/text/enum fields.
 - `StatusSnapshot` and `StatusDelta`: entity/player/world generation, monotonic revision, scoped status values and explicitly removed/hidden fields; field-level permissions and lifecycle.
 - `LocationSnapshot` and `LocationDelta`: stable visible room/region identity, display label, allowed exit links, direction/label, state if disclosed, optional verified coordinate hints/parent vehicle; map reveal/forget behavior.
@@ -43,15 +43,15 @@ Mini map displays current room, discovered/authorized nearby nodes, topology lin
 
 ## 7. Testing gates and dependencies
 
-- **S03** versioned prompt/map metadata persisted with asset revisions and searchable schema.
-- **S04** complete room/exit topology and observer visibility; prerequisite for authoritative map projections.
-- **S05** movement/status commands publish committed observer events; text prompt fallback is a real output path.
-- **S08** authenticated versioned status/location snapshots and deltas, safe output, reconnect synchronization; cannot claim E2 solely from fabricated UI state.
-- **S09** Creator map metadata/preview and reusable theme/status widgets.
-- **S09C** basic location/exits and prompt visibility in early connected play, then customizable pinned bar/structured mini map after first playable.
-- **S10** no-code Creator Prompt & Status editor and world map presentation settings.
-- **S11** creator-defined typed C# field/status bindings via same validated ECS API; not direct DB reads.
-- **S13** publishing and hosting compatible player-presentation assets; restore and reconnect preserve consistency.
-- **S14** permission leak, stale delta/reconnect, large maps, moving interiors, external telnet fallback, mobile and screen-reader audits.
+- **S04** versioned prompt/map metadata persisted with asset revisions and searchable schema.
+- **S05** complete room/exit topology and observer visibility; prerequisite for authoritative map projections.
+- **S06** movement/status commands publish committed observer events; text prompt fallback is a real output path.
+- **S07** authenticated versioned status/location snapshots and deltas, safe output, reconnect synchronization; cannot claim E2 solely from fabricated UI state.
+- **S02** Creator map metadata/preview and reusable theme/status widgets.
+- **S08** basic location/exits and prompt visibility in early connected play, then customizable pinned bar/structured mini map after first playable.
+- **S09** no-code Creator Prompt & Status editor and world map presentation settings.
+- **S13** creator-defined typed C# field/status bindings via same validated ECS API; not direct DB reads.
+- **S17** publishing and hosting compatible player-presentation assets; restore and reconnect preserve consistency.
+- **S18** permission leak, stale delta/reconnect, large maps, moving interiors, external telnet fallback, mobile and screen-reader audits.
 
 **Concrete user acceptance scenarios:** (1) create two rooms with exits, connect and move, observe location/exits and mini map update; (2) set health/mana then damage/heal via authorized game action, bar changes without duplicating transcript lines; (3) owner customizes a preset and a player customizes their own layout without altering permissions; (4) secret door only appears to approved observer; (5) teleport/board train/dock/undock and reconnect show accurate positions; (6) connect to unrelated plain-text MUD and degrade gracefully; (7) load 10k-room test fixture without global map download; (8) restart host and reconnect without stale prompt or map data. Each handoff has one Builder, separate scoped Auditor and actual focused evidence.

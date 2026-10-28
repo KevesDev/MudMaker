@@ -30,4 +30,4 @@ Function locals last one invocation. C# worker object fields or statics are **no
 ## Design/runtime rule
 Host stops running game → local edit/validate/compile → publish immutable release → start game → server loads only host-authored DLL/graph assets. No hot reload required. Player clients submit authenticated gameplay commands **never script source/assemblies**. See [publish/run](scripting-v1/09-build-publish-restart-run.md).
 
-**Implementation status:** source contracts exist; real C# + Protobuf compilation, native dispatch and restart tests are planned in [S11 phases](../05-sprints/specs/S11.md) and [S13 phases](../05-sprints/specs/S13.md). Do not mark runnable before tests.
+**Implementation status:** source contracts exist; real C# + Protobuf compilation, native dispatch and restart tests are planned in [S13 phases](../05-sprints/specs/S13.md) and [S17 phases](../05-sprints/specs/S17.md). Do not mark runnable before tests.
