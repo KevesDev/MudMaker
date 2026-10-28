@@ -1,6 +1,6 @@
 # Scripting Runtime Architecture | Code + Graph + One ECS Authority
 
-**Status:** REQUIRED dual authoring model and user-defined scripts; PROPOSED typed runtime contract. **Owner:** Script Asset Registry, Graph Compiler, Script Host, Hook Registry, shared ECS Capability Gateway. **Dependencies:** ecs-core, single mutation owner, events/time, quest hooks, persistence, host/deployment/security.
+**Status:** selected v1 code/graph contract; detailed API implemented only as source declarations, not a running engine. **Owner:** Script Asset Registry, Graph Compiler, Script Host, Hook Registry, shared ECS Capability Gateway. **Dependencies:** ecs-core, single mutation owner, events/time, quest hooks, persistence, host/deployment/security.
 
 **Research and safety gate:** [Unity vs Godot, C++/C# research](../08-research/engine-and-scripting-architecture-comparison.md); [native/script memory rules](script-memory-ownership-and-safety.md); [language/shortcuts](script-languages-shortcuts-and-symbols.md). **Editor controls:** [Scripting UX](../04-features/scripting/INDEX.md).
 
@@ -27,7 +27,7 @@
 
 ## Execution model, determinism and performance
 - World ECS remains authoritative. Code and graph handlers run in ordered, bounded invocation contexts; exact worker/thread/single-writer scheduling decided by ADR.
-- **Do not execute untrusted long-running C# inside world writer.** A candidate model: engine passes immutable snapshot/input to supervised isolated code worker (or graph runtime), receives serialized typed effect plan, revalidates against current world revision, commits atomically or rejects stale/precondition changes.
+- **Do not execute untrusted long-running C# inside world writer.** Selected model: engine passes immutable snapshot/input to supervised isolated code worker (or graph runtime), receives serialized typed effect plan, revalidates against current world revision, commits atomically or rejects stale/precondition changes.
 - Inter-process cost must be benchmarked. Avoid one blocking network/IPC call per entity per tick; schedule/batch hooks, run pure graph logic in engine if safe, index subscriptions and only evaluate subscribed entities.
 - Async is a durable workflow (pending event/dialogue/world-system task), not fire-and-forget Task/Thread/Timer that disappears after restart. World-clock time vs wall-clock time documented.
 - Configurable CPU, memory, instruction/event budget, query/result size and recursion limits; no embedded unexplained magic numbers; metrics emitted per hook and instance.
@@ -51,7 +51,10 @@ An editable draft may have compile errors; published release cannot. No "script 
 
 ## Deployment/recovery/operational rules
 Every published release includes verified script/graph manifests, checksums, API version and dependency allowlist. Host performs preflight compile/security checks, starts supervised workers and records readiness. Crash/timeout doesn't take down other tenants; failed hooks use specified fail-closed behavior and alert admin. Restore resumes durable event/question/dialogue/reward state without repeating grants; world/worker configs allow documented resource limits.
-**OPEN before implementation:** C# vs custom DSL, Java-core vs .NET-core vs worker, ABI/IPC, sandbox, execution planner, graph IR, versions/hot reload, tenant isolation and deterministic effect order.
+**Implementation gates:** C#14/.NET10/Roslyn worker, Protobuf v1, typed code/graph effect plans and stop→publish→restart are DECIDED in [scripting v1](scripting-v1/INDEX.md). S11 implements/tests compiler, wire, hook dispatch, persistent ECS effects and graph parity; S13 implements/tests host startup and recovery. Native ECS storage/database and platform hardening need measured verification; do not reopen settled scripting API for routine tasks.
 
 ## Current implementation authority
 The v1 [indexed scripting SDK contract](scripting-v1/INDEX.md), normative C# declarations and protobuf **supersede SDK method/field-name proposals on this page**. Game hosts compile/publish their own local scripts; other players connect and send gameplay commands, never scripts. Persistent script-approved component-field overrides and scoped state slots are now selected capabilities; see [v1 reference/state contract](scripting-v1/04-references-and-state.md).
+
+## Editor style owner
+All graph canvases use [ThemeManager](editor-theme-manager.md) and its dark continuous graph-paper grid. No local color, typography or canvas-dot styling. This is a decided visual rule, not a separate theme system.

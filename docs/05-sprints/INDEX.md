@@ -1,7 +1,7 @@
 # Sprint Index — Dependency-Ordered Recovery Roadmap
 
 **Status:** PROPOSED plan, NOT a declaration of implementation. **Owner:** lead architect. Last reviewed: 2026-10-28.
-Agent kickoff reads [SPRINT-TRACKING](../SPRINT-TRACKING.md) and the exact sprint spec, not every TDD. [CLAUDE.md](../../CLAUDE.md) assigns Lead/Builder/Auditor; author individual specs from [template](specs/SPRINT-SPEC-TEMPLATE.md), and log rationale in [SPRINT-HISTORY](../SPRINT-HISTORY.md).
+Agent kickoff reads [SPRINT-TRACKING](../SPRINT-TRACKING.md), **one active [checkable phase](phases/INDEX.md)** and its exact sprint spec, not every TDD. [CLAUDE.md](../../CLAUDE.md) assigns Lead/Builder/Auditor; author individual specs from [template](specs/SPRINT-SPEC-TEMPLATE.md), and log rationale in [SPRINT-HISTORY](../SPRINT-HISTORY.md).
 
 All sprints are *complete owned vertical/architectural capabilities* with real test proof. Do not use "MVP" as permission to deliver stubs. Parallel work is permitted only when owner contracts and prerequisites are stable.
 
@@ -28,6 +28,11 @@ Parallel gates: 05 -> 06 World systems; 05 + 03 -> 08 Network/auth; 08 + 04 -> 0
 | S12Q | Full visual quest editor: objective palette, chains, eight dialogue stages, rewards, party/instances | S06Q, S08–S11 | Creator authors all quest families without code and tests real sessions |
 | S13 | One-click and headless hosting, deployment, ops, backup/rollback | S03, S08, S11–S12, S12Q | GUI/CLI parity and crash restore incl. quests |
 | S14 | Full cross-platform, accessibility, security, performance and release audit | S02–S13, S12Q | Named measurable release thresholds |
+
+## Small-phase delivery (selected execution policy)
+The [phase tracker](phases/INDEX.md) splits all 17 sprints into **74 independently checkable phases**. **One Builder, one independent scoped Auditor per phase**, with a real test/demo and recorded evidence before a checkbox is checked. Main tracker keeps progress 0/N. Each phase is limited to one demonstrable deliverable slice; later phases are not marked done merely because classes or diagrams exist. User-testable milestones happen early and repeatedly. Full-suite Auditor only at true sprint close if Lead explicitly authorizes; no re-running entire suite on each phase.
+
+**S09** creates central user-customizable ThemeManager and dark continuous **graph-paper** canvas. **S11** compiles C# and Protobuf, validates hooks, executes native effects, persists registered overrides and tests Graph/C# parity. **S13** verifies real GUI/headless boot, script preflight, restart and recovery. All selected scripting decisions live at [Scripting v1](../03-contracts/scripting-v1/INDEX.md); no hot reload requirement.
 
 ## Sprint gating rules
 - Start only when predecessor exit evidence exists or lead documents a safe parallel contract, with its regression coverage.

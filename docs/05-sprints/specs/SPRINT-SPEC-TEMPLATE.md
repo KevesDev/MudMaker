@@ -5,6 +5,11 @@
 **Approved TDDs:** <exact authoritative paths and revisions; avoid broad index references>
 **ADRs:** <approved IDs; list OPEN blockers>
 **Predecessors:** <IDs + exact verified evidence links>
+**Phase tracker:** <docs/05-sprints/phases/SXX.md, exact phase ID>
+**Assigned Builder:** <one Builder for this phase>
+**Assigned Auditor:** <one *different* scoped Auditor for this phase>
+**User-testable milestone:** <concrete click/tap/runnable-harness proof>
+**Phase checkbox/evidence:** <pending until independent PASS>
 **Implementer write scope:** <exact paths/modules>
 **Auditor read scope:** <spec, TDDs, relevant changed files>
 **Out of scope:** <truly separate dependent capabilities; never deferred parts of this feature>
@@ -16,6 +21,7 @@ Explain the independently useful, fully functional capability and realistic work
 State owning subsystem and ECS mutation boundary. Include data types, IDs, query and event contracts, state transitions, versioning, memory/lifecycle limits, persistence and security/permission boundaries. Explicitly forbid any duplicate adjacent owner.
 
 ## Deliverables
+For each phase, list one independently finishable feature slice, an exact output artifact, one real user-visible demo (or executable test harness before UI exists), the narrowly scoped Builder implementation/tests, and the independent Auditor's negative-path oracle. No giant all-sprint code dump or checkbox promotion from documentation alone.
 List exact implemented behavior/API/UI, not just classes or files. Define authoring -> validation -> runtime -> persistence -> recovery behavior where applicable.
 
 ## Acceptance criteria (independently testable)
@@ -40,7 +46,7 @@ Include all necessary custom interaction narration / observers if a feature emit
 Numbered exact click/tap/keyboard actions, setup, expected appearance and behavior; verify on actual target OS/device. Prefer before Auditor to avoid expensive repeated audits on visually bad work. If no UI, write NOT APPLICABLE.
 
 ## Risks, escalation and sign-off
-Builder must stop on missing ADR/owner/interface or incomplete prerequisite; request spec correction rather than guess. Auditor FAIL blocks every real defect including small ones; remediations stay same sprint. Re-audit repair delta only. Lead commits/pushes after verified PASS and any UX approval, then updates SPRINT-TRACKING and appends one history note.
+Phase policy: **one Builder + one scoped independent Auditor per checkable phase**. User sees small frequent verified milestones; Lead updates that exact phase checkbox/evidence and main 0/N progress only after PASS. Builder must stop on missing ADR/owner/interface or incomplete prerequisite; request spec correction rather than guess. Auditor FAIL blocks every real defect including small ones; remediations stay same sprint. Re-audit repair delta only. Lead commits/pushes after verified PASS and any UX approval, then updates SPRINT-TRACKING and appends one history note.
 
 ## Final evidence (fill after build)
 Builder report: <path>; Auditor report: <path>; commit/PR: <link>; tests: <counts, commands>; metrics: <actual>; manual UX: <result>; remaining blockers: NONE or explicit.

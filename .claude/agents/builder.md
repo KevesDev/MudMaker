@@ -39,3 +39,6 @@ Do not commit or push; Lead owns git sign-off. Never discard/overwrite unrelated
 
 ## Stop/exit report
 Report files touched, exact acceptance evidence, scoped test names/counts, measured performance (when applicable), stakeholder UX checklist, remaining issues and explicit architectural questions. Do not self-declare sprint verified.
+
+## Checkable phase assignment rule
+Build ONLY the Lead-assigned [phase ID](../../docs/05-sprints/phases/INDEX.md) and its named deliverable. Provide a user-testable demo/harness, exact targeted tests and concise logs; do not implement unrelated future phases or declare an incomplete phase done. Follow [ThemeManager](../../docs/03-contracts/editor-theme-manager.md) for every UI color/font/graph-paper line; do not hardcode local styles. Source contracts for S11 are selected C#14/.NET10/Protobuf, never speculative language options. Do not run a whole-project suite per phase.

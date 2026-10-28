@@ -1,6 +1,6 @@
 # 06 | Script Syntax, Variables and Engine References — Creator Experience
 
-**Status:** REQUIRED feature categories, PROPOSED UI details; language shortcuts OPEN. **Owner:** code editor + Script SDK / Type Registry. **Authoritative semantics:** [Script Syntax and References Contract](../../03-contracts/scripting-language-and-references.md).
+**Status:** C#14 syntax, SDK reference and persistence semantics DECIDED; UI implementation pending. **Owner:** code editor + Script SDK / Type Registry. **Authoritative semantics:** [C# and references contract](../../03-contracts/scripting-language-and-references.md), [exact typed SDK](../../03-contracts/scripting-v1/02-code-sdk.md).
 
 ## UI placements
 Code Editor **Insert** dropdown: **Entity Reference**, **Asset**, **Component**, **Quest**, **Room**, **Event**, **World System**, **Script Variable**, **Message Variable**. Search modal with filters, preview, typed stable reference and Insert button. Tooltip shows result shape and ownership, not raw runtime pointer.
@@ -9,9 +9,9 @@ Script **Bindings** inspector: attached object(s), hook type dropdown, before/af
 **Docs** tab lists typed engine APIs by category (Entities, Components, Locations/Exits, Quests, World Events, Messages, Players/Permissions, Time/RNG, Assets). Search, example, insert code, show expected result, warnings and allowed capabilities.
 Code Editor hover over reference/SDK method shows concise description, parameters and return type, available only for declared scope, and link "View examples" to expandable popover (no walls of inline text).
 
-## Proposed shorthand interactions (not compiler syntax commitments)
-- Typing `@` in a **reference insertion/search field** may show contextual entity picker; in raw C# code `@` remains normal C# syntax.
-- Typing `#` in message/quest graph builder may open registered event/component/quest picker; in C# code `#` remains preprocessor syntax.
+## Selected editor-only shortcuts (never C# syntax rewriting)
+- Typing `@` in a **reference insertion/search field** shows contextual entity picker; in raw C# code `@` remains normal C# syntax.
+- Typing `#` in message/quest graph builder opens registered event/component/quest picker; in C# code `#` remains preprocessor syntax.
 - Typing `{` inside dialogue/message template opens typed variable list (actor, target, quest, source room, train, condition-approved fields); closes with `}`. The content is escaped data, not code execution.
 - Typing `.` after a typed SDK reference shows member completion, docs tooltip and risk/permission warning.
 - All shortcuts have toolbar/button/picker equivalents; avoid hidden syntax-only essential features, especially on tablets.
@@ -25,7 +25,7 @@ Code Editor hover over reference/SDK method shows concise description, parameter
 **World event:** Quest turn-in > After or Replace -> Start/Stop World Event dropdown -> select existing event asset -> configure scope, lifecycle behavior and whether normal quest completion/reward proceeds. Debug trace shows committed action and result; failed hook never displays fake success.
 
 ## Visual language
-Clean modern editor: left asset/variables rail, central syntax-highlighted code, right inspector/context, bottom diagnostics/trace. Compact toolbar (New Script, Save, Validate, Test, Attach, Publish; advanced actions in overflow). Tooltips on icons, helper text in popovers rather than verbose panels, discoverable disabled-action reasons. Search and keyboard shortcuts with focus protection; touch control parity. Exact colors/layout/token system is in [UI design system](04-ui-components-and-tooltips.md) when approved.
+Clean modern editor: left asset/variables rail, central syntax-highlighted code, right inspector/context, bottom diagnostics/trace. Compact toolbar (New Script, Save, Validate, Test, Attach, Publish; advanced actions in overflow). Tooltips on icons, helper text in popovers rather than verbose panels, discoverable disabled-action reasons. Search and keyboard shortcuts with focus protection; touch control parity. All colors, typography, spacing, interaction sizes and graph-paper grid tokens come from [central ThemeManager](../../03-contracts/editor-theme-manager.md); no arbitrary feature-local styling.
 
 ## Acceptance
 Typed ref chosen by picker survives project save, rename/version change triggers correct dependency warning; old/deleted runtime ref cannot cause native crash; two worlds cannot share accidental script state; exposed persistent variable retains value after actual restart; hidden NPC and secret variable not available to unprivileged script; character prefix Unicode/case handling matches creator setting; `@/#/{}` in C# strings/comments aren't silently modified; curly braces in user text escaped safely; tablet user can invoke all pickers without typing special symbols; script/graph equivalence under same ECS state.

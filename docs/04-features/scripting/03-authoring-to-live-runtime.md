@@ -1,9 +1,9 @@
 # 03 | From Code or Graph to Live ECS Gameplay
 
-**Status:** REQUIRED connected creator workflows, proposed API and deployment mechanics. **Owner:** Asset Registry, Hook Registry, Script/Graph Host, ECS Executor and Hosting Supervisor.
+**Status:** selected v1 code/graph hosting workflow; implementation and testing pending. **Owner:** Asset Registry, Hook Registry, Script/Graph Host, ECS Executor and Hosting Supervisor.
 
 ## Single authoritative pipeline
-Script or Graph draft -> Save -> Validate schema/API/capabilities -> Compile (C# or DSL) / Graph typed plan -> Attach versioned binding -> Test inside isolated *real* ECS world -> Publish immutable release -> Host/update running world -> Runtime receives committed event -> Resolves binding and permissions -> Worker/graph evaluates -> Returns typed effect proposal -> ECS executor validates and commits -> Narration per observer -> Event Trace, audit and persistence.
+Script or Graph draft -> Save -> Validate schema/API/capabilities -> Compile host-local C# 14 with Roslyn / Graph typed plan -> Attach versioned binding -> Test inside isolated *real* ECS world -> Publish immutable release -> Host/update running world -> Runtime receives committed event -> Resolves binding and permissions -> Worker/graph evaluates -> Returns typed effect proposal -> ECS executor validates and commits -> Narration per observer -> Event Trace, audit and persistence.
 Saving source is **not** compiling. Compiling is **not** testing. Testing is **not** publishing. Publishing is **not** automatically changing a live world. UI states must reflect each distinct step and failure.
 
 ## Where attachments happen
@@ -33,3 +33,6 @@ Tauri is optional desktop packaging. Windows/macOS/Linux desktop app may control
 
 ## End-to-end visual diagrams
 [Read three editable Mermaid diagrams: code/graph authoring to hosting, live gameplay event sequence, and exposing code as graph nodes](00-end-to-end-lifecycle.md). Use [Code Scripting](code/INDEX.md) or [Visual Scripting](visual/INDEX.md) for precise per-screen actions.
+
+## Selected publish and restart sequence
+Owner stops game; edits locally authored C# and graph assets; Roslyn compiles C# 14 and typed graph compiler validates IR; manifest validates exact [hook registry](../../contracts/scripting/v1/hooks.v1.json) and [effect registry](../../contracts/scripting/v1/effects.v1.json); owner publishes immutable version with checksums; GUI/headless supervisor starts selected release and isolated worker, restores authoritative world and admits players only after readiness. **No live hot reload is required.** Remote clients never send scripts. [Runnable-shape source and sequence](../../03-contracts/scripting-v1/09-build-publish-restart-run.md). Required [S11](../../05-sprints/phases/S11.md) and [S13](../../05-sprints/phases/S13.md) deliverables track actual implementation.

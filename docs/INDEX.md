@@ -77,3 +77,8 @@
 
 ## Scripting deliverables / verified status
 - [Concrete scripting v1 deliverables and evidence gates](03-contracts/scripting-v1/DELIVERABLES.md) — actual file paths and honest source-versus-runtime status.
+
+## Current editor appearance and sprint execution authority
+- [Central ThemeManager and dark graph-paper canvas](03-contracts/editor-theme-manager.md) — **DECIDED visual contract**, user-editable themes, one source for font/color/spacing and grid tokens. No dotted node canvas or per-screen styles.
+- [74 finishable phase deliverables across 17 sprints](05-sprints/phases/INDEX.md) and [current 0/N tracker](SPRINT-TRACKING.md) — **one Builder + one independent scoped Auditor per phase**, actual user-testable milestone and evidence before checkoff.
+- [S09 UI/theme deliverables](05-sprints/phases/S09.md); [S11 C#/Proto/dispatch deliverables](05-sprints/phases/S11.md); [S13 startup/recovery deliverables](05-sprints/phases/S13.md).

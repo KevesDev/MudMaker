@@ -1,6 +1,6 @@
 # Memory Ownership and Security at C++/C# / Graph Boundary
 
-**Status:** mandatory safety requirements, implementation model PROPOSED. **Owner:** C++ ECS runtime, Script Host, IPC/ABI and Security. **Supports:** multiworld multiplayer + untrusted creator code.
+**Status:** v1 memory/worker isolation/typed handle contract DECIDED; OS isolation profiles and runtime fault-recovery proof pending. **Owner:** C++ ECS runtime, Script Host, IPC/ABI and Security. **Supports:** multiworld multiplayer + untrusted creator code.
 
 ## Three separate safety goals
 1. **Memory correctness:** C++ use-after-free, double-free, stale entity identity, races, overrun and invalid lifetime.
@@ -53,3 +53,6 @@ Use versioned typed messages (schema-validated) with worldId, script/graph asset
 
 ## Approval gates
 Engine C++ adoption, ECS library, writer/threading model, code scripting language, worker OS isolation, IPC schema, allocations and sanitizer/toolchain matrix, hot reload and resource budgets. A sub-agent cannot guess raw pointer lifetimes or pretend managed GC is a security sandbox.
+
+## Selected host-local threat model
+Only game **hosts** compile and publish their local scripts. Players connect to hosted games and transmit validated gameplay actions/choices, never scripts, modules or graph execution plans. The separate worker is used for bounded fault containment and engine integrity; the script cannot mutate arbitrary native memory or direct DB state. Registered writable ECS fields and persistent state slots **are allowed** through the authoritative typed effects defined in [04 references/state](scripting-v1/04-references-and-state.md). Detailed proof lives in [S11](../05-sprints/phases/S11.md) and [S13](../05-sprints/phases/S13.md).

@@ -1,13 +1,13 @@
 # Sprint Specifications, Deliverables and Acceptance
 
-**Status:** PROPOSED. Read [dependencies](INDEX.md), [agent policy](../06-quality/agent-policy.md), [test matrix](../06-quality/test-matrix.md). Do not treat any stage as implemented because its requirements are written.
+**Status:** PLAN / NOT IMPLEMENTED. Current small checkable sprint phases and their actual deliverables: [phase tracker](phases/INDEX.md). Each of 74 phases gets one Builder, one scoped independent Auditor, user-testable evidence, and a checked box only after verified PASS. Read [dependencies](INDEX.md), [agent policy](../06-quality/agent-policy.md), [test matrix](../06-quality/test-matrix.md). Do not treat any stage as implemented because its requirements are written.
 
 ## S00 — Documentation and baseline
 **Deliver:** accurate repo inventory; read-only audit of surviving Spring starter and historic deletion; synced source-controlled docs/index; product stories and open decisions; no restored discarded code.
 **Accept:** links resolve, version/status clear, no document asserts an unimplemented feature works, owner confirms goals.
 
 ## S01 — Architecture and technology decisions
-**Deliver:** approved ADRs for ECS representation, C++ vs managed engine comparison with measured criteria, threading/single-writer design, component/schema storage, persistence, creator code language (C# vs DSL), compiler/interop/sandbox, memory ownership, Tauri/web/tablet packaging, protocol and hosting targets. Interface diagrams, data schemas, security evaluation and performance budgets.
+**Deliver:** approved ADRs for ECS representation, C++ vs managed engine comparison with measured criteria, threading/single-writer design, component/schema storage, persistence, pinned C#14/.NET10 compiler and worker protocol implementation validation, sandbox, memory ownership, Tauri/web/tablet packaging, protocol and hosting targets. Interface diagrams, data schemas, security evaluation and performance budgets.
 **Accept:** no relevant OPEN block for S02; competing technology options evaluated with representative measured prototypes where necessary; explicit interface owners and engine-dependency rules. Do not choose from habit.
 
 ## S02 — ECS runtime
@@ -42,18 +42,25 @@
 **Deliver:** auth/session ownership, protocol envelopes, versioning and authorized event projections, reconnect/resume behavior, channel backpressure and structured network failure handling.
 **Accept:** two real network clients, denied cross-world/unauthorized requests, no duplicate mutation on reconnect, correct filtering and bounded queues under load.
 
-## S09 — Usable cross-device world map editor
-**Deliver:** responsive shell, centralized physical Input Manager, grid rendering/layout and icons/colors, cell inspector, searchable entity palette, room create/remove, exit/lock editor, region painting, touch navigation, undo/redo, validated drafts.
-**Accept:** user can produce connected rooms and nested train interior maps using UI only; test on desktop and tablet viewport/touch; full project roundtrip and invalid-state dialogs.
+## S09 — Editor shell, centralized ThemeManager, graph-paper canvas and map
+
+**Authority:** [ThemeManager](../03-contracts/editor-theme-manager.md) and [six checkable phases](phases/S09.md).
+
+**Deliverable phases:** S09.1 centralized typed semantic theme tokens and dark default; S09.2 creator-editable, import/export, preview/cancel and persisted **user themes**; S09.3 shared subtle dark graph-paper minor/major square **lines**, no dots, stable pan/zoom/snap; S09.4 cross-device editor shell and input manager; S09.5 usable saved/undoable room map, regions and exits; S09.6 real creator visual walkthrough and responsive performance/accessibility evidence. All fonts, colors, spacing, node styles and canvas grid appearance must resolve from **one** ThemeManager, not from independent feature docs/components.
+
+**Accept:** each phase has real user-checkable demonstration, focused test, one Builder, one scoped Auditor PASS. Actual theme import/restart and graph-paper rendering are verified before S11 reuses the view.
 
 ## S10 — Complete component/Blueprint authoring UI
 **Deliver:** custom schema forms, reusable graph/composition, template library/search, typed editor, child slots, instance overrides, asset dependency view, compile/preview validation.
 **Accept:** train Blueprint with cars/doors created through visual UI; no raw code/JSON for required workflow; migration/version impact visible; reopen preserves assets.
 
 ## S11 — Complete graph behavior and script integration
-**Architecture gate:** use [Scripting Runtime/Capabilities](../03-contracts/scripting-runtime-and-capabilities.md), [Memory/Interop](../03-contracts/script-memory-ownership-and-safety.md), [Language/Syntax](../03-contracts/script-languages-shortcuts-and-symbols.md), and [Scripting UX](../04-features/scripting/INDEX.md). C++ or C# unapproved choices block implementation. No direct native pointer or runtime partial-trust assumption.
-**Deliver:** graph validation, typed ports, event/flow/action/query nodes, interpreter or compiled IR per ADR, debug trace, typed code language compiler/diagnostics, code/graph asset and node exposure, versioned C++/script bridge, OS-isolated script gateway/sandbox with audited memory/time limits, validated variable persistence and hot reload with rollback.
-**Accept:** graph and script equivalent permissions/world effects, forged/stale handles rejected, script cannot access foreign world/native memory/file/process, loop/memory limits enforced, compiler/UI tests, deterministic replay, invalid type blocked at publish and live release pinned. Exact scripting language remains OPEN until ADR.
+
+**Architecture decisions FIXED:** Standard C# 14/.NET 10/Roslyn, versioned Protobuf, host-local published scripts, isolated worker, authoritative native ECS mutations, typed Graph IR/HookDecision/GameEffect, persistent registered field overrides and no required hot reload. See [v1 contract](../03-contracts/scripting-v1/INDEX.md), [actual source/publish/restart](../03-contracts/scripting-v1/09-build-publish-restart-run.md) and [9 individually checkable phases](phases/S11.md). No "if C# chosen" and no alternate language/worker decision.
+
+**Concrete phased deliverables:** S11.1 compile C# SDK and real hooks with Roslyn source diagnostics; S11.2 generate C++/C# Protobuf messages, compile both and roundtrip malformed/valid variants; S11.3 register every hook with exact event/phase/result/owner/capability and real binding validation; S11.4 native ECS hook execution, effect validation/atomic transaction/outbox and per-observer projection; S11.5 protected local worker, resource budgets and failure reporting; S11.6 persistent writable engine-field and state-slot overrides, schema migration and restart; S11.7 typed graph compiler, callable C# nodes, code/graph parity using S09 ThemeManager **graph-paper line canvas**; S11.8 stop → edit/compile → publish immutable host release → start with preflight; S11.9 real two-client Midnight Express, negative tests and performance evidence.
+
+**Accept:** named tests + creator demo + independent scoped Auditor PASS **for each phase**, then full integrated real world/worker result, identical graph/code semantics, no cross-world/stale refs, invalid code fails publish, no forged client code, no fake success narration or duplicate rewards. No claim of completion from static C# source alone.
 
 ## S12 — Visual world-system authoring
 **Deliver:** system palette, weather editor, NPC/resource spawner region assignments, schedule and caps forms, interactive object trigger editor, transit/route editor, simulation preview and inspections.
@@ -64,8 +71,12 @@
 **Accept:** creator builds every category in [quest UX checklist](../04-features/quests/07-visual-authoring-and-validation.md) including Bob/Joe and [UXQ test matrix](../04-features/quests/08-quest-verification-matrix.md), saves/reopens/hosts and tests real two-player mixed-phase behavior on desktop/tablet. No hardcoded Bob/Joe-only shortcut.
 
 ## S13 — Hosting and operations
-**Deliver:** same versioned world artifact loaded by GUI and headless CLI; preflight, logging, diagnostics, health, join details, session administration, consistent backup/restore and rollback, graceful stop.
-**Accept:** real process/service launches on supported targets, real remote joining per advertised scope, restart/restore tests T-09/T-12; failure/rollback tests with bad schema, port and script.
+
+**Authority:** [six checkable phases](phases/S13.md), [start/restart protocol](../03-contracts/scripting-v1/09-build-publish-restart-run.md), [host-only script model](../03-contracts/scripting-v1/08-local-host-integration.md). Every MudMaker user can create/host their own game and join other users' hosted games; **no player-script uploads**.
+
+**Concrete phased deliverables:** S13.1 GUI/headless real startup/stop of the same immutable release; S13.2 preflight validates published script DLL hashes, exact hook/capability bindings, worker/schema/SDK versions, and rejects bad versions **before** admitting players; S13.3 real persistence and restart recovery for ECS, quest, doors/overrides, scheduler, outbox and worker; S13.4 remote player join, host admin/status/logs, port/TLS/health; S13.5 backups, rollback and migration failure handling; S13.6 user-testable one-click/headless hosting walkthrough and platform audit.
+
+**Accept:** every phase has one Builder, one scoped Auditor and creator-tested demo. The server is stopped before script edits/publish, then relaunched; live script patching is not a prerequisite. A fake worker or copy/hash-only demo is not evidence of hosting readiness.
 
 ## S14 — Release qualification
 **Deliver:** platform matrix, performance report, threat model verification, load and endurance tests, accessibility review, documentation consistency checks, recovery drills and audited release candidate.
