@@ -94,28 +94,37 @@ A creator may **replace all default combat mechanics** with their own C#14 Comba
 
 **No privileged bypass:** C# code can choose whether its rules count "health" or "damage" but can only mutate allowed custom state through typed/validated effects. Movement must still pass world topology and access rules, equipment transfer through inventory authority, player control through Account/Session/Character authorization and narration through per-observer publication. The host may reject or abort a manager's effect; scripts cannot alter native authorization invariants, invoke raw SQL or extend execution indefinitely.
 
-### Combat scripting hook contract and dispatch mapping
+### Registered combat source contract — canonical hook IDs
 
-| Hook family (canonical event family names) | Creator-defined manager use / expected safe scope |
+The entries below are **fully defined source-level hook IDs** in `contracts/scripting/v1/hooks.v1.json` (every entry has `runtimeImplemented: false` until Builder/Auditor verification). All use `CombatLifecycleEvent` in the C# source contract and `CombatLifecycleEvent` on Protobuf. The connection-control hooks additionally use `CombatControlEvent`. These are the canonical identifiers; any shorthand in the older Tollbridge illustrative code is not an alternative API.
+
+| Service area | Exact hook IDs |
 |---|---|
-| `combat.manager.activate.before/after` | Qualify/create manager instance; choose ruleset and owner scope |
-| `combat.manager.restore/stop` | Restart recovery, cancelled encounter and cleanup (no bypassing durable state) |
-| `combat.encounter.create/join/leave/merge/split/end` | Manage membership, consent, team assignment and independent encounter clocks |
-| `combat.actor.perceived/targeted/moved/disconnected/reconnected/defeated` | Host-authorized world events, actor control and visibility changes |
-| `combat.intent.received/validated/rejected/queued/cancelled` | Custom action vocabulary and admission, legal queued inputs and failure feedback |
-| `combat.round.open/lock/resolve/close` | Turn order, deadlines, simultaneous submissions, resolution and progression |
-| `combat.clock.tick/timer.due/timer.cancelled` | Persistent pulse, cast/reaction windows, periodic conditions and bounded timers |
-| `combat.ability.start/resolve/interrupted/completed` | Casts, cooldown, custom costs and chosen effect pipeline |
-| `combat.reaction.requested/resolved` | Parry, counter, intercept, opportunity and bounded nested reactions |
-| `combat.effect.beforeCommit/committed/rejected` | Validate proposed stat, condition, equipment and position effects; after events read-only |
-| `combat.sound.heard/aid.requested` | Ally calls, hearing, aggression and assistance using observer-authorized world events |
-| `combat.flee.requested/pursuit.updated` | Retreat, leash, chase, actual exits, movement and outcome |
-| `combat.condition.applied/ticked/removed` | Custom status stacks, turn-versus-real-time expiry, persistence outside encounters |
-| `combat.equipment.changed/durability.changed` | Item/armor modifiers and wear, only after valid inventory/equipment operations |
-| `combat.reward.requested/committed` | Contribution, loot, XP, anti-duplication and owner-approved rewards |
-| `combat.narration.project` | Typed audience-safe messages; no hidden event/state disclosure |
+| Manager lifecycle, scope, restore and cleanup | `combat.manager.activate.before`, `combat.manager.activate.after`, `combat.manager.restore.after`, `combat.manager.stop.after` |
+| Encounter membership and terminal state | `combat.encounter.create.before`, `combat.encounter.create.after`, `combat.encounter.join.before`, `combat.encounter.join.after`, `combat.encounter.leave.before`, `combat.encounter.leave.after`, `combat.encounter.merge.before`, `combat.encounter.merge.after`, `combat.encounter.split.before`, `combat.encounter.split.after`, `combat.encounter.end.before`, `combat.encounter.end.after` |
+| Perceived world/actor lifecycle | `combat.actor.perceived.after`, `combat.actor.targeted.after`, `combat.actor.moved.after`, `combat.actor.disconnected.after`, `combat.actor.reconnected.after`, `combat.actor.defeated.after` |
+| Command intent admission and queues | `combat.intent.received.after`, `combat.intent.validated.after`, `combat.intent.rejected.after`, `combat.intent.queued.after`, `combat.intent.cancelled.after` |
+| Turn and phase progression | `combat.round.open.after`, `combat.round.lock.after`, `combat.round.resolve.before`, `combat.round.resolve.after`, `combat.round.close.after` |
+| Encounter-local clock notifications | `combat.clock.tick.after` |
+| Shared scheduler occurrence lifecycle | `combat.timer.due.after`, `combat.timer.cancelled.after` |
+| Casting, channeling and ability lifecycle | `combat.ability.start.before`, `combat.ability.start.after`, `combat.ability.resolve.before`, `combat.ability.resolve.after`, `combat.ability.interrupted.after`, `combat.ability.completed.after` |
+| Counters and bounded reactions | `combat.reaction.requested.before`, `combat.reaction.resolved.after` |
+| Native effect proposal and committed outcome | `combat.effect.before_commit.before`, `combat.effect.committed.after`, `combat.effect.rejected.after` |
+| Audible observer-scoped combat facts | `combat.sound.heard.after` |
+| Assistance requests | `combat.aid.requested.after` |
+| Retreat and movement validation | `combat.flee.requested.before` |
+| Chase state | `combat.pursuit.updated.after` |
+| Status effects | `combat.condition.applied.after`, `combat.condition.ticked.after`, `combat.condition.removed.after` |
+| Worn/held item changes | `combat.equipment.changed.after` |
+| Equipment wear | `combat.durability.changed.after` |
+| Reward authorization and ledger | `combat.reward.requested.before`, `combat.reward.committed.after` |
+| Observer-safe output | `combat.narration.project.query` |
+| Connection control | `combat.participant.control_lost.after`, `combat.participant.grace_expired.after`, `combat.participant.control_restored.after` |
 
-Each listed event family uses a canonical `combat.<family>.<action>.<phase>` hook identifier in the versioned registry. **Before** callbacks may veto or propose bounded alternate effects but never override identity, visibility or authorization; **After** callbacks are read-only for the committed event and can only enqueue independently validated actions; **Query** callbacks are pure and cannot commit effects. All hooks receive event ID, encounter scope/version, actor and target where authorized, host timestamp, causation ID and scoped read-only snapshots. A failed handler times out to deny-safe/no-effect; owner capability and effect allowlists are required. The ABI must be represented consistently across `contracts/scripting/v1/hooks.v1.json`, `MudMaker.Scripting.Abstractions/Contracts.cs`, `mudmaker_scripting_v1.proto`, host dispatcher, graph-node catalog and tests. Existing v1 bindings must continue to function; additive versioning and a clear deprecation/migration policy are required.
+**Dispatch rules:** `Before` hooks run after immutable identity/access/visibility checks, may veto or return capability-bounded proposals, and cannot override host invariants. `After` hooks receive a committed observer-authorized snapshot and may only enqueue separately validated actions; `Query` hooks are pure, including narration projection. All combat events have immutable event ID, encounter/manager IDs, causation, host timestamp, expected revision, permissible actor/target and a scope-filtered snapshot; forbidden fields are omitted, not masked by guesswork. Timeout/crash fails closed for pending proposals, records the failure, and never rolls back prior commits. Native services ensure atomic ECS writes, stable dedup keys, bounded depth and durable outbox. The host-defined manager effect codes are: `encounter.create`, `encounter.join`, `encounter.leave`, `encounter.end`, `intent.queue`, `intent.cancel`, `phase.set`, `timer.schedule`, `timer.cancel`, `field.adjust`, `condition.apply`, `condition.remove`, `equipment.wear`, `movement.request`, `sound.emit`, `narration.emit`, `reward.request`. Unsupported action codes are rejected. Each code has an authorization/capability check and schema-bound argument key/value; C# cannot write ECS directly.
+
+**Custom action/stat registration:** Creators publish `CombatActionDefinition` (stable asset key, typed argument fields, targeting rule, icon/label, command aliases and localizable result text), `CombatStatDefinition` (component field schema, bounds and computed-default function), and `CombatManagerDefinition` (scope, clock policy, behavior binding, permitted effects). No base HP/level requirement. Publish-time schema validation checks field IDs, graph port types, duplicate actions, cyclic formula dependency and capability manifests; each action's Player controls and text command invoke the same host validator. Active encounters pin manager/ability versions until ended. `StateSlotRef` is used for persistent manager state with entity/encounter scoping and expected revision, not arbitrary global variable writes. New code is installed with versioned hook registry/CLR/Protobuf contracts before game publishing.
+
 
 ### Custom manager APIs beyond hooks
 
