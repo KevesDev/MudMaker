@@ -26,3 +26,6 @@
 - ECS Blueprint composition view differs from runtime behavior graph, dialogue graph, quest chain graph and world-system graph. Each uses shared graph interaction vocabulary but own validation/semantics.
 - Device/browser code editing need not run compiler locally; the host can provide compile/diagnostics/test service.
 - C++ headless engine and C# code scripts are strong candidates, **not selected**; do not introduce .NET runtime/package into project without approved ADR and measured integration/security evidence.
+
+## Focused scripting subsystems (separate tabs)
+Open only the appropriate indexed subsection: **[Code Scripting](code/INDEX.md)** or **[Visual Scripting](visual/INDEX.md)**. Both share the authoritative ECS runtime, and [this full process diagram](00-end-to-end-lifecycle.md) explains how an authored behavior becomes a running hosted game feature. For `@/#/{}`, state ownership and safe engine pointers, see [references and syntax](06-syntax-variables-and-references.md). Do not load both authoring manuals by default.

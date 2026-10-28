@@ -30,3 +30,6 @@ Real tests: stock dispenser, quest dialogue quiz, name-based reward, turn-in sta
 
 ## Platform distinction
 Tauri is optional desktop packaging. Windows/macOS/Linux desktop app may control local native headless server where supported, but web and tablets connect to hosted/headless server. A remote C# compiler runs in service, not as a native iPad process. Public reachability, TLS and local vs managed hosting promises must be explicit and tested.
+
+## End-to-end visual diagrams
+[Read three editable Mermaid diagrams: code/graph authoring to hosting, live gameplay event sequence, and exposing code as graph nodes](00-end-to-end-lifecycle.md). Use [Code Scripting](code/INDEX.md) or [Visual Scripting](visual/INDEX.md) for precise per-screen actions.

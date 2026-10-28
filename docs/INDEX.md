@@ -55,3 +55,10 @@
 - Quest eligibility, dialogue, visibility and targetability reuse [one condition evaluator](03-contracts/quest-conditions-and-dialogue.md). Phasing is per-viewer filtering; private instances are distinct world/room copies.
 - Actor/location-specific narration is derived from committed events using [one observer projection](03-contracts/narration-and-observers.md), never from duplicate UI/script broadcasts.
 - The original Google Doc “MudMaker” records the earlier v1.1 design; use these versioned specifications for current planning.
+
+## Scripting documentation: narrow agent entry points
+- [Complete end-to-end diagram: script creation, test, publish, hosting, and live player execution](04-features/scripting/00-end-to-end-lifecycle.md)
+- [Code Scripting tabs and subtabs](04-features/scripting/code/INDEX.md)
+- [Visual Scripting tabs and subtabs](04-features/scripting/visual/INDEX.md)
+- [Scripting symbol, variable and safe references contract](03-contracts/scripting-language-and-references.md)
+- [Native C++ and C# scripting architecture research](08-research/native-engine-and-scripting-options.md)
