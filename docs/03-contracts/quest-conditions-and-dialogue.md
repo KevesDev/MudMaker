@@ -1,10 +1,10 @@
 # Quest Conditions, Dialogue Choices and Typed Game Events
 
-**Status:** REQUIRED authoring power, PROPOSED interface. **Owner:** shared Condition Registry + Quest/Dialogue action interpreter + ECS command gateway. **Dependencies:** quest progression/phasing, scripting/graph, narration, commands.
+**Status:** REQUIRED authoring power, binding condition and dialogue interface. **Owner:** shared Condition Registry + Quest/Dialogue action interpreter + ECS command gateway. **Dependencies:** quest progression/phasing, scripting/graph, narration, commands.
 
 ## One reusable condition language
 All quest gates, NPC phase rules, exit locks, dialogue option visibility, item usability, spawner eligibility and trigger rules call **the same typed condition evaluator**. No ad hoc `hasQuest` utility per feature and no client-side-only checks.
-Proposed expression tree: All / Any / Not / Compare, with named typed predicates:
+Canonical expression tree: All / Any / Not / Compare, with named typed predicates:
 - `QuestIs(questId, stateSet, ownerScope)`
 - `ObjectiveProgress(questId, objectiveId, comparator, value)`
 - `QuestFlag(key, ownerScope, value)`
