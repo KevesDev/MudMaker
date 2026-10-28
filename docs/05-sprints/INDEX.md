@@ -19,11 +19,12 @@
 | Regional/world events and quest runtime | S05 and durable state | S06, S06Q |
 | Moving train and nested locations | S04, S06 | S07 |
 | Hardened remote input, long RP text and sessions | S03, S05 | S08 |
-| Shared editor shell, central ThemeManager | S03 | S09 |
+| Shared UI primitives, central ThemeManager and Editor shell | S03 | S09 |
+| Standalone Player Client, third-party MUD adapters/mapper | S08 and shared S09 foundation | S09C |
 | Blueprint and no-code command editor | S03, S05, S09 | S10 |
 | Native C# / typed graph bindings | S05, S08, S10 | S11 |
 | World event and quest visual authoring | Runtime/editor dependencies | S12, S12Q |
-| Self-hosting, network edge, durability and recovery | S03, S08, S11 | S13 |
+| Self-hosting, network edge, durability and recovery | S03, S08, S09C, S11 | S13 |
 | Complete security, load, accessibility and release audit | All earlier areas | S14 |
 
 Use [technical docs index](../INDEX.md) to locate exact field/protocol/feature contracts. **Input type is explicit**, never inferred from a post or command's length; see [secure client-input v1](../03-contracts/client-input-v1/INDEX.md). Local game hosts own scripts; external clients send gameplay input only.

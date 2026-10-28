@@ -1,0 +1,24 @@
+# 02 — Shared primitives, intent, state, accessibility and error semantics
+
+**One visual/interaction component library; no second host/Client implementations.** Each component is theme-token driven and receives data/action descriptors from its workspace. No network, database, project mutation or ECS write inside UI primitives.
+
+## Primitive contracts
+`AppShell`, `WorkspaceNavigation`, `DockPanel`, `TabStrip`, `Toolbar`, `CommandBar`, `Button`, `IconButton`, `Menu`, `Dropdown`, `Combobox`, `Checkbox`, `Switch`, `RadioGroup`, `Slider`, `NumberField`, `TextField`, `MultilineEditor`, `RichTextPreview`, `List`, `VirtualTree`, `DataGrid`, `InspectorField`, `Tooltip`, `Popover`, `Dialog`, `ContextMenu`, `Toast`, `Progress`, `StatusIndicator`, `SplitView`, `VirtualTranscript`, `MapViewport`, `GraphViewport`, `LogViewer`, `SearchResults`. Each exposes typed value/change/commit/cancel, semantic label and visible focus; no default behavior that emits a network command.
+
+## Universal state machine
+Every visible control registers: `hidden / visible-disabled / ready / focused / pending / success / validation-error / denied / unavailable / recoverable-error`; where meaningful, `empty / loading / populated / disconnected / stale`. A mutation must show `pending` until confirmed by the owning service; do not optimistically show "Saved", "Connected" or "Published". Clicking again during pending is idempotent or disabled with explicit explanation, not silent duplicate work. Input errors preserve user-entered text. Escape/cancel closes non-destructive dialogs; destructive edit opens Impact/Confirm with affected refs and undo/recovery policy. Notifications have stable error codes and accessible announcements without spam.
+
+## Interaction registry rules
+One `ActionId` per user intent, namespaced `app.* / editor.* / client.* / host.*`. `UIControl` uses an action ID or `none` for passive text; passive visual blocks have a content source and accessibility label. Every registry entry records stable ID, workspace/surface, type, visible label/i18n key, tooltip/help text, action, state owner, required permission, conditional availability, keyboard/accessibility, and test ID. Renderer and localized string table are generated/validated against this registry; **missing control metadata blocks phase audit**. Focus path keyboard and touch alternative is mandatory for every activation. Icon-only controls have text accessible name and tooltip.
+
+## Focus & keyboard conflicts
+Shared `FocusMediator` dispatches key events only to focused workspace and active scope; `MultilineEditor`, code editor and transcript selection own text/IME shortcuts before global actions. Input Manager handles pointer/keyboard/pen/touch; Editor/Client/Host routers own semantic intents. Shortcut customization validates collisions **within scope**, displays conflicts, imports/exports profile settings and can reset defaults. A client can bind a command/hotkey in its own profile but cannot steal the Editor's delete or publish shortcut; global emergency disconnect is always accessible. No hover-only or right-click-only command.
+
+## Sizing/accessibility
+WCAG 2.2 AA is the intended acceptance baseline for applicable user-facing views; keyboard, screen readers, visible focus, sufficient contrast and reflow/zoom are non-negotiable. Tablet UI uses drawer/stack, not permanently offscreen right inspector; pointer target min-size and line height from ThemeManager design tokens and accessibility adjustments. No content solely color-coded; real text labels accompany statuses. Console ANSI color is filtered/translated into semantic spans with user overrides; emoji/combining text and wrapped long posts preserve read order. Reduced motion, font scale, scroll behavior and notification sounds live in preferences, not game authority.
+
+## Text and tooltip contract
+Tooltip: **label + short explanation + why disabled (when disabled) + shortcut (when assigned)**, with keyboard/touch Help path, never hover-only. Field: purpose, validation constraints and errors shown adjacent. Empty panel: what belongs here + one visible action to populate it, or explicit read-only status. Loading: skeleton/progress and cancel if safe. Offline state: show last known local items and honest stale marker, never stale "connected". Rich text from servers is sanitized in the sink-specific renderer; raw user content is inert.
+
+## Checkable tests
+For every registry entry, assert it renders (or visible condition explains hiding), has label/tooltip or passive role, maps to registered ActionId, handles enabled/disabled/pending/errors, and has keyboard/touch path and test. Negative cases: rapid double click, modal focus trap, screen reader name, IME text composition, permission revoked while modal open, parent panel closed during pending, theme switch during animation, multiwindow shortcut collision.

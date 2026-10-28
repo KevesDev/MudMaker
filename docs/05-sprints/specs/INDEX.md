@@ -15,6 +15,7 @@
 | S07 | [S07](./S07.md) |
 | S08 | [S08](./S08.md) |
 | S09 | [S09](./S09.md) |
+| S09C | [S09C](./S09C.md) — standalone player Client and third-party MUD toolkit |
 | S10 | [S10](./S10.md) |
 | S11 | [S11](./S11.md) |
 | S12 | [S12](./S12.md) |
