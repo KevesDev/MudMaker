@@ -44,3 +44,7 @@
 
 ## Exact reference acceptance
 See [train-reference-scenario](../04-features/train-reference-scenario.md). Mandatory tests cover nested passengers/items, internal movement in transit, timed docking, conditional exits, concurrent boarding/departure, persistence/restoration, route modification, locked cars, invalid destinations and event/visibility correctness.
+
+## Universal ECS object and exit contract
+
+[Universal objects, exit/door capabilities and traversal](../03-contracts/ecs-objects-and-exits.md) is binding for this spatial subsystem. Every room/exit/door/lever/furniture/character/tool is an ordinary ECS entity; what it can do is defined by components and authoring templates, not a separate class hierarchy. A door is a traversable exit with optional state/interaction/lock components; opposite-facing exit entities may share one durable DoorState entity. Delayed/interruptible exit traversal uses the existing scheduler and validated persistent TraversalOperation, never a private timer. Traversal, LOOK and movement permissions are distinct and observer-authorized. The linked contract defines lifecycle/hook ordering, duration/cancel, recovery, doors and tests; don't invent conflicting exit semantics here.
