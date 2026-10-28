@@ -38,9 +38,6 @@
 | [S13](#s13) | Public hosting | **0/18** | S08,S09C,S11 | PLANNED |
 | [S14](#s14) | Release audit | **0/11** | All preceding | PLANNED |
 
-## Agent process
-**S00 documentation phases do not require independent audits.** For implementation work after S00, Lead selects one phase from this tracker and its scoped sprint spec. One Builder implements the bounded deliverable and runs approved focused checks; one different scoped Auditor reviews real implementation and evidence. `TODO → BUILD → AUDIT → DONE` only with independent PASS, not merely a documented proposal. Record test command, build commit, audit result and any real user demo in **Evidence**. No agent research tasks or broad test-suite loops. `BLOCKED` means the owner must resolve the missing decision. Full suite at sprint closure only by explicit Lead approval.
-
 **Prompt and mapping contract:** [Evennia-inspired server prompt, status HUD, authoritative map projections and Creator/Player customization](03-contracts/prompt-and-world-map.md). Map fields and status snapshots are per-observer and permission-filtered; client personalization never becomes world authority.
 
 **Account, character, roles, login/logout and scripting lifecycle:** [one authoritative contract](03-contracts/account-character-lifecycle.md). Immutable AccountId is distinct from SessionId/CharacterId; no C# handler can bypass host authentication, ownership or capability checks.
