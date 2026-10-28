@@ -1,6 +1,6 @@
 {
   "schema": "mudmaker.hook-registry.v1",
-  "version": 2,
+  "version": 3,
   "origin": "host-local-published-release",
   "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
   "hooks": [
@@ -1051,6 +1051,33 @@
       "ownerKind": "Entity",
       "returnClrType": "HookQueryResult",
       "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.participant.control_lost.after",
+      "phase": "After",
+      "eventClrType": "CombatControlEvent",
+      "ownerKind": "CombatParticipant",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: host-computed session aggregate change, read-only connection state; EnqueueAfter validated effects only; cannot veto transport/auth",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.participant.grace_expired.after",
+      "phase": "After",
+      "eventClrType": "CombatControlEvent",
+      "ownerKind": "CombatParticipant",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: host-computed session aggregate change, read-only connection state; EnqueueAfter validated effects only; cannot veto transport/auth",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.participant.control_restored.after",
+      "phase": "After",
+      "eventClrType": "CombatControlEvent",
+      "ownerKind": "CombatParticipant",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: host-computed session aggregate change, read-only connection state; EnqueueAfter validated effects only; cannot veto transport/auth",
       "runtimeImplemented": false
     }
   ]
