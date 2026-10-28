@@ -1,6 +1,6 @@
 {
   "schema": "mudmaker.hook-registry.v1",
-  "version": 9,
+  "version": 10,
   "origin": "host-local-published-release",
   "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
   "hooks": [
@@ -2302,6 +2302,51 @@
       "ownerKind": "Entity",
       "returnClrType": "HookQueryResult",
       "behavior": "pure authorized read only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "tags.entity.add.before",
+      "phase": "Before",
+      "eventClrType": "TagAssignmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native authorization followed by bounded proposal/veto",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "tags.entity.added.after",
+      "phase": "After",
+      "eventClrType": "TagAssignmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "committed tag change; validated after-effects only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "tags.entity.remove.before",
+      "phase": "Before",
+      "eventClrType": "TagAssignmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native authorization followed by bounded proposal/veto",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "tags.entity.removed.after",
+      "phase": "After",
+      "eventClrType": "TagAssignmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "committed tag change; validated after-effects only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "tags.entity.query",
+      "phase": "Query",
+      "eventClrType": "TagAssignmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure observer-authorized gameplay tag query",
       "runtimeImplemented": false
     }
   ]
