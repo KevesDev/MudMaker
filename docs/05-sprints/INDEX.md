@@ -12,7 +12,7 @@ Parallel gates: 05 -> 06 World systems; 05 + 03 -> 08 Network/auth; 08 + 04 -> 0
 | Sprint | Scope | Required predecessors | Exit proof |
 |---|---|---|---|
 | S00 | Source audit, indexes, product contracts | None | Baseline evidence + index links |
-| S01 | ADRs, architecture/API/interface freeze, test harness plan | S00 | Reviewed decisions, no OPEN blocker for S02 |
+| S01 | Evaluate C++ ECS and script runtime against managed options; ADR/interface freeze, memory/thread/sandbox test plan | S00 | Reviewed evidence-backed decisions, no OPEN blockers for S02 |
 | S02 | Real ECS identity, registry, schemas hooks, queries, writes, scheduling interfaces | S01 | ECS behavior/invariant tests + benchmarks |
 | S03 | Project assets, schema versions, blueprint core, persistent world snapshots/migrations | S02 | Save/restore/migration fixtures |
 | S04 | Spatial/containment, room/exits, locks, region/location topology | S03 | Nested containment and traversal tests |
@@ -23,7 +23,7 @@ Parallel gates: 05 -> 06 World systems; 05 + 03 -> 08 Network/auth; 08 + 04 -> 0
 | S08 | Gateway protocol, sessions, authorization, multi-client runtime, phase-filtered observer events | S03, S05, S06Q for quest-aware projection | Two-client/auth/reconnect + visibility/narration tests |
 | S09 | Cross-device editor shell and cell-grid/map interaction | S04, S08 | Touch/keyboard and map roundtrip |
 | S10 | Component/Blueprint visual editor and reusable asset authoring | S03, S09 | New custom blueprint from UI + versioned instance |
-| S11 | Typed graph compiler/executor, approved scripting bridge and custom typed events | S05, S06, S10, S06Q for quest nodes | Behavior equivalence, sandbox and custom event tests |
+| S11 | Typed graph runtime, code script compiler/worker, validated ECS bridge, exposed functions and custom events | S05, S06, S10, S06Q for quest nodes | Graph/code parity, security isolation, memory and script UX tests |
 | S12 | Visual authoring for world systems, spawners, weather, transit, observer rules | S06, S07, S09–S11 | No-code authoring of integrated world |
 | S12Q | Full visual quest editor: objective palette, chains, eight dialogue stages, rewards, party/instances | S06Q, S08–S11 | Creator authors all quest families without code and tests real sessions |
 | S13 | One-click and headless hosting, deployment, ops, backup/rollback | S03, S08, S11–S12, S12Q | GUI/CLI parity and crash restore incl. quests |
@@ -36,6 +36,7 @@ Parallel gates: 05 -> 06 World systems; 05 + 03 -> 08 Network/auth; 08 + 04 -> 0
 - An unresolved ADR relevant to the sprint is a STOP, not a license for agent guessing.
 - Independent auditor may veto on correctness, architecture, integration, security, performance or documentation drift.
 - Quest requirements have additional dependency gates in [quest implementation plan](quest-implementation-dependencies.md); owner approval of phase/instance/reward/party semantics is required before S06Q.
+- Language runtime and core C++ decisions must pass [engine research](../08-research/engine-and-scripting-architecture-comparison.md), [language and shortcuts](../03-contracts/script-languages-shortcuts-and-symbols.md), [memory safety](../03-contracts/script-memory-ownership-and-safety.md) and approved ADRs before any compilation/integration implementation.
 - The [token/dispatch policy](../06-quality/token-and-dispatch-policy.md) governs scoped runs, Builder prohibition on full suites, optional Auditor-only final suite, and delta-only re-audits.
 - Each sprint's complete acceptance cases and evidence live in [sprint specifications](sprint-specifications.md), with cross-feature oracle [train scenario](../04-features/train-reference-scenario.md).
 

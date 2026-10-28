@@ -2,6 +2,8 @@
 
 **Status:** source-backed research, not an approved backend decision. **Date:** 2026-10-28. **Owner:** architecture investigator. **Scope:** code scripting, visual editor tooling, runtime integration, cross-platform developer access and security.
 
+**Extended native engine comparison:** [Unity/Godot / native ECS architecture](engine-and-scripting-architecture-comparison.md). **Language syntax** is tracked separately in [symbol and variable contract](../03-contracts/script-languages-shortcuts-and-symbols.md).
+
 ## Product requirements driving technology
 - Unity-like *workflow*, not Unity dependencies: creators write behavior scripts, attach them to ECS objects, quests, dialogue stages and world systems; configure exposed variables, test, debug and deploy.
 - Professional node editor with discoverable search, typed ports, data + flow, groups, breakpoints and no-code authoring for most gameplay mechanics.

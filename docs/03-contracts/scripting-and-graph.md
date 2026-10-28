@@ -1,6 +1,6 @@
 # Visual Graph and Script Execution Contract
 
-**Status:** REQUIRED visual Blueprints + custom scripts + world systems; PROPOSED compiler/runtime semantics. **Owner:** graph compiler/runtime + script adapter + ECS command gateway.
+**Status:** REQUIRED visual Blueprints + custom scripts + world systems; PROPOSED compiler/runtime semantics. Exact language/compiler/engine choice OPEN; see [native engine research](../08-research/engine-and-scripting-architecture-comparison.md). **Owner:** graph compiler/runtime + script adapter + ECS command gateway.
 
 ## Design stance
 Creators may build complete gameplay mechanics without programming, and advanced creators may attach custom scripts. Graphs and scripts are two frontends to the **same registered engine capabilities** and authority checks. A script is not allowed a second unvalidated ECS mutation route. Graphs are not "just decorative" connections: every node is typed, has execution semantics, errors and tests.
@@ -30,7 +30,8 @@ The graph runtime must determine deterministic execution order for flows and def
 A reusable Entity Blueprint can consist of nested components plus linked child blueprint slots (e.g. a train contains two car-interior locations and doors). Exposed parameters have type, validation, defaults and editor widget metadata. Instantiation resolves version-pinned references and produces unique entity IDs and a traceable origin. Child references use named slots resolved on instantiate. Cycles in child-instance ownership are invalid; reusable reference cycles that do not imply ownership may be legal by explicit rules.
 
 ## Custom scripting
-Original document proposed Python via GraalVM/GraalPy, stateless event callbacks, WatchService hot-reload and a Java annotation bridge. These are **historical proposals, not yet validated**. Scripting language, sandbox isolation and runtime strategy are OPEN.
+For the authoritative host/API, memory/ownership and editor design, consult [scripting runtime](scripting-runtime-and-capabilities.md), [script language/syntax](script-languages-shortcuts-and-symbols.md), [memory boundary](script-memory-ownership-and-safety.md) and [Scripting UX index](../04-features/scripting/INDEX.md). The generic graph compiler does not own raw C++ entity pointers or script process isolation.
+Original document proposed Python via GraalVM/GraalPy, stateless event callbacks, WatchService hot-reload and a Java annotation bridge. These are **historical proposals, not yet validated**. A headless C++ ECS engine with a typed graph runtime and isolated C# code scripting is now a preferred candidate to investigate, but is not approved; never assume Unity's IL2CPP is a generic runtime transpiler. Scripting language, sandbox isolation and runtime strategy are OPEN.
 Regardless of language:
 - Scripts may read approved ECS queries and submit authorized actions only through capability gateway.
 - Scripts must have resource/time limits, no default file/network/host process access, and explicit allowlist for sensitive APIs.

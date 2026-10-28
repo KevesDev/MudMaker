@@ -7,7 +7,7 @@
 **Accept:** links resolve, version/status clear, no document asserts an unimplemented feature works, owner confirms goals.
 
 ## S01 — Architecture and technology decisions
-**Deliver:** approved ADRs for ECS representation, language/server implementation, single-writer vs alternative, component/schema storage, persistence, script sandbox, packaging/tablet support, protocol and hosting targets. Interface diagrams, data schemas and performance budgets.
+**Deliver:** approved ADRs for ECS representation, C++ vs managed engine comparison with measured criteria, threading/single-writer design, component/schema storage, persistence, creator code language (C# vs DSL), compiler/interop/sandbox, memory ownership, Tauri/web/tablet packaging, protocol and hosting targets. Interface diagrams, data schemas, security evaluation and performance budgets.
 **Accept:** no relevant OPEN block for S02; competing technology options evaluated with representative measured prototypes where necessary; explicit interface owners and engine-dependency rules. Do not choose from habit.
 
 ## S02 — ECS runtime
@@ -51,8 +51,9 @@
 **Accept:** train Blueprint with cars/doors created through visual UI; no raw code/JSON for required workflow; migration/version impact visible; reopen preserves assets.
 
 ## S11 — Complete graph behavior and script integration
-**Deliver:** graph validation, typed ports, event/flow/action/query nodes, interpreter or compiled IR per ADR, debug trace, script gateway/sandbox with audited limits, hot reload with rollback.
-**Accept:** graph and script equivalent permission checks and world effects, loop timeout safe, deterministic replays, invalid types blocked at publish, live version pinned. Scripting language is not preselected.
+**Architecture gate:** use [Scripting Runtime/Capabilities](../03-contracts/scripting-runtime-and-capabilities.md), [Memory/Interop](../03-contracts/script-memory-ownership-and-safety.md), [Language/Syntax](../03-contracts/script-languages-shortcuts-and-symbols.md), and [Scripting UX](../04-features/scripting/INDEX.md). C++ or C# unapproved choices block implementation. No direct native pointer or runtime partial-trust assumption.
+**Deliver:** graph validation, typed ports, event/flow/action/query nodes, interpreter or compiled IR per ADR, debug trace, typed code language compiler/diagnostics, code/graph asset and node exposure, versioned C++/script bridge, OS-isolated script gateway/sandbox with audited memory/time limits, validated variable persistence and hot reload with rollback.
+**Accept:** graph and script equivalent permissions/world effects, forged/stale handles rejected, script cannot access foreign world/native memory/file/process, loop/memory limits enforced, compiler/UI tests, deterministic replay, invalid type blocked at publish and live release pinned. Exact scripting language remains OPEN until ADR.
 
 ## S12 — Visual world-system authoring
 **Deliver:** system palette, weather editor, NPC/resource spawner region assignments, schedule and caps forms, interactive object trigger editor, transit/route editor, simulation preview and inspections.

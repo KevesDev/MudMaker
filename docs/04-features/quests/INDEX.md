@@ -22,6 +22,7 @@ A Quest is a versioned, creator-defined workflow combining **eligibility + an ob
 - ECS per-player quest state / phase / instances: [quest runtime](../../02-architecture/quest-progression-and-phasing.md).
 - Unified condition evaluator, dialogue selection action, event attribution: [quest conditions](../../03-contracts/quest-conditions-and-dialogue.md).
 - Graph/Blueprint compiler: [scripting and graph](../../03-contracts/scripting-and-graph.md).
+- Quest callbacks are defined by [custom stage/script hooks](09-custom-scripts-and-event-hooks.md); code/graph UI documentation is in [Scripting UX](../scripting/INDEX.md).
 - Per-observer gameplay messages: [narration/observers](../../03-contracts/narration-and-observers.md).
 - Formal Bob/Joe case: [Bob/Joe test fixture](../bob-joe-quest-scenario.md).
 - User experience design: [quest editor overview](../quest-and-dialogue-editor.md).

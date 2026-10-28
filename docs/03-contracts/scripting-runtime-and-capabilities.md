@@ -2,6 +2,8 @@
 
 **Status:** REQUIRED dual authoring model and user-defined scripts; PROPOSED typed runtime contract. **Owner:** Script Asset Registry, Graph Compiler, Script Host, Hook Registry, shared ECS Capability Gateway. **Dependencies:** ecs-core, single mutation owner, events/time, quest hooks, persistence, host/deployment/security.
 
+**Research and safety gate:** [Unity vs Godot, C++/C# research](../08-research/engine-and-scripting-architecture-comparison.md); [native/script memory rules](script-memory-ownership-and-safety.md); [language/shortcuts](script-languages-shortcuts-and-symbols.md). **Editor controls:** [Scripting UX](../04-features/scripting/INDEX.md).
+
 ## Architectural diagram in words
 **Authoring surfaces**: Code Editor -> Script Asset; Graph Editor -> Graph Asset (including Blueprint entity composition, behavior, quest, dialogue and world-system graph); Inspectors -> Hook/Attach Binding. Both are **draft assets** and are validated before publish.
 **Compilation**: Graph validator -> typed Graph IR/ExecutionPlan; code script compiler -> validated script module and metadata; both export compatible **public callable signatures and capability manifests**. These are separate compilation pipelines, not a requirement to transpile one to the other.

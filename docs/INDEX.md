@@ -15,6 +15,11 @@
 | Keyboard/touch/text input and game command pipeline | [Commands + input](03-contracts/commands-and-input.md) | REQUIRED ownership; PROPOSED contract |
 | Player-visible room/train/interactions narration and audiences | [Narration/observers](03-contracts/narration-and-observers.md) | REQUIRED behavior; PROPOSED contract |
 | Quest condition evaluator, dialogue, typed objective event | [Quest conditions/dialogue](03-contracts/quest-conditions-and-dialogue.md) | PROPOSED |
+| Modern Code & Visual Graph scripting UI (indexed tabs) | [Scripting UX](04-features/scripting/INDEX.md) | REQUIRED modes; PROPOSED UI |
+| Native engine vs C# vs DSL technical comparison | [Engine/scripting architecture research](08-research/engine-and-scripting-architecture-comparison.md) | RESEARCH / OPEN |
+| Script language, API references, # @ {} shorthand proposals | [Language and syntax](03-contracts/script-languages-shortcuts-and-symbols.md) | PROPOSED / OPEN |
+| Memory ownership, C++ handles and script isolation | [Memory and script safety](03-contracts/script-memory-ownership-and-safety.md) | REQUIRED safety; PROPOSED contract |
+| Unified code/graph runtime and API | [Scripting runtime/ABI](03-contracts/scripting-runtime-and-capabilities.md) | PROPOSED |
 | Nodes, custom scripts, execution and APIs | [Scripting + graph](03-contracts/scripting-and-graph.md) | REQUIRED capability; PROPOSED interfaces |
 | Remote protocol, sessions, hosting runtime | [Protocol + hosting](03-contracts/protocol-and-hosting.md) | PROPOSED |
 | Quest system detailed tabs and subtabs | [Quest specifications](04-features/quests/INDEX.md) | REQUIRED scope; PROPOSED contracts |
@@ -36,6 +41,8 @@
 | Verifiable behavior matrix and test policy | [Test matrix](06-quality/test-matrix.md) | PROPOSED |
 | Trust boundaries, script sandbox, permissions | [Security policy](06-quality/security-policy.md) | PROPOSED |
 | Decisions intentionally not guessed | [Open decisions](07-decisions/OPEN_DECISIONS.md) | OPEN |
+| Unity, Godot, C++ Flecs / C# research | [Engine research](08-research/engine-and-scripting-architecture-comparison.md) | RESEARCH |
+| C# vs custom DSL and scripting editor references | [Scripting technology research](08-research/scripting-engine-research.md) | RESEARCH |
 | Source-backed quest / WoW / Evennia / dialogue research | [Quest research](08-research/quest-design-research.md) | RESEARCH |
 | Legacy source audit and earlier v1.1 concept | [Baseline](08-research/legacy-baseline.md) | FACTS |
 
@@ -44,6 +51,7 @@
 - When a document proposes a choice, add a decision entry; do not silently promote it to confirmed.
 - Each owning subsystem should have one mutation boundary. The map editor, command parser, scripts and network are clients of the same authority.
 - Paths are case-sensitive; ensure all links resolve and index entries are updated for added/renamed files.
+- C++ and C# are **candidate engine/runtime technologies**, not an approved stack; the deprecated Java/Python proposals are historical. Engine/API decisions need evidence-backed ADR before implementation.
 - Quest eligibility, dialogue, visibility and targetability reuse [one condition evaluator](03-contracts/quest-conditions-and-dialogue.md). Phasing is per-viewer filtering; private instances are distinct world/room copies.
 - Actor/location-specific narration is derived from committed events using [one observer projection](03-contracts/narration-and-observers.md), never from duplicate UI/script broadcasts.
 - The original Google Doc “MudMaker” records the earlier v1.1 design; use these versioned specifications for current planning.

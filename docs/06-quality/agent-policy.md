@@ -54,5 +54,11 @@
 - Objective credit semantics and reward grants are independently defined and verified: provenance, combat participation, escort lifecycle, class/level thresholds, rarity/chance and exactly-once claims.
 - Complete visual category includes all eight dialogue stages, branching/choice/exclusive chains, phase and party options. Bob/Joe-only implementation cannot pass general quest acceptance.
 
+## Native and code-script quality hard gates
+- Treat headless C++ ECS and C# scripts as **research candidates** until approved ADR. Do not mix in Unity IL2CPP as invented runtime compiler or blindly restore Java/GraalPy.
+- All script code/graph API uses typed world-scoped handles, component snapshots and proposed ECS commands; no untrusted raw native pointers, shared writable memory, unrestricted reflection/PInvoke or process-wide mutable game state.
+- Builder/Auditor must test stale entity refs, cross-world denial, worker termination, memory budget/CPU timeout, hot reload, exposed fields and code-to-graph parity; C++ core requires sanitizer and race/invariant evidence.
+- Source scripts never execute on player tablet; GUI/CLI host and remote editor use immutable release+compiler/sandbox protocol.
+
 ## Completion
 Only mark VERIFIED when code, executed tests, runtime demonstration and independent audit agree. A plan or green smoke test alone never qualifies. Relevant red flags block merge; don't lower requirements to clear the sprint.
