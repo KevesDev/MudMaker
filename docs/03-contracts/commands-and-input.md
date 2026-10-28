@@ -40,3 +40,5 @@ Game authors can declare commands with aliases, typed parameters, visibility/hel
 ## Ordinary ECS object interactions and exits
 
 [Universal ECS object/exit contract](ecs-objects-and-exits.md) requires scoped `InteractableCapability` for arbitrary object verbs (lever, chair, machine) and `ExitConnectionComponent` plus `TraversalCapability` for traversable objects (passages, doors, portals). `north`, `go north`, `enter doorway` and native exit clicks submit the same authorized traversal intent; `open/close/lock/unlock` are separate validated object interaction actions. No hard-coded object subclass or duplicate movement path. Delay and cancellation are persistent scheduler operations.
+
+**Canonical aliases and scoped resolution:** [Command Aliases and Resolution](command-aliases-and-resolution.md) defines primary names, alternate spellings, contextual exit/item command sets, deterministic precedence, conflict diagnostics, normalization and no shadowing of protected host actions. Implement one CommandService lookup, not separate alias parsing.
