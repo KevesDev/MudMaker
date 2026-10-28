@@ -169,6 +169,16 @@ public sealed record ChannelHookEvent(
     Guid? RecipientAccountId) : MudEvent(EventId);
 public sealed record ScheduleHookEvent(
     Guid EventId, Guid ScheduleId, Guid OccurrenceId) : MudEvent(EventId);
+// Source-level combat connection contracts. Host computes these; scripts cannot set session state.
+public enum CombatControlState { Online, LinkLost, GracePeriod, Offline }
+public sealed record CombatConnectionSnapshot(
+    CombatControlState State, DateTimeOffset? DisconnectedAt,
+    DateTimeOffset? GraceDeadline, Guid? LastAcceptedIntentId,
+    uint ControllingSessionCount, string ReasonCode, ulong Revision);
+public sealed record CombatControlEvent(
+    Guid EventId, Guid EncounterId, EntityRef Character,
+    CombatConnectionSnapshot Before, CombatConnectionSnapshot After,
+    DateTimeOffset OccurredAt, string CauseCode) : MudEvent(EventId);
 public sealed record HostHookEvent(Guid EventId, string LifecycleCode) : MudEvent(EventId);
 public sealed record AccessHookEvent(
     Guid EventId, EntityRef Subject, EntityRef Object, string AccessKey,
