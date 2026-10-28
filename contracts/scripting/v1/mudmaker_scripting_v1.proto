@@ -166,6 +166,12 @@ message InventoryOpenCloseEffect { EntityRef actor = 1; EntityRef container = 2;
 message InventoryEquipEffect { EntityRef actor = 1; EntityRef holder = 2; EntityRef item = 3; string slot_key = 4; bool equip = 5; uint64 expected_version = 6; }
 message InventoryTradeEffect { EntityRef actor = 1; string trade_id = 2; string action_code = 3; uint64 expected_version = 4; }
 
+enum CombatManagerScope { COMBAT_MANAGER_SCOPE_UNSPECIFIED = 0; COMBAT_ACTOR = 1; COMBAT_TEAM = 2; COMBAT_ENCOUNTER = 3; COMBAT_LOCATION = 4; COMBAT_ARENA = 5; COMBAT_REGION = 6; COMBAT_WORLD = 7; }
+enum CombatClockMode { COMBAT_CLOCK_UNSPECIFIED = 0; COMBAT_PULSE = 1; COMBAT_ALTERNATING_TURN = 2; COMBAT_INITIATIVE_ROUND = 3; COMBAT_SIMULTANEOUS_ROUND = 4; COMBAT_REAL_TIME = 5; COMBAT_HYBRID = 6; }
+message CombatManagerSnapshot { string manager_instance_id = 1; AssetRef manager_definition = 2; CombatManagerScope scope = 3; ScopeRef owner_scope = 4; string encounter_id = 5; uint64 version = 6; CombatClockMode clock_mode = 7; string phase_key = 8; string next_deadline_utc = 9; repeated EntityRef participants = 10; }
+message CombatLifecycleEvent { string event_id = 1; string encounter_id = 2; string manager_instance_id = 3; EntityRef actor = 4; EntityRef target = 5; string action_key = 6; string lifecycle_code = 7; uint64 expected_revision = 8; string occurred_at_utc = 9; string causation_key = 10; CombatManagerSnapshot manager = 11; repeated ComponentFieldSnapshot visible_fields = 12; repeated StateSlotSnapshot visible_state = 13; }
+message CombatManagerEffect { string manager_instance_id = 1; string encounter_id = 2; string action_code = 3; EntityRef actor = 4; EntityRef target = 5; AssetRef asset = 6; string argument_key = 7; PropertyValue value = 8; uint64 expected_revision = 9; }
+
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -198,6 +204,7 @@ message HookEvent {
     InventoryContainerEvent inventory_container = 28;
     InventoryEquipmentEvent inventory_equipment = 29;
     InventoryTradeEvent inventory_trade = 30;
+    CombatLifecycleEvent combat_lifecycle = 31;
   }
 }
 enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
@@ -273,6 +280,7 @@ message GameEffect {
     InventoryOpenCloseEffect inventory_open_close = 18;
     InventoryEquipEffect inventory_equip = 19;
     InventoryTradeEffect inventory_trade = 20;
+    CombatManagerEffect combat_manager = 21;
   }
 }
 enum Disposition {
