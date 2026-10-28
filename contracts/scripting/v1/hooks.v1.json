@@ -1,6 +1,6 @@
 {
   "schema": "mudmaker.hook-registry.v1",
-  "version": 5,
+  "version": 6,
   "origin": "host-local-published-release",
   "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
   "hooks": [
@@ -1825,6 +1825,69 @@
       "ownerKind": "CombatManager",
       "returnClrType": "HookQueryResult",
       "behavior": "pure observer-scoped narration projection; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "look.target.resolve.query",
+      "phase": "Query",
+      "eventClrType": "LookQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure authorized appearance query, may replace viewer-safe text or deny; cannot expand visibility",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "look.perception.query",
+      "phase": "Query",
+      "eventClrType": "LookQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure authorized appearance query, may replace viewer-safe text or deny; cannot expand visibility",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "look.detail.query",
+      "phase": "Query",
+      "eventClrType": "LookQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure authorized appearance query, may replace viewer-safe text or deny; cannot expand visibility",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "look.contents.query",
+      "phase": "Query",
+      "eventClrType": "LookQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure authorized appearance query, may replace viewer-safe text or deny; cannot expand visibility",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "look.examine.query",
+      "phase": "Query",
+      "eventClrType": "LookQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure authorized appearance query, may replace viewer-safe text or deny; cannot expand visibility",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "look.requested.after",
+      "phase": "After",
+      "eventClrType": "LookObservedEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-query observation notification; only independently validated deferred effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "look.completed.after",
+      "phase": "After",
+      "eventClrType": "LookObservedEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-query observation notification; only independently validated deferred effects",
       "runtimeImplemented": false
     }
   ]
