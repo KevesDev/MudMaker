@@ -1,6 +1,6 @@
 # Security, Trust Boundaries and Runtime Resource Limits
 
-**Status:** PROPOSED security policy; threat-model and sandbox implementation OPEN. **Owner:** security + runtime + hosting.
+**Status:** binding security requirements and threat model; implementation and independent penetration evidence pending. **Owner:** security + runtime + hosting.
 
 ## Trust boundaries
 Creator project files, public-world scripts, visual graphs, network commands, uploads, user-supplied text, restored save state and plugin packages are untrusted inputs even when submitted through editor UI. A world owner may have broader game-design powers without receiving OS admin access or raw host files.
