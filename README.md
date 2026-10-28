@@ -6,9 +6,9 @@ MudMaker is a graphical **MUD/game creator, self-hosted multiplayer world server
 
 ## Project status
 
-**Documentation-first design; not yet a working game engine or released editor.** This repository contains extensive product specifications, versioned UI and scripting contracts, source-level DTOs, technical examples, test scenarios and a phased implementation tracker. A hook appearing in a JSON registry or C# SDK does **not** mean the native host dispatches it yet. Published design decisions are distinguished from implementation evidence, and unresolved architecture gates remain in [Open Decisions](docs/07-decisions/OPEN_DECISIONS.md).
+**Documentation-first design; not yet a working game engine or released editor.** This repository contains extensive product specifications, versioned UI and scripting contracts, source-level DTOs, technical examples, test scenarios and a phased implementation tracker. A hook appearing in a JSON registry or C# SDK does **not** mean the native host dispatches it yet. Published design decisions are distinguished from implementation evidence, and selected architecture and its verification gates are recorded in [Architecture Decisions](docs/02-architecture/architecture-decisions.md).
 
-The planned runtime uses a **native authoritative ECS host**, a separate bounded **C# 14 / .NET 10 scripting worker**, and a typed graphical node system. The v1 architecture selections are documented in [Architecture Decisions](docs/07-decisions/OPEN_DECISIONS.md); actual build, integration and benchmark evidence remains incomplete. Remote players can send authenticated commands, text and actions—not executable scripts. Host-authored scripts are built and published locally against versioned contracts; the hosting workflow uses stop → validate/publish → restart, without mandatory hot reload.
+The planned runtime uses a **native authoritative ECS host**, a separate bounded **C# 14 / .NET 10 scripting worker**, and a typed graphical node system. The v1 architecture selections are documented in [Architecture Decisions](docs/02-architecture/architecture-decisions.md); actual build, integration and benchmark evidence remains incomplete. Remote players can send authenticated commands, text and actions—not executable scripts. Host-authored scripts are built and published locally against versioned contracts; the hosting workflow uses stop → validate/publish → restart, without mandatory hot reload.
 
 ## What MudMaker is designed to support
 
@@ -45,7 +45,7 @@ A novice should be able to use built-in templates and contextual controls withou
 | Build visual or C# scripting integration | [Scripting v1](docs/03-contracts/scripting-v1/INDEX.md) |
 | Read end-to-end technical examples | [Scripting examples index](docs/04-features/scripting/INDEX.md) |
 | Work as Lead, Builder or Auditor | [AGENTS.md](AGENTS.md) · [CLAUDE.md](CLAUDE.md) |
-| Check architectural decisions before implementation | [Open Decisions](docs/07-decisions/OPEN_DECISIONS.md) |
+| Check architectural decisions before implementation | [Architecture Decisions](docs/02-architecture/architecture-decisions.md) |
 
 ## Engineering commitments
 
