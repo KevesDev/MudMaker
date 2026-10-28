@@ -128,3 +128,5 @@
 **Bundled sample:** [MudMaker Tutorial World project and acceptance](04-features/tutorial-world-starter-project.md).
 
 **Command aliases and scope resolution:** [Evennia-inspired alias matching, command-set layering, collision policy and Creator editing](03-contracts/command-aliases-and-resolution.md).
+
+**Universal tags:** [One project-wide tag system for objects, commands, scripts, graphs, templates, quests and ECS gameplay conditions](03-contracts/universal-tags-and-organization.md).
