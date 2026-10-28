@@ -1,8 +1,8 @@
 # MudMaker Sprint Tracker
 
-**Canonical sprint order and phase status.** Each sprint owns a cohesive milestone; phases are small Builder/Auditor handoffs. Legacy IDs remain stable because specs and contracts reference them. The section/table order below is the actual execution order.
+**Canonical sprint order and phase status.** Each sprint owns a cohesive milestone; phases are small Builder/Auditor handoffs. Sprint and phase IDs follow this table's execution order; matching specs and references must use these canonical IDs.
 
-**Current:** S00 documentation 9/9 DONE; owner architecture decisions remain open. Implementation phases are TODO.
+**Current:** S00 documentation 10/10 DONE; owner architecture decisions remain open. Implementation phases are TODO.
 
 ## Real application and testing milestones
 
@@ -13,14 +13,14 @@
 | Level | Actual proof | Earliest checkpoint |
 |---|---|---|
 | **E1 — Native harness** | ECS, rooms, commands, persistence exercised by real focused tests; no graphical Player Client claimed | S03–S06 |
-| **E2 — Local playable game** | Real Player Client connects to a running loopback world, moves through rooms, receives real authorized events | **S08.6**, after authenticated S07.7–17, S07.9, S02 and S08.5 |
+| **E2 — Local playable game** | Real Player Client connects to a running loopback world, moves through rooms, receives real authorized events | **S08.6**, after S07.7–8 authentication, S07.9 loopback roundtrip, S02 shell and S08.5 account lobby |
 | **E3 — Creator/public host** | Owner safely starts a durable hosted world with remote joins and host-facing operational controls | S17.19, after input security, recovery and hosting prerequisites |
 
 ## Sprint overview — in actual work order
 
 | Sprint | Focus | Verified | Depends on | Status |
 |---|---|---:|---|---|
-| [S00](#s00) | Documents and decisions | **9/9** | — | ACTIVE — owner decisions outstanding |
+| [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates | **0/6** | S00 + owner ADRs | PLANNED |
 | [S02](#s02) | Launchable application shell and shared UI | **0/9** | S01 UI/platform choice | PLANNED |
 | [S03](#s03) | Native ECS | **0/9** | S01 | PLANNED |
@@ -33,12 +33,12 @@
 | [S10](#s10) | World events | **0/4** | S08.6 | PLANNED |
 | [S11](#s11) | Quests | **0/6** | S08.6 | PLANNED |
 | [S12](#s12) | Transit | **0/4** | S10,S08.6 | PLANNED |
-| [S13](#s13) | Scripts and graphs | **0/15** | S07,S08.6,S09 | PLANNED |
+| [S13](#s13) | Scripts and graphs | **0/17** | S07,S08.6,S09 | PLANNED |
 | [S14](#s14) | Account/character Creator workflows | **0/9** | S04,S07,S08,S09,S13 | PLANNED |
-| [S15](#s15) | World authoring | **0/5** | S10,S12,S13 | PLANNED |
+| [S15](#s15) | World authoring | **0/7** | S10,S12,S13 | PLANNED |
 | [S16](#s16) | Quest authoring | **0/6** | S11,S13 | PLANNED |
-| [S17](#s17) | Public hosting | **0/19** | S07,S08,S13 | PLANNED |
-| [S18](#s18) | Release audit | **0/12** | All preceding | PLANNED |
+| [S17](#s17) | Public hosting | **0/20** | S07,S08,S13 | PLANNED |
+| [S18](#s18) | Release audit | **0/13** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -54,6 +54,7 @@
 | **S00.7 Prompt, status HUD and mapping** | Evennia-inspired prompt/status updates, Creator/Host map support, Player mini map and customizable layouts | DONE | [Prompt and map](03-contracts/prompt-and-world-map.md), [Player Client](03-contracts/ui-ux/05-player-client-workspace.md), [mapper](03-contracts/ui-ux/07-mapper-and-automation.md) |
 | **S00.8 Account, character and security lifecycle** | AccountId vs SessionId vs CharacterId, registration, login/logout, character ownership, Telnet credential security, custom roles and visual character-creation workflows | DONE | [Account/character contract](03-contracts/account-character-lifecycle.md), [Account & Character Studio](05-sprints/specs/S18.md), [S07](05-sprints/specs/S12.md) |
 | **S00.9 C# lifecycle scripting hooks and sprint integration** | Document versioned account/character/creation hook extensions, graph integration and cross-sprint prerequisites without claiming unregistered hooks work | DONE | [Scripting v1 index](03-contracts/scripting-v1/INDEX.md), [hook registry](03-contracts/scripting-v1/03-hook-registry.md), [S13](05-sprints/specs/S17.md), [tracker](SPRINT-TRACKING.md) |
+| **S00.10 Embedded storage and optional ambient NPC AI** | Pin no-external-software database requirement and CPU-first optional NPC dialogue research/experiments and sprint gates | DONE | [Local DB contract](03-contracts/local-database-and-data-manager.md), [NPC dialogue](03-contracts/optional-local-npc-dialogue.md) |
 
 ## S01 — Native decisions
 
@@ -347,6 +348,8 @@
 | **S13.13 Two-player demo** | Midnight Express gameplay | TODO | — |
 | **S13.14 Account/character hook ABI** | Versioned registry/CLR/proto parity for typed lifecycle and security-safe events | TODO | — |
 | **S13.15 Workflow hook effects** | Durable graph continuation and approved C# effects for creation steps, approval and world events | TODO | — |
+| **S13.16 Optional inference worker** | Bundle supervised CPU-only quantized-model inference with strict RAM, thread, context, queue and cancellation budgets | TODO | — |
+| **S13.17 NPC speech hook** | Bridge observer-authorized visible/heard events into short NPC dialogue, validated speech-only commit and graceful fallback | TODO | — |
 
 ## S14 — Account & Character Studio
 
@@ -382,6 +385,8 @@
 | **S15.3 World test preview** | In-app author-and-play event, spawner and transit preview of published world definitions | TODO | — |
 | **S15.4 Transit authoring** | Route/train/doors authoring graph using shared canvas | TODO | — |
 | **S15.5 Narration authoring** | Observer template and audience rule editor | TODO | — |
+| **S15.6 NPC persona authoring** | Add optional NPC identity/world descriptors and heard-speech trigger settings to existing Creator nodes | TODO | — |
+| **S15.7 NPC dialogue preview** | In-app roleplay preview from real room-scoped events with visible memory/latency and fallback | TODO | — |
 
 ## S16 — Quest editing
 
@@ -431,6 +436,7 @@
 | **S17.17 Database operations UI** | Accessible database health, storage usage, maintenance and actionable recovery errors | TODO | — |
 | **S17.18 Presentation publish compatibility** | Host publishes valid prompt/map schemas with restart/reconnect recovery and UI preview | TODO | — |
 | **S17.19 Account operations** | Host account search, revoke/ban/recovery and session audit without raw DB access | TODO | — |
+| **S17.20 Optional AI Host controls** | Install/remove validated model pack in-app, opt-in enable, strict hardware budget, activity/kill switch; no separate server | TODO | — |
 
 ## S18 — Release audit
 
@@ -455,6 +461,7 @@
 | **S18.10 Storage disaster tests** | Cross-platform fresh bootstrap, privacy, large-data pagination, corruption/migration, active backup and restore-failure audits | TODO | — |
 | **S18.11 Prompt/map safety audit** | Test hidden exits, status permissions, stale reconnects, moving trains, 10k-room pagination, accessibility | TODO | — |
 | **S18.12 Identity and workflow audit** | ID non-reuse, login/logout ordering, puppet races, malicious hooks and multi-session recovery | TODO | — |
+| **S18.13 Low-end NPC AI audit** | CPU-only 2-core/4-core 8GB testing, RAM/tick isolation, privacy, prompt injection, throughput and disable/no-model behavior | TODO | — |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
