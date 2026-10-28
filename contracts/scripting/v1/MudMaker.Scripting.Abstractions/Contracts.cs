@@ -319,6 +319,26 @@ public sealed record LookObservedEvent(
 // Only after-look callbacks may queue separately checked game effects;
 // no LOOK effect mutates or makes hidden entities visible by itself.
 
+// NPC behavior and services: host-filtered observations, not omniscient world reads.
+public enum NpcBehaviorState { Idle, Travel, Interact, Alert, Engaged, Retreat, Unavailable, Custom }
+public sealed record NpcLifecycleEvent(
+    Guid EventId, EntityRef Npc, EntityRef? Actor, EntityRef? Subject,
+    AssetRef Blueprint, string LifecycleCode, string TriggerKey,
+    string CurrentState, string NextState, string ReasonCode,
+    Guid? ScheduledOccurrenceId, ulong ExpectedRevision) : MudEvent(EventId);
+public sealed record NpcServiceEvent(
+    Guid EventId, EntityRef Npc, EntityRef Customer, AssetRef Service,
+    string OperationCode, EntityRef? Item, long Quantity,
+    ulong ExpectedRevision, string RequestKey) : MudEvent(EventId);
+public sealed record NpcBehaviorEffect(
+    EntityRef Npc, string ActionCode, EntityRef? Target, AssetRef? Asset,
+    string ArgumentKey, PropertyValue? Value, ulong ExpectedRevision,
+    string Key) : GameEffect(Key);
+// Allowed actions: state.set, route.navigate, interaction.start,
+// dialogue.say, quest.offer, quest.credit, combat.request, flee.request,
+// service.quote, service.request, timer.schedule and timer.cancel.
+// All must pass host permissions, observer scope and effect validation.
+
 // AUTHORING CONTRACT: every entrypoint must be a public instance method
 // HookDecision Handler(HookContext ctx, TEvent evt) for before/after hooks;
 // HookQueryResult Handler(HookContext ctx, TEvent evt) for read-only query hooks.
