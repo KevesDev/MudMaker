@@ -85,3 +85,44 @@ Every sprint implementing a material combat capability must ship its necessary v
 ## Implementation ownership
 
 C++ engine owns ECS, scheduler, topology, combat resolver and authoritative commits. Versioned assets live in local embedded project DB. C#14/.NET10 sandbox and graph compiler attach typed hooks/actions once registered in the JSON/CLR/Protobuf contracts. Every hook name in the worked case study is **proposed only**, never assumed already in `hooks.v1.json`. Full implementations need host-side DTOs, schemas, security/authority tests, graph parity and real in-app Play/Creator evidence.
+
+## Full creator-owned C# CombatManager (first-class requirement)
+
+A creator may **replace all default combat mechanics** with their own C#14 CombatManager, not merely modify damage numbers. The host supplies **authoritative primitives**, not a mandatory genre: scoped manager registration (per actor, team, encounter, location, arena, zone, world), typed custom versioned state, validated operations, deterministic RNG/clock, event routing, and explicit manager lifecycle. The creator chooses how and when combat begins, which entities join, action collection/resolution order, timers, target ranges, resource formulas, effects, victory/retreat/defeat, and how players interact.
+
+**Manager contract:** register versioned manager asset and scope/predicate; activate on an authorized event, create/join/leave/merge/split/finish encounters, transfer ownership only with explicit atomic policy, resolve actor death/logout/reconnect or world release changes, persist/restore manager cursor, expire or cancel registered timers, and observe authorized actor/world events. Multiple handlers may coexist on the same world or room if rules permit; conflict policies decide whether a character can join multiple engagements. Never hardcode one handler per room or combatant.
+
+**No privileged bypass:** C# code can choose whether its rules count "health" or "damage" but can only mutate allowed custom state through typed/validated effects. Movement must still pass world topology and access rules, equipment transfer through inventory authority, player control through Account/Session/Character authorization and narration through per-observer publication. The host may reject or abort a manager's effect; scripts cannot alter native authorization invariants, invoke raw SQL or extend execution indefinitely.
+
+### Proposed typed scripting hook coverage — NOT registered/implemented
+
+| Hook family (proposed names) | Creator-defined manager use / expected safe scope |
+|---|---|
+| `combat.manager.activate.before/after` | Qualify/create manager instance; choose ruleset and owner scope |
+| `combat.manager.restore/stop` | Restart recovery, cancelled encounter and cleanup (no bypassing durable state) |
+| `combat.encounter.create/join/leave/merge/split/end` | Manage membership, consent, team assignment and independent encounter clocks |
+| `combat.actor.perceived/targeted/moved/disconnected/reconnected/defeated` | Host-authorized world events, actor control and visibility changes |
+| `combat.intent.received/validated/rejected/queued/cancelled` | Custom action vocabulary and admission, legal queued inputs and failure feedback |
+| `combat.round.open/lock/resolve/close` | Turn order, deadlines, simultaneous submissions, resolution and progression |
+| `combat.clock.tick/timer.due/timer.cancelled` | Persistent pulse, cast/reaction windows, periodic conditions and bounded timers |
+| `combat.ability.start/resolve/interrupted/completed` | Casts, cooldown, custom costs and chosen effect pipeline |
+| `combat.reaction.requested/resolved` | Parry, counter, intercept, opportunity and bounded nested reactions |
+| `combat.effect.beforeCommit/committed/rejected` | Validate proposed stat, condition, equipment and position effects; after events read-only |
+| `combat.sound.heard/aid.requested` | Ally calls, hearing, aggression and assistance using observer-authorized world events |
+| `combat.flee.requested/pursuit.updated` | Retreat, leash, chase, actual exits, movement and outcome |
+| `combat.condition.applied/ticked/removed` | Custom status stacks, turn-versus-real-time expiry, persistence outside encounters |
+| `combat.equipment.changed/durability.changed` | Item/armor modifiers and wear, only after valid inventory/equipment operations |
+| `combat.reward.requested/committed` | Contribution, loot, XP, anti-duplication and owner-approved rewards |
+| `combat.narration.project` | Typed audience-safe messages; no hidden event/state disclosure |
+
+These are **candidate families**, not approved literal hook IDs. Some are native engine events rather than script interception points; each entry needs a documented before/after/cancellable distinction, event fields, capability scopes, valid effects, error behavior and ordering. The ABI must be expanded **atomically** across `contracts/scripting/v1/hooks.v1.json`, `MudMaker.Scripting.Abstractions/Contracts.cs`, `mudmaker_scripting_v1.proto`, host dispatcher, graph-node catalog and tests. Existing v1 bindings must continue to function; additive versioning and a clear deprecation/migration policy are required.
+
+### Custom manager APIs beyond hooks
+
+Hooks alone are insufficient. A typed SDK must expose scoped read-only snapshots of actor stats/custom fields, equipment, condition state, encounter membership, authorized world topology, session control eligibility, action queues and remaining time; a transactional effect builder for custom stat writes, resource exchanges, conditions, status, damage-as-custom-stat, item wear, world movement requests, encounter state and rewards; and bounded scheduler/RNG services. Typed C# manager code must be able to **register its own custom action names and stat schemas**, with publish-time validation and Player action-menu metadata, without requiring the Builder to hardcode new abilities.
+
+### Evennia crosswalk and extra tests
+
+The Evennia 6.x beginner lessons document a common action/handler base for [twitch](https://www.evennia.com/docs/6.x/Howtos/Beginner-Tutorial/Part3/Beginner-Tutorial-Combat-Twitch.html) and [turn-based](https://www.evennia.com/docs/6.x/Howtos/Beginner-Tutorial/Part3/Beginner-Tutorial-Combat-Turnbased.html) combat; the former times individual actor actions, the latter collects choices centrally and resolves at deadline or when all choose. [Turnbattle](https://www.evennia.com/docs/latest/Contribs/Contrib-Turnbattle.html) adds equipment, items, status effects, magic, and relative range. MudMaker should explicitly test those distinctions in the same native authority model.
+
+Additional acceptance cases: a room has two independent encounters; a custom manager tied to one actor follows legal room movement; two actors fight with no Level/HP field; queued turn actions auto-resolve early when all submit; timed twitch action and turn-based encounter coexist; temporary paralysis survives combat and converts to real-time expiry; an ally joins mid-round; a creator switches to an alternate manager on a published world; an unhandled manager crash cannot strand players in combat; a manager's requested movement or hidden-target hit is rejected; a custom combat action appears in both Player Client and command parser; manager script is replayed after restart without double damage or rewards. No mandatory `CombatManager` superclass should grant direct ECS pointers or raw database access.
