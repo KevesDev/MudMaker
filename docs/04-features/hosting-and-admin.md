@@ -1,6 +1,6 @@
 # One-Click Hosting, Headless Operation and Administration
 
-**Status:** REQUIRED one-click and command-run hosting; PROPOSED implementation/user workflow. **Owner:** hosting supervisor + admin UI + CLI.
+**Status:** REQUIRED one-click and command-run hosting; binding hosting lifecycle and UI. **Owner:** hosting supervisor + admin UI + CLI.
 
 ## Outcome
 A nontechnical creator can click **Host World**, receive an accurate ready/failed state and connection details, and run the game with minimal setup. A Linux/cloud operator performs the same lifecycle via a documented headless command, config and service model. Editor is not required at runtime. Hosting is a product capability, not a demo socket server with a Start button.
@@ -14,10 +14,10 @@ A nontechnical creator can click **Host World**, receive an accurate ready/faile
 6. Failed restart or incompatible schema leaves prior working release and recoverable backup rather than corrupting data.
 
 ## Headless parity
-Proposed command surface: mudmaker validate PROJECT; mudmaker host PROJECT --config FILE; mudmaker status INSTANCE; mudmaker stop INSTANCE; mudmaker backup INSTANCE; mudmaker restore INSTANCE BACKUP. Exact spelling is not locked; commands must use same supervisor and validation pipeline as GUI. Document all config keys, required environment variables, secret storage, nonzero exit codes and stdout/stderr format; no default production secret keys.
+Canonical operator command surface: mudmaker validate PROJECT; mudmaker host PROJECT --config FILE; mudmaker status INSTANCE; mudmaker stop INSTANCE; mudmaker backup INSTANCE; mudmaker restore INSTANCE BACKUP. Exact spelling is not locked; commands must use same supervisor and validation pipeline as GUI. Document all config keys, required environment variables, secret storage, nonzero exit codes and stdout/stderr format; no default production secret keys.
 
 ## Instance lifecycle
-States: Stopped, Validating, Starting, Loading, Healthy, Degraded, Stopping, Failed (PROPOSED). Idempotent start/stop; world ID + release pin + instance ID unique. Hosting supervisor manages process/service; runtime manages ECS; gateway manages sessions. Health needs functional readiness, not just port open: verify world loaded and commands can be processed.
+States: Stopped, Validating, Starting, Loading, Healthy, Degraded, Stopping, Failed (canonical). Idempotent start/stop; world ID + release pin + instance ID unique. Hosting supervisor manages process/service; runtime manages ECS; gateway manages sessions. Health needs functional readiness, not just port open: verify world loaded and commands can be processed.
 
 ## Remote hosting
 Local host cannot guarantee an external public address through NAT. The UI explains accessibility and may guide port/TLS setup or managed connection path when implemented. Do not claim one-click public internet availability until actual supported transport is in place. Multiple instances, quotas, log retention, hot updates, persistent volumes, restart policies and backup destinations require operational architecture decisions.
