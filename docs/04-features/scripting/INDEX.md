@@ -46,3 +46,5 @@ Visual Graph Editor: **dark, subtle continuous graph-paper lines, no dotted grid
 [**Technical Case Study 04 — LOOK aboard Midnight Express**](10-look-technical-case-study.md): appearance of rooms, NPCs and exits, virtual details, a window into passing scenery, private phasing, locked-chest contents, C# query, diagrams and real acceptance checks.
 
 [**Technical Case Study 05 — Northgate NPCs**](11-npc-technical-case-study.md): guard/quest giver, wandering merchant, banker/auctioneer, pure custom ECS NPC, scheduled patrols, C# hooks and live acceptance.
+
+[**Creator Tutorial — Craft a Sword with ECS and visual graph**](12-crafting-graph-tutorial.md): 3 Wood + 2 Iron + blacksmithing >= 2, workbench, atomic output-to-inventory, script/graph parity and negative tests.
