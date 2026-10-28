@@ -13,7 +13,7 @@
 | Level | Actual proof | Earliest checkpoint |
 |---|---|---|
 | **E1 — Native harness** | ECS, rooms, commands, persistence exercised by real focused tests; no graphical Player Client claimed | S02–S05 |
-| **E2 — Local playable game** | Real Player Client connects to a running loopback world, moves through rooms, receives real authorized events | **S09C.5**, after S08.7 and S09.1–4 |
+| **E2 — Local playable game** | Real Player Client connects to a running loopback world, moves through rooms, receives real authorized events | **S09C.5**, after authenticated S08.16–17, S08.7, S09 and S09C.19 |
 | **E3 — Creator/public host** | Owner safely starts a durable hosted world with remote joins and host-facing operational controls | S13.18, after input security, recovery and hosting prerequisites |
 
 ## Sprint overview — in actual work order
@@ -23,22 +23,22 @@
 | [S00](#s00) | Documents and decisions | **9/9** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates | **0/6** | S00 + owner ADRs | PLANNED |
 | [S09](#s09) | Launchable application shell and shared UI | **0/9** | S01 UI/platform choice | PLANNED |
-| [S02](#s02) | Native ECS | **0/8** | S01 | PLANNED |
-| [S03](#s03) | Assets and persistence | **0/14** | S02 | PLANNED |
-| [S04](#s04) | Rooms and exits | **0/8** | S02,S03 | PLANNED |
-| [S05](#s05) | Command harness | **0/12** | S03,S04 | PLANNED |
-| [S08](#s08) | Loopback host and secure input | **0/17** | S03,S05 | PLANNED |
+| [S02](#s02) | Native ECS | **0/9** | S01 | PLANNED |
+| [S03](#s03) | Assets and persistence | **0/15** | S02 | PLANNED |
+| [S04](#s04) | Rooms and exits | **0/9** | S02,S03 | PLANNED |
+| [S05](#s05) | Command harness | **0/13** | S03,S04 | PLANNED |
+| [S08](#s08) | Loopback host and secure input | **0/18** | S03,S05 | PLANNED |
 | [S09C](#s09c) | Playable client and toolkit | **0/19** | S08.7,S09.1–4 | PLANNED |
 | [S10](#s10) | Creator tools, real map and Data Manager | **0/18** | S03–S05,S09 | PLANNED |
-| [S06](#s06) | World events | **0/3** | S09C.5 | PLANNED |
-| [S06Q](#s06q) | Quests | **0/5** | S09C.5 | PLANNED |
-| [S07](#s07) | Transit | **0/3** | S06,S09C.5 | PLANNED |
-| [S11](#s11) | Scripts and graphs | **0/14** | S08,S09C.5,S10 | PLANNED |
-| [S10A](#s10a) | Account/character Creator workflows | **0/8** | S03,S08,S09C,S10,S11 | PLANNED |
-| [S12](#s12) | World authoring | **0/4** | S06,S07,S11 | PLANNED |
-| [S12Q](#s12q) | Quest authoring | **0/5** | S06Q,S11 | PLANNED |
-| [S13](#s13) | Public hosting | **0/18** | S08,S09C,S11 | PLANNED |
-| [S14](#s14) | Release audit | **0/11** | All preceding | PLANNED |
+| [S06](#s06) | World events | **0/4** | S09C.5 | PLANNED |
+| [S06Q](#s06q) | Quests | **0/6** | S09C.5 | PLANNED |
+| [S07](#s07) | Transit | **0/4** | S06,S09C.5 | PLANNED |
+| [S11](#s11) | Scripts and graphs | **0/15** | S08,S09C.5,S10 | PLANNED |
+| [S10A](#s10a) | Account/character Creator workflows | **0/9** | S03,S08,S09C,S10,S11 | PLANNED |
+| [S12](#s12) | World authoring | **0/5** | S06,S07,S11 | PLANNED |
+| [S12Q](#s12q) | Quest authoring | **0/6** | S06Q,S11 | PLANNED |
+| [S13](#s13) | Public hosting | **0/19** | S08,S09C,S11 | PLANNED |
+| [S14](#s14) | Release audit | **0/12** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -97,7 +97,7 @@
 **Implementation spec:** [S02.md](05-sprints/specs/S02.md) · **Prerequisites:** S01
 
 
-**Checkpoints:** After S02.3 run entity creation/mutation tests; after S02.7 exercise the full native ECS harness.
+**Checkpoints:** After S02.3 run entity creation/mutation tests; after S02.7 exercise the full native ECS harness. **Hands-on:** S02.9 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -109,13 +109,14 @@
 | **S02.6 Event commit** | Atomic state plus domain event | TODO | — |
 | **S02.7 Core harness** | Lifecycle tests and metrics | TODO | — |
 | **S02.8 Authorization primitives** | Typed Account/Character/Session references, scoped capability checks and deny-safe evaluator | TODO | — |
+| **S02.9 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API | TODO | — |
 
 ## S03 — Assets and persistence
 
 **Implementation spec:** [S03.md](05-sprints/specs/S03.md) · **Prerequisites:** S02
 
 
-**Checkpoints:** After S03.5 save/reopen a real test world; after S03.8 verify asset revisions and rollback.
+**Checkpoints:** After S03.5 save/reopen a real test world; after S03.8 verify asset revisions and rollback. **Hands-on:** S03.15 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -133,13 +134,14 @@
 | **S03.12 Presentation assets** | Persist versioned map display metadata, prompt presets and typed field bindings | TODO | — |
 | **S03.13 Account store** | Durable opaque AccountId, credential/identity fields, account migration, ownership relations | TODO | — |
 | **S03.14 Character roster state** | Durable character slots, account links and creation-graph cursors/approval state | TODO | — |
+| **S03.15 Storage explorer** | Shell project-data view to create/open a world, inspect persisted entities, restart and verify saved state | TODO | — |
 
 ## S04 — Spatial containment
 
 **Implementation spec:** [S04.md](05-sprints/specs/S04.md) · **Prerequisites:** S02,S03
 
 
-**Checkpoints:** After S04.3 traverse room/exits in the native harness; after S04.6 test lock/visibility rules.
+**Checkpoints:** After S04.3 traverse room/exits in the native harness; after S04.6 test lock/visibility rules. **Hands-on:** S04.9 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -151,6 +153,7 @@
 | **S04.6 Visibility** | Per-observer target set | TODO | — |
 | **S04.7 Map projection contract** | Authorized room/exit discovery projections incl. dynamic transit and private locations | TODO | — |
 | **S04.8 Safe character entry** | Validated last room/spawn fallback, character ownership and location continuity | TODO | — |
+| **S04.9 Room traversal preview** | Shell room/exit viewer to create linked test rooms, walk actor, inspect visibility and locks | TODO | — |
 
 ## S05 — Command runtime
 
@@ -159,7 +162,7 @@
 **Proof:** E1 only: native command harness, not a playable MUD.
 
 
-**Checkpoints:** **E1:** after S05.8 run look/move through the actual command service; after S05.10 inspect committed observer-specific output. This is not a graphical game.
+**Checkpoints:** **E1:** after S05.8 run look/move through the actual command service; after S05.10 inspect committed observer-specific output. This is not a graphical game. **Hands-on:** S05.13 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -175,6 +178,7 @@
 | **S05.10 Narration** | Observer-projected committed output | TODO | — |
 | **S05.11 Prompt updates** | Committed movement/status events produce scoped text prompt fallback without extra mutation path | TODO | — |
 | **S05.12 Account command authority** | Owner/role/region permission checks for character and builder/moderation commands | TODO | — |
+| **S05.13 Command console** | Shell command input/output panel using one real executor; test look/move, errors, permissions and narration | TODO | — |
 
 ## S08 — Remote player input
 
@@ -183,7 +187,7 @@
 **E1→E2 bridge:** loopback developer host only; no public exposure or production hosting. S08.7 proves the engine can receive and reply to an authenticated test client.
 
 
-**Checkpoints:** After S08.7 exercise look/move on the real loopback host; after S08.11 test RP versus command intent, then quotas and reconnect at S08.14. Do not expose loopback test hosting publicly.
+**Checkpoints:** After S08.7 exercise look/move on the real loopback host; after S08.11 test RP versus command intent, then quotas and reconnect at S08.14. Do not expose loopback test hosting publicly. **Hands-on:** S08.18 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Small deliverable | Status | Evidence |
 |---|---|---|---|
@@ -193,6 +197,8 @@
 | **S08.3 Typed decoding** | Versioned envelope, strict UTF-8, explicit message kind | TODO | — |
 | **S08.5 Safe output** | Encode actual committed text and errors without control injection | TODO | — |
 | **S08.6 Actor visibility** | Deliver only authorized room/event output | TODO | — |
+| **S08.16 Account authentication** | Registration, verification, hashed credentials, login denial and lockout without script bypass | TODO | — |
+| **S08.17 Session puppeting** | Session-bound AccountId, character selection/attachment, revocation and simultaneous-session policy | TODO | — |
 | **S08.7 Loopback roundtrip** | Test client sends look and move, host commits and replies | TODO | — |
 | **S08.8 Short RP** | One-word SubmitText handled as post, never command | TODO | — |
 | **S08.9 Long RP** | Bounded multiline Unicode prose submission | TODO | — |
@@ -202,8 +208,7 @@
 | **S08.13 Backpressure** | Bounded fair input and output queues | TODO | — |
 | **S08.14 Reconnect** | Dedupe receipts and restore session safely | TODO | — |
 | **S08.15 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
-| **S08.16 Account authentication** | Registration, verification, hashed credentials, login denial and lockout without script bypass | TODO | — |
-| **S08.17 Session puppeting** | Session-bound AccountId, character selection/attachment, revocation and simultaneous-session policy | TODO | — |
+| **S08.18 Loopback connection panel** | Shell local host/session status and connect test with authenticated actor, real network receipts and errors | TODO | — |
 
 ## S09C — Standalone Player Client (native + external MUDs)
 
@@ -220,6 +225,7 @@
 | **S09C.2 World profiles** | Save native/third-party connection profiles | TODO | — |
 | **S09C.3 Native adapter** | Connect to real S08 loopback game host | TODO | — |
 | **S09C.4 Basic composer** | Send explicit action/command and display response | TODO | — |
+| **S09C.19 Account lobby** | Login, registration, auto-enter or character roster with valid session attachment and text fallback | TODO | — |
 | **S09C.5 FIRST PLAYABLE** | Two real players can look, move and receive scoped output | TODO | — |
 | **S09C.6 Navigation retention** | Keep session and drafts on safe workspace switch | TODO | — |
 | **S09C.7 Text rendering** | Bounded ANSI/UTF-8 spans and safe output | TODO | — |
@@ -234,7 +240,6 @@
 | **S09C.16 Autowalk** | Opt-in one-step navigation and accessible route list | TODO | — |
 | **S09C.17 Live HUD** | Pinned per-profile prompt/vitals/exits bar using real scoped native fields or external fallback | TODO | — |
 | **S09C.18 Native mini map** | Render authorized room/exits from host topology, preserve client notes, handle unknown/dynamic paths | TODO | — |
-| **S09C.19 Account lobby** | Login, registration, auto-enter or character roster with valid session attachment and text fallback | TODO | — |
 
 ## S10 — Visual command editor
 
@@ -273,13 +278,14 @@
 **Proof:** Real Player Client interaction is required to verify actual event gameplay; engine-only tests alone are insufficient.
 
 
-**Checkpoints:** User tests after S06.1 (trigger regional event) and S06.3 (spawn/conditional world interaction).
+**Checkpoints:** User tests after S06.1 (trigger regional event) and S06.3 (spawn/conditional world interaction). **Hands-on:** S06.4 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S06.1 World event state** | Regional/world event definitions and lifecycle | TODO | — |
 | **S06.2 Spawner** | Timed/entity spawning and despawning | TODO | — |
 | **S06.3 World interaction** | Conditional world systems and environmental effects | TODO | — |
+| **S06.4 World-event testing panel** | In-app event trigger/status panel for region state and spawn results through actual world commands | TODO | — |
 
 ## S06Q — Quests
 
@@ -288,7 +294,7 @@
 **Proof:** Player-connected quest acceptance, dialogue, reward and observer tests are required in addition to native unit tests.
 
 
-**Checkpoints:** User tests after S06Q.3 (accept/progress quest through dialogue) and S06Q.5 (reward plus restart persistence).
+**Checkpoints:** User tests after S06Q.3 (accept/progress quest through dialogue) and S06Q.5 (reward plus restart persistence). **Hands-on:** S06Q.6 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -297,6 +303,7 @@
 | **S06Q.3 Dialogue stages** | Validated dialogue choices, sessions and quiz | TODO | — |
 | **S06Q.4 Rewards/phasing** | Atomic claim, bonus roll and phased NPC | TODO | — |
 | **S06Q.5 Quest recovery** | Persist and resume quest/session after restart | TODO | — |
+| **S06Q.6 Quest testing panel** | In-app quest accept/dialogue/objective/reward view using real character and live quest service | TODO | — |
 
 ## S07 — Transit
 
@@ -305,13 +312,14 @@
 **Proof:** Board, travel and exit from a real Player Client; mocked command traces cannot close gameplay acceptance.
 
 
-**Checkpoints:** User tests after S07.2 (ride train within nested rooms) and S07.3 (dock and disembark only when exits are available).
+**Checkpoints:** User tests after S07.2 (ride train within nested rooms) and S07.3 (dock and disembark only when exits are available). **Hands-on:** S07.4 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S07.1 Transit route** | Route progression with persistent train state | TODO | — |
 | **S07.2 Moving interiors** | Nested carriage rooms and their passengers/items | TODO | — |
 | **S07.3 Dynamic exits** | Dock-time door to station, closed en route | TODO | — |
+| **S07.4 Transit testing view** | In-app carriage/route/exit view with board/ride/dock and actual movement controls | TODO | — |
 
 ## S11 — C# and graphs
 
@@ -320,7 +328,7 @@
 **Proof:** C# and graph runtime must execute inside real playable host/client integration.
 
 
-**Checkpoints:** After S11.5, test real compiled C# through ECS authority; after S11.10, code/graph parity; after S11.12, two-player scripted gameplay.
+**Checkpoints:** After S11.5, test real compiled C# through ECS authority; after S11.10, code/graph parity; after S11.12, two-player scripted gameplay. **Hands-on:** S11.15 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -338,12 +346,13 @@
 | **S11.12 Two-player demo** | Midnight Express gameplay | TODO | — |
 | **S11.13 Account/character hook ABI** | Versioned registry/CLR/proto parity for typed lifecycle and security-safe events | TODO | — |
 | **S11.14 Workflow hook effects** | Durable graph continuation and approved C# effects for creation steps, approval and world events | TODO | — |
+| **S11.15 Script authoring workspace** | In-app C# editor compile diagnostics, hook binding and test-run output before advanced graph parity | TODO | — |
 
 ## S10A — Account & Character Studio
 
 **Spec:** [S10A](05-sprints/specs/S10A.md) · **Requires:** S03 account/character state, S08 authenticated sessions, S09C.5 playable client, S10 Creator UI and S11 typed graph/worker foundation. **One visual graph editor**, not a second form designer. The early identity/login functionality belongs to its prerequisite sprints; this sprint finishes sophisticated creator-facing workflows.
 
-**Checkpoints:** Preview auto-enter and multiple character selection; then test a roleplay application/approval and in-world sword-or-staff class selection in two real sessions. Independently audit permission scope and persistence.
+**Checkpoints:** Preview auto-enter and multiple character selection; then test a roleplay application/approval and in-world sword-or-staff class selection in two real sessions. Independently audit permission scope and persistence. **Hands-on:** S10A.9 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -355,6 +364,7 @@
 | **S10A.6 Creator permissions UX** | Scope-limited Builder/Moderator capabilities, custom roles, explain/dry-run and safe audits | TODO | — |
 | **S10A.7 Custom C# integration** | Graph hooks, persistent typed effects and owner-published script extension with no security bypass | TODO | — |
 | **S10A.8 End-to-end creator playtest** | Publish and play several differing creation styles; verify AccountId, resume, login/logout and two sessions | TODO | — |
+| **S10A.9 Creation preview workspace** | Preview/test workflow graph as real test account/character with persisted cursor and reset | TODO | — |
 
 ## S12 — World-system editing
 
@@ -363,7 +373,7 @@
 **Proof:** The visual authoring test must result in playable world-system output.
 
 
-**Checkpoints:** User tests after S12.2 (author and play a world event) and S12.4 (published transit/narration).
+**Checkpoints:** User tests after S12.2 (author and play a world event) and S12.4 (published transit/narration). **Hands-on:** S12.5 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -371,6 +381,7 @@
 | **S12.2 World event authoring** | Visual weather/event transitions and regional scope | TODO | — |
 | **S12.3 Transit authoring** | Route/train/doors authoring graph using shared canvas | TODO | — |
 | **S12.4 Narration authoring** | Observer template and audience rule editor | TODO | — |
+| **S12.5 World test preview** | In-app author-and-play event, spawner and transit preview of published world definitions | TODO | — |
 
 ## S12Q — Quest editing
 
@@ -379,7 +390,7 @@
 **Proof:** Verify no-code quests through Player Client, not only an editor-only graph preview.
 
 
-**Checkpoints:** User tests after S12Q.2 (edit dialogue) and S12Q.5 (publish and play a complete quest).
+**Checkpoints:** User tests after S12Q.2 (edit dialogue) and S12Q.5 (publish and play a complete quest). **Hands-on:** S12Q.6 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -388,6 +399,7 @@
 | **S12Q.3 Rewards/eligibility UI** | Configure rewards, phase/party/instance conditions | TODO | — |
 | **S12Q.4 Graph/script binding** | Attach typed C# handler to quest graph and test | TODO | — |
 | **S12Q.5 Complete creator workflow** | Build, validate and publish full Midnight Express from UI | TODO | — |
+| **S12Q.6 Quest test preview** | In-app live quest graph/condition preview from player and staff perspectives | TODO | — |
 
 ## S13 — Self-hosting
 
@@ -396,7 +408,7 @@
 **Proof:** E3 public/creator hosting: host startup, recovery, external joins and operations. Different from S08 loopback developer host.
 
 
-**Checkpoints:** Test GUI/headless local release startup after S13.4, recovery after S13.6; **E3** only after S13.16 verifies real remote joins and protective host operations.
+**Checkpoints:** Test GUI/headless local release startup after S13.4, recovery after S13.6; **E3** only after S13.16 verifies real remote joins and protective host operations. **Hands-on:** S13.19 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -418,6 +430,7 @@
 | **S13.16 Database operations UI** | Accessible database health, storage usage, maintenance and actionable recovery errors | TODO | — |
 | **S13.17 Presentation publish compatibility** | Host publishes valid prompt/map schemas with restart/reconnect recovery and UI preview | TODO | — |
 | **S13.18 Account operations** | Host account search, revoke/ban/recovery and session audit without raw DB access | TODO | — |
+| **S13.19 Host operations dashboard** | In-app startup, health, sessions, backup/restore and safe server-stop controls | TODO | — |
 
 ## S14 — Release audit
 
@@ -426,7 +439,7 @@
 **Proof:** Final security/accessibility/performance on real supported configurations.
 
 
-**Checkpoints:** Test supported platforms and accessibility, then security/performance; finish with clean install → host → play → save → restore.
+**Checkpoints:** Test supported platforms and accessibility, then security/performance; finish with clean install → host → play → save → restore. **Hands-on:** S14.12 runs in the existing S09 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -441,6 +454,7 @@
 | **S14.9 Storage disaster tests** | Cross-platform fresh bootstrap, privacy, large-data pagination, corruption/migration, active backup and restore-failure audits | TODO | — |
 | **S14.10 Prompt/map safety audit** | Test hidden exits, status permissions, stale reconnects, moving trains, 10k-room pagination, accessibility | TODO | — |
 | **S14.11 Identity and workflow audit** | ID non-reuse, login/logout ordering, puppet races, malicious hooks and multi-session recovery | TODO | — |
+| **S14.12 Release walkthrough UI** | Clean-install app walkthrough capturing real Create/Play/Host accessibility, session and recovery results | TODO | — |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
