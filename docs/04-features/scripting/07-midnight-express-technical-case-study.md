@@ -291,6 +291,71 @@ void WorldActor::OnWorkerResult(WorkerResult result) {
 
 **Critical design caveat:** The precise \`store.beginWorldTransaction\` ordering, in-memory publish barrier and restart recovery protocol depend on the approved persistence ADR. A correct implementation must not make the database durable while keeping an inconsistent live ECS state if the process crashes between commits. Options include transactional outbox plus recoverable state journal/snapshot epochs. The pseudocode states the required atomic/recovery boundary, not that a particular database already provides it.
 
+
+## 5A. Typed wire messages between native engine and isolated C# worker
+
+**The host-to-script boundary is not a C++ function pointer or a C# direct registry read.** It is a versioned message protocol. Binary serialization format (e.g. protobuf or FlatBuffers) is an ADR, but the logical schema and validation requirements are concrete:
+
+\`\`\`text
+// Proposed IDL pseudocode; names, wire numbers and serialization undecided.
+type EntityRef { worldId: WorldId; entityId: EntityId; generation: u64; }
+type VersionedAssetRef { id: AssetId; revision: AssetVersion; }
+
+message HookInvoke {
+  protocolVersion: u32;
+  invocationId: UUID;             // unique durable invocation ID
+  requestId: UUID;                // client command idempotency key
+  worldId: WorldId;
+  releaseId: ReleaseHash;
+  hookBinding: VersionedAssetRef;
+  handlerId: HandlerId;           // validated against compiled manifest
+  actor: EntityRef; target?: EntityRef;
+  committedWorldRevision: u64;   // snapshot read epoch
+  observedEntityVersions: map<EntityRef, u64>;
+  event: TypedEvent { typeId, version, payload };
+  authorizedReadSnapshot: TypedComponentView[];  // filtered fields
+  allowedCapabilities: CapabilityId[];           // intersect manifest+actor
+  deadline: MonotonicDeadline;
+  traceId: UUID;
+}
+
+enum HookOutcome { ContinueDefault, Reject, DeferChoice, EffectPlan }
+message HookReply {
+  invocationId: UUID;
+  hookBindingRevision: AssetVersion;
+  outcome: HookOutcome;
+  error?: SafeErrorCode;
+  effects: ProposedEffect[];     // tagged union, never arbitrary raw opcode
+  diagnosticTrace: TraceRef;     // filtered; not player-facing
+}
+
+union ProposedEffect {
+  CompleteQuest { attemptId, evidenceEventId }
+  StartQuest { actorRef, questDefinition }
+  OpenQuiz { actorRef, questionSetRef, attemptId, onceKey }
+  CreditObjective { attemptId, objectiveId, evidenceEventId }
+  RequestStartWorldEvent { eventDefRef, scope, onceKey }
+  RequestStopWorldEvent { eventInstanceRef, onceKey }
+  GrantRewardPlan { recipientRef, planRef, onceKey }
+  RollRewardTable { recipientRef, tableRef, onceKey }
+  EmitDomainEvent { typeId, version, typedPayload }
+  ShowDialogue { actorRef, dialogueAssetRef }
+}
+\`\`\`
+
+**Wire validation and failure behavior:**
+- Gateway creates an authenticated \`requestId\`; the server creates and persists \`invocationId\`. User content cannot supply or forge actor/target/permissions or arbitrary effect types.
+- World performs schema and version checks on every field and reference. Payload lengths, recursion, collection sizes and worker execution cost are bounded by approved configuration. Unknown protocol/asset versions fail closed.
+- The script worker receives **filtered value snapshots**, not arbitrary registry query callbacks or C++ addresses. If a script needs extra data, it requests a **typed capability-limited read** and the engine may return a new versioned snapshot. Such round trips must be bounded, measured and not block the world writer.
+- The world actor **revalidates affected reads and preconditions after the worker reply**, because entity position, NPC visibility, quest progress, train docking or ownership may have changed while a script was executing.
+- \`ProposedEffect\` messages are instructions to validate, **not** a signed permission to modify ECS. Capability and actor/target authorization is recomputed by the authoritative server before commit.
+- For \`OpenQuiz\`, the worker returns a trusted \`questionSetRef\`; the Quest/Dialogue service creates a durable session, randomizes option order under server RNG policy and stores correct-answer data privately. The client receives option display text + opaque IDs, **never** the answer key.
+- For \`RollRewardTable\`, the engine chooses and records the result under a stable onceKey/seed; no script- or client-controlled reroll.
+- Timeouts, worker crashes and stale revisions produce structured failures. Retry strategy must be idempotent and may re-invoke the handler only under explicit policy; fail-closed is required for state-mutating hooks.
+
+### Performance rationale
+A native world actor awaiting an out-of-process C# response synchronously on its update thread would stall the simulation. The proposed dispatcher stores a pending invocation, releases the writer, runs sandbox work asynchronously, then enqueues an effect-plan completion. Depending on script-call frequency, batching and compiled native graph execution may be preferable to one IPC roundtrip per entity. Benchmarks must measure representative hook throughput and p95/p99 tail latency before ABI/worker topology approval.
+
 ## 6. Live sequence: two-player interaction and exactly-once reward
 
 \`\`\`mermaid
