@@ -41,13 +41,13 @@
 | [S18](#s18) | Release audit | **0/22** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
-**Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
+**Spec:** [S00.md](05-sprints/specs/S00.md) · [Architecture decisions](02-architecture/architecture-decisions.md)
 
 | Phase | Document deliverable | Status | Evidence |
 |---|---|---|---|
 | **S00.1 Authority & indexed contracts** | Indexed ECS, scripting, input and UI decisions with exact agent read paths | DONE | [Technical index](INDEX.md), [UI index](03-contracts/ui-ux/INDEX.md), [UI catalog](../contracts/ui/v1/INDEX.md) |
 | **S00.2 Workspace/security boundaries** | Separate Editor, Player Client, Host; safe input and concurrent host/view lifetimes | DONE | [Ownership](03-contracts/ui-ux/01-workspaces-and-ownership.md), [navigation](03-contracts/ui-ux/00-launch-and-workspace-navigation.md), [remote input](03-contracts/client-input-v1/01-ingress-threat-boundary.md) |
-| **S00.3 UI/UX architecture & decision gates** | ThemeManager, cataloged controls, Creator/Client workflows and open platform ADRs | DONE | [UI contract](03-contracts/ui-ux/INDEX.md), [controls](../contracts/ui/v1/INDEX.md), [client research](03-contracts/ui-ux/09-client-research.md), [open decisions](07-decisions/OPEN_DECISIONS.md) |
+| **S00.3 UI/UX architecture & decision gates** | ThemeManager, cataloged controls, Creator/Client workflows and open platform ADRs | DONE | [UI contract](03-contracts/ui-ux/INDEX.md), [controls](../contracts/ui/v1/INDEX.md), [client research](03-contracts/ui-ux/09-client-research.md), [open decisions](02-architecture/architecture-decisions.md) |
 | **S00.4 Implementable sprint handoffs** | One tracker, one spec/sprint and phase dependency map | DONE | [Sprint specs](05-sprints/specs/INDEX.md), [agent rules](../CLAUDE.md), [tracker](SPRINT-TRACKING.md) |
 | **S00.5 First-playable dependency review** | Distinguish engine harness, local playable and public host gates, and phase prerequisites | DONE | [Tracker](SPRINT-TRACKING.md), [roadmap](05-sprints/INDEX.md) |
 | **S00.6 Local databases and data management** | Automatic local provisioning, authenticated data API, searchable large-world records, optional backups, staged restoration and host operations | DONE | [Database/Data Manager](03-contracts/local-database-and-data-manager.md), [S04](05-sprints/specs/S04.md), [S17](05-sprints/specs/S17.md) |
