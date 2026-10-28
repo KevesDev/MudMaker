@@ -25,20 +25,20 @@
 | [S02](#s02) | Launchable application shell and shared UI | **0/10** | S01 UI/platform choice | PLANNED |
 | [S03](#s03) | Native ECS | **0/9** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/17** | S03 | PLANNED |
-| [S05](#s05) | Rooms and exits | **0/9** | S03,S04 | PLANNED |
-| [S06](#s06) | Command harness | **0/13** | S04,S05 | PLANNED |
-| [S07](#s07) | Loopback host and secure input | **0/20** | S04,S06 | PLANNED |
-| [S08](#s08) | Playable client and toolkit | **0/20** | S07.9,S02.2–4 | PLANNED |
-| [S09](#s09) | Creator tools, real map and Data Manager | **0/20** | S04–S06,S02 | PLANNED |
-| [S10](#s10) | World events | **0/4** | S08.6 | PLANNED |
+| [S05](#s05) | Rooms and exits | **0/10** | S03,S04 | PLANNED |
+| [S06](#s06) | Command harness | **0/15** | S04,S05 | PLANNED |
+| [S07](#s07) | Loopback host and secure input | **0/22** | S04,S06 | PLANNED |
+| [S08](#s08) | Playable client and toolkit | **0/21** | S07.9,S02.2–4 | PLANNED |
+| [S09](#s09) | Creator tools, real map and Data Manager | **0/22** | S04–S06,S02 | PLANNED |
+| [S10](#s10) | World events | **0/5** | S08.6 | PLANNED |
 | [S11](#s11) | Quests | **0/6** | S08.6 | PLANNED |
-| [S12](#s12) | Transit | **0/4** | S10,S08.6 | PLANNED |
-| [S13](#s13) | Scripts and graphs | **0/16** | S07,S08.6,S09 | PLANNED |
+| [S12](#s12) | Transit | **0/5** | S10,S08.6 | PLANNED |
+| [S13](#s13) | Scripts and graphs | **0/17** | S07,S08.6,S09 | PLANNED |
 | [S14](#s14) | Account/character Creator workflows | **0/9** | S04,S07,S08,S09,S13 | PLANNED |
-| [S15](#s15) | World authoring | **0/6** | S10,S12,S13 | PLANNED |
+| [S15](#s15) | World authoring | **0/7** | S10,S12,S13 | PLANNED |
 | [S16](#s16) | Quest authoring | **0/6** | S11,S13 | PLANNED |
 | [S17](#s17) | Public hosting | **0/20** | S07,S08,S13 | PLANNED |
-| [S18](#s18) | Release audit | **0/14** | All preceding | PLANNED |
+| [S18](#s18) | Release audit | **0/15** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -160,6 +160,7 @@
 | **S05.7 Visibility** | Per-observer target set | TODO | — |
 | **S05.8 Map projection contract** | Authorized room/exit discovery projections incl. dynamic transit and private locations | TODO | — |
 | **S05.9 Safe character entry** | Validated last room/spawn fallback, character ownership and location continuity | TODO | — |
+| **S05.10 Combat spatial queries** | Authenticated combat range/LOS/hearing topology queries with grid cells, room hops, obstacles and visibility; show range overlay in existing room test UI | TODO | — |
 
 ## S06 — Command runtime
 
@@ -185,6 +186,8 @@
 | **S06.11 Narration** | Observer-projected committed output | TODO | — |
 | **S06.12 Prompt updates** | Committed movement/status events produce scoped text prompt fallback without extra mutation path | TODO | — |
 | **S06.13 Account command authority** | Owner/role/region permission checks for character and builder/moderation commands | TODO | — |
+| **S06.14 Combat intent and resource core** | Versioned CombatRuleset/Ability, action admission, generic stat/resource costs, hit/condition proposals and atomic ECS commits | TODO | — |
+| **S06.15 In-app combat duel panel** | Real shell duel with two ECS actors, HP/resource inspector, strike/block results, roll/denial trace and repeat-safe event commits | TODO | — |
 
 ## S07 — Remote player input
 
@@ -217,6 +220,8 @@
 | **S07.18 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
 | **S07.19 CPU NPC inference supervisor** | Bundle CPU native model worker with process/resource isolation, bounded queue, timeouts, shared model, live host status and deterministic fallback; off unless installed/enabled | TODO | — |
 | **S07.20 First local NPC speech demo** | Visible real loopback world NPC replies to nearby authorized speech using persona and short room context; run actual model installed and verified through S04.17 wizard, no cloud/API, manual model provisioning or extra runtime | TODO | — |
+| **S07.21 Combat clocks and encounter service** | Host-owned pulse/round/real-time/hybrid clock modes, participation, cooldown/cast interruption, persistence and bounded event queues | TODO | — |
+| **S07.22 Local hosted combat playtest** | In existing host test UI control NPC target, live turn/tick, abilities, status and failure states over actual loopback transport | TODO | — |
 
 ## S08 — Standalone Player Client (native + external MUDs)
 
@@ -249,6 +254,7 @@
 | **S08.18 Live HUD** | Pinned per-profile prompt/vitals/exits bar using real scoped native fields or external fallback | TODO | — |
 | **S08.19 Native mini map** | Render authorized room/exits from host topology, preserve client notes, handle unknown/dynamic paths | TODO | — |
 | **S08.20 Player-facing NPC conversation test** | Use real Play client to speak with NPC across rooms, move/disconnect/reconnect and verify scoped replies and timeout fallback | TODO | — |
+| **S08.21 Player combat interface** | Action palette, target selection, turn/tick or cast state, cooldown and combat narration integrated into real native Player; no client-side resolution | TODO | — |
 
 ## S09 — Visual command editor
 
@@ -281,6 +287,8 @@
 | **S09.18 Data Manager shell** | Real indexed collections, paginated/virtualized records, scoped search and detail navigation using S04 API | TODO | — ||
 | **S09.19 NPC personality and dialogue nodes** | Creator Blueprint/node inspector provides identity, world lore, reply style, hearing triggers, cooldown, response budgets and script-hook bindings using actual ECS events | TODO | — |
 | **S09.20 NPC conversation live preview** | Creator launches real NPC test conversation with observable scene facts, roleplay constraints, latency and fallback diagnostics; no separate editor | TODO | — |
+| **S09.21 Combat Studio ruleset and abilities** | Creator presets for pulse, turn, realtime, hybrid and empty custom; editable stat pools, ability/target/timing/durability and PvP policies in shared inspectors | TODO | — |
+| **S09.22 Combat Studio live test** | Creator opens live duel with selectable mode, range/hearing overlay, condition/durability status, step tick/turn and replay reset; saves versioned rulesets | TODO | — |
 
 ## S10 — World systems
 
@@ -297,6 +305,7 @@
 | **S10.2 World-event testing panel** | In-app event trigger/status panel for region state and spawn results through actual world commands | TODO | — |
 | **S10.3 Spawner** | Timed/entity spawning and despawning | TODO | — |
 | **S10.4 World interaction** | Conditional world systems and environmental effects | TODO | — |
+| **S10.5 NPC combat disposition and aid** | Typed neutral/aggressive/passive, level/range/faction aggro, threat, authorized sound calls, ally assistance and leash behavior with in-app trigger controls | TODO | — |
 
 ## S11 — Quests
 
@@ -331,6 +340,7 @@
 | **S12.2 Moving interiors** | Nested carriage rooms and their passengers/items | TODO | — |
 | **S12.3 Transit testing view** | In-app carriage/route/exit view with board/ride/dock and actual movement controls | TODO | — |
 | **S12.4 Dynamic exits** | Dock-time door to station, closed en route | TODO | — |
+| **S12.5 Flee and chase world interaction** | Flee, pursuit, blocked exits, moving interiors and sound/path rules use authoritative transit/topology, tested via real Player | TODO | — |
 
 ## S13 — C# and graphs
 
@@ -359,6 +369,7 @@
 | **S13.14 Account/character hook ABI** | Versioned registry/CLR/proto parity for typed lifecycle and security-safe events | TODO | — |
 | **S13.15 Workflow hook effects** | Durable graph continuation and approved C# effects for creation steps, approval and world events | TODO | — |
 | **S13.16 NPC C# hook integration** | Expose typed read-only heard/seen context and validated dialogue proposals in versioned SDK/CLR/Protobuf/hook manifest; graph and scripts use same runtime authority | TODO | — |
+| **S13.17 Combat graph and C# parity** | Version combat event/ability/effect hooks across registry, CLR, proto and graph; bounded validated proposals, failure and exploit tests | TODO | — |
 
 ## S14 — Account & Character Studio
 
@@ -395,6 +406,7 @@
 | **S15.4 Transit authoring** | Route/train/doors authoring graph using shared canvas | TODO | — |
 | **S15.5 Narration authoring** | Observer template and audience rule editor | TODO | — |
 | **S15.6 NPC world authoring integration** | World designers place/configure NPC Blueprint and dialogue triggers via existing visual nodes and published script effects; test real room events | TODO | — |
+| **S15.7 Encounter Blueprint authoring** | Place encounters, NPC combat behaviors, aid/chase and boss stages using existing node graph and published asset pipeline; full in-app playtest | TODO | — |
 
 ## S16 — Quest editing
 
@@ -471,6 +483,7 @@
 | **S18.12 Identity and workflow audit** | ID non-reuse, login/logout ordering, puppet races, malicious hooks and multi-session recovery | TODO | — |
 | **S18.13 Low-end NPC AI audit** | CPU-only 2-core/4-core 8GB testing, RAM/tick isolation, privacy, prompt injection, throughput and disable/no-model behavior | TODO | — |
 | **S18.14 NPC immersion and hardware audit** | Independent Auditor aggressively tests fourth-wall/prompt leak resistance, identity consistency, context isolation, repeat conversations, 2/4-core CPU load, 8GB RAM, attacks, latency, abort/fallback | TODO | — |
+| **S18.15 Combat scenario audit** | Independently test pulse/turn/realtime/hybrid, PvP, hearing/chase, custom stats, durability, replay, disconnect, safe zones, low-end load and malicious scripts | TODO | — |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
