@@ -30,13 +30,9 @@
 **Deliver:** region-scoped weather controller, spawner definition, capacity and placement policy, typed event triggers and configurable object interactions. Extend via components/registered capabilities rather than hardcoding special cases.
 **Accept:** deterministic weather/spawn lifecycle, capacity enforcement under concurrency, safe reload and restart, missing-room no-op with typed status and trace. All systems use same clock/command gateway.
 
-## S06Q — Quest Progression, Shared Conditions, Phasing and Private Instances
-**Deliver:** ECS-based durable quest attempt state, event-driven objectives, branching/rewards, conditions reused by NPC visibility/interaction, phase-aware world projection and explicit private encounter instancing.
-**Accept:** [Bob/Joe Q-01..Q-19](../04-features/bob-joe-quest-scenario.md) engine semantics, invalid-ID/permission checks, observer separation and restart. Network-specific two-client tests complete in S08, visual in S12Q; do not mislabel S06Q as the completed quest authoring feature.
-
-## S06Q — Quest Runtime, Objective Providers and Phasing
-**Deliver:** versioned quest definitions/attempts, shared typed conditions, objective catalog and provenance policies, branching chain prerequisites, eight-stage dialogue dispatch, reward groups/claims, ECS-authoritative observer filtering, private instance API and event integration.
-**Accept:** relevant [quest matrix](../04-features/quests/08-quest-verification-matrix.md) engine state/invariants and Bob/Joe fixture. Full network/GUI acceptance remains in their true prerequisite sprint owners, not a stand-in feature.
+## S06Q — Complete Quest Runtime, Objectives, Conditions, Phasing, Instances and Rewards
+**Deliver:** versioned ECS quest definitions and attempts; shared condition/eligibility registry; objective catalog with provenance, kill/escort/level and custom event credit; prerequisite/branch graphs; eight-stage dialogue dispatch; guaranteed, choice and chance reward resolution/claim; per-observer phase visibility and targetability; true private encounter instance ownership; persistence, audit and error diagnostics.
+**Accept:** [Quest Verification Matrix](../04-features/quests/08-quest-verification-matrix.md) engine cases plus [Bob/Joe](../04-features/bob-joe-quest-scenario.md). No claim of network UX until S08, and no claim of complete visual quest creation until S12Q. All reward/phase/chain ADRs must be approved.
 
 ## S07 — Moving objects, trains and dynamic exits
 **Deliver:** track graph, routing, motion/docking state, interiors as stable locations, dynamic platform and door bindings, transferable players/NPCs/items, persistence of route progress.
@@ -62,13 +58,9 @@
 **Deliver:** system palette, weather editor, NPC/resource spawner region assignments, schedule and caps forms, interactive object trigger editor, transit/route editor, simulation preview and inspections.
 **Accept:** complete P-01..P-06 world built visually including train, station, weather, spawners, scripted interaction; no uncategorized manual configuration for standard flows.
 
-## S12Q — Visual Quest, Dialogue and Phase Authoring
-**Deliver:** searchable quest/chain library, full typed branches/objectives, conditional dialogue with random generic pools, NPC visibility/interaction conditions, configurable after-completion options, group/instance decisions, version validation and state/observer preview.
-**Accept:** creator builds Talk to Bob -> Find Joe entirely through visual UI, plus branching/repeat/group cases; [Q-20..Q-22](../04-features/bob-joe-quest-scenario.md), desktop/tablet hands-on evidence, real multiplayer conditional NPC behavior and no independent quest-engine duplicate.
-
-## S12Q — Quest and Dialogue Visual Authoring
-**Deliver:** indexed quest library, complete plain-language objective palette, prerequisite/branch node graph, eight dialogue tabs, random/generic pools, conditional presence, solo/party/instance controls, randomized/choice/conditional reward forms, version/validation diagnostics and multi-actor preview, integrated into map/NPC Blueprints.
-**Accept:** creator completes all [visual quest workflows](../04-features/quests/07-visual-authoring-and-validation.md) and [UXQ acceptance](../04-features/quests/08-quest-verification-matrix.md) on real desktop/tablet and two-client runtime, without raw code/JSON.
+## S12Q — Full Visual Quest, Chain, Dialogue and Reward Authoring
+**Deliver:** searchable quest library, complete plain-language objective palette, prerequisite/branch graph, eight dialogue tabs, conditional generic/random pools, NPC/exit phasing, solo/party/instance policies, conditional guaranteed/choice/weighted-surprise rewards, typed custom events, graph verification, versioning and multi-actor preview integrated with Map/Blueprint editors.
+**Accept:** creator builds every category in [quest UX checklist](../04-features/quests/07-visual-authoring-and-validation.md) including Bob/Joe and [UXQ test matrix](../04-features/quests/08-quest-verification-matrix.md), saves/reopens/hosts and tests real two-player mixed-phase behavior on desktop/tablet. No hardcoded Bob/Joe-only shortcut.
 
 ## S13 — Hosting and operations
 **Deliver:** same versioned world artifact loaded by GUI and headless CLI; preflight, logging, diagnostics, health, join details, session administration, consistent backup/restore and rollback, graceful stop.
