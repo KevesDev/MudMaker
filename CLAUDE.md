@@ -13,7 +13,7 @@ Use [Builder](.claude/agents/builder.md) and [Auditor](.claude/agents/auditor.md
 - [docs/INDEX.md](docs/INDEX.md): mapping to authoritative TDDs. Read the relevant few files, never the whole repository "to be safe."
 - [docs/05-sprints/INDEX.md](docs/05-sprints/INDEX.md): dependency graph.
 - [docs/05-sprints/specs/SPRINT-SPEC-TEMPLATE.md](docs/05-sprints/specs/SPRINT-SPEC-TEMPLATE.md): every implementation sprint gets its own filled specification before dispatch.
-- [docs/07-decisions/OPEN_DECISIONS.md](docs/07-decisions/OPEN_DECISIONS.md): open design questions stop impacted implementation; a proposed TDD is not an approved choice.
+- [docs/02-architecture/architecture-decisions.md](docs/02-architecture/architecture-decisions.md): selected v1 architectural boundaries must be implemented and independently verified; source contracts and draft TDDs are not proof of executable behavior.
 - [docs/06-quality/agent-policy.md](docs/06-quality/agent-policy.md), [docs/06-quality/token-and-dispatch-policy.md](docs/06-quality/token-and-dispatch-policy.md) and [docs/06-quality/test-matrix.md](docs/06-quality/test-matrix.md).
 
 Do not repeatedly reread unchanged documents across a conversation. Dispatch includes an explicit read set of spec + directly relevant TDDs, allowed write scope, acceptance, exact filtered test commands, and concise report requirements. Do not dump logs or whole files into agent context.
