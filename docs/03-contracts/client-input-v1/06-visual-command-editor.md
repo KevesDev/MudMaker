@@ -30,3 +30,5 @@ Sidebar project command library; central **Command Definition Form**; optional *
 
 ## Phases
 S06: parser/types/registry/permissions in native harness. S07: hardened client ingress. S02: shell/ThemeManager. **S09: default command templates + form editor + visual permissions + command test harness**, then S13 advanced C#/graph binding. S17: real hosted publish/security. [Phase list](../../05-sprints/specs/INDEX.md).
+
+**Alias editor and test authority:** [Command Aliases and Resolution](../command-aliases-and-resolution.md) requires Name & Aliases chip editing, normalized collision previews, scoped command-pack sources, explicit conflict rules and real parse-trace tests. Do not silently merge duplicate aliases as Evennia's CmdSet replacement can do; same-scope conflicts block publication unless explicitly and safely resolved.
