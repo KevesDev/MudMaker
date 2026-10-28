@@ -9,6 +9,14 @@
 - **Event dispatch:** subscriptions by type/scope, deterministic ordering and maximum depth/steps; event handlers enqueue validated commands rather than causing unbounded synchronous recursion.
 - **Scheduled action:** durable next-fire time, repeat policy, optional jitter defined by named setting, owner/scope, cancellation token, idempotency key and failure/backoff. Scheduler rebuilds state on resume.
 
+## Scheduling domains and scale
+
+The **WorldClock** is the common authority for time and durable deadline ordering, **not one giant weather-style timer**. The scheduler multiplexes independent domains: world/region systems (usually sparse, long-running deadlines), per-entity routines, and potentially **hundreds or thousands of active encounter-local clocks**. An encounter owns its own phase, turn cursor, casts, cooldowns, reaction windows and cancellation generation; it does not get a private OS thread or a dedicated polling loop.
+
+The engine schedules only the **next actionable deadline** for each active encounter/timer (priority queue or equivalent indexed timer wheel), dispatches due work in bounded batches, and reschedules as needed. Idle encounters have no active polling. Cancellation, movement, death, pause, disconnect and ending the encounter invalidate stale pending occurrences through owner/generation keys. Combat jobs have per-world and per-domain CPU/work budgets so a mass of battles cannot starve authentication, commands, weather or persistence. Metrics expose queue depth, late deadlines, active encounters, processed work, rejected work and event-loop latency.
+
+World/region timers and combat deadlines may follow different pause, catch-up and persistence policies, chosen explicitly by the ruleset: e.g. a paused turn can retain its turn cursor; a real-time cast can cancel or resume after a restart. Never blindly run hundreds of missed attacks or cooldown ticks during catch-up; use bounded coalescing/expiry semantics. All actions still commit via the authoritative ECS/event/outbox boundary. Use the same scheduler service for scripts, quests, NPC routines, weather, travel and encounters, while keeping their independent domain policies.
+
 ## Regional systems and weather
 A creator can define: WorldWeather with state/transition graph, target regions, probabilities/conditions, minimum/maximum duration, season/time effects, local overrides and event output. A region is a semantic membership set (spatial region entity or query), not purely the map grid's color. Weather changes expose queryable state and optional look-description/exit modifiers; must be explicitly wired, not magical global effects.
 
