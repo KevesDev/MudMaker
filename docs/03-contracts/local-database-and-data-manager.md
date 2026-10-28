@@ -10,7 +10,7 @@ Creating a project automatically creates an empty but fully configured *local* d
 
 ## 2. Data ownership and schema boundaries
 
-Distinguish (a) versioned authoring assets: Blueprints, maps, dialogue, quests, command definitions and scripts; (b) durable runtime ECS state: entities, component values, parent/room relations, dynamic exits, world event timers, inventory and player/quest state; (c) accounts, permissions, audit/operational data; (d) transaction outbox, onceKeys/idempotency, schema and release manifests; and (e) cache/derived indexes that can be rebuilt. Ownership and storage of each category must be explicit in S01 ADR and S03 design; do not silently conflate project draft, immutable published release and current live world. Do not store live scripts as executable input from remote users. Type-safe schema IDs, stable entity IDs with generations, versioned asset GUIDs, foreign reference integrity, expectedRevision/optimistic conflict checks, and world/project isolation are mandatory.
+Distinguish (a) versioned authoring assets: Blueprints, maps, dialogue, quests, command definitions and scripts; (b) durable runtime ECS state: entities, component values, parent/room relations, dynamic exits, world event timers, inventory and player/quest state; (c) accounts, permissions, audit/operational data; (d) transaction outbox, onceKeys/idempotency, schema and release manifests; and (e) cache/derived indexes that can be rebuilt. Ownership and storage of each category must be explicit in S01 ADR and S04 design; do not silently conflate project draft, immutable published release and current live world. Do not store live scripts as executable input from remote users. Type-safe schema IDs, stable entity IDs with generations, versioned asset GUIDs, foreign reference integrity, expectedRevision/optimistic conflict checks, and world/project isolation are mandatory.
 
 Like Evennia's typed persistent Objects/Accounts/Scripts/Channels, Attributes, Tags, aliases and access locks, support *discoverable* typed records with indexed fields/tags and extensible typed component data; MudMaker uses its approved **composition-first ECS**, not Django/Evennia typeclass inheritance. Attributes and searchable tags should remain distinct concepts, with documented index/key/category semantics and migration policy. Provide nonpersistent runtime/cache state explicitly rather than accidentally writing every temporary value.
 
@@ -34,7 +34,7 @@ Expose a **World Data**/Data Manager workspace from Creator, not a raw database 
 
 Selecting a record opens a schema-driven inspector with human labels, help text, component tabs, links to referenced records/where-used, revision and last-modified metadata, validation errors and a **View in Map / Open Blueprint / Test in Player** action where appropriate. Distinguish immutable published release data, editable draft assets and live runtime state visually, with correct permissions. Edits offer undo for uncommitted drafts; committed change uses explicit transaction and, where supported, reversible change history. Bulk select/filter/preview/edit/archive/delete with number of impacted records, confirmation, referential checks and progress/cancel behavior. Warn before changes affecting active players; no mass silent deletes or accidental cascades. Preserve search/filter/scroll across navigation, offer accessible feedback and a useful empty state.
 
-For high volume, define measurable S09/S10 acceptance fixtures (e.g. 1,000/10,000 mixed records) and latency/scroll memory budgets in a verified platform ADR; do not invent fixed performance guarantees. Loading and error states should remain responsive under query cancellation or service failures. No database terminology is required for routine user actions.
+For high volume, define measurable S02/S09 acceptance fixtures (e.g. 1,000/10,000 mixed records) and latency/scroll memory budgets in a verified platform ADR; do not invent fixed performance guarantees. Loading and error states should remain responsive under query cancellation or service failures. No database terminology is required for routine user actions.
 
 ## 6. Backups: optional, discoverable and safe
 
@@ -64,12 +64,12 @@ Host UI: database Ready / Starting / Migrating / Busy / Recovery Needed status; 
 
 ## 9. Sprint placement / dependencies
 
-- **S01:** storage engine, concurrency, file layout, locking, schema versioning, native durability and recovery ADRs **before S02–S03**.
-- **S03 (storage foundation):** automatic DB provisioning, record persistence, indexes, migrations, atomic snapshots, host-local data API and restore safety *before* S04/S05/S08 depend on persistence.
-- **S09/S10:** navigable database management shell, searchable paginated collections, schema inspectors and safe bulk tools; Editor actions reuse S03 API and existing command/asset services.
-- **S08:** loopback-host persistence readiness, no remotely reachable database, remote data isolation.
-- **S11:** worker-typed effects only, no raw DB access; persisted C# overrides and recovery.
-- **S13:** supervised hosting DB lifecycle, optional backup schedules, backup browsing, safe fallback restore and diagnostics, remote hosting gate.
-- **S14:** full cross-platform, concurrency, security, high-volume and disaster recovery audit.
+- **S01:** storage engine, concurrency, file layout, locking, schema versioning, native durability and recovery ADRs **before S03–S04**.
+- **S04 (storage foundation):** automatic DB provisioning, record persistence, indexes, migrations, atomic snapshots, host-local data API and restore safety *before* S05/S06/S07 depend on persistence.
+- **S02/S09:** navigable database management shell, searchable paginated collections, schema inspectors and safe bulk tools; Editor actions reuse S04 API and existing command/asset services.
+- **S07:** loopback-host persistence readiness, no remotely reachable database, remote data isolation.
+- **S13:** worker-typed effects only, no raw DB access; persisted C# overrides and recovery.
+- **S17:** supervised hosting DB lifecycle, optional backup schedules, backup browsing, safe fallback restore and diagnostics, remote hosting gate.
+- **S18:** full cross-platform, concurrency, security, high-volume and disaster recovery audit.
 
-No new separate giant “database sprint”: database foundations belong early in S03, management belongs in Creator work, hosting/backup lifecycle belongs in S13. All tracker phases retain central status/evidence ownership.
+No new separate giant “database sprint”: database foundations belong early in S04, management belongs in Creator work, hosting/backup lifecycle belongs in S17. All tracker phases retain central status/evidence ownership.

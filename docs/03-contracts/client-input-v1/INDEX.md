@@ -15,7 +15,7 @@
 | Independently test input, parser, graph and clients | [09 — Threat and acceptance test matrix](09-tests-and-evidence.md) |
 | Real hosted-game command assets | [sample command pack](../../../contracts/input/v1/sample-game-commands.json) |
 
-**Build order:** S05 defines bounded *semantic* command parse/authorization (no network prerequisite), S08 provides hardened authenticated network ingress before two-player play, S09 provides shared editor shell, S10 creates a **basic visual command editor for data-backed native effects**, S11 binds advanced typed graph/C# command behaviors, S13 enforces host-exposed internet edge/ops, S14 adversarial audits. Exact checkable phases: [sprint index](../../05-sprints/specs/INDEX.md).
+**Build order:** S06 defines bounded *semantic* command parse/authorization (no network prerequisite), S07 provides hardened authenticated network ingress before two-player play, S02 provides shared editor shell, S09 creates a **basic visual command editor for data-backed native effects**, S13 binds advanced typed graph/C# command behaviors, S17 enforces host-exposed internet edge/ops, S18 adversarial audits. Exact checkable phases: [sprint index](../../05-sprints/specs/INDEX.md).
 
 ## Ownership and non-negotiables
 - `NetworkGateway` limits/prevalidates frames; `SessionService` establishes actor/session; `InputDecoder` performs bounded typed decoding; `CommandResolver` matches available immutable command definitions; `CommandService` checks argument type, access, cooldown, target and current world state; `WorldActor/ECS` validates and commits; `ObserverProjector` renders only committed authorized output.
