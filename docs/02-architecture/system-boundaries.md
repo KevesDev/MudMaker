@@ -1,10 +1,10 @@
 # Architecture Boundaries and Single Ownership
 
-**Status:** PROPOSED contracts; ECS centrality is REQUIRED. **Owner:** architecture. **Dependencies:** vision and open decisions.
+**Status:** binding subsystem responsibilities; implementation pending. **Owner:** architecture. **Dependencies:** vision and open decisions.
 
 ## Logical components
-- **Editor / Player UI:** React-based cross-device view proposed. UI owns ephemeral presentation, gestures, keyboard focus, selection and optimistic state only when reconciled. UI never mutates authoritative ECS state directly.
-- **Application gateway:** authentication, session identity, rate limits, protocol versioning, authorization checks; REST for project/admin operations and WebSocket for live events are PROPOSED, not locked technologies.
+- **Editor / Player UI:** Cross-device user interface using the shared UI catalog. UI owns ephemeral presentation, gestures, keyboard focus, selection and optimistic state only when reconciled. UI never mutates authoritative ECS state directly.
+- **Application gateway:** authentication, session identity, rate limits, protocol versioning, authorization checks; Local project/admin calls use authenticated typed service operations; live games use the versioned authenticated command/event gateway, with adapter-specific wire transports.
 - **Headless ECS engine:** deterministic entity/component lifecycle, queries, system scheduler, commands, events, world rules and game-local state. No dependency on Tauri, browser DOM or UI components.
 - **Script/graph execution adapters:** execute validated logic via capability-limited commands/queries exposed by the engine. Both use the same authorization and mutation bridge.
 - **Persistence adapter:** snapshots, incremental changes/transactions, schema migrations, project assets and restore. Does not independently decide game rules.
@@ -35,7 +35,7 @@
 UI gesture / text command / graph / script / admin API -> command request (subject, actor, world, expected version, intent) -> authenticate + authorize + validate preconditions -> enqueue or execute inside world-owned transaction -> ECS state transition -> typed events -> persistence publication + client events. Reject with structured errors; no partial mutation on failed validation.
 
 ## Concurrency and lifecycle
-- A world instance must have a well-defined mutation concurrency model. *Proposed*: single-writer deterministic simulation loop with concurrent reads/snapshot publication and work queues; alternative must be evaluated via ADR before implementation.
+- A world instance must have a well-defined mutation concurrency model. **Required:** one serialized per-world mutation authority with immutable snapshots for parallel queries, bounded work queues and deterministic commit order.
 - No unbounded blocking I/O, database calls or user scripts on hot world-update path.
 - Cross-world interactions require explicit contract; no accidental shared mutable global ECS.
 - Engine code is independently testable without launching Spring/Tauri/editor.
