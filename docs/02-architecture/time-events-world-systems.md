@@ -1,6 +1,6 @@
 # World Time, Events, Global Systems and Region Spawners
 
-**Status:** REQUIRED authoring of weather, NPC/resource spawners and global systems; PROPOSED runtime semantics. **Owner:** scheduler + event dispatcher + world-systems runtime.
+**Status:** binding scheduler/world-system semantics; runtime implementation pending. **Owner:** scheduler + event dispatcher + world-systems runtime.
 
 ## Unified execution primitives
 - **WorldClock:** simulation time, real-time mapping, pause/resume policy, tick cadence, catch-up policy, time dilation (if enabled), monotonic ordering, seeded randomness. All schedule-dependent game logic reads one world clock.
@@ -31,10 +31,10 @@ A spawner is a configured system or system entity with: world/region/room select
 - Despawn policies distinguish world-owned ecology NPCs from owned/quest-persistent instances.
 
 ## Triggers and interactivity
-Trigger is an event subscription + condition + bounded action, optionally attached to door, object, room, region or world system. An interactable object may carry custom fields, container inventory, access requirements and multiple actions. State mutation only via command gateway; trigger fires exactly according to event semantics (at-most-once vs effectively-once with deduplication is OPEN and must be documented per event class).
+Trigger is an event subscription + condition + bounded action, optionally attached to door, object, room, region or world system. An interactable object may carry custom fields, container inventory, access requirements and multiple actions. State mutation only via command gateway; triggers commit at most once per event+rule+entity onceKey, with durable effectively-once observation after deduplicated outbox retry.
 
 ## Timer and catch-up decisions
-Real-time games versus turn-based games are both REQUIRED capabilities from v1.1. Exact semantics for offline time, missed spawn windows, missed weather transitions, time zone handling and paused worlds are OPEN; choose policies before coding and test each. Per-entity tick cadence may override world defaults only under bounded scheduler budgets and documented fairness.
+Real-time games versus turn-based games are both REQUIRED capabilities from v1.1. World simulation uses UTC instants plus configured world-clock scale; paused worlds freeze simulation deadlines, while real UTC timestamps continue. On recovery, coalesce missed periodic weather/spawn ticks into one latest-state reconciliation per scheduler entry; do not replay each missed occurrence. Per-event expiry and recovery are persisted and independently tested. Per-entity tick cadence may override world defaults only under bounded scheduler budgets and documented fairness.
 
 ## Quest events
 Quest progression receives typed committed events from interactable objects, weather, NPC spawners and train travel. All checks go through the central quest Condition Registry, never private system copies. See [quest progression](quest-progression-and-phasing.md).
