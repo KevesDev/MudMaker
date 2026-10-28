@@ -1,6 +1,6 @@
 # Entity Blueprint Editor and Visual Graph Authoring
 
-**Status:** REQUIRED Blueprint-style ECS object creation; PROPOSED UI contract. **Owner:** asset editor + graph editor.
+**Status:** REQUIRED Blueprint-style ECS object creation; binding Creator UI contract. **Owner:** asset editor + graph editor.
 
 ## Design goal
 Unreal-style discoverable visual editing, without binding MudMaker to Unreal's runtime. Creators assemble custom data-defined game entities as reusable visual blueprints, attach any validated ECS component (built-in or creator-defined), assign properties, nest child templates and attach event/action graphs or custom scripts. Engine capabilities, not handcoded entity-category menus, determine allowed behavior.
