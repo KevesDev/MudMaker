@@ -28,3 +28,5 @@
 - Default Editor graph canvas remains **subtle dark continuous graph-paper lines** (never dots). Player mini mapper is a distinct player-local navigation visualization, not an Editor cell grid.
 
 **Creator templates and navigation:** [Editor workspace — integrated Templates view and asset picker](04-editor-workspace.md#project-template-library--planned-first-class-editor-workflow) defines complete Save as Template, variations, indexed browsing, rename/group/tag/archive/delete, rebase and mobile/keyboard flows; [UI controls catalog](../../../contracts/ui/v1/editor-controls.v1.json) registers the actions, and [library product contract](../reusable-templates-and-variants.md) owns persistent behavior.
+
+**No-code Command Wizard:** [Guided create-to-publish and management lifecycle](../client-input-v1/06-visual-command-editor.md#complete-command-wizard-and-management-lifecycle--binding-ux) integrated into existing Creator Command Library; exact controls `editor.commands.01`–`.30` in [Editor UI catalog](../../../contracts/ui/v1/editor-controls.v1.json).
