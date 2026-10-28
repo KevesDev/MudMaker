@@ -1,6 +1,6 @@
 {
   "schema": "mudmaker.hook-registry.v1",
-  "version": 8,
+  "version": 9,
   "origin": "host-local-published-release",
   "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
   "hooks": [
@@ -2149,6 +2149,159 @@
       "ownerKind": "Entity",
       "returnClrType": "HookDecision",
       "behavior": "committed observer-scoped event, enqueue validated follow-up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "communication.message.before",
+      "phase": "Before",
+      "eventClrType": "CommunicationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization then bounded veto/proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "communication.message.sent.after",
+      "phase": "After",
+      "eventClrType": "CommunicationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "communication.message.delivered.after",
+      "phase": "After",
+      "eventClrType": "CommunicationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "communication.message.rejected.after",
+      "phase": "After",
+      "eventClrType": "CommunicationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "communication.channel.join.before",
+      "phase": "Before",
+      "eventClrType": "CommunicationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization then bounded veto/proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "communication.channel.joined.after",
+      "phase": "After",
+      "eventClrType": "CommunicationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "communication.channel.left.after",
+      "phase": "After",
+      "eventClrType": "CommunicationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "communication.channel.moderated.after",
+      "phase": "After",
+      "eventClrType": "CommunicationEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "craft.request.before",
+      "phase": "Before",
+      "eventClrType": "CraftRequestEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization then bounded veto/proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "craft.committed.after",
+      "phase": "After",
+      "eventClrType": "CraftRequestEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "craft.rejected.after",
+      "phase": "After",
+      "eventClrType": "CraftRequestEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "social.member.join.before",
+      "phase": "Before",
+      "eventClrType": "SocialRelationshipEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization then bounded veto/proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "social.member.joined.after",
+      "phase": "After",
+      "eventClrType": "SocialRelationshipEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "social.member.left.after",
+      "phase": "After",
+      "eventClrType": "SocialRelationshipEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "social.reputation.changed.after",
+      "phase": "After",
+      "eventClrType": "SocialRelationshipEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "social.allegiance.changed.after",
+      "phase": "After",
+      "eventClrType": "SocialRelationshipEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit event, validated follow up only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "social.relationship.query",
+      "phase": "Query",
+      "eventClrType": "SocialRelationshipEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure authorized read only",
       "runtimeImplemented": false
     }
   ]
