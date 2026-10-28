@@ -198,6 +198,11 @@ message CraftTransactionEffect { EntityRef actor = 1; EntityRef station = 2; Ass
 message SocialRelationshipEvent { string event_id = 1; EntityRef subject = 2; EntityRef target = 3; string relationship_kind = 4; string action_code = 5; int64 value = 6; uint64 expected_revision = 7; }
 message SocialRelationshipEffect { EntityRef subject = 1; EntityRef target = 2; string relationship_kind = 3; string action_code = 4; int64 value = 5; uint64 expected_revision = 6; }
 
+// Gameplay tags; project organizational tags are Creator-only metadata.
+message TagRef { string project_id = 1; string tag_id = 2; }
+message TagAssignmentEvent { string event_id = 1; EntityRef actor = 2; EntityRef subject = 3; TagRef tag = 4; string operation_code = 5; uint64 expected_revision = 6; }
+message TagMutationEffect { EntityRef actor = 1; EntityRef subject = 2; TagRef tag = 3; bool add = 4; uint64 expected_revision = 5; }
+
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -241,6 +246,7 @@ message HookEvent {
     CommunicationEvent communication = 39;
     CraftRequestEvent craft_request = 40;
     SocialRelationshipEvent social_relationship = 41;
+    TagAssignmentEvent tag_assignment = 42;
   }
 }
 enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
@@ -321,6 +327,7 @@ message GameEffect {
     ExitBehaviorEffect exit_behavior = 23;
     CraftTransactionEffect craft_transaction = 24;
     SocialRelationshipEffect social_relationship = 25;
+    TagMutationEffect tag_mutation = 26;
   }
 }
 enum Disposition {
