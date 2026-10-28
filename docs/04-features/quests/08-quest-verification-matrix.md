@@ -1,6 +1,6 @@
 # 08 | Quest Behavioral Verification Matrix and Audit Gates
 
-**Status:** PROPOSED full category acceptance suite and anti-fake test contract. **Owner:** Quest runtime QA, independent Auditor and relevant subsystem owners. **Run-cost policy:** targeted tests during build; full suite only Auditor on Lead-authorized sprint-close command. One discriminating oracle per distinct behavior, not parameter-padding.
+**Status:** binding category acceptance suite and anti-fake test contract. **Owner:** Quest runtime QA, independent Auditor and relevant subsystem owners. **Run-cost policy:** targeted tests during build; full suite only Auditor on Lead-authorized sprint-close command. One discriminating oracle per distinct behavior, not parameter-padding.
 
 ## Verification oracle
 For each case assert (1) initial *durable* QuestProgress and ECS world, (2) actual authenticated gameplay/event input, (3) final authoritative quest and world state, (4) emitted committed events, (5) per-observer visibility/narration and client-facing options, (6) restart/idempotency where relevant. Expected values are derived from spec fixtures, **not** code under test. A test that compares `actual` to the method that computed `actual`, uses mocked "quest completed" engine or only checks a displayed line is invalid evidence.
