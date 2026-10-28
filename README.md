@@ -57,3 +57,5 @@ A novice should be able to use built-in templates and contextual controls withou
 - **Incremental, independently audited implementation:** one scoped Builder and one independent Auditor per phase; unresolved ADRs must be decided explicitly before the affected implementation phase.
 
 This is currently a **specification and planning repository**. See [Sprint Tracking](docs/SPRINT-TRACKING.md) for phase-level status rather than assuming the README describes a shippable product.
+
+**Target platform distinction:** v1 desktop/local host is engineered for Windows 11 x64 and Linux x86-64; macOS Apple Silicon is a target gated on a complete native build and isolation test suite. Tablets use remote browser Creator/Player. The exact status of supported vs targeted binaries is determined by S17/S18 release evidence, not this design document. See [architecture decisions](docs/02-architecture/architecture-decisions.md).
