@@ -53,7 +53,7 @@ The world engine owns authoritative state, identities, visibility, cooldowns, RN
 - `CombatOutcome`: validated host proposal (typed resource/stat/position/condition/equipment changes) + RNG receipt + domain events + narration audiences; commit atomically and publish via outbox.
 - `CombatDebugTrace`: creator-authorized, redacted explanation of gates, rolls, costs, durations and event IDs; not exposed to adversaries in live play.
 
-Pipeline is **Intent → admission/auth → encounter snapshot → range/perception/turn/cost checks → resolve policy and RNG → validate proposed effects → single atomic commit → event/outbox → per-observer narration and UI updates**. Rejects must not spend a turn, item, action point, resource or durability unless rules explicitly define a committed attempt-cost. A rejected/replayed packet must not double-hit or double-award.
+Pipeline is **Intent → admission/auth → encounter snapshot → range/perception/turn/cost checks → resolve policy and RNG → validate requested effects → single atomic commit → event/outbox → per-observer narration and UI updates**. Rejects must not spend a turn, item, action point, resource or durability unless rules explicitly define a committed attempt-cost. A rejected/replayed packet must not double-hit or double-award.
 
 ## Timing, space and pursuit
 
