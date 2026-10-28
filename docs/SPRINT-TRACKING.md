@@ -1,8 +1,12 @@
 # MudMaker Sprint Tracker
 
-**Canonical repo-native dashboard.** Sprints are large self-contained milestones, each broken into small independently auditable Builder/Auditor phases. The sprint sections follow dependency order; phase rows within each sprint follow implementation order, even when stable phase IDs are not numerical. Multiple phase handoffs should ordinarily fit a five-hour Claude session. Do not fragment a sprint into separate roadmap waves.
+**Canonical sprint order and phase status.** Each sprint owns a cohesive milestone; phases are small Builder/Auditor handoffs. Legacy IDs remain stable because specs and contracts reference them. The section/table order below is the actual execution order.
 
 **Current:** S00 documentation 9/9 DONE; owner architecture decisions remain open. Implementation phases are TODO.
+
+## Real application and testing milestones
+
+**First launchable UI: S09.2**, immediately after S01 platform decisions and before the ECS. Create/Play/Host shell navigation becomes testable in S09.3; S09.7 tests the real editor canvas without claiming a saved world. Native world/command testing is an executable harness (S02–S05), not a fake GUI. S10.16 introduces **real Creator map editing** only after room topology and persistence exist. S09C.5 demonstrates real connected play after S08.7. No mock world counts as a gameplay checkpoint.
 
 ## Evidence levels and first playable gate
 
@@ -10,9 +14,7 @@
 |---|---|---|
 | **E1 — Native harness** | ECS, rooms, commands, persistence exercised by real focused tests; no graphical Player Client claimed | S02–S05 |
 | **E2 — Local playable game** | Real Player Client connects to a running loopback world, moves through rooms, receives real authorized events | **S09C.5**, after S08.7 and S09.1–4 |
-| **E3 — Creator/public host** | Owner safely starts a durable hosted world with remote joins and host-facing operational controls | S13.16, after input security, recovery and hosting prerequisites |
-
-**Primary sprint sequence:** S00 → S01 → S02 → S03 → S04 → S05 → S08 → S09 → **S09C (E2 first playable at .5)** → S10 → S06 → S06Q → S07 → S11 → S10A → S12 → S12Q → **S13 (E3 public hosting)** → S14. S09.1–4 can start after S03 in parallel with backend work, when Lead confirms exact prerequisites; S09C.1–5 requires S08.7 and S09.1–4. A sprint remains a cohesive milestone, while user-testing checkpoints occur *inside* sprints. Do not confuse E1 native harness, E2 local play, and E3 remotely accessible hosting.
+| **E3 — Creator/public host** | Owner safely starts a durable hosted world with remote joins and host-facing operational controls | S13.18, after input security, recovery and hosting prerequisites |
 
 ## Sprint overview — in actual work order
 
@@ -20,14 +22,14 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **9/9** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates | **0/6** | S00 + owner ADRs | PLANNED |
+| [S09](#s09) | Launchable application shell and shared UI | **0/9** | S01 UI/platform choice | PLANNED |
 | [S02](#s02) | Native ECS | **0/8** | S01 | PLANNED |
 | [S03](#s03) | Assets and persistence | **0/14** | S02 | PLANNED |
 | [S04](#s04) | Rooms and exits | **0/8** | S02,S03 | PLANNED |
 | [S05](#s05) | Command harness | **0/12** | S03,S04 | PLANNED |
 | [S08](#s08) | Loopback host and secure input | **0/17** | S03,S05 | PLANNED |
-| [S09](#s09) | Shared UI foundation | **0/12** | S03 | PLANNED |
 | [S09C](#s09c) | Playable client and toolkit | **0/19** | S08.7,S09.1–4 | PLANNED |
-| [S10](#s10) | Creator command/Blueprint UI | **0/15** | S05,S09 | PLANNED |
+| [S10](#s10) | Creator tools, real map and Data Manager | **0/18** | S03–S05,S09 | PLANNED |
 | [S06](#s06) | World events | **0/3** | S09C.5 | PLANNED |
 | [S06Q](#s06q) | Quests | **0/5** | S09C.5 | PLANNED |
 | [S07](#s07) | Transit | **0/3** | S06,S09C.5 | PLANNED |
@@ -37,7 +39,6 @@
 | [S12Q](#s12q) | Quest authoring | **0/5** | S06Q,S11 | PLANNED |
 | [S13](#s13) | Public hosting | **0/18** | S08,S09C,S11 | PLANNED |
 | [S14](#s14) | Release audit | **0/11** | All preceding | PLANNED |
-
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -54,7 +55,6 @@
 | **S00.8 Account, character and security lifecycle** | AccountId vs SessionId vs CharacterId, registration, login/logout, character ownership, Telnet credential security, custom roles and visual character-creation workflows | DONE | [Account/character contract](03-contracts/account-character-lifecycle.md), [Account & Character Studio](05-sprints/specs/S10A.md), [S08](05-sprints/specs/S08.md) |
 | **S00.9 C# lifecycle scripting hooks and sprint integration** | Document versioned account/character/creation hook extensions, graph integration and cross-sprint prerequisites without claiming unregistered hooks work | DONE | [Scripting v1 index](03-contracts/scripting-v1/INDEX.md), [hook registry](03-contracts/scripting-v1/03-hook-registry.md), [S11](05-sprints/specs/S11.md), [tracker](SPRINT-TRACKING.md) |
 
-
 ## S01 — Native decisions
 
 **Implementation spec:** [S01.md](05-sprints/specs/S01.md) · **Prerequisites:** S00 + owner ADRs
@@ -70,6 +70,27 @@
 | **S01.4 Wire ABI** | Freeze versioned SDK/proto rules | TODO | — |
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | TODO | — |
 | **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | TODO | — |
+
+## S09 — Editor and shared UI foundation
+
+**Spec:** [S09](05-sprints/specs/S09.md) · **Requires:** S01 UI/platform decision; application shell starts before ECS implementation
+
+**Proof:** MudMaker launches with real Create/Play/Host workspace shells, ThemeManager, navigation, responsive controls and persistent preferences; no fake ECS/editor data.
+
+
+**User checkpoints:** S09.2 splash/window visible; S09.3 switch between Create, Play and Host without losing drafts; S09.7 pan/zoom graph-paper canvas and S09.9 keyboard/touch navigation. Back-end world editing begins in S10.
+
+| Phase | Deliverable | Status | Evidence |
+|---|---|---|---|
+| **S09.4 ThemeManager** | Resolve independent Editor/Client themes from one shared token schema | TODO | — |
+| **S09.1 UI primitives** | Implement shared accessible, themed UI primitives and typed action descriptors | TODO | — |
+| **S09.2 Loading and splash** | Validate startup then display MudMaker name/version, Create, Play and Host | TODO | — |
+| **S09.3 Workspace navigation** | Implement Go To menu and transition guard; retain Editor drafts across switches | TODO | — |
+| **S09.6 Editor shell** | Implement Creator tabs, inspectors, focus handling and draft undo ownership | TODO | — |
+| **S09.7 Graph paper** | Render reusable continuous dark minor/major grid with pan/zoom/snap | TODO | — |
+| **S09.9 Responsive inputs** | Support tablet/pen/touch and keyboard workspace navigation | TODO | — |
+| **S09.10 Control registration** | Bind implemented Editor widgets to UI catalog, action ownership and accessible states | TODO | — |
+| **S09.5 Theme preferences** | Provide user themes, preview, import/export, persistence and safe fallback | TODO | — |
 
 ## S02 — ECS foundation
 
@@ -184,30 +205,6 @@
 | **S08.16 Account authentication** | Registration, verification, hashed credentials, login denial and lockout without script bypass | TODO | — |
 | **S08.17 Session puppeting** | Session-bound AccountId, character selection/attachment, revocation and simultaneous-session policy | TODO | — |
 
-## S09 — Editor and shared UI foundation
-
-**Spec:** [S09](05-sprints/specs/S09.md) · **Requires:** S03; S09.1–4 may proceed before S08
-
-**Proof:** S09.1–4 enable first Player Client; later Editor work can proceed independently.
-
-
-**Checkpoints:** User tests after S09.3 (launch and navigate), S09.8 (edit and save a map), and S09.10 (responsive/focus controls); S09.5 finalizes theme preferences.
-
-| Phase | Deliverable | Status | Evidence |
-|---|---|---|---|
-| **S09.4 ThemeManager** | Resolve independent Editor/Client themes from one shared token schema | TODO | — |
-| **S09.1 UI primitives** | Implement shared accessible, themed UI primitives and typed action descriptors | TODO | — |
-| **S09.2 Loading and splash** | Validate startup then display MudMaker name/version, Create, Play and Host | TODO | — |
-| **S09.3 Workspace navigation** | Implement Go To menu and transition guard; retain Editor drafts across switches | TODO | — |
-| **S09.6 Editor shell** | Implement Creator tabs, inspectors, focus handling and draft undo ownership | TODO | — |
-| **S09.7 Graph paper** | Render reusable continuous dark minor/major grid with pan/zoom/snap | TODO | — |
-| **S09.8 Map editing** | Add selectable/editable cells, rooms, exits and inspector/save integration | TODO | — |
-| **S09.9 Responsive inputs** | Support tablet/pen/touch and keyboard workspace navigation | TODO | — |
-| **S09.10 Control registration** | Bind implemented Editor widgets to UI catalog, action ownership and accessible states | TODO | — |
-| **S09.5 Theme preferences** | Provide user themes, preview, import/export, persistence and safe fallback | TODO | — |
-| **S09.11 Data Manager shell** | World Data navigation, collections, statuses, searchable paginated/virtualized results | TODO | — |
-| **S09.12 Creator map metadata** | Add room icons, layers, coordinate hints, visibility settings and as-player preview | TODO | — |
-
 ## S09C — Standalone Player Client (native + external MUDs)
 
 **Spec:** [S09C](05-sprints/specs/S09C.md) · **Requires:** S08.7 + S09.1–4
@@ -246,7 +243,7 @@
 **Proof:** Visual command editor reuses native gameplay command service. First-playable S09C.5 is available for user tests.
 
 
-**Checkpoints:** User tests after S10.2 (edit Blueprint), S10.8 (run new command from creator UI) and S10.9 (publish and use command in the real Player Client).
+**User checkpoints:** S10.2 reusable Blueprint inspector; S10.8 create and run a command; S10.16 edit and save actual linked rooms in the running shell; S10.18 browse thousands of records; S10.9 publish and execute through Player.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
@@ -264,7 +261,10 @@
 | **S10.12 Bulk data operations** | Scoped selection, where-used, batch previews/validation, safe deletion and progress feedback | TODO | — |
 | **S10.13 Prompt designer** | No-code Host/Creator prompt and resource/status widget bindings, presets and preview | TODO | — |
 | **S10.14 Map presentation settings** | Publish region/map icon defaults, discoverability and safe map projection policies | TODO | — |
-| **S10.15 Role editor** | Creator-friendly custom roles, scoped grants/denials and effective-permission preview | TODO | — |
+| **S10.15 Role editor** | Creator-friendly custom roles, scoped grants/denials and effective-permission preview | TODO | — 
+| **S10.16 World map editing** | Connect Creator's cell/room/exit editor to real S04 topology and S03 persistence; human maps two rooms | TODO | — |
+| **S10.17 Map presentation metadata** | Author room icons, layers, coordinate hints and visibility rules; preview player projection | TODO | — |
+| **S10.18 Data Manager shell** | Real indexed collections, paginated/virtualized records, scoped search and detail navigation using S03 API | TODO | — ||
 
 ## S06 — World systems
 
