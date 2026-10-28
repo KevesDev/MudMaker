@@ -3593,6 +3593,405 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-editor-templates-25"
+    },
+    {
+      "id": "editor.commands.12",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "segmented-control",
+      "label": "Guided / Full / Graph / C#",
+      "tooltip": "Switch progressively between guided and advanced views without losing edits",
+      "actionId": "ui.editor.commandMode",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-12"
+    },
+    {
+      "id": "editor.commands.13",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "stepper",
+      "label": "Wizard Steps",
+      "tooltip": "Navigate validated creation steps",
+      "actionId": "ui.editor.commandStep",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-13"
+    },
+    {
+      "id": "editor.commands.14",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "dropdown",
+      "label": "Command Preset",
+      "tooltip": "Choose ordinary game command starter or Empty Custom",
+      "actionId": "ui.editor.commandPreset",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-14"
+    },
+    {
+      "id": "editor.commands.15",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Edit Command",
+      "tooltip": "Open selected command in shared Command Definition editor",
+      "actionId": "ui.editor.commandEdit",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-15"
+    },
+    {
+      "id": "editor.commands.16",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Rename Command",
+      "tooltip": "Rename command and revalidate aliases while retaining stable ID",
+      "actionId": "ui.editor.commandRename",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-16"
+    },
+    {
+      "id": "editor.commands.17",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Duplicate Command",
+      "tooltip": "Copy command to independent draft",
+      "actionId": "ui.editor.commandDuplicate",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-17"
+    },
+    {
+      "id": "editor.commands.18",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Create Command Variation",
+      "tooltip": "Create pinned inherited variation of command",
+      "actionId": "ui.editor.commandVariation",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-18"
+    },
+    {
+      "id": "editor.commands.19",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "toggle",
+      "label": "Enable / Disable",
+      "tooltip": "Enable or disable command through a published availability policy",
+      "actionId": "ui.editor.commandToggle",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-19"
+    },
+    {
+      "id": "editor.commands.20",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Archive / Restore",
+      "tooltip": "Archive or restore command without breaking dependent assets",
+      "actionId": "ui.editor.commandArchive",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-20"
+    },
+    {
+      "id": "editor.commands.21",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Delete Command",
+      "tooltip": "Safely delete unreferenced draft with Where Used confirmation",
+      "actionId": "ui.editor.commandDelete",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-21"
+    },
+    {
+      "id": "editor.commands.22",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Command Where Used",
+      "tooltip": "Inspect referencing assets, command packs, menus and published versions",
+      "actionId": "ui.editor.commandWhereUsed",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-22"
+    },
+    {
+      "id": "editor.commands.23",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "panel",
+      "label": "Command History / Diff",
+      "tooltip": "Inspect revision history and compare changes",
+      "actionId": "ui.editor.commandHistory",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-23"
+    },
+    {
+      "id": "editor.commands.24",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "input",
+      "label": "Command Search / Filters",
+      "tooltip": "Filter commands by name, alias, scope, tag, status and folder",
+      "actionId": "ui.editor.commandSearch",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-24"
+    },
+    {
+      "id": "editor.commands.25",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "input",
+      "label": "Command Tags / Folder",
+      "tooltip": "Organize project-persistent commands using universal Asset Explorer metadata",
+      "actionId": "ui.editor.commandOrganize",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-25"
+    },
+    {
+      "id": "editor.commands.26",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Save Command Draft",
+      "tooltip": "Save validated draft; preserve editor on failure",
+      "actionId": "ui.editor.commandSaveDraft",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-26"
+    },
+    {
+      "id": "editor.commands.27",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Publish Command",
+      "tooltip": "Validate and publish version-pinned command through existing host workflow",
+      "actionId": "ui.editor.commandPublish",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-27"
+    },
+    {
+      "id": "editor.commands.28",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "button",
+      "label": "Cancel Wizard",
+      "tooltip": "Offer save draft, discard, or continue for dirty wizard",
+      "actionId": "ui.editor.commandCancel",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-28"
+    },
+    {
+      "id": "editor.commands.29",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "input",
+      "label": "Alias Chip Editor",
+      "tooltip": "Edit and validate multiple aliases with conflict preview",
+      "actionId": "ui.editor.commandAliases",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-29"
+    },
+    {
+      "id": "editor.commands.30",
+      "workspace": "editor",
+      "surface": "editor.commands",
+      "kind": "dropdown",
+      "label": "Advanced Action Binding",
+      "tooltip": "Bind an approved graph or published C# handler to same command definition",
+      "actionId": "ui.editor.commandAdvancedBinding",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-commands-30"
     }
   ]
 }
