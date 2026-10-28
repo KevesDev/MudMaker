@@ -112,3 +112,5 @@
 **LOOK and perception:** [Canonical LOOK/LOOK AT/LOOK IN/EXAMINE, virtual details, authorized appearance and Creator UX](03-contracts/look-and-perception.md) · [Midnight Express LOOK technical case](04-features/scripting/10-look-technical-case-study.md).
 
 **NPC creation:** [Composable templates, autonomous states, quests, services, AI and Creator NPC Studio](03-contracts/npc-templates-and-behaviors.md) · [Northgate NPC technical case study](04-features/scripting/11-npc-technical-case-study.md).
+
+**Universal Creator Template Library:** [Save any authored object as a template; persistent variants, search, tags, folders, rename and safe deletion](03-contracts/reusable-templates-and-variants.md).
