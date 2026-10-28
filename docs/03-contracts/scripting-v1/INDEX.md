@@ -18,6 +18,9 @@
 | Browse attributed C# methods for entire hook registry | [Hook source catalog](../../../examples/scripting/hook-catalog/INDEX.md) | One typed method per contract ID; runtime not verified |
 | Review full complicated scripted example | [Midnight Express](../../04-features/scripting/07-midnight-express-technical-case-study.md) + [v1 C# source](../../../examples/scripting/MidnightExpressHooks.cs) | Example, not running engine |
 
+## Deliverables and handoff
+- [Exact deliverables, paths and verification status](DELIVERABLES.md). This is the owner/agent checklist; do not infer implementation from source files.
+
 ## Authority rules
 - Code types, signatures and semantics live in `contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs`; the wire format lives in `contracts/scripting/v1/mudmaker_scripting_v1.proto`. Prose explains those sources and records decisions, but must not invent alternative names. Changing either requires a compatible version bump or new major namespace with migration evidence.
 - Hook IDs, eligible event types, phase and routing constraints live in [03](03-hook-registry.md); `[MudHook]` attribute strings must match that catalog exactly.

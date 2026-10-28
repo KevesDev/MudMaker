@@ -74,3 +74,6 @@
 - [Evennia 108-hook/method source mapping](08-research/evennia-hook-parity/INDEX.md) — 89 distinct MudMaker counterparts, pinned upstream commit, 7 separate small index pages.
 - [121 exact hook signatures and C# method catalog](../examples/scripting/hook-catalog/INDEX.md) plus [actual game-oriented family samples](../examples/scripting/hook-families/README.md) — source-level SDK only.
 - [Runnable C# SDK assertion project](../examples/scripting/tests/MudMaker.ScriptContractChecks.csproj) — compile/run required, **not yet executed**.
+
+## Scripting deliverables / verified status
+- [Concrete scripting v1 deliverables and evidence gates](03-contracts/scripting-v1/DELIVERABLES.md) — actual file paths and honest source-versus-runtime status.
