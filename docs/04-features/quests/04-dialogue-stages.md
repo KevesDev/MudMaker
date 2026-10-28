@@ -1,6 +1,6 @@
 # 04 | Dialogue Lifecycle, Conditional Lines and Player Choices
 
-**Status:** User-confirmed eight dialogue stages REQUIRED; proposed precedence, typed sessions and editor model. **Owner:** single Dialogue Runtime + Quest Conditions; not NPC-specific duplicated logic. **Depends:** [quest lifecycle](01-quest-definition-and-lifecycle.md), [chain transitions](03-chains-and-dependencies.md), [observer narration](../../03-contracts/narration-and-observers.md).
+**Status:** User-confirmed eight dialogue stages REQUIRED; binding dialogue precedence, typed sessions and Creator model. **Owner:** single Dialogue Runtime + Quest Conditions; not NPC-specific duplicated logic. **Depends:** [quest lifecycle](01-quest-definition-and-lifecycle.md), [chain transitions](03-chains-and-dependencies.md), [observer narration](../../03-contracts/narration-and-observers.md).
 
 ## Distinguish dialogue phase from quest lifecycle state
 One NPC can offer more than one quest, and the same player may have one active, one eligible and another completed. Dialogue phase is a **rule selected for this actor + this NPC/object + current quest/chain/world conditions**; not a global `NPC.currentDialogue` property. Dialogue assets are versioned and may be reused by multiple interaction targets.
@@ -28,7 +28,7 @@ Every one of the eight stages above supports developer-defined **before / after 
 - Each line: speaker, text, tone/tag, visibility, text substitution allowlist, optional side-effect and observer audience rules, fallback/localization and accessibility. Choices: title, eligibility, source/target/action IDs, confirmation, irreversible warning, if-unavailable reason and next-node.
 - Random pool: named entry weights, optional no-repeat memory, deterministic seeded RNG and persistence of pool state if needed; no invented random thresholds.
 - Per-session state: initiating character, target and world IDs, dialogue asset version, current node, selected choice history, ephemeral vs persisted local values, expiry, revision. Concurrent users never share cursor unless author selected a collaborative conversation.
-- Priority/conflicts: creator sees specific resolution ordering and cannot accidentally make two quest offers render at same time; proposed resolution is authored rule priority + specificity + stable tie policy, but final rule is an OPEN ADR, not agent guess. Author explicitly chooses "show multiple quest options as a menu" vs "highest priority only."
+- Priority/conflicts: creator sees specific resolution ordering and cannot accidentally make two quest offers render at same time; canonical resolution is explicit authored priority (higher first), then condition specificity (more matching conditions), then stable dialogue asset ID. Conflicting equal-priority rules are flagged in Creator; no arbitrary runtime selection. Author explicitly chooses "show multiple quest options as a menu" vs "highest priority only."
 
 ## Dialogue stages are creators' UI tabs
 A nonprogrammer clicking Bob sees tabs **Before**, **Offer**, **Confirm**, **In Progress**, **Reminder**, **Turn-In**, **Complete**, **After**; each has a plain-language default and **Advanced Conditions** toggle. A preview selector simulates No Quest, Eligible, Offered, Active at 2/5, Objectives Complete, Reward Pending, Completed, Failed, Expired, Repeat Cooldown, Party Member, and Class-specific status. Clicking each tab displays exactly who will see it and what changes after a choice. No raw code/JSON required for default workflow.
@@ -45,3 +45,5 @@ Bob with no Q1 chooses generic pool; Bob active Q1 chooses quest line; Q1 comple
 
 ## No false simplifications
 A generic pre-quest line pool is *not* a replacement for eight stages. Quest turn-in is not inherently the same moment as objective completion or reward claim. "Talk" can count on initiating conversation, reaching a specific line, or selecting an option, but creator MUST choose when. Narration to bystanders is separately configured using [observer rules](../../03-contracts/narration-and-observers.md).
+
+**Dialogue default:** show the highest eligible authored conversation, with ready-to-turn-in before active reminder before new offers before generic dialogue. Multiple eligible new quests appear as a selectable menu only when explicitly enabled. A player/target/dialogue session is revision-pinned, 5 minutes of inactivity expiry by default, and aborts safely on target loss, distance, phase change or permission revocation. No quest state progresses on mere dialogue render.
