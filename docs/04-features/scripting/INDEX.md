@@ -42,3 +42,5 @@ Visual Graph Editor: **dark, subtle continuous graph-paper lines, no dotted grid
 [**Technical Case Study 02 — Tollbridge Ambush / combat**](08-combat-technical-case-study.md): timed, turn-based and hybrid encounters, NPC aid cry/hearing/fleeing, graph authoring, proposed C# hooks, native commit, sequence diagram and acceptance matrix.
 
 [**Technical Case Study 03 — Traveling Merchant's Chest**](09-inventory-technical-case-study.md): any entity's inventory, nested bags, chest access, stack splitting, equipment and live two-player trade with graphs, C# and transactional acceptance.
+
+[**Technical Case Study 04 — LOOK aboard Midnight Express**](10-look-technical-case-study.md): appearance of rooms, NPCs and exits, virtual details, a window into passing scenery, private phasing, locked-chest contents, C# query, diagrams and real acceptance checks.
