@@ -1,6 +1,6 @@
 {
   "schema": "mudmaker.hook-registry.v1",
-  "version": 6,
+  "version": 7,
   "origin": "host-local-published-release",
   "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
   "hooks": [
@@ -1888,6 +1888,213 @@
       "ownerKind": "Entity",
       "returnClrType": "HookDecision",
       "behavior": "post-query observation notification; only independently validated deferred effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.spawned.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.despawning.before",
+      "phase": "Before",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "host-authorized NPC event; veto or bounded validated proposal only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.despawned.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.perceived.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.entered_scope.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.left_scope.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.heard_speech.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.heard_sound.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.interaction.before",
+      "phase": "Before",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "host-authorized NPC event; veto or bounded validated proposal only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.actor.interaction.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.behavior.evaluate.before",
+      "phase": "Before",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "host-authorized NPC event; veto or bounded validated proposal only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.behavior.state_changed.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.behavior.action_rejected.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.navigation.waypoint_reached.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.navigation.route_blocked.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.service.requested.before",
+      "phase": "Before",
+      "eventClrType": "NpcServiceEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "host-authorized NPC event; veto or bounded validated proposal only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.service.completed.after",
+      "phase": "After",
+      "eventClrType": "NpcServiceEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.trade.stock_changed.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.quest.stage_eligible.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.quest.objective_credited.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.schedule.due.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.dialogue.respond.before",
+      "phase": "Before",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "host-authorized NPC event; veto or bounded validated proposal only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.dialogue.respond.after",
+      "phase": "After",
+      "eventClrType": "NpcLifecycleEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit observer-scoped event; only independently validated follow-up effects",
       "runtimeImplemented": false
     }
   ]
