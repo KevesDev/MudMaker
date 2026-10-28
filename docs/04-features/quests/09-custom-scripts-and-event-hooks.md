@@ -1,6 +1,6 @@
 # 09 | Custom Quest Scripts, Hook Overrides, Dialogue Challenges and World Events
 
-**Status:** User-confirmed custom scripting throughout quest lifecycle REQUIRED. Specific callback signatures, effect ordering, runtime language and sandbox PROPOSED / ADR-gated. **Authority:** Quest Hook Registry + typed Graph/Script Adapter + ECS Command Executor; no independent quest scripting engine. **Related:** [dialogue stages](04-dialogue-stages.md), [objective credit](02-objective-catalog-and-credit.md), [rewards](05-rewards-and-loot.md), [world events](../../02-architecture/time-events-world-systems.md), [engine script contract](../../03-contracts/scripting-and-graph.md).
+**Status:** User-confirmed custom scripting throughout quest lifecycle REQUIRED. Canonical callback IDs, typed event/effect ordering and C# worker/graph security governed by the versioned scripting-v1 source contracts; runtime dispatch pending. **Authority:** Quest Hook Registry + typed Graph/Script Adapter + ECS Command Executor; no independent quest scripting engine. **Related:** [dialogue stages](04-dialogue-stages.md), [objective credit](02-objective-catalog-and-credit.md), [rewards](05-rewards-and-loot.md), [world events](../../02-architecture/time-events-world-systems.md), [engine script contract](../../03-contracts/scripting-and-graph.md).
 
 ## Fundamental requirement
 A creator can attach a no-code graph, typed custom script or combination of both to **any quest lifecycle stage, objective, quest NPC interaction, reward, chain transition or world-system event**. Creator can extend default behavior, conditionally replace it, or handle the stage entirely through a custom workflow. No forced reward, forced quest completion or fixed dialogue script. Scripting is fully optional for typical quests, but advanced creators can implement novel mechanics without forking the engine.
@@ -10,7 +10,7 @@ A creator can attach a no-code graph, typed custom script or combination of both
 ## One hook abstraction for every entrypoint
 A **HookBinding** is an authored, versioned asset with: bindingId, owner asset ID+version (quest/step/NPC/Blueprint/dialogue/reward/chain), HookPoint enum, matching typed event or stage, guard (shared Condition Registry), scope/actor/target, priority/conflict policy, mode, handler asset (graph ID or script ID), allowed capability/read/write manifest, max execution budget reference, failure policy, logging/trace settings, and enable/disable.
 A **HookInvocation** is a validated immutable context: world+instance ID/revision, request/correlation ID, quest definition+attempt/owner scope+revision, actor+target IDs, interaction location, current objective/chain state, dialogue session+node (when relevant), typed event payload, relevant approved ECS reads, origin/source, and deterministic world clock/RNG capability.
-A **HookResult** (PROPOSED typed union) must be one of: ContinueDefault; ReplaceText/DialogueBranch with validated asset; ProposeEffects (ordered validated command actions); Veto/Reject with safe reason; DeferToChoice with durable workflow/session ID; SuppressOptionalNarration; or a documented composite **before commit**. Never accept arbitrary string return values as authoritative action names, raw SQL, or direct component memory pointers.
+A **HookDecision** (canonical typed result) must be one of: ContinueDefault; ReplaceText/DialogueBranch with validated asset; ProposeEffects (ordered validated command actions); Veto/Reject with safe reason; DeferToChoice with durable workflow/session ID; SuppressOptionalNarration; or a documented composite **before commit**. Never accept arbitrary string return values as authoritative action names, raw SQL, or direct component memory pointers.
 
 ### Hook execution modes (user-facing)
 - **Before default (add conditions):** run validation/choice/script, then normal stage; can reject or defer before any commit.
@@ -39,7 +39,7 @@ A **HookResult** (PROPOSED typed union) must be one of: ContinueDefault; Replace
 | NPC/object interaction | OnInteractAttempt, OnInteractionCommitted, OnInteractionDenied | NPC script only while a named quest active; scripted item/door action |
 | World event lifecycle | OnEventStartRequested, OnEventStarted, OnEventStopRequested, OnEventStopped | Spawn regions, change weather, activate encounter, clean up scheduled effects |
 
-**This table is product capability intent, not finalized exact method names.** API naming/phase ordering is OPEN until the Hook-ABI ADR is approved. Never create multiple separate dispatcher implementations for every row.
+The display names in this table describe author-facing lifecycle stages, not alternate executable method names. **Only exact IDs in** `contracts/scripting/v1/hooks.v1.json` **are executable bindings**. Each row maps to the typed registered hook family/phase for that lifecycle; if a listed stage lacks a literal ID, the S13 Builder must add it atomically across registry, CLR, Proto and graph catalog before the feature is considered delivered. Never create a parallel dispatcher.
 
 ## Example A — Name-based reward
 Creator: "When event X occurs, reward eligible characters whose names begin with A."
@@ -81,7 +81,7 @@ A script can offer a multi-choice dialogue where selecting the correct answer gr
 6. **Failures:** missing script, compilation failure, deadline or denied capability produces explicit creator-facing diagnostic and player-safe error. **Security/permission/quest mutations fail closed**; optional cosmetic fallback may be explicitly chosen by creator, with trace. A failed required hook cannot be silently skipped to mark quest complete.
 7. **Versioning:** bindings pin script/graph/schema version and persist in quest/package; hot reload compiles/validates before swap and never changes a running conversation's semantics without compatible migration.
 8. **Visibility:** quiz choices, hidden quest details and identity-based rewards cannot leak via observer narration, global event subscriptions, logs exposed to players or projection of private component fields.
-9. **No speculative capabilities:** scripting language, sandbox implementation, in-process vs worker placement and cross-world permissions remain OPEN; examples express behavior, not technology approval.
+9. **No speculative capabilities:** scripting language is C# 14/.NET 10 in a bounded host-local worker; cross-world writes are denied; examples express behavior, not technology approval.
 
 ## No-code and advanced visual authoring
 For every quest/dialogue stage, objective, NPC interaction and reward, show **When this happens...** with options **Use normal behavior**, **Run an action first**, **Run an action afterward**, **Replace normal behavior**, **Only if...**, **Ask player a question**, **Run a visual graph**, **Run a custom script**.
