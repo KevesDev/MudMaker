@@ -1,6 +1,6 @@
 # 05 | Code + Graph Authoring and Runtime Acceptance Matrix
 
-**Status:** PROPOSED, tests required before scripting is declared complete. **Owner:** independent Auditor + UI stakeholder. **Agent cost:** scoped tests, final full suite only Auditor on Lead authorization.
+**Status:** binding test matrix, tests required before scripting is declared complete. **Owner:** independent Auditor + UI stakeholder. **Agent cost:** scoped tests, final full suite only Auditor on Lead authorization.
 
 ## Code editor
 CODE-01 create versioned script from entity and project tree; same asset reused, no duplicate inline source. CODE-02 real compile failures produce accurate line/diagnostics, never "success" on noop. CODE-03 autocomplete/API docs and allowlisted function permissions; role-specific denied API isn't accessible at runtime. CODE-04 exported typed variable has default+instance override+persisted migration; invalid value rejects. CODE-05 script function exposed as graph node has correct typed ports and signature-update dependency diagnostics. CODE-06 script Test runs real ECS mutation and observed messages; debugger trace maps source and world revision. CODE-07 tablet remotely edits/validates and focus/keyboard works without local engine compiler.
