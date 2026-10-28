@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"/c/Users/riane/AppData/Local/agy/bin/agy.exe\" -p *)",
+      "Bash(\"/c/Users/riane/AppData/Local/agy/bin/agy.exe\" --print *)",
+      "Bash(\"/c/Users/riane/AppData/Local/agy/bin/agy.exe\" models)",
+      "Bash(\"/c/Users/riane/AppData/Local/agy/bin/agy.exe\" --help)",
+      "Bash(\"/c/Users/riane/AppData/Local/agy/bin/agy.exe\" help*)",
+      "Bash(\"/c/Users/riane/AppData/Local/agy/bin/agy.exe\" --version)"
+    ]
+  },
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Bash commands invoking F:/AnimLab's agy.exe (Antigravity's headless Gemini agent CLI) with -p/--print, --model, --add-dir, --print-timeout, and --dangerously-skip-permissions flags, scoped to the ScriptboardPro project directory, are safe to run without confirmation as part of the Project Lead's Builder dispatch workflow. Stakeholder explicitly authorized standing use of --dangerously-skip-permissions for agy dispatches on this project on 2026-07-24 because agy's own permissions.json allowlist does not reliably unblock write/execute tool calls in headless mode. This authorization is specific to agy.exe invocations scoped to F:/ScriptboardPro via --add-dir and does not extend to any other use of --dangerously-skip-permissions.",
+      "Bash commands invoking agy.exe with -p/--print, --model, --add-dir, --print-timeout, and --dangerously-skip-permissions flags, scoped to F:/AnimLab via --add-dir, are safe to run without confirmation as the Builder dispatch workflow for AnimLab."
+    ]
+  }
+,
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  }
+}
