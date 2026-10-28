@@ -24,21 +24,21 @@
 | [S01](#s01) | Architecture gates and native launch smoke | **0/8** | S00 + owner ADRs | PLANNED |
 | [S02](#s02) | Launchable application shell and shared UI | **0/11** | S01 UI/platform choice | PLANNED |
 | [S03](#s03) | Native ECS | **0/11** | S01 | PLANNED |
-| [S04](#s04) | Assets and persistence | **0/22** | S03 | PLANNED |
+| [S04](#s04) | Assets and persistence | **0/23** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/14** | S03,S04 | PLANNED |
 | [S06](#s06) | Command harness | **0/22** | S04,S05 | PLANNED |
 | [S07](#s07) | Loopback host and secure input | **0/23** | S04,S06 | PLANNED |
 | [S08](#s08) | Playable client and toolkit | **0/25** | S07.9,S02.2–4 | PLANNED |
-| [S09](#s09) | Creator tools, real map and Data Manager | **0/32** | S04–S06,S02 | PLANNED |
+| [S09](#s09) | Creator tools, real map and Data Manager | **0/33** | S04–S06,S02 | PLANNED |
 | [S10](#s10) | World events | **0/8** | S08.6 | PLANNED |
 | [S11](#s11) | Quests | **0/7** | S08.6 | PLANNED |
 | [S12](#s12) | Transit | **0/5** | S10,S08.6 | PLANNED |
-| [S13](#s13) | Scripts and graphs | **0/24** | S07,S08.6,S09 | PLANNED |
+| [S13](#s13) | Scripts and graphs | **0/25** | S07,S08.6,S09 | PLANNED |
 | [S14](#s14) | Account/character Creator workflows | **0/9** | S04,S07,S08,S09,S13 | PLANNED |
 | [S15](#s15) | World authoring | **0/10** | S10,S12,S13 | PLANNED |
 | [S16](#s16) | Quest authoring | **0/6** | S11,S13 | PLANNED |
 | [S17](#s17) | Public hosting | **0/21** | S07,S08,S13 | PLANNED |
-| [S18](#s18) | Release audit | **0/21** | All preceding | PLANNED |
+| [S18](#s18) | Release audit | **0/22** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -149,6 +149,7 @@
 | **S04.20 NPC Blueprint and controller persistence** | Save template inheritance/overrides, NPC instance state, spawn origin, patrol index, scheduled state and service inventory with restart verification | TODO | — |
 | **S04.21 Universal template persistence and index** | Persist every eligible Blueprint/template, pinned parent revision, variations, folders/tags, override lineage and where-used index in embedded project DB; verify reopen/restart | TODO | — |
 | **S04.22 Tutorial World bundle persistence** | Versioned bundled sample project, clone into embedded DB, inspect and reopen without cloud or default credentials | TODO | — |
+| **S04.23 Universal tag definitions and assignments** | Project-persistent tags across all authorable assets and runtime ECS entities, indexed reverse lookup, stable IDs and restore | TODO | — |
 
 ## S05 — Spatial containment
 
@@ -323,6 +324,7 @@
 | **S09.30 Exit presets and integrated editor** | Saveable passage/door/portal/slow-exit Blueprint presets in existing Map/Inspector, shared DoorState linking and test both sides | TODO | — |
 | **S09.31 ECS attribute and social rules authoring** | Creator typed custom numeric fields, character gold/wallet examples, relationship/faction/party policies and visual previews | TODO | — |
 | **S09.32 Crafting graph Creator tutorial** | Create workbench graph requiring 3 wood, 2 iron and blacksmithing>=2; one atomic sword craft and real local test | TODO | — |
+| **S09.33 Universal Tags management and UI** | Shared tags in Asset Explorer/Inspector/Commands/Script files/Graph, bulk edit, namespace selector, search, rename/merge/archive/delete/where-used | TODO | — |
 
 ## S10 — World systems
 
@@ -415,6 +417,7 @@
 | **S13.22 NPC C# and graph lifecycle parity** | Implement exact npc.* registered events, NpcLifecycleEvent/NpcServiceEvent and NpcBehaviorEffect with native permission checks, graph parity and hostile inputs | TODO | — |
 | **S13.23 Exit scripting hook parity** | Implement exact registered exit.* source events and ExitBehaviorEffect in C#/Proto/graph, audit native-authority denial and delayed completion | TODO | — |
 | **S13.24 Communication/crafting/social hooks and graph parity** | Implement versioned communication, craft and relationship event/effect bindings across native JSON/CLR/Proto/graph; authoritative single craft transaction | TODO | — |
+| **S13.25 Typed gameplay tag graph/C# integration** | Implement registered tag query/add/remove hooks, TagRef and TagMutationEffect with native identity/permission checks | TODO | — |
 
 ## S14 — Account & Character Studio
 
@@ -539,6 +542,7 @@
 | **S18.19 Template management audit** | Test all asset-kind coverage, rename/reference stability, variation cycles, pinned releases, guarded delete, concurrent editing, project recovery and high-volume indexed search | TODO | — |
 | **S18.20 Exit/door integrity audit** | Audit shared door races, delayed cancellation/restart, hidden exits, train docking, 1000 pending traversals and object-vs-template behavior | TODO | — |
 | **S18.21 Economy/social/crafting/tutorial audit** | Adversarial currency atomicity, recipe dedup, message audience isolation, party rights, 2-player tutorial and asset persistence | TODO | — |
+| **S18.22 Tag integrity and scale verification** | Cross-asset assignments, organizational/gameplay isolation, reference rename/merge/delete, 100k tags and 1M indexed assignments | TODO | — |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
