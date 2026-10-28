@@ -1,6 +1,6 @@
 # Agent Token, Verification and Dispatch Budget Policy
 
-**Status:** proposed policy adapted from provided AnimLab CLAUDE.md / builder.md / auditor.md. **Authority:** `CLAUDE.md` is role governance; this file is the cost-controlled execution contract.
+**Status:** binding agent policy adapted from provided AnimLab CLAUDE.md / builder.md / auditor.md. **Authority:** `CLAUDE.md` is role governance; this file is the cost-controlled execution contract.
 
 ## Cost model
 Expensive work is unnecessary recontextualization, speculative agents, full-suite reruns, repeated comprehensive audits, giant tool logs and tests that don't distinguish correct from incorrect behavior. Savings must not come from skipping real verification of ECS, identity, session authorization or world-data correctness.
