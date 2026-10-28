@@ -1,6 +1,6 @@
 # Localized Observer Narration, Gameplay Events and Creator-Defined Interactions
 
-**Status:** user-confirmed REQUIRED ability; detailed engine/editor contract PROPOSED. **Owner:** ECS committed event dispatcher + observer projection/narration service; graph and scripting author their rules but do not implement private broadcast buses. **Dependencies:** ECS, spatial/containment/transit, commands/input, world-system event semantics, protocol/security.
+**Status:** binding observer/narration design contract; runtime implementation pending. **Owner:** ECS committed event dispatcher + observer projection/narration service; graph and scripting author their rules but do not implement private broadcast buses. **Dependencies:** ECS, spatial/containment/transit, commands/input, world-system event semantics, protocol/security.
 
 ## Requirement
 When any game actor (player, NPC, machine, world system or scripted object) performs a meaningful action, other relevant players may see a **creator-configured** description of the action. Different observers can see different messages based on their own location, role, senses, permission, knowledge, gameplay state, and actor/target. Examples: a player moving between train cars, a train arriving at a platform, someone disembarking, using a ticket machine, manipulating doors or triggering an arbitrary custom Blueprint. The creator can configure messages and when they appear through visual authoring without programming. Custom scripts use exactly the same event/narration pipeline.
@@ -12,9 +12,9 @@ When any game actor (player, NPC, machine, world system or scripted object) perf
 - A failed/rolled-back command emits no success narration. A local echo is not authoritative.
 - NPCs and players use the same event semantics; actor display name is resolved by approved visibility projection, never trusting arbitrary client-provided text.
 
-## Suggested typed event envelope (PROPOSED)
+## Canonical typed event envelope
 `worldId, worldRevision, eventId, eventTypeId, eventVersion, sequence, committedAtWorldTime, actorEntityId?, subjectEntityId?, sourceLocationId?, destinationLocationId?, eventData (typed), causationId, correlationId, visibilityClass, origin`.
-For movement, the event must capture **pre-commit source location** and **post-commit destination**; do not attempt to derive both from post-commit world containment. For train arrival, event records route/direction and station binding in authoritative transit state. Events may be durable for recovery; delivery guarantees (exactly-once vs at-least-once with dedupe) are OPEN and need explicit ADR, but retries must not visibly duplicate one action in a normal session.
+For movement, the event must capture **pre-commit source location** and **post-commit destination**; do not attempt to derive both from post-commit world containment. For train arrival, event records route/direction and station binding in authoritative transit state. Events and outbox are durable with at-least-once transport and eventId+recipient deduplication; committed gameplay effects are idempotent by onceKey. Reconnect obtains a viewer-authorized revision snapshot and replays only unseen authorized messages.
 
 ## Audience scopes (creator-configurable)
 - **ACTOR:** initiator sees second-person confirmation or custom text.
@@ -60,5 +60,5 @@ NAR-07 Change narration and audience in visual editor, save/reopen/publish/host,
 NAR-08 Save/restart train while in motion; events after restart narrate from correct resolved location, no phantom arrival.
 Required test oracle: read and assert committed ECS state and emitted structured event separately from projected messages; a test that only checks a printed line is insufficient. Logs and event traces must explain suppressed/blocked delivery to authors without leaking private information to players.
 
-## Open decisions
+## Binding dispatch defaults and override rules
 Delivery guarantee, localization/fallback, rule precedence/conflict handling, historical transcript retention, spatial visibility model and high-volume event coalescing/queuing budgets require ADRs. No agent picks behavior silently.
