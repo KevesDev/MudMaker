@@ -1,6 +1,6 @@
 # 08 — UI/UX verification, screen inventory and user journey matrix
 
-**Status:** specified test oracles, not yet passed. **Control inventory** [311 UI elements in four scoped catalogs](../../../contracts/ui/v1/INDEX.md). Each new interactive control added by Builder requires an indexed visible label, tooltip/help, stable action, current state owner, permission, keyboard/touch/reader path and real error feedback, not just component render.
+**Status:** specified test oracles, not yet passed. **Control inventory** [the versioned UI inventory in four scoped catalogs](../../../contracts/ui/v1/INDEX.md). Each new interactive control added by Builder requires an indexed visible label, tooltip/help, stable action, current state owner, permission, keyboard/touch/reader path and real error feedback, not just component render.
 
 | Earliest sprint/phase | Creator can actually demonstrate | Independent Auditor rejects when |
 |---|---|---|
@@ -40,4 +40,4 @@
 **Access needs:** use keyboard only and accessible room list/command list; no essential tooltip only on hover. Touch client can send, switch composer mode, open map, navigate panel drawer, access Stop Auto Walk and disconnect without a hardware keyboard.
 
 ## Evidence and process
-For each phase: one Builder provides exact source path/commit, focused executable test output and human reproducible steps. One different Auditor reports PASS/FAIL including broken flows and negative cases. **No implementation milestone is marked DONE solely because registry/spec exists**; S00 documentation checks may be sent to AUDIT with links, but no independent signoff is presumed. [Tracker](../../SPRINT-TRACKING.md) is the only status location.
+For each implementation phase, Lead selects the relevant verification appropriate to the deliverable. Builder supplies actual evidence; one different Auditor reports PASS/FAIL within the dispatched scope. Human workflows are used when the work is user-facing, not compelled for every phase. **No implementation milestone is marked DONE solely because registry/spec exists**; S00 documentation checks may be sent to AUDIT with links, but no independent signoff is presumed. [Tracker](../../SPRINT-TRACKING.md) is the only status location.

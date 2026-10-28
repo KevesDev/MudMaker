@@ -1,13 +1,13 @@
 # MudMaker Sprint Roadmap
 
-**Repo-native source of truth:** [Sprint Tracker](../SPRINT-TRACKING.md) — all phases, current status, evidence and progress in one readable table. [One implementation spec per sprint](specs/INDEX.md) — exact approved contracts, narrow Builder scope, real user test and independent Auditor checks.
+**Repo-native source of truth:** [Sprint Tracker](../SPRINT-TRACKING.md) — all phases, current status, evidence and progress in one readable table. [One implementation spec per sprint](specs/INDEX.md) — exact approved contracts, narrow Builder scope and Lead-selected verification with independent Auditor approval.
 
 ## Execution policy
-- Each phase is independently testable and intentionally small enough that **multiple Builder → scoped Auditor → user-demo handoffs** can normally complete during a Claude session.
+- Each phase is independently testable and intentionally small enough that **multiple Builder → scoped Auditor handoffs** can normally complete during a Claude session.
 - Builder and Auditor **do not perform research** or choose libraries/architecture. Unanswered research is owner/documentation work and blocks dispatch.
 - The tracker is the **only place to change TODO/BUILD/AUDIT/BLOCKED/DONE or progress**. No per-phase files; these were removed.
 - Native/technical architecture decisions precede implementation. A source example, documentation or green mock is not evidence of a running engine.
-- Run targeted tests for each phase, with a larger independent sprint closeout when explicitly authorized.
+- Lead chooses focused verification for each phase, including a user-facing check when naturally useful. No mandatory demo or negative-test recipe per phase; full suite only when explicitly authorized at sprint close.
 
 ## Dependency order
 
