@@ -216,7 +216,7 @@
 | **S07.14 Long commands** | Authorized multiline command args remain commands | TODO | — |
 | **S07.15 Rate limits** | Per-actor, action and byte budgets | TODO | — |
 | **S07.16 Backpressure** | Bounded fair input and output queues | TODO | — |
-| **S07.17 Reconnect** | Dedupe receipts and restore session safely | TODO | — |
+| **S07.17 Reconnect** | Dedupe receipts, distinguish loss of one socket from loss of final controlling session, host-stamp loss/grace/restoration and restore authorization safely | TODO | — |
 | **S07.18 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
 | **S07.19 CPU NPC inference supervisor** | Bundle CPU native model worker with process/resource isolation, bounded queue, timeouts, shared model, live host status and deterministic fallback; off unless installed/enabled | TODO | — |
 | **S07.20 First local NPC speech demo** | Visible real loopback world NPC replies to nearby authorized speech using persona and short room context; run actual model installed and verified through S04.17 wizard, no cloud/API, manual model provisioning or extra runtime | TODO | — |
@@ -254,7 +254,7 @@
 | **S08.18 Live HUD** | Pinned per-profile prompt/vitals/exits bar using real scoped native fields or external fallback | TODO | — |
 | **S08.19 Native mini map** | Render authorized room/exits from host topology, preserve client notes, handle unknown/dynamic paths | TODO | — |
 | **S08.20 Player-facing NPC conversation test** | Use real Play client to speak with NPC across rooms, move/disconnect/reconnect and verify scoped replies and timeout fallback | TODO | — |
-| **S08.21 Player combat interface** | Action palette, target selection, turn/tick or cast state, cooldown and combat narration integrated into real native Player; no client-side resolution | TODO | — |
+| **S08.21 Player combat interface** | Action palette, target selection, turn/tick or cast state, cooldown and combat narration; visible disconnected/reconnecting state and resynced turn on reattach; no client-side resolution | TODO | — |
 
 ## S09 — Visual command editor
 
@@ -287,8 +287,8 @@
 | **S09.18 Data Manager shell** | Real indexed collections, paginated/virtualized records, scoped search and detail navigation using S04 API | TODO | — ||
 | **S09.19 NPC personality and dialogue nodes** | Creator Blueprint/node inspector provides identity, world lore, reply style, hearing triggers, cooldown, response budgets and script-hook bindings using actual ECS events | TODO | — |
 | **S09.20 NPC conversation live preview** | Creator launches real NPC test conversation with observable scene facts, roleplay constraints, latency and fallback diagnostics; no separate editor | TODO | — |
-| **S09.21 Combat Studio ruleset and abilities** | Creator presets for pulse, turn, realtime, hybrid and empty custom; editable stat pools, ability/target/timing/durability and PvP policies in shared inspectors | TODO | — |
-| **S09.22 Combat Studio live test** | Creator opens live duel with selectable mode, range/hearing overlay, condition/durability status, step tick/turn and replay reset; saves versioned rulesets | TODO | — |
+| **S09.21 Combat Studio ruleset and abilities** | Creator presets for pulse, turn, realtime, hybrid and empty custom; editable stats, abilities, PvP, plus disconnect/grace/forfeit policies and graph nodes in shared inspectors | TODO | — |
+| **S09.22 Combat Studio live test** | Creator opens live duel with selectable mode, condition/durability status, turn/tick controls, real local disconnect/reconnect test and second-player observation; saves versioned rulesets | TODO | — |
 
 ## S10 — World systems
 
@@ -369,7 +369,7 @@
 | **S13.14 Account/character hook ABI** | Versioned registry/CLR/proto parity for typed lifecycle and security-safe events | TODO | — |
 | **S13.15 Workflow hook effects** | Durable graph continuation and approved C# effects for creation steps, approval and world events | TODO | — |
 | **S13.16 NPC C# hook integration** | Expose typed read-only heard/seen context and validated dialogue proposals in versioned SDK/CLR/Protobuf/hook manifest; graph and scripts use same runtime authority | TODO | — |
-| **S13.17 Combat graph and C# parity** | Version combat event/ability/effect hooks across registry, CLR, proto and graph; bounded validated proposals, failure and exploit tests | TODO | — |
+| **S13.17 Combat graph and C# parity** | Version combat event/ability/effect and control-lost/grace-expired/control-restored hooks across registry, CLR, proto and graph; read-only connection snapshots, bounded effects and exploit tests | TODO | — |
 | **S13.18 Creator-owned C# CombatManager** | Register and scope independent manager instances, custom action/stat schemas, queue/timers, encounter ownership and durable state through typed SDK/effect API; no built-in damage/HP dependency | TODO | — |
 | **S13.19 Custom combat end-to-end UI test** | In running Creator and two-player Client, publish a C# manager with entirely custom rules, actions and result display; audit hooks, crashes, movement/permission denial, restart and no duplicate effects | TODO | — |
 
