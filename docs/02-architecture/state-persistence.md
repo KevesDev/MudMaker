@@ -1,6 +1,6 @@
 # Project Assets, ECS Persistence, Versioning and Restore
 
-**Status:** PROPOSED. **Owner:** persistence + schema registry. **Dependencies:** ECS, space, event contracts.
+**Status:** binding durability and recovery behaviors; runtime pending. **Owner:** persistence + schema registry. **Dependencies:** ECS, space, event contracts.
 
 ## Separate three kinds of data
 1. **Project definitions (authoring):** component schemas, entity/room/exit templates, node graphs, world-system definitions, map layout/color/icons, scripts, region topology, hosting manifest. Version-controlled project package, not a live engine registry.
@@ -8,7 +8,7 @@
 3. **Ephemeral/transient state:** UI selection/focus/panel placement, current sockets, temporary caches and derived query indexes. Must rebuild safely and never masquerade as durable gameplay data.
 
 ## Schema requirements
-Every data asset has stable ID, version, validation schema, owner/scope and explicit references. Serializer must reject unknown incompatible schema versions or run reviewed migrations; never drop fields silently. Human-readable project formats are desirable, but file format (JSON vs other), binary snapshots, DB implementation and engine language are OPEN. The original v1.1 envisioned JSON + embedded SQLite, while the current Maven pom uses H2: neither is automatically approved.
+Every data asset has stable ID, version, validation schema, owner/scope and explicit references. Serializer must reject unknown incompatible schema versions or run reviewed migrations; never drop fields silently. Project authoring assets use canonical schema-versioned JSON manifests with deterministic stable references; active world state resides in the bundled embedded transactional store, with durable journal/outbox and recoverable snapshots. Engine implementation language does not alter serialized schemas.
 
 ## Save/restore semantics
 - Document transaction/snapshot atomicity and crash recovery, write-order guarantee and idempotent replay boundary.
@@ -32,4 +32,4 @@ Every durable entity is tied to world instance and project version; account iden
 - Save while a train moves and player changes cars: restored train at lawful progress, player in same car, item owned by correct carrier.
 - Restore a room with a dynamic locked exit and weather controller.
 - Schema migrate from a prior fixture; report exact unsupported cases.
-- Many entities + frequent state deltas meet measured latency/storage budgets (targets OPEN).
+- Many entities + frequent state deltas meet measured latency/storage budgets (measured latency/storage targets from the release performance contract).
