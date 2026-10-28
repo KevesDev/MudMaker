@@ -1,6 +1,6 @@
 # 06 | Eligibility, Conditional Presence, Phasing, Parties and Instances
 
-**Status:** REQUIRED per-player Bob/Joe world, level/class-specific quests and group behavior; PROPOSED contract. **Owner:** shared Condition Evaluator + ECS Quest Progress + Observer/Phase Projection + Instance Manager. Authoritative implementation details in [quest runtime](../../02-architecture/quest-progression-and-phasing.md).
+**Status:** REQUIRED per-player Bob/Joe world, level/class-specific quests and group behavior; binding eligibility and phasing contract. **Owner:** shared Condition Evaluator + ECS Quest Progress + Observer/Phase Projection + Instance Manager. Authoritative implementation details in [quest runtime](../../02-architecture/quest-progression-and-phasing.md).
 
 ## Separate five independent questions
 1. **Can this actor discover or see the offer?** (NPC marker / dialog / location trigger)
