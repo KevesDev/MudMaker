@@ -11,6 +11,7 @@
 | Rooms, containers, moving trains, exits, spatial graph | [Spatial / containment / transit](02-architecture/spatial-containment-transit.md) | REQUIRED scenario; PROPOSED invariants |
 | Weather, spawners, events, time and scheduling | [Time / events / world systems](02-architecture/time-events-world-systems.md) | REQUIRED features; PROPOSED mechanics |
 | Quest runtime, progression, phased NPCs, private instances | [Quest progression and phasing](02-architecture/quest-progression-and-phasing.md) | REQUIRED behavior; PROPOSED engine contract |
+| **Automatic local databases, Creator Data Manager, optional backup, safe restore, access controls** | [Local storage and Data Manager](03-contracts/local-database-and-data-manager.md) | REQUIRED experience; PROPOSED implementation pending ADR |
 | Durable state, prototypes, versions, save/restore | [State / persistence](02-architecture/state-persistence.md) | PROPOSED |
 | Keyboard/touch/text input and game command pipeline | [Commands + input](03-contracts/commands-and-input.md) | REQUIRED ownership; PROPOSED contract |
 | Player-visible room/train/interactions narration and audiences | [Narration/observers](03-contracts/narration-and-observers.md) | REQUIRED behavior; PROPOSED contract |
