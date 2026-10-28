@@ -103,4 +103,4 @@
 
 [Account, character, session, permission, registration/login/logout and one visual workflow graph](03-contracts/account-character-lifecycle.md) — REQUIREMENTS / PROPOSED contract; includes Evennia lifecycle research and version-gated C# hooks. [Dedicated Creator sprint](05-sprints/specs/S14.md) builds on early identity/auth and S13 graphs. Exact hook IDs remain governed by the [scripting registry](03-contracts/scripting-v1/03-hook-registry.md).
 
-**Optional local NPC dialogue:** [CPU-first embedded model research, roleplay boundaries and hardware gates](03-contracts/optional-local-npc-dialogue.md). Off by default; implementation only in S13/S15/S17/S18 phases.
+**Optional local NPC dialogue:** [CPU-first embedded model research, roleplay boundaries and hardware gates](03-contracts/optional-local-npc-dialogue.md). Off by default; the wizard is S02, verified model packs S04, first real NPC dialogue S07, Play testing S08, visual nodes S09, C# hooks S13, and later Host/release checks S17–S18.
