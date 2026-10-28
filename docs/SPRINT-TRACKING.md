@@ -10,7 +10,7 @@
 |---|---|---|
 | **E1 — Native harness** | ECS, rooms, commands, persistence exercised by real focused tests; no graphical Player Client claimed | S02–S05 |
 | **E2 — Local playable game** | Real Player Client connects to a running loopback world, moves through rooms, receives real authorized events | **S09C.5**, after S08.7 and S09.1–4 |
-| **E3 — Creator/public host** | Owner safely starts a durable hosted world with remote joins and host-facing operational controls | S13.13, after input security, recovery and hosting prerequisites |
+| **E3 — Creator/public host** | Owner safely starts a durable hosted world with remote joins and host-facing operational controls | S13.16, after input security, recovery and hosting prerequisites |
 
 **Primary sprint sequence:** S00 → S01 → S02 → S03 → S04 → S05 → S08 → S09 → **S09C (E2 first playable at .5)** → S10 → S06 → S06Q → S07 → S11 → S12 → S12Q → **S13 (E3 public hosting)** → S14. S09.1–4 can start after S03 in parallel with backend work, when Lead confirms exact prerequisites; S09C.1–5 requires S08.7 and S09.1–4. A sprint remains a cohesive milestone, while user-testing checkpoints occur *inside* sprints. Do not confuse E1 native harness, E2 local play, and E3 remotely accessible hosting.
 
@@ -21,21 +21,21 @@
 | [S00](#s00) | Documents and decisions | **0/5** | — | ACTIVE |
 | [S01](#s01) | Architecture gates | **0/5** | S00 + owner ADRs | PLANNED |
 | [S02](#s02) | Native ECS | **0/7** | S01 | PLANNED |
-| [S03](#s03) | Assets and persistence | **0/8** | S02 | PLANNED |
+| [S03](#s03) | Assets and persistence | **0/11** | S02 | PLANNED |
 | [S04](#s04) | Rooms and exits | **0/6** | S02,S03 | PLANNED |
 | [S05](#s05) | Command harness | **0/10** | S03,S04 | PLANNED |
 | [S08](#s08) | Loopback host and secure input | **0/14** | S03,S05 | PLANNED |
-| [S09](#s09) | Shared UI foundation | **0/10** | S03 | PLANNED |
+| [S09](#s09) | Shared UI foundation | **0/11** | S03 | PLANNED |
 | [S09C](#s09c) | Playable client and toolkit | **0/16** | S08.7,S09.1–4 | PLANNED |
-| [S10](#s10) | Creator command/Blueprint UI | **0/9** | S05,S09 | PLANNED |
+| [S10](#s10) | Creator command/Blueprint UI | **0/12** | S05,S09 | PLANNED |
 | [S06](#s06) | World events | **0/3** | S09C.5 | PLANNED |
 | [S06Q](#s06q) | Quests | **0/5** | S09C.5 | PLANNED |
 | [S07](#s07) | Transit | **0/3** | S06,S09C.5 | PLANNED |
 | [S11](#s11) | Scripts and graphs | **0/12** | S08,S09C.5,S10 | PLANNED |
 | [S12](#s12) | World authoring | **0/4** | S06,S07,S11 | PLANNED |
 | [S12Q](#s12q) | Quest authoring | **0/5** | S06Q,S11 | PLANNED |
-| [S13](#s13) | Public hosting | **0/13** | S08,S09C,S11 | PLANNED |
-| [S14](#s14) | Release audit | **0/8** | All preceding | PLANNED |
+| [S13](#s13) | Public hosting | **0/16** | S08,S09C,S11 | PLANNED |
+| [S14](#s14) | Release audit | **0/9** | All preceding | PLANNED |
 
 ## Agent process
 Lead selects one phase from this table and its one sprint spec. One Builder implements the bounded deliverable and runs approved focused checks; one different scoped Auditor reviews real implementation and evidence. `TODO → BUILD → AUDIT → DONE` only with independent PASS, not merely a documented proposal. Record test command, build commit, audit result and any real user demo in **Evidence**. No agent research tasks or broad test-suite loops. `BLOCKED` means the owner must resolve the missing decision. Full suite at sprint closure only by explicit Lead approval.
@@ -70,7 +70,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 |---|---|---|---|
 | **S01.1 ECS identities** | Finalize world+generation handle ADR | TODO | — |
 | **S01.2 Writer model** | Finalize one authoritative writer | TODO | — |
-| **S01.3 Persistence ADR** | Select transaction and outbox implementation | TODO | — |
+| **S01.3 Persistence ADR** | Approve embedded local DB engine, isolation/locking, transaction/outbox, migration, recovery and backup ADR | TODO | — |
 | **S01.4 Wire ABI** | Freeze versioned SDK/proto rules | TODO | — |
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | TODO | — |
 
@@ -101,13 +101,16 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S03.1 Asset registry** | Versioned stable asset GUIDs | TODO | — |
-| **S03.2 Asset serializer** | Typed asset data roundtrip | TODO | — |
+| **S03.2 Asset serializer** | Typed asset data roundtrip with indexed searchable records | TODO | — |
 | **S03.3 Layered overrides** | Default/instance/runtime property values | TODO | — |
 | **S03.4 Scoped slots** | Persistent world/player state schema | TODO | — |
-| **S03.5 World snapshot** | ECS and slot restore | TODO | — |
+| **S03.5 Automatic local DB bootstrap and durable world snapshot** | Create/configure local project database automatically; ECS and slot save/restore | TODO | — |
 | **S03.6 Outbox ledger** | Durable onceKeys and committed events | TODO | — |
-| **S03.7 Migration gate** | Schema revision and safe migration | TODO | — |
-| **S03.8 Release manifest** | Immutable asset hashes and rollback | TODO | — |
+| **S03.7 Schema migration and integrity gate** | App-run versioned schema migration, safety checkpoint and corruption/incompatible-store detection | TODO | — |
+| **S03.8 Release and storage manifest** | Immutable asset hashes, database version compatibility and rollback | TODO | — |
+| **S03.9 Local storage service** | Local-only authenticated storage access, project writer lease, permissions and health API | TODO | — |
+| **S03.10 Data service API** | Typed, paginated, indexed List/Get/Create/Update/Delete, schema and revision/authorization tests | TODO | — |
+| **S03.11 Safe backup primitives** | Consistent live DB snapshot, manifest/checksum, staged validation and non-destructive restore harness | TODO | — |
 
 ## S04 — Spatial containment
 
@@ -194,6 +197,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S09.9 Responsive inputs** | Support tablet/pen/touch and keyboard workspace navigation | TODO | — |
 | **S09.10 Control registration** | Bind implemented Editor widgets to UI catalog, action ownership and accessible states | TODO | — |
 | **S09.5 Theme preferences** | Provide user themes, preview, import/export, persistence and safe fallback | TODO | — |
+| **S09.11 Data Manager shell** | World Data navigation, collections, statuses, searchable paginated/virtualized results | TODO | — |
 
 ## S09C — Standalone Player Client (native + external MUDs)
 
@@ -234,8 +238,8 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S10.1 Inspector** | Schema-driven component editor | TODO | — |
-| **S10.2 Blueprints** | Reusable template and overrides | TODO | — |
+| **S10.1 Inspector** | Schema-driven component editor with local data API | TODO | — |
+| **S10.2 Blueprints** | Reusable templates and overrides with searchable data catalog | TODO | — |
 | **S10.3 Theme reuse** | S09 graph-paper tokens | TODO | — |
 | **S10.4 Command form** | No-code command name/help/action | TODO | — |
 | **S10.5 Arguments UI** | Typed param/switch/multiline controls | TODO | — |
@@ -243,6 +247,9 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S10.7 Alias/help view** | Conflict analysis and generated usage | TODO | — |
 | **S10.8 Real test UI** | Use native command harness in editor | TODO | — |
 | **S10.9 Command publish** | Versioned release validation | TODO | — |
+| **S10.10 Record explorer** | Fast filters, server paging, stable identifiers and relationships across thousands of entities | TODO | — |
+| **S10.11 Safe data editing** | Inspector CRUD, changes preview, conflict feedback and reversible draft edit via existing authority | TODO | — |
+| **S10.12 Bulk data operations** | Scoped selection, where-used, batch previews/validation, safe deletion and progress feedback | TODO | — |
 
 ## S06 — World systems
 
@@ -355,23 +362,26 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 **Proof:** E3 public/creator hosting: host startup, recovery, external joins and operations. Different from S08 loopback developer host.
 
 
-**Checkpoints:** Test GUI/headless local release startup after S13.4, recovery after S13.6; **E3** only after S13.13 verifies real remote joins and protective host operations.
+**Checkpoints:** Test GUI/headless local release startup after S13.4, recovery after S13.6; **E3** only after S13.16 verifies real remote joins and protective host operations.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S13.1 Hosting lease** | Enforce one active hosted project per application supervisor | TODO | — |
-| **S13.5 Startup preflight** | Validate scripts, command assets, schema and limits before player port opens | TODO | — |
+| **S13.1 Hosting and database lease** | Enforce one active host/project database writer, local-only store handles and runtime ownership | TODO | — |
+| **S13.5 Storage and host preflight** | Automatically open/check local database and validate scripts, schema, permissions and limits before player port opens | TODO | — |
 | **S13.2 GUI hosting** | Start a validated immutable release from Host workspace | TODO | — |
 | **S13.3 Background host navigation** | Keep host A running when switching to Create, Play or Splash; guarded stop | TODO | — |
 | **S13.4 Headless hosting** | Start same release using CLI under identical single-host rule | TODO | — |
-| **S13.6 State recovery** | Restore ECS, quests, posts, timers and outbox after restart | TODO | — |
+| **S13.6 Database and world recovery** | Restore ECS, quests, posts, timers and outbox; detect corrupt storage without silent rollback | TODO | — |
 | **S13.7 Secure transport** | Configure server TLS and browser Origin restrictions where appropriate | TODO | — |
 | **S13.8 Proxy and firewall** | Implement trusted proxy policy and connectivity diagnostics | TODO | — |
 | **S13.9 Traffic metrics** | Expose bounded rate, queue, rejection and latency status | TODO | — |
 | **S13.10 Moderation controls** | Provide role-checked kick/ban and protective rate settings | TODO | — |
-| **S13.11 Backups** | Save and restore compatible durable world snapshots | TODO | — |
-| **S13.12 Release rollback** | Select prior validated immutable release safely | TODO | — |
+| **S13.11 Backups** | Optional manual/scheduled consistent database backups, manifest validation and in-app selection | TODO | — |
+| **S13.12 Release rollback** | Restore selected verified backup or prior compatible release via staging, safety snapshot and failure rollback | TODO | — |
 | **S13.13 Host onboarding** | Guide self-hosting, friend connection and playing from independent Client | TODO | — |
+| **S13.14 Backup preferences UI** | Opt-in manual/scheduled backup, destinations, retention and verification status | TODO | — |
+| **S13.15 In-app restore UX** | Choose verified backup; restore as copy or staged replacement with consent and failure fallback | TODO | — |
+| **S13.16 Database operations UI** | Accessible database health, storage usage, maintenance and actionable recovery errors | TODO | — |
 
 ## S14 — Release audit
 
@@ -392,6 +402,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S14.6 Worker sandbox** | Crash/isolation negative cases | TODO | — |
 | **S14.7 Performance** | World+command+RP fanout benchmark | TODO | — |
 | **S14.8 Release** | Clean install, host, save, restore | TODO | — |
+| **S14.9 Storage disaster tests** | Cross-platform fresh bootstrap, privacy, large-data pagination, corruption/migration, active backup and restore-failure audits | TODO | — |
 
 ## Phase evidence
 When a phase is DONE, its Evidence cell links the **Builder change, the verification chosen by Lead for that phase, and the independent Auditor PASS**. Add a user exercise when applicable, not as a universal requirement. Use [Sprint History](SPRINT-HISTORY.md) for longer discussion, never duplicate phase status in separate files. A 4–5 hour usage reset is a scheduling constraint, not a technical deliverable: size work so multiple complete phases can ordinarily be handled per session; split unexpectedly large phases before implementation.
