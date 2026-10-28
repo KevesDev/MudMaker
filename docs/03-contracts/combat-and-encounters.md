@@ -1,6 +1,6 @@
 # Combat and encounter architecture
 
-**Status:** proposed product contract, not implemented. Combat must support radically different MUDs without forking the authoritative ECS or creating a second visual programming system. [Worked example](../04-features/scripting/08-combat-technical-case-study.md) · [Midnight Express precedent](../04-features/scripting/07-midnight-express-technical-case-study.md).
+**Status:** binding design decisions complete; implementation not yet built. Combat must support radically different MUDs without forking the authoritative ECS or creating a second visual programming system. [Worked example](../04-features/scripting/08-combat-technical-case-study.md) · [Midnight Express precedent](../04-features/scripting/07-midnight-express-technical-case-study.md).
 
 ## Design rule: composition, not one mandatory combat genre
 
@@ -42,7 +42,7 @@ The world engine owns authoritative state, identities, visibility, cooldowns, RN
 | Async/offline turn games, PvP tournaments | Persisted encounter phase, expiry and reconnect policy; host clock and conflict resolution, no offline unbounded actions |
 | Cross-server/spectator replay | Observer-scoped committed events + replay IDs; remote/spectator views never gain hidden or controlling authority |
 
-## Core typed assets and services (proposed names)
+## Core typed assets and services (canonical names)
 
 - `CombatRulesetAsset`: versioned collection of policies and default skill/resource definitions.
 - `CombatAbilityAsset`: costs, eligibility, target query, windup/cast/channel/cooldown, effect graph, interrupts, outcome/narration templates, failure refund.
@@ -59,7 +59,7 @@ Pipeline is **Intent → admission/auth → encounter snapshot → range/percept
 
 Combat must not freeze the shared WorldClock or durable scheduler described in [Time, Events & World Systems](../02-architecture/time-events-world-systems.md#scheduling-domains-and-scale). Hundreds of simultaneous fights must have independently owned clocks and bounded dispatch work. Group co-due deadlines by fair budgets and measure scheduling latency under load; don't scan all active combatants each world tick. Turn-based encounters keep their own deterministic phase and may coexist with real-time travel and weather. Real-time abilities use monotonic host clocks and stored recovery cursors; never trust client timers or wall clock. Simultaneous resolution uses snapshot/commit conflict rules, not nondeterministic thread order. Interruptions cannot recurse unboundedly. Network latency compensation must be explicit and capped; never allow retroactive edits to committed turns.
 
-Distance and hearing are separate typed policies. `20 cells` means a bounded spatial-index/range query on a cell-based map; in a room graph the creator chooses 20 hops, weighted distance or sound transmission edges instead. Hearing respects barriers, region rules, silence, privacy, stealth and observer phase. An aid cry is **one committed audible event**, not N direct calls into surrounding NPC scripts. Listeners independently evaluate allegiance, combat readiness, capacity, cooldown and path availability; a call for help does not teleport assistance or override access restrictions. Pursuit obeys actual exit permissions and route changes; flee may succeed even while pursuers stay engaged until disengagement rules complete.
+Distance and hearing are separate typed policies. `20 cells` means a bounded spatial-index/range query on a cell-based map; in room-only maps the default adapter is shortest traversable directed path hops; sound uses traversable sound edges with closed barriers blocking it; creators can override via the same policy graph. Hearing respects barriers, region rules, silence, privacy, stealth and observer phase. An aid cry is **one committed audible event**, not N direct calls into surrounding NPC scripts. Listeners independently evaluate allegiance, combat readiness, capacity, cooldown and path availability; a call for help does not teleport assistance or override access restrictions. Pursuit obeys actual exit permissions and route changes; flee may succeed even while pursuers stay engaged until disengagement rules complete.
 
 ## Accessible Creator experience and first-class test UI
 
@@ -76,27 +76,27 @@ Every sprint implementing a material combat capability must ship its necessary v
 
 - PvP/duel consent, safe zones, actor permissions, hidden targets and authorized controls checked server-side on every intent and effect; scripts and AI never authorize a forbidden action.
 - Account/Character/Session IDs remain separate; reconnect does not grant two moves; NPC AI text cannot become a trusted combat command.
-- One RNG seed/stream per appropriate scope, recorded version/roll digest for replay/debug and anti-cheat; caller cannot choose authoritative randomness.
-- Persist active encounter phase, pending intents, cast/condition deadlines, cooldown state and resource/equipment changes; define restore behavior for offline actors and expired rounds.
+- One RNG stream per encounter, seeded from host-managed world RNG, recorded version/roll digest for replay/debug and anti-cheat; caller cannot choose authoritative randomness.
+- Persist active encounter phase, pending intents, cast/condition deadlines, cooldown state and resource/equipment changes; restore elapsed wall-clock deadlines with bounded catch-up: at most one overdue resolution per encounter, then advance next deadlines; preserve paused turn-based phases.
 - Disconnection, death mid-cast, double-target, simultaneous kill, hidden target, room transition, teleport, asset hot edit, corrupt save, process crash, outbox replay and high NPC density are explicit negative tests.
 - Run performance/load profiles for 2/4-core low-end servers with thousands of idle NPCs and bounded active encounters; visual UI must not hold engine ticks.
 - Publish and migration require compatibility checks; running encounters pin release versions or follow explicit migration/abort policy.
 
 ## Implementation ownership
 
-C++ engine owns ECS, scheduler, topology, combat resolver and authoritative commits. Versioned assets live in local embedded project DB. C#14/.NET10 sandbox and graph compiler attach typed hooks/actions once registered in the JSON/CLR/Protobuf contracts. Every hook name in the worked case study is **proposed only**, never assumed already in `hooks.v1.json`. Full implementations need host-side DTOs, schemas, security/authority tests, graph parity and real in-app Play/Creator evidence.
+C++ engine owns ECS, scheduler, topology, combat resolver and authoritative commits. Versioned assets live in local embedded project DB. C#14/.NET10 sandbox and graph compiler attach typed hooks/actions once registered in the JSON/CLR/Protobuf contracts. Hook names in the older worked case study are illustrative aliases; the hook registry is the canonical executable contract. Runtime readiness is represented separately by `runtimeImplemented`, never inferred from documentation. Full implementations need host-side DTOs, schemas, security/authority tests, graph parity and real in-app Play/Creator evidence.
 
 ## Full creator-owned C# CombatManager (first-class requirement)
 
-A creator may **replace all default combat mechanics** with their own C#14 CombatManager, not merely modify damage numbers. The host supplies **authoritative primitives**, not a mandatory genre: scoped manager registration (per actor, team, encounter, location, arena, zone, world), typed custom versioned state, validated operations, deterministic RNG/clock, event routing, and explicit manager lifecycle. The creator chooses how and when combat begins, which entities join, action collection/resolution order, timers, target ranges, resource formulas, effects, victory/retreat/defeat, and how players interact.
+A creator may **replace all default combat mechanics** with their own C#14 CombatManager, not merely modify damage numbers. The host supplies **authoritative primitives**, not a mandatory genre: scoped manager registration (per actor, team, encounter, location, arena, zone, world), typed custom versioned state, validated operations, deterministic RNG/clock, event routing, and explicit manager lifecycle. The creator configures how and when combat begins, which entities join, action collection/resolution order, timers, target ranges, resource formulas, effects, victory/retreat/defeat, and how players interact.
 
-**Manager contract:** register versioned manager asset and scope/predicate; activate on an authorized event, create/join/leave/merge/split/finish encounters, transfer ownership only with explicit atomic policy, resolve actor death/logout/reconnect or world release changes, persist/restore manager cursor, expire or cancel registered timers, and observe authorized actor/world events. Multiple handlers may coexist on the same world or room if rules permit; conflict policies decide whether a character can join multiple engagements. Never hardcode one handler per room or combatant.
+**Manager contract:** register versioned manager asset and scope/predicate; activate on an authorized event, create/join/leave/merge/split/finish encounters, transfer ownership only with explicit atomic policy, resolve actor death/logout/reconnect or world release changes, persist/restore manager cursor, expire or cancel registered timers, and observe authorized actor/world events. Multiple handlers may coexist on the same world or room if rules permit; by default each character can participate in only one encounter; explicit multi-encounter capability overrides this if all affected encounter managers allow it. Never hardcode one handler per room or combatant.
 
 **No privileged bypass:** C# code can choose whether its rules count "health" or "damage" but can only mutate allowed custom state through typed/validated effects. Movement must still pass world topology and access rules, equipment transfer through inventory authority, player control through Account/Session/Character authorization and narration through per-observer publication. The host may reject or abort a manager's effect; scripts cannot alter native authorization invariants, invoke raw SQL or extend execution indefinitely.
 
-### Proposed typed scripting hook coverage — NOT registered/implemented
+### Combat scripting hook contract and dispatch mapping
 
-| Hook family (proposed names) | Creator-defined manager use / expected safe scope |
+| Hook family (canonical event family names) | Creator-defined manager use / expected safe scope |
 |---|---|
 | `combat.manager.activate.before/after` | Qualify/create manager instance; choose ruleset and owner scope |
 | `combat.manager.restore/stop` | Restart recovery, cancelled encounter and cleanup (no bypassing durable state) |
@@ -115,7 +115,7 @@ A creator may **replace all default combat mechanics** with their own C#14 Comba
 | `combat.reward.requested/committed` | Contribution, loot, XP, anti-duplication and owner-approved rewards |
 | `combat.narration.project` | Typed audience-safe messages; no hidden event/state disclosure |
 
-These are **candidate families**, not approved literal hook IDs. Some are native engine events rather than script interception points; each entry needs a documented before/after/cancellable distinction, event fields, capability scopes, valid effects, error behavior and ordering. The ABI must be expanded **atomically** across `contracts/scripting/v1/hooks.v1.json`, `MudMaker.Scripting.Abstractions/Contracts.cs`, `mudmaker_scripting_v1.proto`, host dispatcher, graph-node catalog and tests. Existing v1 bindings must continue to function; additive versioning and a clear deprecation/migration policy are required.
+Each listed event family uses a canonical `combat.<family>.<action>.<phase>` hook identifier in the versioned registry. **Before** callbacks may veto or propose bounded alternate effects but never override identity, visibility or authorization; **After** callbacks are read-only for the committed event and can only enqueue independently validated actions; **Query** callbacks are pure and cannot commit effects. All hooks receive event ID, encounter scope/version, actor and target where authorized, host timestamp, causation ID and scoped read-only snapshots. A failed handler times out to deny-safe/no-effect; owner capability and effect allowlists are required. The ABI must be represented consistently across `contracts/scripting/v1/hooks.v1.json`, `MudMaker.Scripting.Abstractions/Contracts.cs`, `mudmaker_scripting_v1.proto`, host dispatcher, graph-node catalog and tests. Existing v1 bindings must continue to function; additive versioning and a clear deprecation/migration policy are required.
 
 ### Custom manager APIs beyond hooks
 
@@ -126,6 +126,14 @@ Hooks alone are insufficient. A typed SDK must expose scoped read-only snapshots
 The Evennia 6.x beginner lessons document a common action/handler base for [twitch](https://www.evennia.com/docs/6.x/Howtos/Beginner-Tutorial/Part3/Beginner-Tutorial-Combat-Twitch.html) and [turn-based](https://www.evennia.com/docs/6.x/Howtos/Beginner-Tutorial/Part3/Beginner-Tutorial-Combat-Turnbased.html) combat; the former times individual actor actions, the latter collects choices centrally and resolves at deadline or when all choose. [Turnbattle](https://www.evennia.com/docs/latest/Contribs/Contrib-Turnbattle.html) adds equipment, items, status effects, magic, and relative range. MudMaker should explicitly test those distinctions in the same native authority model.
 
 Additional acceptance cases: a room has two independent encounters; a custom manager tied to one actor follows legal room movement; two actors fight with no Level/HP field; queued turn actions auto-resolve early when all submit; timed twitch action and turn-based encounter coexist; temporary paralysis survives combat and converts to real-time expiry; an ally joins mid-round; a creator switches to an alternate manager on a published world; an unhandled manager crash cannot strand players in combat; a manager's requested movement or hidden-target hit is rejected; a custom combat action appears in both Player Client and command parser; manager script is replayed after restart without double damage or rewards. No mandatory `CombatManager` superclass should grant direct ECS pointers or raw database access.
+
+## Fixed engine defaults for empty/new combat assets
+
+New world combat is disabled until a creator attaches a CombatRuleset. The **Text Pulse** template uses a 2,000 ms encounter pulse, one action per actor per pulse, one autoattack per participant if opted in, a 3,000 ms example ability cooldown, optional Health/Stamina components created by the template, and nonlethal unconscious defeat by default. PvP is disabled by default; safe-zone and visibility restrictions always take precedence. Player attacks require valid authorized targets and range. Default disconnected behavior is `ContinueAuto` for 30 seconds, then `DefendOnly` until encounter ends; logout does not erase the character. For a new encounter missing an explicitly selected policy, this template's policy applies. All other presets are independent concrete ruleset assets and do not alter the engine defaults.
+
+All times are host monotonic deadlines with durable world-clock reconstruction. The native scheduler keeps only next deadlines, fair-batches due work, limits nested reaction depth to 8 and event cascade depth to 16, and rejects excess work with a structured failure; it never spins a timer thread per fight. Concurrent intents resolve by server-assigned receipt sequence within a round, with simultaneous rounds using one frozen snapshot and stable actor-ID tie breaker. A denied intent has zero costs unless an explicitly author-authored *attempt cost* is separately accepted and committed. Effect batching is atomic; replay is deduplicated by world/encounter/intent/onceKey.
+
+Published CombatManager assets are immutable by revision for running encounters. New encounters use latest published revisions; active ones retain their pinned revision until completion. Host recovery reloads manager cursor, phase, event dedup ledger and deadlines. For overdue time, process at most one overdue combat resolution per encounter on resume, then skip/coalesce obsolete pulses while retaining a durable recovery trace. A manager exception cancels its in-flight proposal, retains committed state, and quarantines that manager instance with a clear Host/Creator error; it never strands other encounters.
 
 ## Player disconnect and combat continuation
 
