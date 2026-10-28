@@ -1,6 +1,6 @@
 # 00 | From Authoring to a Live Hosted Game — Scripting Lifecycle Diagrams
 
-**Status:** REQUIRED user journey; detailed sequence PROPOSED until native-engine/script-host ADRs approved. **Owner:** asset registry, graph/code compiler, binding manager, deployment supervisor, runtime hook dispatcher, ECS executor. **Read this ONE file** for whole-system lifecycle. Code-specific controls: [Code Scripting Index](code/INDEX.md). Graph-specific controls: [Visual Scripting Index](visual/INDEX.md). Cross-cutting contracts: [runtime](../../03-contracts/scripting-runtime-and-capabilities.md) and [permissions](../../06-quality/security-policy.md).
+**Status:** REQUIRED user journey; binding source-level sequence; runtime integration not implemented. **Owner:** asset registry, graph/code compiler, binding manager, deployment supervisor, runtime hook dispatcher, ECS executor. **Read this ONE file** for whole-system lifecycle. Code-specific controls: [Code Scripting Index](code/INDEX.md). Graph-specific controls: [Visual Scripting Index](visual/INDEX.md). Cross-cutting contracts: [runtime](../../03-contracts/scripting-runtime-and-capabilities.md) and [permissions](../../06-quality/security-policy.md).
 
 ## Diagram A — Creation, testing, publishing and activation (both authoring paths)
 
