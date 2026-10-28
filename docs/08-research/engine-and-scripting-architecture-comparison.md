@@ -1,6 +1,6 @@
 # Research | Unity, Godot, Native ECS and Creator Script Runtime
 
-**Status:** Research / architecture recommendation, NOT an approved selection. **Date:** 2026-10-28. **Owner:** architecture investigation. **Source of truth for decisions:** [Open ADRs](../07-decisions/OPEN_DECISIONS.md). Read this only when choosing engine/scripting technology, not for ordinary editor work.
+**Status:** Research / architecture recommendation, NOT an approved selection. **Date:** 2026-10-28. **Owner:** architecture investigation. **Source of truth for decisions:** [Open ADRs](../02-architecture/architecture-decisions.md). Read this only when choosing engine/scripting technology, not for ordinary editor work.
 
 ## What Unity does, specifically
 - C# is compiled by Roslyn to Intermediate Language assemblies. Unity's **IL2CPP** backend can convert **IL -> C++ -> target-native binary at build time**, with cross-platform AOT advantages and higher build/packaging cost. This is NOT an instant, safe hosted-game runtime compiler for arbitrary uploaded scripts.
