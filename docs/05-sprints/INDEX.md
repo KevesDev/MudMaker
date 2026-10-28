@@ -19,3 +19,5 @@
 **Contracts:** [Local database](../03-contracts/local-database-and-data-manager.md), [prompt/map](../03-contracts/prompt-and-world-map.md), [accounts/character creation](../03-contracts/account-character-lifecycle.md). All phase status/evidence lives in [the tracker](../SPRINT-TRACKING.md).
 
 **Combat delivery:** S05 spatial adapters → S06 real duel UI → S07 clock modes and live host test → S08 Player action controls → S09 Creator combat presets and graph playtest → S10 hostile NPC assistance → S12 escape/pursuit → S13 C# hook parity → S15 encounter authoring → S18 adversarial audit. [Combat contract](../03-contracts/combat-and-encounters.md). Each functional gate includes real in-app testing, not a postponed GUI.
+
+**Inventory delivery:** S03 generic containment → S04 durable item inventory + in-app explorer → S05 authorized custody → S06 get/put/equip/trade commands → S08 Player inventory → S09 one-click Creator container presets → S13 typed C#/graph parity → S15 merchant/loot placement → S18 adversarial audits. [Inventory contract](../03-contracts/inventory-and-containers.md).
