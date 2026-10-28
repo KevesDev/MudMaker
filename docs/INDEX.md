@@ -114,3 +114,5 @@
 **NPC creation:** [Composable templates, autonomous states, quests, services, AI and Creator NPC Studio](03-contracts/npc-templates-and-behaviors.md) · [Northgate NPC technical case study](04-features/scripting/11-npc-technical-case-study.md).
 
 **Universal Creator Template Library:** [Save any authored object as a template; persistent variants, search, tags, folders, rename and safe deletion](03-contracts/reusable-templates-and-variants.md).
+
+**Universal ECS objects and exits:** [Objects, doors-as-exits, locks, traversal lifecycle, slow exits and Evennia comparison](03-contracts/ecs-objects-and-exits.md). This is the cross-feature component authority, not a second object system.
