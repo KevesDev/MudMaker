@@ -28,7 +28,7 @@ A Quest is a versioned, creator-defined workflow combining **eligibility + an ob
 - User experience design: [quest editor overview](../quest-and-dialogue-editor.md).
 - Sequencing: [quest dependencies](../../05-sprints/quest-implementation-dependencies.md).
 - Research evidence and limitations: [WoW/TrinityCore/Evennia/Yarn/ink references](../../08-research/quest-design-research.md).
-- Unresolved architecture: [ADR register](../../07-decisions/OPEN_DECISIONS.md).
+- Unresolved architecture: [ADR register](../../02-architecture/architecture-decisions.md).
 
 ## Index vocabulary (keep consistent)
 **Quest definition** = reusable versioned asset; **quest attempt** = one owner/period-specific lifecycle; **objective** = credited criterion, not reward; **quest chain** = dependencies/transitions across quests; **dialogue asset** = text/choices and effects; **condition** = pure typed predicate; **phasing** = observer-specific shared-world projection; **instancing** = isolated world/entity subset with its own IDs; **hook binding** = a versioned script/graph callback attached to a stage or event; **reward grant** = atomic, audited ECS transaction; **observer narration** = committed-event player message.
