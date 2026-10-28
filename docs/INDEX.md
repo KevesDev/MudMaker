@@ -116,3 +116,13 @@
 **Universal Creator Template Library:** [Save any authored object as a template; persistent variants, search, tags, folders, rename and safe deletion](03-contracts/reusable-templates-and-variants.md).
 
 **Universal ECS objects and exits:** [Objects, doors-as-exits, locks, traversal lifecycle, slow exits and Evennia comparison](03-contracts/ecs-objects-and-exits.md). This is the cross-feature component authority, not a second object system.
+
+**Communication and channels:** [Typed SAY/WHISPER/SHOUT/EMOTE/PAGE, audience scopes and message permissions](03-contracts/communication-and-channels.md).
+
+**Attributes, money and basic item commands:** [Typed money fields and default GET/PUT/GIVE parsers](03-contracts/attributes-currency-and-inventory-commands.md).
+
+**Crafting graph tutorial:** [Craft sword using 3 Wood, 2 Iron, skill 2 and a Workbench, atomically](04-features/scripting/12-crafting-graph-tutorial.md).
+
+**Parties, groups, factions and reputation:** [Shared ECS relationship contract](03-contracts/groups-factions-and-reputation.md).
+
+**Bundled sample:** [MudMaker Tutorial World project and acceptance](04-features/tutorial-world-starter-project.md).
