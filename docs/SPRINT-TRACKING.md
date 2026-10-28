@@ -72,7 +72,7 @@
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | TODO | — |
 | **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | TODO | — |
 | **S01.7 Platform launch smoke test** | Build and launch a minimal real native MudMaker app window on the selected platform; verify packaged startup and shutdown, with no fake engine state | TODO | — |
-| **S01.8 Optional inference ADR** | Lead decides bundled inference backend, exact redistributable model artifacts, CPU/RAM budgets, download URLs/checksums, licensing and benchmark oracles before Builder implementation; no manual model installation | TODO | — |
+| **S01.8 Optional inference ADR** | Approve inference/runtime architecture, catalog publishing/provenance criteria, hardware safety budgets and benchmark acceptance; model choice, metadata review and installation are exercised through MudMaker wizard, not manually | TODO | — |
 
 ## S02 — Editor and shared UI foundation
 
