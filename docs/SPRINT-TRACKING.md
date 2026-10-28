@@ -104,12 +104,12 @@
 | **S02.1 Identity allocator** | World scoped entity generations | TODO | — |
 | **S02.2 Component schema** | Typed component registry | TODO | — |
 | **S02.3 Mutation API** | Writer-only field mutation | TODO | — |
+| **S02.9 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API | TODO | — |
 | **S02.4 Query API** | Bounded entity query | TODO | — |
 | **S02.5 Revision guard** | ExpectedVersion write checks | TODO | — |
 | **S02.6 Event commit** | Atomic state plus domain event | TODO | — |
 | **S02.7 Core harness** | Lifecycle tests and metrics | TODO | — |
 | **S02.8 Authorization primitives** | Typed Account/Character/Session references, scoped capability checks and deny-safe evaluator | TODO | — |
-| **S02.9 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API | TODO | — |
 
 ## S03 — Assets and persistence
 
@@ -125,6 +125,7 @@
 | **S03.3 Layered overrides** | Default/instance/runtime property values | TODO | — |
 | **S03.4 Scoped slots** | Persistent world/player state schema | TODO | — |
 | **S03.5 Automatic local DB bootstrap and durable world snapshot** | Create/configure local project database automatically; ECS and slot save/restore | TODO | — |
+| **S03.15 Storage explorer** | Shell project-data view to create/open a world, inspect persisted entities, restart and verify saved state | TODO | — |
 | **S03.6 Outbox ledger** | Durable onceKeys and committed events | TODO | — |
 | **S03.7 Schema migration and integrity gate** | App-run versioned schema migration, safety checkpoint and corruption/incompatible-store detection | TODO | — |
 | **S03.8 Release and storage manifest** | Immutable asset hashes, database version compatibility and rollback | TODO | — |
@@ -134,7 +135,6 @@
 | **S03.12 Presentation assets** | Persist versioned map display metadata, prompt presets and typed field bindings | TODO | — |
 | **S03.13 Account store** | Durable opaque AccountId, credential/identity fields, account migration, ownership relations | TODO | — |
 | **S03.14 Character roster state** | Durable character slots, account links and creation-graph cursors/approval state | TODO | — |
-| **S03.15 Storage explorer** | Shell project-data view to create/open a world, inspect persisted entities, restart and verify saved state | TODO | — |
 
 ## S04 — Spatial containment
 
@@ -148,12 +148,12 @@
 | **S04.1 Parent containment** | Validated parent/child nesting | TODO | — |
 | **S04.2 Room membership** | World/region rooms and occupants | TODO | — |
 | **S04.3 Exit graph** | Directed typed exits | TODO | — |
+| **S04.9 Room traversal preview** | Shell room/exit viewer to create linked test rooms, walk actor, inspect visibility and locks | TODO | — |
 | **S04.4 Exit access** | Door and lock conditions | TODO | — |
 | **S04.5 Dynamic doors** | Dock-dependent exit activation | TODO | — |
 | **S04.6 Visibility** | Per-observer target set | TODO | — |
 | **S04.7 Map projection contract** | Authorized room/exit discovery projections incl. dynamic transit and private locations | TODO | — |
 | **S04.8 Safe character entry** | Validated last room/spawn fallback, character ownership and location continuity | TODO | — |
-| **S04.9 Room traversal preview** | Shell room/exit viewer to create linked test rooms, walk actor, inspect visibility and locks | TODO | — |
 
 ## S05 — Command runtime
 
@@ -174,11 +174,11 @@
 | **S05.6 Access rules** | Typed permission predicates | TODO | — |
 | **S05.7 Ambiguity** | Expiring visible-target selection | TODO | — |
 | **S05.8 Single executor** | GUI action and text share validation | TODO | — |
+| **S05.13 Command console** | Shell command input/output panel using one real executor; test look/move, errors, permissions and narration | TODO | — |
 | **S05.9 Event commit** | Idempotent command/outbox | TODO | — |
 | **S05.10 Narration** | Observer-projected committed output | TODO | — |
 | **S05.11 Prompt updates** | Committed movement/status events produce scoped text prompt fallback without extra mutation path | TODO | — |
 | **S05.12 Account command authority** | Owner/role/region permission checks for character and builder/moderation commands | TODO | — |
-| **S05.13 Command console** | Shell command input/output panel using one real executor; test look/move, errors, permissions and narration | TODO | — |
 
 ## S08 — Remote player input
 
@@ -200,6 +200,7 @@
 | **S08.16 Account authentication** | Registration, verification, hashed credentials, login denial and lockout without script bypass | TODO | — |
 | **S08.17 Session puppeting** | Session-bound AccountId, character selection/attachment, revocation and simultaneous-session policy | TODO | — |
 | **S08.7 Loopback roundtrip** | Test client sends look and move, host commits and replies | TODO | — |
+| **S08.18 Loopback connection panel** | Shell local host/session status and connect test with authenticated actor, real network receipts and errors | TODO | — |
 | **S08.8 Short RP** | One-word SubmitText handled as post, never command | TODO | — |
 | **S08.9 Long RP** | Bounded multiline Unicode prose submission | TODO | — |
 | **S08.10 Descriptions** | Owner-authenticated character text revision | TODO | — |
@@ -208,7 +209,6 @@
 | **S08.13 Backpressure** | Bounded fair input and output queues | TODO | — |
 | **S08.14 Reconnect** | Dedupe receipts and restore session safely | TODO | — |
 | **S08.15 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
-| **S08.18 Loopback connection panel** | Shell local host/session status and connect test with authenticated actor, real network receipts and errors | TODO | — |
 
 ## S09C — Standalone Player Client (native + external MUDs)
 
@@ -283,9 +283,9 @@
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S06.1 World event state** | Regional/world event definitions and lifecycle | TODO | — |
+| **S06.4 World-event testing panel** | In-app event trigger/status panel for region state and spawn results through actual world commands | TODO | — |
 | **S06.2 Spawner** | Timed/entity spawning and despawning | TODO | — |
 | **S06.3 World interaction** | Conditional world systems and environmental effects | TODO | — |
-| **S06.4 World-event testing panel** | In-app event trigger/status panel for region state and spawn results through actual world commands | TODO | — |
 
 ## S06Q — Quests
 
@@ -301,9 +301,9 @@
 | **S06Q.1 Quest state** | Per-actor quest attempts, scope and eligibility | TODO | — |
 | **S06Q.2 Objective credit** | Evidence-based objective types and chain prerequisites | TODO | — |
 | **S06Q.3 Dialogue stages** | Validated dialogue choices, sessions and quiz | TODO | — |
+| **S06Q.6 Quest testing panel** | In-app quest accept/dialogue/objective/reward view using real character and live quest service | TODO | — |
 | **S06Q.4 Rewards/phasing** | Atomic claim, bonus roll and phased NPC | TODO | — |
 | **S06Q.5 Quest recovery** | Persist and resume quest/session after restart | TODO | — |
-| **S06Q.6 Quest testing panel** | In-app quest accept/dialogue/objective/reward view using real character and live quest service | TODO | — |
 
 ## S07 — Transit
 
@@ -318,8 +318,8 @@
 |---|---|---|---|
 | **S07.1 Transit route** | Route progression with persistent train state | TODO | — |
 | **S07.2 Moving interiors** | Nested carriage rooms and their passengers/items | TODO | — |
-| **S07.3 Dynamic exits** | Dock-time door to station, closed en route | TODO | — |
 | **S07.4 Transit testing view** | In-app carriage/route/exit view with board/ride/dock and actual movement controls | TODO | — |
+| **S07.3 Dynamic exits** | Dock-time door to station, closed en route | TODO | — |
 
 ## S11 — C# and graphs
 
@@ -338,6 +338,7 @@
 | **S11.6 Worker start** | Load host-published hashed DLL | TODO | — |
 | **S11.4 Command binding** | Host command to C# handler | TODO | — |
 | **S11.5 ECS effects** | Revalidate and commit worker plan | TODO | — |
+| **S11.15 Script authoring workspace** | In-app C# editor compile diagnostics, hook binding and test-run output before advanced graph parity | TODO | — |
 | **S11.7 Worker failure** | Timeout and crash recovery | TODO | — |
 | **S11.8 Persistent fields** | Validated ECS/state slot overrides | TODO | — |
 | **S11.9 Graph compile** | Typed visual node plan | TODO | — |
@@ -346,7 +347,6 @@
 | **S11.12 Two-player demo** | Midnight Express gameplay | TODO | — |
 | **S11.13 Account/character hook ABI** | Versioned registry/CLR/proto parity for typed lifecycle and security-safe events | TODO | — |
 | **S11.14 Workflow hook effects** | Durable graph continuation and approved C# effects for creation steps, approval and world events | TODO | — |
-| **S11.15 Script authoring workspace** | In-app C# editor compile diagnostics, hook binding and test-run output before advanced graph parity | TODO | — |
 
 ## S10A — Account & Character Studio
 
@@ -358,13 +358,13 @@
 |---|---|---|---|
 | **S10A.1 Creator account policies** | Choose registration, auto-entry, roster, slots, guest and simultaneous-session policies from clear presets | TODO | — |
 | **S10A.2 Creation graph templates** | One shared visual graph: instant, menu, point-buy, reroll, staff-review and in-world templates | TODO | — |
+| **S10A.9 Creation preview workspace** | Preview/test workflow graph as real test account/character with persisted cursor and reset | TODO | — |
 | **S10A.3 Typed creation interactions** | Player graphical/text choice rendering, validation and point/roll budgets | TODO | — |
 | **S10A.4 World event continuation** | Durable room/item/NPC and dialogue triggers that resume real character creation once | TODO | — |
 | **S10A.5 Approval and roster UX** | Staff review/revise/approve, prebuilt character claims, multi-character selection and recovery | TODO | — |
 | **S10A.6 Creator permissions UX** | Scope-limited Builder/Moderator capabilities, custom roles, explain/dry-run and safe audits | TODO | — |
 | **S10A.7 Custom C# integration** | Graph hooks, persistent typed effects and owner-published script extension with no security bypass | TODO | — |
 | **S10A.8 End-to-end creator playtest** | Publish and play several differing creation styles; verify AccountId, resume, login/logout and two sessions | TODO | — |
-| **S10A.9 Creation preview workspace** | Preview/test workflow graph as real test account/character with persisted cursor and reset | TODO | — |
 
 ## S12 — World-system editing
 
@@ -379,9 +379,9 @@
 |---|---|---|---|
 | **S12.1 Spawner editor** | Visual configure/validate spawner and condition graph | TODO | — |
 | **S12.2 World event authoring** | Visual weather/event transitions and regional scope | TODO | — |
+| **S12.5 World test preview** | In-app author-and-play event, spawner and transit preview of published world definitions | TODO | — |
 | **S12.3 Transit authoring** | Route/train/doors authoring graph using shared canvas | TODO | — |
 | **S12.4 Narration authoring** | Observer template and audience rule editor | TODO | — |
-| **S12.5 World test preview** | In-app author-and-play event, spawner and transit preview of published world definitions | TODO | — |
 
 ## S12Q — Quest editing
 
@@ -396,10 +396,10 @@
 |---|---|---|---|
 | **S12Q.1 Quest authoring** | Build no-code objective definitions and prerequisites | TODO | — |
 | **S12Q.2 Dialogue graph** | Create all documented dialogue stages with choices | TODO | — |
+| **S12Q.6 Quest test preview** | In-app live quest graph/condition preview from player and staff perspectives | TODO | — |
 | **S12Q.3 Rewards/eligibility UI** | Configure rewards, phase/party/instance conditions | TODO | — |
 | **S12Q.4 Graph/script binding** | Attach typed C# handler to quest graph and test | TODO | — |
 | **S12Q.5 Complete creator workflow** | Build, validate and publish full Midnight Express from UI | TODO | — |
-| **S12Q.6 Quest test preview** | In-app live quest graph/condition preview from player and staff perspectives | TODO | — |
 
 ## S13 — Self-hosting
 
@@ -417,6 +417,7 @@
 | **S13.2 GUI hosting** | Start a validated immutable release from Host workspace | TODO | — |
 | **S13.3 Background host navigation** | Keep host A running when switching to Create, Play or Splash; guarded stop | TODO | — |
 | **S13.4 Headless hosting** | Start same release using CLI under identical single-host rule | TODO | — |
+| **S13.19 Host operations dashboard** | In-app startup, health, sessions, backup/restore and safe server-stop controls | TODO | — |
 | **S13.6 Database and world recovery** | Restore ECS, quests, posts, timers and outbox; detect corrupt storage without silent rollback | TODO | — |
 | **S13.7 Secure transport** | Configure server TLS and browser Origin restrictions where appropriate | TODO | — |
 | **S13.8 Proxy and firewall** | Implement trusted proxy policy and connectivity diagnostics | TODO | — |
@@ -430,7 +431,6 @@
 | **S13.16 Database operations UI** | Accessible database health, storage usage, maintenance and actionable recovery errors | TODO | — |
 | **S13.17 Presentation publish compatibility** | Host publishes valid prompt/map schemas with restart/reconnect recovery and UI preview | TODO | — |
 | **S13.18 Account operations** | Host account search, revoke/ban/recovery and session audit without raw DB access | TODO | — |
-| **S13.19 Host operations dashboard** | In-app startup, health, sessions, backup/restore and safe server-stop controls | TODO | — |
 
 ## S14 — Release audit
 
@@ -451,10 +451,10 @@
 | **S14.6 Worker sandbox** | Crash/isolation negative cases | TODO | — |
 | **S14.7 Performance** | World+command+RP fanout benchmark | TODO | — |
 | **S14.8 Release** | Clean install, host, save, restore | TODO | — |
+| **S14.12 Release walkthrough UI** | Clean-install app walkthrough capturing real Create/Play/Host accessibility, session and recovery results | TODO | — |
 | **S14.9 Storage disaster tests** | Cross-platform fresh bootstrap, privacy, large-data pagination, corruption/migration, active backup and restore-failure audits | TODO | — |
 | **S14.10 Prompt/map safety audit** | Test hidden exits, status permissions, stale reconnects, moving trains, 10k-room pagination, accessibility | TODO | — |
 | **S14.11 Identity and workflow audit** | ID non-reuse, login/logout ordering, puppet races, malicious hooks and multi-session recovery | TODO | — |
-| **S14.12 Release walkthrough UI** | Clean-install app walkthrough capturing real Create/Play/Host accessibility, session and recovery results | TODO | — |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
