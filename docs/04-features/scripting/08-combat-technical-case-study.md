@@ -1,6 +1,6 @@
 # Technical Case Study 02 — The Tollbridge Ambush: configurable combat end to end
 
-**Status:** proposed contract and typed **illustrative pseudocode** only; none of the shown `Combat.*` hook IDs or `CombatEffects` SDK methods are currently registered or implemented. Follow [Midnight Express technical case study](07-midnight-express-technical-case-study.md) for the same engine/graph/worker/commit discipline, and [combat contract](../../03-contracts/combat-and-encounters.md) for supported modes. Real SDK identity and effect surfaces are defined in `contracts/scripting/v1`; this example does not change them by implication.
+**Status:** binding combat contract with an illustrative C# behavior sketch. Hook IDs are now in the versioned registry; runtime implementation remains pending. The convenience `CombatEffects` methods and event-specific aliases in the sketch are explanatory rather than actual SDK signatures. Follow [Midnight Express technical case study](07-midnight-express-technical-case-study.md) for the same engine/graph/worker/commit discipline, and [combat contract](../../03-contracts/combat-and-encounters.md) for supported modes. Real SDK identity and effect surfaces are defined in `contracts/scripting/v1`; this example does not change them by implication.
 
 ## 1. Scenario and reusable rulesets
 
@@ -129,7 +129,7 @@ sequenceDiagram
 
 **Concurrency guarantees:** combat, chase and sound are not unbounded recursive callbacks. They become queued typed intents/events, causally linked to committed event IDs, processed with quotas and revision/onceKey guards. One NPC hearing another's cry cannot amplify the cry indefinitely. Simultaneous attack and flee are serialized or resolved from a defined same-turn snapshot policy; never half-move a defeated actor.
 
-## 4. Proposed C# behavior hooks (non-compiling sketch)
+## 4. C# behavior example (explicit illustrative sketch)
 
 ```csharp
 // ILLUSTRATIVE C# pseudocode, not an existing SDK implementation.
@@ -139,7 +139,7 @@ sequenceDiagram
 [MudScript("tollbridge")]
 public sealed class TollbridgeCombatHooks
 {
-    [MudHook("Combat.NpcPerceivesActor")] // PROPOSED
+    [MudHook("combat.actor.perceived.after")] // registered source hook
     public HookResult DecideAggro(HookContext ctx, CombatPerceptionEvent e)
     {
         if (e.ObserverAsset != Npcs.Bran || !e.IsVisible || !e.IsAudibleOrVisible)
@@ -161,7 +161,7 @@ public sealed class TollbridgeCombatHooks
                 onceKey: Keys.For(e.EventId, "engage")));
     }
 
-    [MudHook("Combat.Engaged")] // PROPOSED
+    [MudHook("combat.encounter.join.after")] // registered source hook
     public HookResult BranCallsForAid(HookContext ctx, CombatEngagedEvent e)
     {
         if (e.ActorAsset != Npcs.Bran || !e.IsFirstEngagement)
@@ -174,7 +174,7 @@ public sealed class TollbridgeCombatHooks
             onceKey: Keys.For(e.EncounterId, "BranFirstCry")));
     }
 
-    [MudHook("Combat.SoundHeard")] // PROPOSED
+    [MudHook("combat.sound.heard.after")] // registered source hook
     public HookResult AllyAssists(HookContext ctx, AudibleCombatEvent e)
     {
         // e exists ONLY if the host's hearing/phase/visibility checks passed.
@@ -192,7 +192,7 @@ public sealed class TollbridgeCombatHooks
                 e.Recipient, e.SourceEncounter));
     }
 
-    [MudHook("Combat.BeforeAbilityCommit")] // PROPOSED
+    [MudHook("combat.ability.resolve.before")] // registered source hook
     public HookResult ResolveStrike(HookContext ctx, CombatAbilityEvent e)
     {
         if (e.AbilityId != Abilities.Strike)
@@ -209,7 +209,7 @@ public sealed class TollbridgeCombatHooks
             onceKey: Keys.For(e.IntentId, "strike")));
     }
 
-    [MudHook("Combat.PhaseChanged")] // PROPOSED
+    [MudHook("combat.round.close.after")] // registered source hook
     public HookResult BranFlees(HookContext ctx, CombatPhaseEvent e)
     {
         if (e.ActorAsset != Npcs.Bran || e.CurrentHealthRatio >= 0.2)
@@ -296,7 +296,7 @@ A Builder's green unit tests **do not** replace real Creator and Player testing.
 
 ## 8. Hook/contract gating
 
-The `Combat.*` labels are **proposed registry entries**. Implement only when exact hook IDs, event schemas and effect types are agreed and added together to `contracts/scripting/v1/hooks.v1.json`, `contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs`, `contracts/scripting/v1/mudmaker_scripting_v1.proto`, node catalog, generated wire code, example bindings and negative tests, under version control with compatibility review. The host's native authorization and authoritative transactions are never bypassable, even by owner-authored scripts.
+The lowercase `combat.*` labels now match exact source hook IDs. Their canonical event payload is `CombatLifecycleEvent`, not the illustrative specialized DTO aliases in section 4. Builders implement and validate these already defined source contracts through `contracts/scripting/v1/hooks.v1.json`, `contracts/scripting/v1/MudMaker.Scripting.Abstractions/Contracts.cs`, `contracts/scripting/v1/mudmaker_scripting_v1.proto`, node catalog, generated wire code, example bindings and negative tests, under version control with compatibility review. The host's native authorization and authoritative transactions are never bypassable, even by owner-authored scripts.
 
 ## 9. Fully custom C# manager variant (not a built-in-ruleset extension)
 
