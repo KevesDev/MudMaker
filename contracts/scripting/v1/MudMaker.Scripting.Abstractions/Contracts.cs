@@ -360,6 +360,24 @@ public sealed record ExitBehaviorEffect(
 // ActionCode: traverse.request / traverse.cancel / door.open / door.close /
 // door.lock / door.unlock / door.break / door.repair; all rechecked by host.
 
+// Generic communication, crafting and relationships; no direct authority mutation.
+public sealed record CommunicationEvent(Guid EventId, EntityRef Sender, EntityRef? Recipient,
+    Guid? ChannelId, string Mode, string SanitizedText, string ScopeCode,
+    string OutcomeCode, ulong ExpectedRevision) : MudEvent(EventId);
+public sealed record CraftRequirement(string TagKey, long Quantity);
+public sealed record CraftRequestEvent(Guid EventId, EntityRef Actor, EntityRef Station,
+    AssetRef OutputTemplate, EntityRef Destination, IReadOnlyList<CraftRequirement> Requirements,
+    string OutcomeCode, ulong ExpectedRevision) : MudEvent(EventId);
+public sealed record CraftTransactionEffect(EntityRef Actor, EntityRef Station,
+    AssetRef OutputTemplate, EntityRef Destination, IReadOnlyList<CraftRequirement> Requirements,
+    ulong ExpectedRevision, string Key) : GameEffect(Key);
+public sealed record SocialRelationshipEvent(Guid EventId, EntityRef Subject,
+    EntityRef Target, string RelationshipKind, string ActionCode, long? Value,
+    ulong ExpectedRevision) : MudEvent(EventId);
+public sealed record SocialRelationshipEffect(EntityRef Subject, EntityRef Target,
+    string RelationshipKind, string ActionCode, long? Value,
+    ulong ExpectedRevision, string Key) : GameEffect(Key);
+
 // AUTHORING CONTRACT: every entrypoint must be a public instance method
 // HookDecision Handler(HookContext ctx, TEvent evt) for before/after hooks;
 // HookQueryResult Handler(HookContext ctx, TEvent evt) for read-only query hooks.
