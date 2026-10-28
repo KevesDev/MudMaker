@@ -51,12 +51,14 @@ enum QuestState {
   QUEST_FAILED = 6;
   QUEST_ABANDONED = 7;
 }
+enum ActorKind { ACTOR_KIND_UNSPECIFIED = 0; ACTOR_PLAYER = 1; ACTOR_WORLD_SYSTEM = 2; }
 message ActorSnapshot {
   EntityRef actor = 1;
   string display_name = 2;
   string name_key = 3;
   repeated QuestAttempt quest_attempts = 4;
   repeated AssetRef aboard_vehicles = 5;
+  ActorKind kind = 6;
 }
 message WorldReadSnapshot {
   string world_id = 1;
@@ -95,6 +97,38 @@ message ItemEvent { string event_id = 1; EntityRef item = 2; EntityRef other_par
 message EntityLifecycle { string event_id = 1; EntityRef entity = 2; AssetRef prototype = 3; }
 message TimerFired { string event_id = 1; AssetRef timer = 2; string occurrence_id = 3; }
 
+
+message EntityLifecycleHook {
+  string event_id = 1; EntityRef subject = 2; EntityRef related = 3; AssetRef prototype = 4;
+}
+message MovementHook {
+  string event_id = 1; EntityRef mover = 2; EntityRef origin = 3;
+  EntityRef destination = 4; EntityRef exit = 5;
+}
+message PresentationQuery {
+  string event_id = 1; EntityRef viewer = 2; EntityRef subject = 3; string current_text = 4;
+  uint32 count = 5;
+}
+message CommandHook {
+  string event_id = 1; string command_key = 2; string arguments = 3;
+}
+message AccountHook {
+  string event_id = 1; string account_id = 2;
+  EntityRef character = 3; string reason_code = 4;
+}
+message ChannelHook {
+  string event_id = 1; string channel_id = 2; EntityRef sender = 3;
+  string message = 4; string recipient_account_id = 5;
+}
+message ScheduleHook {
+  string event_id = 1; string schedule_id = 2; string occurrence_id = 3;
+}
+message HostHook { string event_id = 1; string lifecycle_code = 2; }
+message AccessHook {
+  string event_id = 1; EntityRef subject = 2; EntityRef object = 3;
+  string access_key = 4; bool engine_allowed = 5;
+}
+message QueryHook { string event_id = 1; string key = 2; string default_value = 3; }
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -112,9 +146,19 @@ message HookEvent {
     BaseEvent player_session = 13;
     EntityLifecycle entity_spawn = 14;
     EntityLifecycle entity_despawn = 15;
+    EntityLifecycleHook entity_lifecycle_hook = 16;
+    MovementHook movement_hook = 17;
+    PresentationQuery presentation_query = 18;
+    CommandHook command_hook = 19;
+    AccountHook account_hook = 20;
+    ChannelHook channel_hook = 21;
+    ScheduleHook schedule_hook = 22;
+    HostHook host_hook = 23;
+    AccessHook access_hook = 24;
+    QueryHook query_hook = 25;
   }
 }
-enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; }
+enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
 message HookInvoke {
   uint32 protocol_major = 1;
   uint32 protocol_minor = 2;
@@ -194,6 +238,9 @@ enum Disposition {
   DEFER = 5;
   ENQUEUE_AFTER = 6;
 }
+message HookQueryResult {
+  oneof result { bool keep_default = 1; string replace_text = 2; string deny_error_code = 3; }
+}
 message HookReply {
   uint32 protocol_major = 1;
   string invocation_id = 2;
@@ -203,6 +250,7 @@ message HookReply {
   string safe_error_code = 6;
   AssetRef deferred_prompt = 7;
   string trace_id = 8;
+  HookQueryResult query_result = 9;
 }
 message ProtocolHello {
   uint32 min_major = 1;
@@ -210,4 +258,18 @@ message ProtocolHello {
   string worker_build_hash = 3;
   string sdk_contract_hash = 4;
   string release_hash = 5;
+}
+
+message WorkerReady {
+  uint32 protocol_major = 1;
+  string release_hash = 2;
+  uint32 bound_handlers = 3;
+}
+message WorkerFrame {
+  oneof payload {
+    ProtocolHello hello = 1;
+    WorkerReady ready = 2;
+    HookInvoke invoke = 3;
+    HookReply reply = 4;
+  }
 }

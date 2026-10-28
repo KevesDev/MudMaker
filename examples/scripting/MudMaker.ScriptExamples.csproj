@@ -6,8 +6,13 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>false</IsPackable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MidnightExpressHooks.cs" />
+    <Compile Include="PersistentStationOverrides.cs" />
+    <Compile Include="hook-families/*.cs" />
+    <Compile Include="hook-catalog/*.cs" />
     <ProjectReference Include="../../contracts/scripting/v1/MudMaker.Scripting.Abstractions/MudMaker.Scripting.Abstractions.csproj"/>
   </ItemGroup>
 </Project>

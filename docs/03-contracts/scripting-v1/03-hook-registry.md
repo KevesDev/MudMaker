@@ -68,3 +68,94 @@ Flecs `OnAdd`, `OnSet`, `OnRemove` and observers fire around ECS component chang
 
 ## More specific extension points
 Before adding a hook for region enter/leave, combat, inventory/crafting, scheduled weather, spawner onCreate, party/instance, command parser or custom creator-defined domain event: define **exact typed payload**, authority, audience, effects, failure semantics, and independent tests. "Any lifecycle" in the feature vision means these categories must be covered as implemented, **not** that invented generic `OnAnything` callbacks ship silently. Extension hook catalog requires v2 or additive reviewed v1 minor revision.
+
+## Evennia coverage: exact additional v1 hook contracts (runtime pending)
+
+The complete [Evennia-to-MudMaker source map](../../08-research/evennia-hook-parity/INDEX.md) covers 108 upstream methods, resolving to 89 unique target IDs. The JSON registry is the canonical machine contract; this section is the human-readable additional set. **Every row has a defined CLR event/result signature; no row is yet a functioning native host callback.** Query hooks return `HookQueryResult` and cannot emit effects.
+
+| Exact ID | Phase | CLR event | Return | Host owner |
+|---|---|---|---|---|
+| `entity.copied.after` | After | `EntityLifecycleHookEvent` | `HookDecision` | Entity |
+| `entity.appearance.format.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.appearance.resolve.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.created.after` | After | `EntityLifecycleHookEvent` | `HookDecision` | Entity |
+| `entity.initialized.after` | After | `EntityLifecycleHookEvent` | `HookDecision` | Entity |
+| `entity.delete.before` | Before | `EntityLifecycleHookEvent` | `HookDecision` | Entity |
+| `entity.prototype.applied.after` | After | `EntityLifecycleHookEvent` | `HookDecision` | Entity |
+| `entity.hydrated.after` | After | `EntityLifecycleHookEvent` | `HookDecision` | Entity |
+| `command.available.query` | Query | `QueryHookEvent` | `HookQueryResult` | Command |
+| `character.control.before` | Before | `AccountHookEvent` | `HookDecision` | Entity |
+| `character.control.after` | After | `AccountHookEvent` | `HookDecision` | Entity |
+| `character.release.before` | Before | `AccountHookEvent` | `HookDecision` | Entity |
+| `character.release.after` | After | `AccountHookEvent` | `HookDecision` | Entity |
+| `host.stopping.before` | Before | `HostHookEvent` | `HookDecision` | Host |
+| `access.checked.after` | After | `AccessHookEvent` | `HookDecision` | Access |
+| `entity.move.before` | Before | `MovementHookEvent` | `HookDecision` | Entity |
+| `container.leave.before` | Before | `MovementHookEvent` | `HookDecision` | Container |
+| `container.receive.before` | Before | `MovementHookEvent` | `HookDecision` | Container |
+| `narration.move.origin.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Narration |
+| `narration.move.destination.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Narration |
+| `container.leave.after` | After | `MovementHookEvent` | `HookDecision` | Container |
+| `container.receive.after` | After | `MovementHookEvent` | `HookDecision` | Container |
+| `exit.traverse.failed.after` | After | `MovementHookEvent` | `HookDecision` | Exit |
+| `message.receive.before` | Before | `ChannelHookEvent` | `HookDecision` | Channel |
+| `message.send.before` | Before | `ChannelHookEvent` | `HookDecision` | Channel |
+| `entity.look.after` | After | `EntityLifecycleHookEvent` | `HookDecision` | Entity |
+| `entity.description.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `item.drop.before` | Before | `ItemEvent` | `HookDecision` | Item |
+| `item.drop.after` | After | `ItemEvent` | `HookDecision` | Item |
+| `chat.say.before` | Before | `ChannelHookEvent` | `HookDecision` | Channel |
+| `chat.say.after` | After | `ChannelHookEvent` | `HookDecision` | Channel |
+| `entity.renamed.after` | After | `EntityLifecycleHookEvent` | `HookDecision` | Entity |
+| `account.character.assigned.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `account.character.unassigned.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `character.created.after` | After | `AccountHookEvent` | `HookDecision` | Entity |
+| `channel.recipient.before` | Before | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.recipient.after` | After | `ChannelHookEvent` | `HookDecision` | Channel |
+| `account.created.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `account.hydrated.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `account.first_login.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `account.credentials.changed.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `account.login.before` | Before | `AccountHookEvent` | `HookDecision` | Account |
+| `account.login.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `account.login.failed.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `account.disconnect.before` | Before | `AccountHookEvent` | `HookDecision` | Account |
+| `account.disconnect.after` | After | `AccountHookEvent` | `HookDecision` | Account |
+| `scheduler.job.created.after` | After | `ScheduleHookEvent` | `HookDecision` | Scheduler |
+| `scheduler.job.hydrated.after` | After | `ScheduleHookEvent` | `HookDecision` | Scheduler |
+| `scheduler.job.delete.before` | Before | `ScheduleHookEvent` | `HookDecision` | Scheduler |
+| `scheduler.job.validity.query` | Query | `QueryHookEvent` | `HookQueryResult` | Scheduler |
+| `scheduler.job.started.after` | After | `ScheduleHookEvent` | `HookDecision` | Scheduler |
+| `scheduler.job.paused.after` | After | `ScheduleHookEvent` | `HookDecision` | Scheduler |
+| `scheduler.job.stopped.after` | After | `ScheduleHookEvent` | `HookDecision` | Scheduler |
+| `host.started.after` | After | `HostHookEvent` | `HookDecision` | Host |
+| `channel.created.after` | After | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.prefix.query` | Query | `QueryHookEvent` | `HookQueryResult` | Channel |
+| `channel.message.before` | Before | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.message.after` | After | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.member.join.before` | Before | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.member.join.after` | After | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.member.leave.before` | Before | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.member.leave.after` | After | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.hydrated.after` | After | `ChannelHookEvent` | `HookDecision` | Channel |
+| `channel.senders.format.query` | Query | `ChannelHookEvent` | `HookQueryResult` | Channel |
+| `channel.external.format.query` | Query | `ChannelHookEvent` | `HookQueryResult` | Channel |
+| `channel.message.format.query` | Query | `ChannelHookEvent` | `HookQueryResult` | Channel |
+| `command.execute.before` | Before | `CommandHookEvent` | `HookDecision` | Command |
+| `command.execute.after` | After | `CommandHookEvent` | `HookDecision` | Command |
+| `command.parse.query` | Query | `CommandHookEvent` | `HookQueryResult` | Command |
+| `command.set.created.after` | After | `CommandHookEvent` | `HookDecision` | Command |
+| `session.synchronized.after` | After | `AccountHookEvent` | `HookDecision` | Session |
+| `session.login.after` | After | `AccountHookEvent` | `HookDecision` | Session |
+| `session.disconnect.after` | After | `AccountHookEvent` | `HookDecision` | Session |
+
+| `entity.appearance.name.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.appearance.numbered_name.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.appearance.header.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.appearance.desc.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.appearance.exits.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.appearance.characters.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.appearance.things.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+| `entity.appearance.footer.query` | Query | `PresentationQueryEvent` | `HookQueryResult` | Entity |
+
+For each ID: `[MudHook("entity.copied.after")] public HookDecision Method(HookContext ctx, EntityLifecycleHookEvent e)` illustrates the **signature format** only; substitute the ID/type/return from that exact row. Source-level family examples: [code sample index](../../../examples/scripting/hook-families/README.md). Native hook dispatch must match these types and reject incorrect bindings, phase or result types. All scripts are installed by the local host, never uploaded by connected players.

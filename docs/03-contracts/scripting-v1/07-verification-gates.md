@@ -19,3 +19,8 @@
 
 ## Evidence policy
 Report exact command, compiler/proto versions, real host OS, test case, expected/actual, transaction+event IDs (redacted), pass/fail and benchmark p50/p95/p99. **No measurements or passing tests have been claimed for this specification work.** Preserve v1 decisions unless real benchmark or correctness tests demonstrate needed change, then ADR version and migration.
+
+## Source-level executable checks: real C# projects
+Run `dotnet build examples/scripting/MudMaker.ScriptExamples.csproj -c Release`, `dotnet build examples/scripting/worker/MudMaker.ScriptWorker.csproj -c Release`, `dotnet build examples/scripting/publisher/MudMaker.LocalPublisher.csproj -c Release`, and `dotnet run --project examples/scripting/tests/MudMaker.ScriptContractChecks.csproj`. The tests exercise real authored C# methods, not mocks of a C++ game. The SDK and examples remain **uncompiled in this authoring environment** (dotnet/protoc not installed), so do not claim PASS. `Grpc.Tools` and `Google.Protobuf` package versions are pinned in worker csproj. A failure requires Builder correction before declaring runnable.
+  
+The [host lifecycle](09-build-publish-restart-run.md) is STOP → local edit/build/test → publish complete immutable release → START. No in-game script upload, hot reload or script recompilation on player connection.

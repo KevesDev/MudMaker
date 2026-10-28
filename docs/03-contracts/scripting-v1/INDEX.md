@@ -13,6 +13,9 @@
 | Implement graph editor/compiler and exposure | [06 Graph parity](06-graph-parity-and-publishing.md) | Typed flow execution |
 | Design negative/abuse/runtime integration tests | [07 Verification](07-verification-gates.md) | Acceptance/risks |
 | Build actual source-level examples and persistent overrides | [SDK and example projects](../../../contracts/scripting/v1/README.md) | Compile checks (not yet run) |
+| See actual C# host compile → publish → restart → player dispatch | [09 Start flow](09-build-publish-restart-run.md) | Owner-managed deploy, no hot reload |
+| Look up Evennia hook-by-hook source comparison | [Evennia hook index](../../08-research/evennia-hook-parity/INDEX.md) | 108 distinct upstream methods / 89 counterparts |
+| Browse attributed C# methods for entire hook registry | [Hook source catalog](../../../examples/scripting/hook-catalog/INDEX.md) | One typed method per contract ID; runtime not verified |
 | Review full complicated scripted example | [Midnight Express](../../04-features/scripting/07-midnight-express-technical-case-study.md) + [v1 C# source](../../../examples/scripting/MidnightExpressHooks.cs) | Example, not running engine |
 
 ## Authority rules

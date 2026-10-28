@@ -16,7 +16,7 @@
 | ADR-010 | Spatial parent semantics for nested rooms, route progress interpolation, dynamic exit binding/capacity policy | PROPOSED spec requires confirmation before S04/S07 |
 | ADR-011 | World time: real-time vs turn-based coexistence, pause/catch-up, persistent timers, event delivery guarantee | OPEN: blocks S05/S06 |
 | ADR-012 | Quantitative workload and resource budgets, OS/test devices and accessibility conformance target | OPEN: blocks performance/release claims |
-| ADR-013 | Editing/deploying live state: release pin, migration/rollback and collaborative edits | OPEN: blocks live authoring S12/S13 |
+| ADR-013 | Editing/deploying script releases | **DECIDED:** stop → edit/compile → validate/publish → restart; no hot reload required. Persistent migration/rollback must be verified before S13. |
 | ADR-014 | Blueprint inheritance/child templates, component schema permissions and custom type UI | OPEN: blocks S03/S10 details |
 | ADR-015 | Default product game template/command set, onboarding, traditional telnet/SSH clients | OPEN: design and release documentation |
 | ADR-016 | Host isolation and script fault containment | **DECIDED boundary:** locally host-authored scripts only; no incoming player code/script uploads. Separate bounded worker; exact OS profile/benchmarks OPEN. [Host security](../03-contracts/scripting-v1/05-wire-security-recovery.md). |
@@ -48,3 +48,8 @@ For each ADR: describe problem, constraints, alternatives, security/performance/
 
 ## Reconciliation with historical v1.1
 v1.1 specified Java 21/Spring, GraalPy, Tauri/React, JSON+SQLite/JPA, Python hot-reload and annotation node bridge. C++ ECS + code C# worker + typed visual graph is the currently preferred **research direction**; not an approved stack or permission to implement without measured decision. The current source is a minimal Spring/H2 bootstrap, while earlier Java Swing/MySQL code was intentionally removed. This document **preserves original concepts** (ECS, two scripting modes, local/cloud runtime, map and playable terminal) without automatically adopting outdated or unvalidated technology choices.
+
+## Confirmed Scripting Deployment & Hook API (current)
+- **No live hot-reload requirement:** Game host stops the server, edits/compiles locally, publishes validated scripts, then starts server from pinned release; [source-level lifecycle](../03-contracts/scripting-v1/09-build-publish-restart-run.md). ADR-013 live migration/hot reload only applies if later explicitly requested; startup migrations and rollback remain mandatory.
+- **Evennia comparison:** 108 upstream overridable methods/hooks from seven main modules are mapped to 89 distinct MudMaker hook IDs; all are in v1 source-level catalog, plus MudMaker-specific hooks (121 total). [Map](../08-research/evennia-hook-parity/INDEX.md) and [registry](../contracts/scripting/v1/hooks.v1.json). **None is proven dispatched by the native engine.**
+- **Account login hooks:** Game creator hooks execute only **after the engine's identity provider authenticates credentials**, before world/session attach. No script receives password/token or can override authentication. Invalid logins yield only safe, nonsecret reason codes to optional post-failure hooks.

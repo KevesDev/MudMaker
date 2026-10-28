@@ -20,3 +20,8 @@
 
 ## Complete code execution example
 - [Midnight Express: four proposed C# hook handlers, worker invocation, effect plan, C++ transaction and hosted game](../07-midnight-express-technical-case-study.md). Read only when implementing/refining this vertical slice; it is pseudocode, not shipped APIs.
+
+## Run and install actual host C# scripts
+- [C# source → local release → worker → native ECS → hosted player](../../../03-contracts/scripting-v1/09-build-publish-restart-run.md) — stop-edit-publish-start, no hot reload required.
+- [Hook-by-hook 121-method source catalog](../../../../examples/scripting/hook-catalog/INDEX.md) and [realistic gameplay samples](../../../../examples/scripting/hook-families/README.md).
+- [Evennia side-by-side source audit](../../../08-research/evennia-hook-parity/INDEX.md). All contracts are **source only** until native game host is implemented.

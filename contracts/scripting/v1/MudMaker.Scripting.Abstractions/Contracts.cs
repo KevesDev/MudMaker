@@ -77,7 +77,7 @@ public sealed class StateReadSet(IReadOnlyList<StateSlotSnapshot> entries)
     }
 }
 
-public enum HookPhase { Before, After }
+public enum HookPhase { Before, After, Query }
 public enum HookDisposition { Continue, Append, Replace, Veto, Defer, EnqueueAfter }
 public enum QuestState { Absent, Offered, Active, ReadyToTurnIn, Completed, Failed, Abandoned }
 public enum WorldEventAction { Start, Stop }
@@ -92,6 +92,7 @@ public sealed record QuestAttemptSnapshot(
     public bool ReadyToTurnIn => State == QuestState.ReadyToTurnIn;
 }
 
+public enum ActorKind { Player, WorldSystem }
 public sealed record ActorSnapshot(
     EntityRef Ref,
     string DisplayName,
@@ -99,7 +100,8 @@ public sealed record ActorSnapshot(
     // the worker must never derive authorization from client-provided text.
     string NameKey,
     IReadOnlyDictionary<Guid, QuestAttemptSnapshot> QuestAttempts,
-    IReadOnlySet<AssetRef> AboardVehicles)
+    IReadOnlySet<AssetRef> AboardVehicles,
+    ActorKind Kind = ActorKind.Player)
 {
     public QuestAttemptSnapshot? Quest(AssetRef quest) =>
         QuestAttempts.TryGetValue(quest.Id, out var value) &&
@@ -149,6 +151,42 @@ public sealed record EntityLifecycleEvent(Guid EventId, EntityRef Entity, AssetR
 public sealed record TimerFiredEvent(Guid EventId, AssetRef TimerDefinition, Guid ScheduledOccurrenceId)
     : MudEvent(EventId);
 public sealed record PlayerSessionEvent(Guid EventId) : MudEvent(EventId);
+
+
+public sealed record EntityLifecycleHookEvent(
+    Guid EventId, EntityRef Subject, EntityRef? Related, AssetRef? Prototype) : MudEvent(EventId);
+public sealed record MovementHookEvent(
+    Guid EventId, EntityRef Mover, EntityRef? Origin, EntityRef? Destination,
+    EntityRef? Exit) : MudEvent(EventId);
+public sealed record PresentationQueryEvent(
+    Guid EventId, EntityRef Viewer, EntityRef Subject, string CurrentText, int Count = 1) : MudEvent(EventId);
+public sealed record CommandHookEvent(
+    Guid EventId, string CommandKey, string Arguments) : MudEvent(EventId);
+public sealed record AccountHookEvent(
+    Guid EventId, Guid AccountId, EntityRef? Character, string ReasonCode) : MudEvent(EventId);
+public sealed record ChannelHookEvent(
+    Guid EventId, Guid ChannelId, EntityRef? Sender, string Message,
+    Guid? RecipientAccountId) : MudEvent(EventId);
+public sealed record ScheduleHookEvent(
+    Guid EventId, Guid ScheduleId, Guid OccurrenceId) : MudEvent(EventId);
+public sealed record HostHookEvent(Guid EventId, string LifecycleCode) : MudEvent(EventId);
+public sealed record AccessHookEvent(
+    Guid EventId, EntityRef Subject, EntityRef Object, string AccessKey,
+    bool EngineAllowed) : MudEvent(EventId);
+public sealed record QueryHookEvent(
+    Guid EventId, string Key, string DefaultValue) : MudEvent(EventId);
+
+public enum QueryDisposition { KeepDefault, ReplaceText, Deny }
+public sealed record HookQueryResult(QueryDisposition Disposition, string? Text, ErrorCode? Reason)
+{
+    public static HookQueryResult Keep() => new(QueryDisposition.KeepDefault, null, null);
+    public static HookQueryResult ReplaceText(string text) =>
+        new(QueryDisposition.ReplaceText, text, null);
+    // A query may DENY (e.g. accessibility/visibility), never grant access
+    // denied by native engine authentication or authorization.
+    public static HookQueryResult Deny(string safeError) =>
+        new(QueryDisposition.Deny, null, new ErrorCode(safeError));
+}
 
 public abstract record GameEffect(string OnceKey);
 public sealed record StartQuest(EntityRef Actor, AssetRef Quest, string Key) : GameEffect(Key);
@@ -207,6 +245,7 @@ public sealed record HookDecision(
 }
 
 // AUTHORING CONTRACT: every entrypoint must be a public instance method
-// HookDecision Handler(HookContext ctx, TEvent evt), with exact catalog event type.
+// HookDecision Handler(HookContext ctx, TEvent evt) for before/after hooks;
+// HookQueryResult Handler(HookContext ctx, TEvent evt) for read-only query hooks.
 // Build/runtime enforces manifest, phase, capabilities, deadline and effect allowlist.
 // C# attributes and these DTOs are NOT the sandbox security boundary.

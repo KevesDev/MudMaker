@@ -1,0 +1,47 @@
+[
+  {
+    "BindingId": "00000001-1111-4111-8111-000000000001",
+    "HookId": "dialogue.choice.before",
+    "ModuleId": "mudmaker.examples.midnight-express",
+    "ClassName": "MudMaker.Examples.MidnightExpressHooks",
+    "MethodName": "BobAccept",
+    "EventClrName": "MudMaker.Scripting.V1.DialogueChoiceEvent",
+    "ReturnClrName": "MudMaker.Scripting.V1.HookDecision"
+  },
+  {
+    "BindingId": "00000002-1111-4111-8111-000000000001",
+    "HookId": "npc.interact.before",
+    "ModuleId": "mudmaker.examples.midnight-express",
+    "ClassName": "MudMaker.Examples.MidnightExpressHooks",
+    "MethodName": "ConductorInteract",
+    "EventClrName": "MudMaker.Scripting.V1.NpcInteractEvent",
+    "ReturnClrName": "MudMaker.Scripting.V1.HookDecision"
+  },
+  {
+    "BindingId": "00000003-1111-4111-8111-000000000001",
+    "HookId": "quiz.evaluated.before",
+    "ModuleId": "mudmaker.examples.midnight-express",
+    "ClassName": "MudMaker.Examples.MidnightExpressHooks",
+    "MethodName": "ConductorQuizResult",
+    "EventClrName": "MudMaker.Scripting.V1.QuizEvaluatedEvent",
+    "ReturnClrName": "MudMaker.Scripting.V1.HookDecision"
+  },
+  {
+    "BindingId": "00000004-1111-4111-8111-000000000001",
+    "HookId": "dialogue.choice.before",
+    "ModuleId": "mudmaker.examples.midnight-express",
+    "ClassName": "MudMaker.Examples.MidnightExpressHooks",
+    "MethodName": "JoeGreeting",
+    "EventClrName": "MudMaker.Scripting.V1.DialogueChoiceEvent",
+    "ReturnClrName": "MudMaker.Scripting.V1.HookDecision"
+  },
+  {
+    "BindingId": "00000005-1111-4111-8111-000000000001",
+    "HookId": "quest.turn_in.before",
+    "ModuleId": "mudmaker.examples.midnight-express",
+    "ClassName": "MudMaker.Examples.MidnightExpressHooks",
+    "MethodName": "JoeTurnIn",
+    "EventClrName": "MudMaker.Scripting.V1.QuestTurnInEvent",
+    "ReturnClrName": "MudMaker.Scripting.V1.HookDecision"
+  }
+]

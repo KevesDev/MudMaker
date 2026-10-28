@@ -7,3 +7,6 @@ After installing .NET SDK 10: `dotnet build examples/scripting/MudMaker.ScriptEx
 Only **locally authored, host-published** scripts become part of a world's immutable release. Remote players transmit gameplay input, never scripts, bytecode or code updates. Persistent field overrides and scoped state slots are validated through native ECS transactions and do not permit raw database or pointer access.
 
 Agent read order: [scripting v1 INDEX](../../../docs/03-contracts/scripting-v1/INDEX.md). No need to load the entire design archive.
+
+## Host operation and direct code tests
+[Start-to-host implementation sequence](../../../docs/03-contracts/scripting-v1/09-build-publish-restart-run.md). This uses stop/edit/compile/publish/start, not live code updates. [Evennia source comparison](../../../docs/08-research/evennia-hook-parity/INDEX.md) and [every canonical hook's C# method](../../../examples/scripting/hook-catalog/INDEX.md). Run `dotnet run --project examples/scripting/tests/MudMaker.ScriptContractChecks.csproj` from repository root for source-level behavior assertions (not C++ integration).
