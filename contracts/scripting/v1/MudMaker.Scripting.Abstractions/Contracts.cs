@@ -254,6 +254,34 @@ public sealed record HookDecision(
         new(HookDisposition.EnqueueAfter, effects);
 }
 
+// Inventory source contract: only the native world writer may change custody.
+public sealed record InventoryTransferEvent(
+    Guid EventId, EntityRef Actor, EntityRef Item, EntityRef Source,
+    EntityRef Destination, long Quantity, ulong ItemVersion,
+    ulong SourceVersion, ulong DestinationVersion, string ActionCode)
+    : MudEvent(EventId);
+public sealed record InventoryContainerEvent(
+    Guid EventId, EntityRef Actor, EntityRef Container, string ActionCode,
+    ulong ExpectedVersion) : MudEvent(EventId);
+public sealed record InventoryEquipmentEvent(
+    Guid EventId, EntityRef Actor, EntityRef Holder, EntityRef Item,
+    string SlotKey, string ActionCode, ulong ExpectedVersion) : MudEvent(EventId);
+public sealed record InventoryTradeEvent(
+    Guid EventId, Guid TradeId, EntityRef Actor, EntityRef Counterparty,
+    string ActionCode, ulong ExpectedVersion) : MudEvent(EventId);
+public sealed record InventoryMutationEffect(
+    EntityRef Actor, EntityRef Item, EntityRef Source, EntityRef Destination,
+    long Quantity, ulong ExpectedItemVersion, string Key) : GameEffect(Key);
+public sealed record InventoryOpenCloseEffect(
+    EntityRef Actor, EntityRef Container, bool Open, ulong ExpectedVersion,
+    string Key) : GameEffect(Key);
+public sealed record InventoryEquipEffect(
+    EntityRef Actor, EntityRef Holder, EntityRef Item, string SlotKey,
+    bool Equip, ulong ExpectedVersion, string Key) : GameEffect(Key);
+public sealed record InventoryTradeEffect(
+    EntityRef Actor, Guid TradeId, string ActionCode,
+    ulong ExpectedVersion, string Key) : GameEffect(Key);
+
 // AUTHORING CONTRACT: every entrypoint must be a public instance method
 // HookDecision Handler(HookContext ctx, TEvent evt) for before/after hooks;
 // HookQueryResult Handler(HookContext ctx, TEvent evt) for read-only query hooks.
