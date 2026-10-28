@@ -4,7 +4,7 @@
 
 | Order | Cohesive sprint | Milestone |
 |---|---|---|
-| 1 | S00 → S01 | Documentation and platform/engine decisions |
+| 1 | S00 → S01 | Documentation, architecture, and first native launch check (S01.7) |
 | 2 | **S02** | **Real launchable Create/Play/Host application shell**, ThemeManager, navigation and reusable canvas |
 | 3 | S03 → S04 → S05 → S06 | ECS, durable data, rooms and command runtime (E1 native harness) |
 | 4 | S07 → S08 | Authenticated loopback host and independent Player Client (**E2 at S08.6**) |
