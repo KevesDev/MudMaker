@@ -2,7 +2,7 @@
 
 **Canonical repo-native dashboard.** Sprints are large self-contained milestones, each broken into small independently auditable Builder/Auditor phases. The sprint sections follow dependency order; phase rows within each sprint follow implementation order, even when stable phase IDs are not numerical. Multiple phase handoffs should ordinarily fit a five-hour Claude session. Do not fragment a sprint into separate roadmap waves.
 
-**Current:** S00 documentation and owner decision review. Documentation deliverables may be marked DONE once written and linked; **no independent documentation audit is required**. This does not claim implementation or executable tests. All implementation remains TODO. Missing research, implementation platform decisions and test oracles go to the owner **before** dispatch, not to Builder/Auditor.
+**Current:** S00 documentation 9/9 DONE; owner architecture decisions remain open. Implementation phases are TODO.
 
 ## Evidence levels and first playable gate
 
@@ -38,17 +38,9 @@
 | [S13](#s13) | Public hosting | **0/18** | S08,S09C,S11 | PLANNED |
 | [S14](#s14) | Release audit | **0/11** | All preceding | PLANNED |
 
-**Prompt and mapping contract:** [Evennia-inspired server prompt, status HUD, authoritative map projections and Creator/Player customization](03-contracts/prompt-and-world-map.md). Map fields and status snapshots are per-observer and permission-filtered; client personalization never becomes world authority.
-
-**Account, character, roles, login/logout and scripting lifecycle:** [one authoritative contract](03-contracts/account-character-lifecycle.md). Immutable AccountId is distinct from SessionId/CharacterId; no C# handler can bypass host authentication, ownership or capability checks.
-
-**Input is explicit:** command/action versus RP/description is identified by authenticated message kind, **never text length**.
-
 ## S00 — Research, design contracts and agent-ready documentation
 
-**Sprint spec:** [S00.md](05-sprints/specs/S00.md) · **Prerequisite:** none. S00 records documentation and owner decisions, not implementation or mandatory independent documentation audits. Written, linked documentation is DONE; unresolved architectural decisions are tracked separately and block dependent implementation.
-
-**Checkpoint:** All documentation subjects are indexed below for owner review. No runtime implementation or executable test is implied.
+**Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
 
 | Phase | Document deliverable | Status | Evidence |
 |---|---|---|---|
@@ -62,7 +54,6 @@
 | **S00.8 Account, character and security lifecycle** | AccountId vs SessionId vs CharacterId, registration, login/logout, character ownership, Telnet credential security, custom roles and visual character-creation workflows | DONE | [Account/character contract](03-contracts/account-character-lifecycle.md), [Account & Character Studio](05-sprints/specs/S10A.md), [S08](05-sprints/specs/S08.md) |
 | **S00.9 C# lifecycle scripting hooks and sprint integration** | Document versioned account/character/creation hook extensions, graph integration and cross-sprint prerequisites without claiming unregistered hooks work | DONE | [Scripting v1 index](03-contracts/scripting-v1/INDEX.md), [hook registry](03-contracts/scripting-v1/03-hook-registry.md), [S11](05-sprints/specs/S11.md), [tracker](SPRINT-TRACKING.md) |
 
-**S00 documentation deliverables: 9/9 DONE.** Owner architectural decisions may still remain open; implementation phases stay TODO until their prerequisites are approved. Documentation requires no separate Auditor approval.
 
 ## S01 — Native decisions
 
@@ -452,4 +443,4 @@
 | **S14.11 Identity and workflow audit** | ID non-reuse, login/logout ordering, puppet races, malicious hooks and multi-session recovery | TODO | — |
 
 ## Phase evidence
-When a phase is DONE, its Evidence cell links the **Builder change, the verification chosen by Lead for that phase, and the independent Auditor PASS**. Add a user exercise when applicable, not as a universal requirement. Use [Sprint History](SPRINT-HISTORY.md) for longer discussion, never duplicate phase status in separate files. A 4–5 hour usage reset is a scheduling constraint, not a technical deliverable: size work so multiple complete phases can ordinarily be handled per session; split unexpectedly large phases before implementation.
+Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
