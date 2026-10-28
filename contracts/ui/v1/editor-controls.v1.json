@@ -3992,6 +3992,258 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-editor-commands-30"
+    },
+    {
+      "id": "editor.tags.01",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "panel",
+      "label": "Tags Manager",
+      "tooltip": "Browse and manage project-wide organization and gameplay tags",
+      "actionId": "ui.editor.tagManager",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-01"
+    },
+    {
+      "id": "editor.tags.02",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "button",
+      "label": "Create Tag",
+      "tooltip": "Create a tag definition in chosen namespace",
+      "actionId": "ui.editor.tagCreate",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-02"
+    },
+    {
+      "id": "editor.tags.03",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "input",
+      "label": "Tag Search",
+      "tooltip": "Search indexed tags across asset and entity types",
+      "actionId": "ui.editor.tagSearch",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-03"
+    },
+    {
+      "id": "editor.tags.04",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "input",
+      "label": "Assign Tags",
+      "tooltip": "Add or remove selected tags from current object or asset",
+      "actionId": "ui.editor.tagAssign",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-04"
+    },
+    {
+      "id": "editor.tags.05",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "button",
+      "label": "Bulk Tag",
+      "tooltip": "Apply tags to selected items using same tag catalog",
+      "actionId": "ui.editor.tagBulk",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-05"
+    },
+    {
+      "id": "editor.tags.06",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "button",
+      "label": "Rename Tag",
+      "tooltip": "Rename stable ID without breaking references",
+      "actionId": "ui.editor.tagRename",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-06"
+    },
+    {
+      "id": "editor.tags.07",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "button",
+      "label": "Merge Tags",
+      "tooltip": "Preview remap of tag assignments and merge",
+      "actionId": "ui.editor.tagMerge",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-07"
+    },
+    {
+      "id": "editor.tags.08",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "button",
+      "label": "Tag Where Used",
+      "tooltip": "Show tagged assets, entities, scripts, commands and dependencies",
+      "actionId": "ui.editor.tagWhereUsed",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-08"
+    },
+    {
+      "id": "editor.tags.09",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "button",
+      "label": "Archive Tag",
+      "tooltip": "Archive tag, retain published gameplay uses",
+      "actionId": "ui.editor.tagArchive",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-09"
+    },
+    {
+      "id": "editor.tags.10",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "button",
+      "label": "Delete Tag",
+      "tooltip": "Safely delete tag after dependency checks",
+      "actionId": "ui.editor.tagDelete",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-10"
+    },
+    {
+      "id": "editor.tags.11",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "dropdown",
+      "label": "Tag Filter",
+      "tooltip": "Filter ANY ALL NONE across asset types",
+      "actionId": "ui.editor.tagFilter",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-11"
+    },
+    {
+      "id": "editor.tags.12",
+      "workspace": "editor",
+      "surface": "editor.tags",
+      "kind": "segmented-control",
+      "label": "Tag Namespace",
+      "tooltip": "Distinguish organizational from gameplay tags",
+      "actionId": "ui.editor.tagNamespace",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-tags-12"
     }
   ]
 }
