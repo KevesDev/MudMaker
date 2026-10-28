@@ -98,3 +98,7 @@
 ## Prompt and map integration
 
 [Evennia-informed authoritative map and prompt/HUD contract](03-contracts/prompt-and-world-map.md): typed per-observer location/status projections, Creator map metadata and prompt presets, local Player UI customization, and third-party text fallback. Implement only the phases assigned to this sprint in the [canonical tracker](SPRINT-TRACKING.md). A prompt is a player-facing status display, not an input parser or an LLM prompt. Never reveal hidden room/exit data, fake a status value, or allow client presentation to mutate world state.
+
+## Accounts, character creation and hooks
+
+[Account, character, session, permission, registration/login/logout and one visual workflow graph](03-contracts/account-character-lifecycle.md) — REQUIREMENTS / PROPOSED contract; includes Evennia lifecycle research and version-gated C# hooks. [Dedicated Creator sprint](05-sprints/specs/S10A.md) builds on early identity/auth and S11 graphs. Exact hook IDs remain governed by the [scripting registry](03-contracts/scripting-v1/03-hook-registry.md).
