@@ -27,12 +27,4 @@ S09 UI foundation may begin after S03 and overlap S04/S05. S08.4 is a **loopback
 
 One small phase per Builder and one different scoped Auditor; multiple independently verifiable deliverables should ordinarily fit within a Claude usage window. Lead chooses focused test/harness proof for each phase. For gameplay-level acceptance at E2, a real Client and live host must be used; a headless harness is not an acceptable substitute. Only the tracker gets DONE/evidence/status. Owner resolves external research, undecided stack, network and persistence ADRs **before** dispatch; agents never go researching those choices. No invented tests or passing claims.
 
-**Next owner topic after this cleanup:** hosting/network deployment and bundled managed database decisions, presently **not selected or implemented**. Do not preemptively assume a database engine or external deployment model.
-
-## Database dependency and phase ownership
-
-S01 approves the local storage and durability ADR. S03 owns automated database creation, migration, local access and typed data API, plus the consistent backup/restore foundation. S09 and S10 own the navigable Creator Data Manager and safe browsing/editing for thousands of records. S13 owns Host-side database lifecycle, optional backup scheduling, restore selection and recovery UX. S14 audits disaster recovery and cross-platform data safety. See [the binding local database specification](../03-contracts/local-database-and-data-manager.md) and [the canonical phase tracker](../SPRINT-TRACKING.md). Do not imply that a planned phase is implemented.
-
-## Account / character dependencies
-
-S01–S03 implement immutable AccountId and durable ownership; S04/S05 authorize character location and commands; S08 authenticates and binds sessions before E2; S09C provides login/character choice; S10 provides visual UI controls; S11 implements typed lifecycle hook/graph integration; **S10A** is the cohesive Creator workflow/role editor sprint after these foundations, before final hosting/release. [Account lifecycle specification](../03-contracts/account-character-lifecycle.md). Status remains in [tracker](../SPRINT-TRACKING.md).
+**Feature contracts:** [Database](../03-contracts/local-database-and-data-manager.md), [prompt/map](../03-contracts/prompt-and-world-map.md), [account/character creation](../03-contracts/account-character-lifecycle.md). Phase prerequisites and status: [Tracker](../SPRINT-TRACKING.md).
