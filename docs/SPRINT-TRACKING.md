@@ -72,7 +72,7 @@
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | TODO | — |
 | **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | TODO | — |
 | **S01.7 Platform launch smoke test** | Build and launch a minimal real native MudMaker app window on the selected platform; verify packaged startup and shutdown, with no fake engine state | TODO | — |
-| **S01.8 Optional inference ADR** | Approve inference/runtime architecture, catalog publishing/provenance criteria, hardware safety budgets and benchmark acceptance; model choice, metadata review and installation are exercised through MudMaker wizard, not manually | TODO | — |
+| **S01.8 Optional inference ADR** | Approve embedded inference runtime and hardware safety/acceptance limits; initial selectable models are fixed in S02 specification and are installed only through the wizard | TODO | — |
 
 ## S02 — Editor and shared UI foundation
 
@@ -94,7 +94,7 @@
 | **S02.7 Responsive inputs** | Support tablet/pen/touch and keyboard workspace navigation | TODO | — |
 | **S02.8 Control registration** | Bind implemented Editor widgets to UI catalog, action ownership and accessible states | TODO | — |
 | **S02.9 Theme preferences** | Provide user themes, preview, import/export, persistence and safe fallback | TODO | — |
-| **S02.10 Model setup wizard shell** | Real UI for hardware detection, selectable model catalog and information panel, opt-in/off state and error/status views; no hardcoded model claims | TODO | — |
+| **S02.10 Model setup wizard shell** | Real hardware-check UI and fixed three-model catalog from S02 specification, with model details, off state and error/status views | TODO | — |
 
 ## S03 — ECS foundation
 
