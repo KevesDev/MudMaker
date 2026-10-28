@@ -1,6 +1,6 @@
 # Technical Case Study 01 — Midnight Express: Real Script → Live Multiplayer ECS
 
-**Status:** PROPOSED design/example, not implemented code. **Goal:** engineering-level worked example with exact proposed data structures, script entrypoints, host interactions, authoritative ECS commit, event/outbox handling, and negative tests. **Stack candidate only:** C++ ECS engine + isolated C# code worker + typed graph compiler. Read **this file** for a complete vertical slice. Consult general files only to implement specific parts: [Code](code/INDEX.md), [Visual](visual/INDEX.md), [Runtime ABI](../../03-contracts/scripting-runtime-and-capabilities.md), [Quest Hooks](../quests/09-custom-scripts-and-event-hooks.md), [Moving Locations](../../02-architecture/spatial-containment-transit.md), [Narration](../../03-contracts/narration-and-observers.md).
+**Status:** binding worked acceptance scenario with illustrative (noncompiled) examples; runtime not implemented. **Goal:** engineering-level worked example with versioned source-contract data structures, script entrypoints, host interactions, authoritative ECS commit, event/outbox handling, and negative tests. **Stack candidate only:** C++ ECS engine + isolated C# code worker + typed graph compiler. Read **this file** for a complete vertical slice. Consult general files only to implement specific parts: [Code](code/INDEX.md), [Visual](visual/INDEX.md), [Runtime ABI](../../03-contracts/scripting-runtime-and-capabilities.md), [Quest Hooks](../quests/09-custom-scripts-and-event-hooks.md), [Moving Locations](../../02-architecture/spatial-containment-transit.md), [Narration](../../03-contracts/narration-and-observers.md).
 
 > **Not source code.** The C# and C++ snippets below are typed pseudocode. Names such as `Effects`, `MudHook`, `CommitAtomically`, `WorldActor` and `EntityRef` are illustrative proposed interfaces, not shipped SDK classes or final APIs. Exact engine technology, script language, ABI, database, event delivery guarantees, and concurrency choices require ADR approval. The intent is precise behavioral and ownership semantics rather than pretending code compiles today.
 
@@ -84,7 +84,7 @@ flowchart TB
 
 **Compile/load boundary:** `ScriptAsset` source + `GraphAsset` layout become *versioned compiled executable behavior*; `HookBinding` points at handler+asset versions, not mutable source text. **Host boundary:** Tauri, desktop and browser are authoring/player clients; the authoritative engine + workers run on the server. **Live versioning:** saving a new draft does not mutate the host; publish/reload is a separately validated controlled operation.
 
-## 4. Proposed C#-style pseudocode: four complete hook handlers
+## 4. Illustrative C#-style pseudocode: four behavior examples
 
 ```csharp
 // C#-STYLE PSEUDOCODE ONLY: exact SDK/API and binding names not approved.
