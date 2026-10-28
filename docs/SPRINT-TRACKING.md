@@ -21,24 +21,26 @@
 | [S00](#s00) | Documents and decisions | **0/5** | — | ACTIVE |
 | [S01](#s01) | Architecture gates | **0/5** | S00 + owner ADRs | PLANNED |
 | [S02](#s02) | Native ECS | **0/7** | S01 | PLANNED |
-| [S03](#s03) | Assets and persistence | **0/11** | S02 | PLANNED |
-| [S04](#s04) | Rooms and exits | **0/6** | S02,S03 | PLANNED |
-| [S05](#s05) | Command harness | **0/10** | S03,S04 | PLANNED |
-| [S08](#s08) | Loopback host and secure input | **0/14** | S03,S05 | PLANNED |
-| [S09](#s09) | Shared UI foundation | **0/11** | S03 | PLANNED |
-| [S09C](#s09c) | Playable client and toolkit | **0/16** | S08.7,S09.1–4 | PLANNED |
-| [S10](#s10) | Creator command/Blueprint UI | **0/12** | S05,S09 | PLANNED |
+| [S03](#s03) | Assets and persistence | **0/12** | S02 | PLANNED |
+| [S04](#s04) | Rooms and exits | **0/7** | S02,S03 | PLANNED |
+| [S05](#s05) | Command harness | **0/11** | S03,S04 | PLANNED |
+| [S08](#s08) | Loopback host and secure input | **0/15** | S03,S05 | PLANNED |
+| [S09](#s09) | Shared UI foundation | **0/12** | S03 | PLANNED |
+| [S09C](#s09c) | Playable client and toolkit | **0/18** | S08.7,S09.1–4 | PLANNED |
+| [S10](#s10) | Creator command/Blueprint UI | **0/14** | S05,S09 | PLANNED |
 | [S06](#s06) | World events | **0/3** | S09C.5 | PLANNED |
 | [S06Q](#s06q) | Quests | **0/5** | S09C.5 | PLANNED |
 | [S07](#s07) | Transit | **0/3** | S06,S09C.5 | PLANNED |
 | [S11](#s11) | Scripts and graphs | **0/12** | S08,S09C.5,S10 | PLANNED |
 | [S12](#s12) | World authoring | **0/4** | S06,S07,S11 | PLANNED |
 | [S12Q](#s12q) | Quest authoring | **0/5** | S06Q,S11 | PLANNED |
-| [S13](#s13) | Public hosting | **0/16** | S08,S09C,S11 | PLANNED |
-| [S14](#s14) | Release audit | **0/9** | All preceding | PLANNED |
+| [S13](#s13) | Public hosting | **0/17** | S08,S09C,S11 | PLANNED |
+| [S14](#s14) | Release audit | **0/10** | All preceding | PLANNED |
 
 ## Agent process
 Lead selects one phase from this table and its one sprint spec. One Builder implements the bounded deliverable and runs approved focused checks; one different scoped Auditor reviews real implementation and evidence. `TODO → BUILD → AUDIT → DONE` only with independent PASS, not merely a documented proposal. Record test command, build commit, audit result and any real user demo in **Evidence**. No agent research tasks or broad test-suite loops. `BLOCKED` means the owner must resolve the missing decision. Full suite at sprint closure only by explicit Lead approval.
+
+**Prompt and mapping contract:** [Evennia-inspired server prompt, status HUD, authoritative map projections and Creator/Player customization](03-contracts/prompt-and-world-map.md). Map fields and status snapshots are per-observer and permission-filtered; client personalization never becomes world authority.
 
 **Input is explicit:** command/action versus RP/description is identified by authenticated message kind, **never text length**.
 
@@ -111,6 +113,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S03.9 Local storage service** | Local-only authenticated storage access, project writer lease, permissions and health API | TODO | — |
 | **S03.10 Data service API** | Typed, paginated, indexed List/Get/Create/Update/Delete, schema and revision/authorization tests | TODO | — |
 | **S03.11 Safe backup primitives** | Consistent live DB snapshot, manifest/checksum, staged validation and non-destructive restore harness | TODO | — |
+| **S03.12 Presentation assets** | Persist versioned map display metadata, prompt presets and typed field bindings | TODO | — |
 
 ## S04 — Spatial containment
 
@@ -127,6 +130,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S04.4 Exit access** | Door and lock conditions | TODO | — |
 | **S04.5 Dynamic doors** | Dock-dependent exit activation | TODO | — |
 | **S04.6 Visibility** | Per-observer target set | TODO | — |
+| **S04.7 Map projection contract** | Authorized room/exit discovery projections incl. dynamic transit and private locations | TODO | — |
 
 ## S05 — Command runtime
 
@@ -149,6 +153,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S05.8 Single executor** | GUI action and text share validation | TODO | — |
 | **S05.9 Event commit** | Idempotent command/outbox | TODO | — |
 | **S05.10 Narration** | Observer-projected committed output | TODO | — |
+| **S05.11 Prompt updates** | Committed movement/status events produce scoped text prompt fallback without extra mutation path | TODO | — |
 
 ## S08 — Remote player input
 
@@ -175,6 +180,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S08.12 Rate limits** | Per-actor, action and byte budgets | TODO | — |
 | **S08.13 Backpressure** | Bounded fair input and output queues | TODO | — |
 | **S08.14 Reconnect** | Dedupe receipts and restore session safely | TODO | — |
+| **S08.15 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
 
 ## S09 — Editor and shared UI foundation
 
@@ -198,6 +204,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S09.10 Control registration** | Bind implemented Editor widgets to UI catalog, action ownership and accessible states | TODO | — |
 | **S09.5 Theme preferences** | Provide user themes, preview, import/export, persistence and safe fallback | TODO | — |
 | **S09.11 Data Manager shell** | World Data navigation, collections, statuses, searchable paginated/virtualized results | TODO | — |
+| **S09.12 Creator map metadata** | Add room icons, layers, coordinate hints, visibility settings and as-player preview | TODO | — |
 
 ## S09C — Standalone Player Client (native + external MUDs)
 
@@ -226,6 +233,8 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S09C.14 Mini mapper** | Personal rooms/exits, notes and source confidence | TODO | — |
 | **S09C.15 Metadata** | Optional GMCP/CHARSET/NAWS and mapping hints | TODO | — |
 | **S09C.16 Autowalk** | Opt-in one-step navigation and accessible route list | TODO | — |
+| **S09C.17 Live HUD** | Pinned per-profile prompt/vitals/exits bar using real scoped native fields or external fallback | TODO | — |
+| **S09C.18 Native mini map** | Render authorized room/exits from host topology, preserve client notes, handle unknown/dynamic paths | TODO | — |
 
 ## S10 — Visual command editor
 
@@ -250,6 +259,8 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S10.10 Record explorer** | Fast filters, server paging, stable identifiers and relationships across thousands of entities | TODO | — |
 | **S10.11 Safe data editing** | Inspector CRUD, changes preview, conflict feedback and reversible draft edit via existing authority | TODO | — |
 | **S10.12 Bulk data operations** | Scoped selection, where-used, batch previews/validation, safe deletion and progress feedback | TODO | — |
+| **S10.13 Prompt designer** | No-code Host/Creator prompt and resource/status widget bindings, presets and preview | TODO | — |
+| **S10.14 Map presentation settings** | Publish region/map icon defaults, discoverability and safe map projection policies | TODO | — |
 
 ## S06 — World systems
 
@@ -382,6 +393,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S13.14 Backup preferences UI** | Opt-in manual/scheduled backup, destinations, retention and verification status | TODO | — |
 | **S13.15 In-app restore UX** | Choose verified backup; restore as copy or staged replacement with consent and failure fallback | TODO | — |
 | **S13.16 Database operations UI** | Accessible database health, storage usage, maintenance and actionable recovery errors | TODO | — |
+| **S13.17 Presentation publish compatibility** | Host publishes valid prompt/map schemas with restart/reconnect recovery and UI preview | TODO | — |
 
 ## S14 — Release audit
 
@@ -403,6 +415,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S14.7 Performance** | World+command+RP fanout benchmark | TODO | — |
 | **S14.8 Release** | Clean install, host, save, restore | TODO | — |
 | **S14.9 Storage disaster tests** | Cross-platform fresh bootstrap, privacy, large-data pagination, corruption/migration, active backup and restore-failure audits | TODO | — |
+| **S14.10 Prompt/map safety audit** | Test hidden exits, status permissions, stale reconnects, moving trains, 10k-room pagination, accessibility | TODO | — |
 
 ## Phase evidence
 When a phase is DONE, its Evidence cell links the **Builder change, the verification chosen by Lead for that phase, and the independent Auditor PASS**. Add a user exercise when applicable, not as a universal requirement. Use [Sprint History](SPRINT-HISTORY.md) for longer discussion, never duplicate phase status in separate files. A 4–5 hour usage reset is a scheduling constraint, not a technical deliverable: size work so multiple complete phases can ordinarily be handled per session; split unexpectedly large phases before implementation.
