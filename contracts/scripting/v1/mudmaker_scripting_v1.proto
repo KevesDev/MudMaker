@@ -129,6 +129,33 @@ message AccessHook {
   string access_key = 4; bool engine_allowed = 5;
 }
 message QueryHook { string event_id = 1; string key = 2; string default_value = 3; }
+// Host-computed aggregate control state; no raw session identifiers or credentials.
+enum CombatControlState {
+  COMBAT_CONTROL_STATE_UNSPECIFIED = 0;
+  COMBAT_ONLINE = 1;
+  COMBAT_LINK_LOST = 2;
+  COMBAT_GRACE_PERIOD = 3;
+  COMBAT_OFFLINE = 4;
+}
+message CombatConnectionSnapshot {
+  CombatControlState state = 1;
+  string disconnected_at_utc = 2; // ISO-8601 UTC; empty when not applicable
+  string grace_deadline_utc = 3;
+  string last_accepted_intent_id = 4;
+  uint32 controlling_session_count = 5;
+  string reason_code = 6;
+  uint64 revision = 7;
+}
+message CombatControlEvent {
+  string event_id = 1;
+  string encounter_id = 2;
+  EntityRef character = 3;
+  CombatConnectionSnapshot before = 4;
+  CombatConnectionSnapshot after = 5;
+  string occurred_at_utc = 6;
+  string cause_code = 7;
+}
+
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -156,6 +183,7 @@ message HookEvent {
     HostHook host_hook = 23;
     AccessHook access_hook = 24;
     QueryHook query_hook = 25;
+    CombatControlEvent combat_control = 26;
   }
 }
 enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
