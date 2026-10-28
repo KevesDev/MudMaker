@@ -38,4 +38,4 @@ Tablet-width tests for map cell select/palette/exit editing, pinch-pan, drag can
 
 **One ThemeManager**, distinct Editor and Client resolved preference scopes, with user-customizable fonts/colors and validated import/export; Editor dark continuous graph paper, Client local terminal font/ANSI policy and personal mini mapper. User-generated status text cannot install scripts or create host controls. The player mini mapper is *not* the editor world map. All visible text, field, tooltip, panel and action variants are registered by stable UI ID and test ID with ownership; new UI cannot silently bypass registry.
 
-**S09** common UI and Editor foundation; **S09C** independent Player Client and legacy server adapters; **S10–S12Q** editor features; **S13** host tools; **S14** actual UX/security/device verification. [Tracker](../SPRINT-TRACKING.md). All are designed, not implemented.
+**S02** common UI and Editor foundation; **S08** independent Player Client and legacy server adapters; **S09–S16** editor features; **S17** host tools; **S18** actual UX/security/device verification. [Tracker](../SPRINT-TRACKING.md). All are designed, not implemented.

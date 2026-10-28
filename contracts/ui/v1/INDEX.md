@@ -18,4 +18,4 @@
 4. Implementation phase must render/bind/test the relevant registered controls, not all 365. If it introduces another visible element it must add it to the scoped catalog and action table in the same phase, including keyboard/touch/failure evidence.
 
 ## Static audit
-Exactly one action owner per ActionId, catalog IDs unique, every interactive control has action + accessible label + help + relevant failure states, every passive status shows owner/safe value, all four catalog payloads validate with [control schema](ui-control.schema.json). No duplicate ThemeManager, service-bound UI primitive, unauthorized Actor/Host actions, or cross-workspace shortcut. An exhaustive live UI audit happens in **S14**, not S00.
+Exactly one action owner per ActionId, catalog IDs unique, every interactive control has action + accessible label + help + relevant failure states, every passive status shows owner/safe value, all four catalog payloads validate with [control schema](ui-control.schema.json). No duplicate ThemeManager, service-bound UI primitive, unauthorized Actor/Host actions, or cross-workspace shortcut. An exhaustive live UI audit happens in **S18**, not S00.
