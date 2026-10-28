@@ -41,7 +41,7 @@
 | Rules for AI builders/reviewers | [Agent policy](06-quality/agent-policy.md) | REQUIRED prohibitions; BINDING DESIGN enforcement |
 | Verifiable behavior matrix and test policy | [Test matrix](06-quality/test-matrix.md) | BINDING DESIGN |
 | Trust boundaries, script sandbox, permissions | [Security policy](06-quality/security-policy.md) | BINDING DESIGN |
-| Decisions intentionally not guessed | [Open decisions](07-decisions/OPEN_DECISIONS.md) | OPEN |
+| Decisions intentionally not guessed | [Architecture decisions](02-architecture/architecture-decisions.md) | OPEN |
 | Unity, Godot, C++ Flecs / C# research | [Engine research](08-research/engine-and-scripting-architecture-comparison.md) | RESEARCH |
 | C# vs custom DSL and scripting editor references | [Scripting technology research](08-research/scripting-engine-research.md) | RESEARCH |
 | Source-backed quest / WoW / Evennia / dialogue research | [Quest research](08-research/quest-design-research.md) | RESEARCH |
