@@ -77,3 +77,5 @@ No new separate giant “database sprint”: database foundations belong early i
 ## Universal template library persistence
 
 [Canonical template management and variations](reusable-templates-and-variants.md) use the project's embedded DB and immutable published asset revisions. Persist folders, tags, searches/saved views, lineage, instance overrides, aliases, audit and where-used indexes across reopen/restart/backup. Rename by stable ID; delete only unreferenced draft assets after review; archive otherwise. S04 stores/indexes it and S09 exposes the full searchable graphical library.
+
+**Tag persistence implementation:** [Universal tags](universal-tags-and-organization.md) use project-owned `TagDefinition` and `TagAssignment` tables with durable IDs, indexed target/namespace/key lookups, expected-revision mutations, audit, restore, rename/merge, and safe reference checks. Every asset type (including C# file catalog records and commands) can be tagged through the same data service. Gameplay tag runtime assignments are published ECS mutations and never inferred from editor organization labels.
