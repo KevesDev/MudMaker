@@ -12,35 +12,38 @@
 | **E2 — Local playable game** | Real Player Client connects to a running loopback world, moves through rooms, receives real authorized events | **S09C.5**, after S08.7 and S09.1–4 |
 | **E3 — Creator/public host** | Owner safely starts a durable hosted world with remote joins and host-facing operational controls | S13.16, after input security, recovery and hosting prerequisites |
 
-**Primary sprint sequence:** S00 → S01 → S02 → S03 → S04 → S05 → S08 → S09 → **S09C (E2 first playable at .5)** → S10 → S06 → S06Q → S07 → S11 → S12 → S12Q → **S13 (E3 public hosting)** → S14. S09.1–4 can start after S03 in parallel with backend work, when Lead confirms exact prerequisites; S09C.1–5 requires S08.7 and S09.1–4. A sprint remains a cohesive milestone, while user-testing checkpoints occur *inside* sprints. Do not confuse E1 native harness, E2 local play, and E3 remotely accessible hosting.
+**Primary sprint sequence:** S00 → S01 → S02 → S03 → S04 → S05 → S08 → S09 → **S09C (E2 first playable at .5)** → S10 → S06 → S06Q → S07 → S11 → S10A → S12 → S12Q → **S13 (E3 public hosting)** → S14. S09.1–4 can start after S03 in parallel with backend work, when Lead confirms exact prerequisites; S09C.1–5 requires S08.7 and S09.1–4. A sprint remains a cohesive milestone, while user-testing checkpoints occur *inside* sprints. Do not confuse E1 native harness, E2 local play, and E3 remotely accessible hosting.
 
 ## Sprint overview — in actual work order
 
 | Sprint | Focus | Verified | Depends on | Status |
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **0/5** | — | ACTIVE |
-| [S01](#s01) | Architecture gates | **0/5** | S00 + owner ADRs | PLANNED |
-| [S02](#s02) | Native ECS | **0/7** | S01 | PLANNED |
-| [S03](#s03) | Assets and persistence | **0/12** | S02 | PLANNED |
-| [S04](#s04) | Rooms and exits | **0/7** | S02,S03 | PLANNED |
-| [S05](#s05) | Command harness | **0/11** | S03,S04 | PLANNED |
-| [S08](#s08) | Loopback host and secure input | **0/15** | S03,S05 | PLANNED |
+| [S01](#s01) | Architecture gates | **0/6** | S00 + owner ADRs | PLANNED |
+| [S02](#s02) | Native ECS | **0/8** | S01 | PLANNED |
+| [S03](#s03) | Assets and persistence | **0/14** | S02 | PLANNED |
+| [S04](#s04) | Rooms and exits | **0/8** | S02,S03 | PLANNED |
+| [S05](#s05) | Command harness | **0/12** | S03,S04 | PLANNED |
+| [S08](#s08) | Loopback host and secure input | **0/17** | S03,S05 | PLANNED |
 | [S09](#s09) | Shared UI foundation | **0/12** | S03 | PLANNED |
-| [S09C](#s09c) | Playable client and toolkit | **0/18** | S08.7,S09.1–4 | PLANNED |
-| [S10](#s10) | Creator command/Blueprint UI | **0/14** | S05,S09 | PLANNED |
+| [S09C](#s09c) | Playable client and toolkit | **0/19** | S08.7,S09.1–4 | PLANNED |
+| [S10](#s10) | Creator command/Blueprint UI | **0/15** | S05,S09 | PLANNED |
 | [S06](#s06) | World events | **0/3** | S09C.5 | PLANNED |
 | [S06Q](#s06q) | Quests | **0/5** | S09C.5 | PLANNED |
 | [S07](#s07) | Transit | **0/3** | S06,S09C.5 | PLANNED |
-| [S11](#s11) | Scripts and graphs | **0/12** | S08,S09C.5,S10 | PLANNED |
+| [S11](#s11) | Scripts and graphs | **0/14** | S08,S09C.5,S10 | PLANNED |
+| [S10A](#s10a) | Account/character Creator workflows | **0/8** | S03,S08,S09C,S10,S11 | PLANNED |
 | [S12](#s12) | World authoring | **0/4** | S06,S07,S11 | PLANNED |
 | [S12Q](#s12q) | Quest authoring | **0/5** | S06Q,S11 | PLANNED |
-| [S13](#s13) | Public hosting | **0/17** | S08,S09C,S11 | PLANNED |
-| [S14](#s14) | Release audit | **0/10** | All preceding | PLANNED |
+| [S13](#s13) | Public hosting | **0/18** | S08,S09C,S11 | PLANNED |
+| [S14](#s14) | Release audit | **0/11** | All preceding | PLANNED |
 
 ## Agent process
 Lead selects one phase from this table and its one sprint spec. One Builder implements the bounded deliverable and runs approved focused checks; one different scoped Auditor reviews real implementation and evidence. `TODO → BUILD → AUDIT → DONE` only with independent PASS, not merely a documented proposal. Record test command, build commit, audit result and any real user demo in **Evidence**. No agent research tasks or broad test-suite loops. `BLOCKED` means the owner must resolve the missing decision. Full suite at sprint closure only by explicit Lead approval.
 
 **Prompt and mapping contract:** [Evennia-inspired server prompt, status HUD, authoritative map projections and Creator/Player customization](03-contracts/prompt-and-world-map.md). Map fields and status snapshots are per-observer and permission-filtered; client personalization never becomes world authority.
+
+**Account, character, roles, login/logout and scripting lifecycle:** [one authoritative contract](03-contracts/account-character-lifecycle.md). Immutable AccountId is distinct from SessionId/CharacterId; no C# handler can bypass host authentication, ownership or capability checks.
 
 **Input is explicit:** command/action versus RP/description is identified by authenticated message kind, **never text length**.
 
@@ -75,6 +78,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S01.3 Persistence ADR** | Approve embedded local DB engine, isolation/locking, transaction/outbox, migration, recovery and backup ADR | TODO | — |
 | **S01.4 Wire ABI** | Freeze versioned SDK/proto rules | TODO | — |
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | TODO | — |
+| **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | TODO | — |
 
 ## S02 — ECS foundation
 
@@ -92,6 +96,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S02.5 Revision guard** | ExpectedVersion write checks | TODO | — |
 | **S02.6 Event commit** | Atomic state plus domain event | TODO | — |
 | **S02.7 Core harness** | Lifecycle tests and metrics | TODO | — |
+| **S02.8 Authorization primitives** | Typed Account/Character/Session references, scoped capability checks and deny-safe evaluator | TODO | — |
 
 ## S03 — Assets and persistence
 
@@ -114,6 +119,8 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S03.10 Data service API** | Typed, paginated, indexed List/Get/Create/Update/Delete, schema and revision/authorization tests | TODO | — |
 | **S03.11 Safe backup primitives** | Consistent live DB snapshot, manifest/checksum, staged validation and non-destructive restore harness | TODO | — |
 | **S03.12 Presentation assets** | Persist versioned map display metadata, prompt presets and typed field bindings | TODO | — |
+| **S03.13 Account store** | Durable opaque AccountId, credential/identity fields, account migration, ownership relations | TODO | — |
+| **S03.14 Character roster state** | Durable character slots, account links and creation-graph cursors/approval state | TODO | — |
 
 ## S04 — Spatial containment
 
@@ -131,6 +138,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S04.5 Dynamic doors** | Dock-dependent exit activation | TODO | — |
 | **S04.6 Visibility** | Per-observer target set | TODO | — |
 | **S04.7 Map projection contract** | Authorized room/exit discovery projections incl. dynamic transit and private locations | TODO | — |
+| **S04.8 Safe character entry** | Validated last room/spawn fallback, character ownership and location continuity | TODO | — |
 
 ## S05 — Command runtime
 
@@ -154,6 +162,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S05.9 Event commit** | Idempotent command/outbox | TODO | — |
 | **S05.10 Narration** | Observer-projected committed output | TODO | — |
 | **S05.11 Prompt updates** | Committed movement/status events produce scoped text prompt fallback without extra mutation path | TODO | — |
+| **S05.12 Account command authority** | Owner/role/region permission checks for character and builder/moderation commands | TODO | — |
 
 ## S08 — Remote player input
 
@@ -181,6 +190,8 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S08.13 Backpressure** | Bounded fair input and output queues | TODO | — |
 | **S08.14 Reconnect** | Dedupe receipts and restore session safely | TODO | — |
 | **S08.15 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
+| **S08.16 Account authentication** | Registration, verification, hashed credentials, login denial and lockout without script bypass | TODO | — |
+| **S08.17 Session puppeting** | Session-bound AccountId, character selection/attachment, revocation and simultaneous-session policy | TODO | — |
 
 ## S09 — Editor and shared UI foundation
 
@@ -235,6 +246,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S09C.16 Autowalk** | Opt-in one-step navigation and accessible route list | TODO | — |
 | **S09C.17 Live HUD** | Pinned per-profile prompt/vitals/exits bar using real scoped native fields or external fallback | TODO | — |
 | **S09C.18 Native mini map** | Render authorized room/exits from host topology, preserve client notes, handle unknown/dynamic paths | TODO | — |
+| **S09C.19 Account lobby** | Login, registration, auto-enter or character roster with valid session attachment and text fallback | TODO | — |
 
 ## S10 — Visual command editor
 
@@ -261,6 +273,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S10.12 Bulk data operations** | Scoped selection, where-used, batch previews/validation, safe deletion and progress feedback | TODO | — |
 | **S10.13 Prompt designer** | No-code Host/Creator prompt and resource/status widget bindings, presets and preview | TODO | — |
 | **S10.14 Map presentation settings** | Publish region/map icon defaults, discoverability and safe map projection policies | TODO | — |
+| **S10.15 Role editor** | Creator-friendly custom roles, scoped grants/denials and effective-permission preview | TODO | — |
 
 ## S06 — World systems
 
@@ -332,6 +345,25 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S11.10 Graph parity** | Same native effect API for code/graph | TODO | — |
 | **S11.11 Release activation** | Stop/edit/build/publish/restart | TODO | — |
 | **S11.12 Two-player demo** | Midnight Express gameplay | TODO | — |
+| **S11.13 Account/character hook ABI** | Versioned registry/CLR/proto parity for typed lifecycle and security-safe events | TODO | — |
+| **S11.14 Workflow hook effects** | Durable graph continuation and approved C# effects for creation steps, approval and world events | TODO | — |
+
+## S10A — Account & Character Studio
+
+**Spec:** [S10A](05-sprints/specs/S10A.md) · **Requires:** S03 account/character state, S08 authenticated sessions, S09C.5 playable client, S10 Creator UI and S11 typed graph/worker foundation. **One visual graph editor**, not a second form designer. The early identity/login functionality belongs to its prerequisite sprints; this sprint finishes sophisticated creator-facing workflows.
+
+**Checkpoints:** Preview auto-enter and multiple character selection; then test a roleplay application/approval and in-world sword-or-staff class selection in two real sessions. Independently audit permission scope and persistence.
+
+| Phase | Deliverable | Status | Evidence |
+|---|---|---|---|
+| **S10A.1 Creator account policies** | Choose registration, auto-entry, roster, slots, guest and simultaneous-session policies from clear presets | TODO | — |
+| **S10A.2 Creation graph templates** | One shared visual graph: instant, menu, point-buy, reroll, staff-review and in-world templates | TODO | — |
+| **S10A.3 Typed creation interactions** | Player graphical/text choice rendering, validation and point/roll budgets | TODO | — |
+| **S10A.4 World event continuation** | Durable room/item/NPC and dialogue triggers that resume real character creation once | TODO | — |
+| **S10A.5 Approval and roster UX** | Staff review/revise/approve, prebuilt character claims, multi-character selection and recovery | TODO | — |
+| **S10A.6 Creator permissions UX** | Scope-limited Builder/Moderator capabilities, custom roles, explain/dry-run and safe audits | TODO | — |
+| **S10A.7 Custom C# integration** | Graph hooks, persistent typed effects and owner-published script extension with no security bypass | TODO | — |
+| **S10A.8 End-to-end creator playtest** | Publish and play several differing creation styles; verify AccountId, resume, login/logout and two sessions | TODO | — |
 
 ## S12 — World-system editing
 
@@ -394,6 +426,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S13.15 In-app restore UX** | Choose verified backup; restore as copy or staged replacement with consent and failure fallback | TODO | — |
 | **S13.16 Database operations UI** | Accessible database health, storage usage, maintenance and actionable recovery errors | TODO | — |
 | **S13.17 Presentation publish compatibility** | Host publishes valid prompt/map schemas with restart/reconnect recovery and UI preview | TODO | — |
+| **S13.18 Account operations** | Host account search, revoke/ban/recovery and session audit without raw DB access | TODO | — |
 
 ## S14 — Release audit
 
@@ -416,6 +449,7 @@ Lead selects one phase from this table and its one sprint spec. One Builder impl
 | **S14.8 Release** | Clean install, host, save, restore | TODO | — |
 | **S14.9 Storage disaster tests** | Cross-platform fresh bootstrap, privacy, large-data pagination, corruption/migration, active backup and restore-failure audits | TODO | — |
 | **S14.10 Prompt/map safety audit** | Test hidden exits, status permissions, stale reconnects, moving trains, 10k-room pagination, accessibility | TODO | — |
+| **S14.11 Identity and workflow audit** | ID non-reuse, login/logout ordering, puppet races, malicious hooks and multi-session recovery | TODO | — |
 
 ## Phase evidence
 When a phase is DONE, its Evidence cell links the **Builder change, the verification chosen by Lead for that phase, and the independent Auditor PASS**. Add a user exercise when applicable, not as a universal requirement. Use [Sprint History](SPRINT-HISTORY.md) for longer discussion, never duplicate phase status in separate files. A 4–5 hour usage reset is a scheduling constraint, not a technical deliverable: size work so multiple complete phases can ordinarily be handled per session; split unexpectedly large phases before implementation.
