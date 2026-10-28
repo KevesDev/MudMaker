@@ -1,13 +1,13 @@
 # Quest Designer, Dialogue Graph and Content Phasing Editor
 
-**Status:** REQUIRED no-code power + all quest/chain types requested; PROPOSED interaction design. **Owner:** quest editor UI + shared Blueprint graph editor; runtime authority remains ECS.
+**Status:** REQUIRED no-code power + all quest/chain types requested; binding quest/dialogue interaction contract. **Owner:** quest editor UI + shared Blueprint graph editor; runtime authority remains ECS.
 
 **Detailed objective/chain/dialogue/reward/eligibility subtabs:** [Quest System Index](quests/INDEX.md). This document is the higher-level Quest Editor overview. Do not duplicate full reference catalogs here.
 
 ## Product goal
 A beginner should create “Talk to Bob -> Find Joe” by selecting NPCs and simple plain-language options, without understanding state machines, components, JSON, scripting or network sessions. An advanced author must be able to create branching, conditional, party/world scoped, timed, repeatable and highly customized quests with the same visual graph plus custom script hooks. No genre-specific template restrictions.
 
-## Proposed creation experience
+## Canonical creation experience
 **Quest Library:** create quest or chain, choose display category/tags (Main Story, Side Story, Daily, Weekly, World Event, Hidden, Group, repeatable, custom), folder/region, searchable tags, template reuse, dependency diagnostics. These are convenience categories, not separate engine classes.
 **Quest card:** title, description, giver, eligibility, who owns progress, how to start, objectives, completion policy, rewards, fail/abandon/replay, after-completion behavior, visibility effects, reminders, permissions and version.
 **Chain canvas:** visual directed graph from Start -> condition -> conversation/task -> grant/counter/event -> branch -> complete/reward -> follow-up. Supports AND/OR tasks, sequence, optional goals, parallel objectives, alternatives, joins, mutually exclusive decisions, timers, loops when explicitly bounded, reusable subgraphs, named checkpoints, comments and grouping. Panning, zooming, minimap, searchable palette, typed ports, undo/redo, accessible keyboard/touch editing.
