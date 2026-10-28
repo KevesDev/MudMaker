@@ -84,8 +84,8 @@
 |---|---|---|---|
 | **S09.4 ThemeManager** | Resolve independent Editor/Client themes from one shared token schema | TODO | — |
 | **S09.1 UI primitives** | Implement shared accessible, themed UI primitives and typed action descriptors | TODO | — |
-| **S09.2 Loading and splash** | Validate startup then display MudMaker name/version, Create, Play and Host | TODO | — |
-| **S09.3 Workspace navigation** | Implement Go To menu and transition guard; retain Editor drafts across switches | TODO | — |
+| **S09.2 Loading and splash** | Boot the real app window, verify installed build/UI health, display name/version and Create/Play/Host; show unavailable engine services honestly | TODO | — |
+| **S09.3 Workspace navigation** | Switch real Create/Play/Host shells and retain unsaved UI drafts; host/session retention integrates when those services exist | TODO | — |
 | **S09.6 Editor shell** | Implement Creator tabs, inspectors, focus handling and draft undo ownership | TODO | — |
 | **S09.7 Graph paper** | Render reusable continuous dark minor/major grid with pan/zoom/snap | TODO | — |
 | **S09.9 Responsive inputs** | Support tablet/pen/touch and keyboard workspace navigation | TODO | — |
