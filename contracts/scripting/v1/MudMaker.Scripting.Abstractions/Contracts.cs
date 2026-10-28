@@ -339,6 +339,27 @@ public sealed record NpcBehaviorEffect(
 // service.quote, service.request, timer.schedule and timer.cancel.
 // All must pass host permissions, observer scope and effect validation.
 
+// Exit/door operations share ECS movement authority; no script writes location directly.
+public enum DoorState { Open, Closed, Locked, Sealed, Destroyed }
+public sealed record ExitTraversalEvent(
+    Guid EventId, EntityRef Actor, EntityRef Exit, EntityRef Origin,
+    EntityRef? AuthorizedDestination, string OutcomeCode, string SafeReasonCode,
+    ulong ExpectedExitRevision) : MudEvent(EventId);
+public sealed record DoorStateEvent(
+    Guid EventId, EntityRef Actor, EntityRef Exit, EntityRef DoorStateOwner,
+    DoorState PreviousState, DoorState NextState, string ActionCode,
+    ulong ExpectedRevision) : MudEvent(EventId);
+public sealed record TraversalOperationEvent(
+    Guid EventId, Guid OperationId, EntityRef Actor, EntityRef Exit,
+    EntityRef Origin, string OperationState, DateTimeOffset Deadline,
+    string SafeReasonCode, ulong ExpectedRevision) : MudEvent(EventId);
+public sealed record ExitBehaviorEffect(
+    EntityRef Actor, EntityRef Exit, string ActionCode,
+    EntityRef? Destination, DoorState? NewDoorState,
+    Guid? OperationId, ulong ExpectedRevision, string Key) : GameEffect(Key);
+// ActionCode: traverse.request / traverse.cancel / door.open / door.close /
+// door.lock / door.unlock / door.break / door.repair; all rechecked by host.
+
 // AUTHORING CONTRACT: every entrypoint must be a public instance method
 // HookDecision Handler(HookContext ctx, TEvent evt) for before/after hooks;
 // HookQueryResult Handler(HookContext ctx, TEvent evt) for read-only query hooks.
