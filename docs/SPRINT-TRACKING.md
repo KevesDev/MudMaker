@@ -49,20 +49,23 @@
 
 ## S00 — Research, design contracts and agent-ready documentation
 
-**Sprint spec:** [S00.md](05-sprints/specs/S00.md) · **Prerequisite:** none. S00 is documentation and owner decisions, **not an independent documentation audit or an implementation test**. A documentation phase is DONE when its source, links and open decisions are recorded; unresolved owner ADRs remain visible and block relevant S01+ implementation.
+**Sprint spec:** [S00.md](05-sprints/specs/S00.md) · **Prerequisite:** none. S00 records documentation and owner decisions, not implementation or mandatory independent documentation audits. Written, linked documentation is DONE; unresolved architectural decisions are tracked separately and block dependent implementation.
 
-
-**Checkpoint:** documentation is authored and indexed. Owner can review or refine it without a mandatory Auditor handoff. No executable app or runtime PASS is implied.
+**Checkpoint:** All documentation subjects are indexed below for owner review. No runtime implementation or executable test is implied.
 
 | Phase | Document deliverable | Status | Evidence |
 |---|---|---|---|
-| **S00.1 Authority & indexed contracts** | Indexed ECS, scripting, input and UI decisions with exact agent read paths | DONE | [Technical index](INDEX.md), [UI index](03-contracts/ui-ux/INDEX.md), [UI catalog](../contracts/ui/v1/INDEX.md); authored and indexed |
-| **S00.2 Workspace/security boundaries** | Separate Editor, Player Client, Host; safe input and concurrent host/view lifetimes | DONE | [Ownership](03-contracts/ui-ux/01-workspaces-and-ownership.md), [navigation](03-contracts/ui-ux/00-launch-and-workspace-navigation.md), [remote input](03-contracts/client-input-v1/01-ingress-threat-boundary.md); authored and indexed |
-| **S00.3 UI/UX architecture & decision gates** | Central ThemeManager, cataloged controls, Editor/Client workflows, sourced client research and unresolved platform ADRs | DONE | [UI contract](03-contracts/ui-ux/INDEX.md), [controls](../contracts/ui/v1/INDEX.md), [client research](03-contracts/ui-ux/09-client-research.md), [open decisions](07-decisions/OPEN_DECISIONS.md); authored and indexed |
-| **S00.4 Implementable sprint handoffs** | One tracker, one spec/sprint and phase dependency map with no agent research tasks | DONE | [Sprint specs](05-sprints/specs/INDEX.md), [agent rules](../CLAUDE.md), [tracker](SPRINT-TRACKING.md); authored and indexed |
-| **S00.5 First-playable dependency review** | Verify engine-only, local-play and public-host gates, plus phased sprint prerequisites | DONE | [Tracker](SPRINT-TRACKING.md), [roadmap](05-sprints/INDEX.md); independent review pending |
+| **S00.1 Authority & indexed contracts** | Indexed ECS, scripting, input and UI decisions with exact agent read paths | DONE | [Technical index](INDEX.md), [UI index](03-contracts/ui-ux/INDEX.md), [UI catalog](../contracts/ui/v1/INDEX.md) |
+| **S00.2 Workspace/security boundaries** | Separate Editor, Player Client, Host; safe input and concurrent host/view lifetimes | DONE | [Ownership](03-contracts/ui-ux/01-workspaces-and-ownership.md), [navigation](03-contracts/ui-ux/00-launch-and-workspace-navigation.md), [remote input](03-contracts/client-input-v1/01-ingress-threat-boundary.md) |
+| **S00.3 UI/UX architecture & decision gates** | ThemeManager, cataloged controls, Creator/Client workflows and open platform ADRs | DONE | [UI contract](03-contracts/ui-ux/INDEX.md), [controls](../contracts/ui/v1/INDEX.md), [client research](03-contracts/ui-ux/09-client-research.md), [open decisions](07-decisions/OPEN_DECISIONS.md) |
+| **S00.4 Implementable sprint handoffs** | One tracker, one spec/sprint and phase dependency map | DONE | [Sprint specs](05-sprints/specs/INDEX.md), [agent rules](../CLAUDE.md), [tracker](SPRINT-TRACKING.md) |
+| **S00.5 First-playable dependency review** | Distinguish engine harness, local playable and public host gates, and phase prerequisites | DONE | [Tracker](SPRINT-TRACKING.md), [roadmap](05-sprints/INDEX.md) |
+| **S00.6 Local databases and data management** | Automatic local provisioning, authenticated data API, searchable large-world records, optional backups, staged restoration and host operations | DONE | [Database/Data Manager](03-contracts/local-database-and-data-manager.md), [S03](05-sprints/specs/S03.md), [S13](05-sprints/specs/S13.md) |
+| **S00.7 Prompt, status HUD and mapping** | Evennia-inspired prompt/status updates, Creator/Host map support, Player mini map and customizable layouts | DONE | [Prompt and map](03-contracts/prompt-and-world-map.md), [Player Client](03-contracts/ui-ux/05-player-client-workspace.md), [mapper](03-contracts/ui-ux/07-mapper-and-automation.md) |
+| **S00.8 Account, character and security lifecycle** | AccountId vs SessionId vs CharacterId, registration, login/logout, character ownership, Telnet credential security, custom roles and visual character-creation workflows | DONE | [Account/character contract](03-contracts/account-character-lifecycle.md), [Account & Character Studio](05-sprints/specs/S10A.md), [S08](05-sprints/specs/S08.md) |
+| **S00.9 C# lifecycle scripting hooks and sprint integration** | Document versioned account/character/creation hook extensions, graph integration and cross-sprint prerequisites without claiming unregistered hooks work | DONE | [Scripting v1 index](03-contracts/scripting-v1/INDEX.md), [hook registry](03-contracts/scripting-v1/03-hook-registry.md), [S11](05-sprints/specs/S11.md), [tracker](SPRINT-TRACKING.md) |
 
-**S00 written deliverables are complete.** S00 remains ACTIVE only for owner decision review and unresolved ADRs; those questions must be decided before their dependent implementation phases. **No documentation AUDIT status, separate docs Auditor, or imaginary app demo is required.**
+**S00 documentation deliverables: 9/9 DONE.** Owner architectural decisions may still remain open; implementation phases stay TODO until their prerequisites are approved. Documentation requires no separate Auditor approval.
 
 ## S01 — Native decisions
 
