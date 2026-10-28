@@ -1,6 +1,6 @@
 # Quest Progression, Quest-Driven Visibility, and Instanced Content
 
-**Status:** REQUIRED behavior by owner example; PROPOSED detailed contract. **Owner:** Quest Progression System, Conditional Projection System, Instance Manager; all built on **one ECS runtime authority**. **Dependencies:** ecs-core, spatial/containment, world events/time, persistence, commands, narration, protocol.
+**Status:** REQUIRED behavior by owner example; binding feature contract. **Owner:** Quest Progression System, Conditional Projection System, Instance Manager; all built on **one ECS runtime authority**. **Dependencies:** ecs-core, spatial/containment, world events/time, persistence, commands, narration, protocol.
 
 **Full product-specific feature index:** [Quest System](../04-features/quests/INDEX.md). This file owns the shared ECS runtime contract rather than every visual option.
 
@@ -13,7 +13,7 @@
 6. **Dialogue Runtime:** selects per-actor dialogue choices and produces validated quest actions, using same Condition Evaluator and ECS command gateway. Dialogue isn't stored as scattered branch logic on NPC.
 7. **Narration Projection:** filters the committed events and audience; must not reveal phased-out Joe or quest secrets.
 
-## Proposed ECS schema concepts
+## Canonical ECS schema concepts
 - `QuestDefinitionId + QuestDefinitionVersion`: stable asset reference, distinct from per-owner quest attempt.
 - `QuestProgress`: owner scope/id, quest definition version, attempt ID, lifecycle state, active objective IDs/counters, branch decisions, durable flags, timers, claimed rewards, event/high-water cursor, creation/update timestamps.
 - `QuestAvailability`: computed from prerequisite/eligibility predicates, not a second independently mutable truth store.
@@ -22,7 +22,7 @@
 - `InstanceTemplate/InstanceMembership`: source room/encounter template, unique live instance ID, parent world, membership, shutdown, resource/save and expiry policies. Entity instance IDs never alias global/shared IDs.
 - `QuestEventSubscription`: indexed quest objective handler by typed committed event and owner/participant scope, not an expensive per-tick scan across every player quest.
 
-**Data model and storage representation are PROPOSED**. Exact Java classes/database layout and index structures must be approved in ECS/persistence ADRs.
+The listed schemas are binding serialized logical contracts; implementation stores them in the versioned native ECS and embedded project/world store, not Java runtime classes.
 
 ## Quest lifecycle
 Recommended states: NotAvailable, Available, Offered, Active, ObjectivesSatisfied, ReadyToTurnIn, Completed, Rewarded, Failed, Abandoned, Expired, Suspended. Treat **availability** as computed and **attempt lifecycle** as durable, so not every computed label is stored as a mutable field. Exact transitions depend on quest acceptance/reward policy (automatic completion, explicit turn-in, repeatable, failure/retry). State machine must reject illegal transitions and ambiguous double reward. New quest from Bob can be granted during the same authorized transition that completes Talk to Bob (either atomic grouped command or transactional outbox with documented no-loss semantics). Repeatable quests create distinguishable attempts/reward periods. No arbitrary rollback of completed choice branch without explicit admin rule and audit.
