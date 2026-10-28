@@ -33,7 +33,7 @@
 | [S10](#s10) | World events | **0/5** | S08.6 | PLANNED |
 | [S11](#s11) | Quests | **0/6** | S08.6 | PLANNED |
 | [S12](#s12) | Transit | **0/5** | S10,S08.6 | PLANNED |
-| [S13](#s13) | Scripts and graphs | **0/17** | S07,S08.6,S09 | PLANNED |
+| [S13](#s13) | Scripts and graphs | **0/19** | S07,S08.6,S09 | PLANNED |
 | [S14](#s14) | Account/character Creator workflows | **0/9** | S04,S07,S08,S09,S13 | PLANNED |
 | [S15](#s15) | World authoring | **0/7** | S10,S12,S13 | PLANNED |
 | [S16](#s16) | Quest authoring | **0/6** | S11,S13 | PLANNED |
@@ -370,6 +370,8 @@
 | **S13.15 Workflow hook effects** | Durable graph continuation and approved C# effects for creation steps, approval and world events | TODO | — |
 | **S13.16 NPC C# hook integration** | Expose typed read-only heard/seen context and validated dialogue proposals in versioned SDK/CLR/Protobuf/hook manifest; graph and scripts use same runtime authority | TODO | — |
 | **S13.17 Combat graph and C# parity** | Version combat event/ability/effect hooks across registry, CLR, proto and graph; bounded validated proposals, failure and exploit tests | TODO | — |
+| **S13.18 Creator-owned C# CombatManager** | Register and scope independent manager instances, custom action/stat schemas, queue/timers, encounter ownership and durable state through typed SDK/effect API; no built-in damage/HP dependency | TODO | — |
+| **S13.19 Custom combat end-to-end UI test** | In running Creator and two-player Client, publish a C# manager with entirely custom rules, actions and result display; audit hooks, crashes, movement/permission denial, restart and no duplicate effects | TODO | — |
 
 ## S14 — Account & Character Studio
 
