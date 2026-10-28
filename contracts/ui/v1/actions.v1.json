@@ -3081,6 +3081,196 @@
       "input": "typedByControlSchema",
       "outcome": "confirmedOrStructuredError",
       "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandMode",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandStep",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandPreset",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandEdit",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandRename",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandDuplicate",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandVariation",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandToggle",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandArchive",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandDelete",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandWhereUsed",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandHistory",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandSearch",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandOrganize",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandSaveDraft",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandPublish",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandCancel",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandAliases",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.commandAdvancedBinding",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
     }
   ]
 }
