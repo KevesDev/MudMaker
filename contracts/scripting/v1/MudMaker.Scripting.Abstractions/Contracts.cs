@@ -282,6 +282,28 @@ public sealed record InventoryTradeEffect(
     EntityRef Actor, Guid TradeId, string ActionCode,
     ulong ExpectedVersion, string Key) : GameEffect(Key);
 
+// Combat source-level ABI. Runtime commits only validated effects; source DTOs are not live hooks.
+public enum CombatManagerScope { Actor, Team, Encounter, Location, Arena, Region, World }
+public enum CombatClockMode { Pulse, AlternatingTurn, InitiativeRound, SimultaneousRound, RealTime, Hybrid }
+public sealed record CombatManagerSnapshot(
+    Guid ManagerInstanceId, AssetRef ManagerDefinition, CombatManagerScope Scope,
+    ScopeRef OwnerScope, Guid EncounterId, ulong Version, CombatClockMode ClockMode,
+    string PhaseKey, DateTimeOffset? NextDeadline, IReadOnlyList<EntityRef> Participants);
+public sealed record CombatLifecycleEvent(
+    Guid EventId, Guid EncounterId, Guid ManagerInstanceId, EntityRef? Actor,
+    EntityRef? Target, string ActionKey, string LifecycleCode, ulong ExpectedRevision,
+    DateTimeOffset OccurredAt, string CausationKey,
+    CombatManagerSnapshot Manager, IReadOnlyList<ComponentFieldSnapshot> VisibleFields,
+    IReadOnlyList<StateSlotSnapshot> VisibleState) : MudEvent(EventId);
+public sealed record CombatManagerEffect(
+    Guid ManagerInstanceId, Guid EncounterId, string ActionCode,
+    EntityRef? Actor, EntityRef? Target, AssetRef? Asset, string ArgumentKey,
+    PropertyValue? Value, ulong ExpectedRevision, string Key) : GameEffect(Key);
+// Only registered action codes with host-validated capability and schema are executable:
+// create/join/leave/end encounter; queue/cancel intent; set phase; schedule/cancel
+// deadline; request authorized field/resource/condition/equipment/movement mutation;
+// emit authorized sound/narration; request reward. All are transactionally validated.
+
 // AUTHORING CONTRACT: every entrypoint must be a public instance method
 // HookDecision Handler(HookContext ctx, TEvent evt) for before/after hooks;
 // HookQueryResult Handler(HookContext ctx, TEvent evt) for read-only query hooks.
