@@ -1,6 +1,6 @@
 # Central ThemeManager and Graph-Paper Visual Contract
 
-**Status: DECIDED design; implementation pending.** **Owner: one shared ThemeManager library with separately resolved Editor/Client preference scopes**, shared by all Map, Code, Visual Graph, Blueprint, Quest, Dialogue and world-system editing surfaces. No feature may define its own palette, fonts, theme rules or duplicated theme settings. [S02 implementation phases](../05-sprints/specs/S02.md).
+**Status: DECIDED design; implementation pending.** **Owner: one shared ThemeManager library with separately resolved Editor/Client preference scopes**, shared by all Map, Code, Visual Graph, Blueprint, Quest, Dialogue and world-system editing surfaces. No feature may define its own palette, fonts, theme rules or duplicated theme settings. [S02 implementation phases](../05-sprints/specs/S03.md).
 
 ## Required default
 The visual graph canvas uses a **quiet dark graph-paper background** with continuous horizontal/vertical minor square lines and subtly stronger lines every `grid.majorEvery` cells. **No dotted grid, stars, noise, checkerboard or decorative gradients.** Nodes, connections, selection, focus, labels and errors remain visually dominant. This is a view renderer, not graph semantics or the Map editor's world cells.
@@ -25,4 +25,4 @@ The centrally pinned [theme-defaults.v1.json](../../contracts/ui/v1/theme-defaul
 - Map's authored region colors remain authored **content** while UI chrome responds to theme.
 - One ThemeManager owns values; no feature-specific style managers and no arbitrary visual constants in feature docs.
 
-**Source of truth:** this page controls common appearance and editor graph styling; [scope and Client theme](ui-ux/03-theme-and-preferences.md) controls Editor/Client preference isolation and terminal-only semantic tokens. [Machine preset values](../../contracts/ui/v1/theme-defaults.v1.json) are one centralized bundle, not local component constants. [Graph interaction design](../04-features/scripting/02-visual-graph-editor.md) controls graph UX; [S02](../05-sprints/specs/S02.md) delivers ThemeManager; S09/S13/S15/S16 use it; S18 audits accessibility.
+**Source of truth:** this page controls common appearance and editor graph styling; [scope and Client theme](ui-ux/03-theme-and-preferences.md) controls Editor/Client preference isolation and terminal-only semantic tokens. [Machine preset values](../../contracts/ui/v1/theme-defaults.v1.json) are one centralized bundle, not local component constants. [Graph interaction design](../04-features/scripting/02-visual-graph-editor.md) controls graph UX; [S02](../05-sprints/specs/S03.md) delivers ThemeManager; S09/S13/S15/S16 use it; S18 audits accessibility.
