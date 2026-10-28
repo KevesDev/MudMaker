@@ -19,8 +19,8 @@ Execution nodes show entry type and event; Conditions show outcomes; Effects sho
 No hover-only command. Tap/focus displays concise tooltip with keyboard/reader accessible equivalent. Graph is navigable using keyboard and ordered node/edge list. Touch/pen gesture disambiguation, reduced motion, scaled text and high contrast read from ThemeManager. Executed paths in an isolated real ECS test world can be inspected by trace; no fake positive display. Large graphs virtualize nodes/edges and throttle redrawing under measured budgets.
 
 ## User-demo milestones
-- [S09.3](../../05-sprints/specs/S09.md): user pans and zooms **continuous dark graph-paper lines** and selects a custom theme with no dotted backdrop.
-- [S11.7](../../05-sprints/specs/S11.md): user creates typed graph equivalent to a C# hook and inspects real matching ECS state.
-- [S12Q](../../05-sprints/specs/S12Q.md): user authors an actual quest/dialogue/reward graph and tests as two players.
+- [S02.4](../../05-sprints/specs/S02.md): user pans and zooms **continuous dark graph-paper lines** and selects a custom theme with no dotted backdrop.
+- [S13.8](../../05-sprints/specs/S13.md): user creates typed graph equivalent to a C# hook and inspects real matching ECS state.
+- [S16](../../05-sprints/specs/S16.md): user authors an actual quest/dialogue/reward graph and tests as two players.
 
 No separate graph style palette, font, pixel constants, hover theme or node-level color authority may be specified in other feature files.
