@@ -1,16 +1,16 @@
 # ECS Core — Identity, Components, Queries, Systems and Safety
 
-**Status:** ECS requirement CONFIRMED; mechanics below PROPOSED pending ADR-002/003. **Owner:** ECS runtime. **Dependencies:** system-boundaries.
+**Status:** binding ECS behavioral invariants; runtime not implemented. Storage layout is an implementation benchmark decision, not a permission to change these invariants. **Owner:** ECS runtime. **Dependencies:** system-boundaries.
 
 ## Mandatory ECS principles
 - Runtime game concepts are entities with identity and component composition. Behavior lives in systems or registered graph/script hooks; entities are not gameplay class inheritance trees.
 - Support builtin and creator-defined component schemas as first-class data. Schemas are inspectable, versioned and available to visual editors, runtime validation and serialization.
 - An entity may represent: player character, NPC, item, door, train, platform, train interior room, track segment, region controller, spawn point, weather controller, scheduled event or a globally scoped world service instance. Being an entity does not require rendering on map.
 - Any specialized template is *composition*, not a permanently hard-coded engine class.
-- Queryable entities and components remain manageable at scale; the concrete storage technique (archetype vs sparse-set vs hybrid) and benchmarks are OPEN.
+- Queryable entities and components remain manageable at scale; storage implementation must preserve indexed entity/component queries; choose the fastest conforming strategy by native benchmark without changing the public ECS contract.
 
 ## Canonical terms and contracts
-**EntityId:** opaque unique runtime identity, immutable within a world instance and never reused while references might exist. IDs must be scoped to world / instance; globally unique UUID vs structured world-scoped IDs is OPEN. An entity's blueprint identity is *not* its instance ID.
+**EntityId:** opaque unique runtime identity, immutable within a world instance and never reused while references might exist. IDs must be scoped to world / instance; use world-scoped opaque EntityRef containing a stable entity identifier and generation; serialization and IPC never expose native pointers. An entity's blueprint identity is *not* its instance ID.
 
 **ComponentTypeId / ComponentSchemaVersion:** globally unambiguous namespaced type ID and version, with property names, primitive/structured types, required/default rules, validation ranges, serialization policy, editor hints and migration handling. Dynamic creator components cannot bypass validation. Example creator component: transit.ticket {class: string, validated: boolean}. Reserved builtins cannot be overridden by user assets.
 
@@ -25,7 +25,7 @@
 **Query:** typed selection by required/optional/excluded component type and optional scope; iteration order must be defined for deterministic systems or explicitly declared nondeterministic for read-only usage.
 
 ## Mutations
-Proposed command/transaction API operations: createEntity, destroyEntity(policy), addComponent, removeComponent, patchComponent(typed change), attach/detach/transfer containment, register blueprint instance and publish domain action. Every operation validates schema + referential/spatial invariants + access permissions before commit. There must be one authoritative mutation gateway; systems must not bypass it with arbitrary registry writes.
+Canonical command/transaction API operations: createEntity, destroyEntity(policy), addComponent, removeComponent, patchComponent(typed change), attach/detach/transfer containment, register blueprint instance and publish domain action. Every operation validates schema + referential/spatial invariants + access permissions before commit. There must be one authoritative mutation gateway; systems must not bypass it with arbitrary registry writes.
 
 - Atomic commands: validation failure commits no mutation, emits no success event, returns a structured error.
 - Commands requiring multiple entity updates (e.g. boarding a train and updating occupancy) are one transaction.
@@ -35,7 +35,7 @@ Proposed command/transaction API operations: createEntity, destroyEntity(policy)
 - User-defined custom components cannot grant administrative permissions solely by naming a field.
 
 ## Scheduling and performance
-System phases proposed: validate intent -> simulation update -> scheduled behaviors -> effects/event processing -> commit -> snapshot/publish. The exact execution model and ordering MUST be recorded before code. No system may spin its own tick thread. Define bounded budgets for processing event recursion, graph steps, script CPU, timed actions and queue backpressure. Defaults must come from named configuration + measurable benchmarks, not embedded literals.
+Required externally observable system order: validate intent -> simulation update -> scheduled behaviors -> effects/event processing -> commit -> snapshot/publish. Each world has one ordered mutation/commit authority; parallel systems may compute proposals from immutable snapshots, then serialize validated commits. No system may spin its own tick thread. Define bounded budgets for processing event recursion, graph steps, script CPU, timed actions and queue backpressure. Defaults must come from named configuration + measurable benchmarks, not embedded literals.
 
 ## Example composition (illustrative, not shipped)
 - TrainEntity = Named + RouteFollower + MotionState + ContainsLocations + Interactable + TransitDoorBindings.
@@ -43,7 +43,7 @@ System phases proposed: validate intent -> simulation update -> scheduled behavi
 - Passenger = Character + LocatedIn(train interior) + Inventory + SessionBinding.
 - Door = Interactable + Lockable + DynamicExitEndpoint + TriggerBindings.
 - WeatherController = RegionScope + ScheduledBehavior + WeatherParameters + State.
-These names are **proposed** descriptive contracts, not instructions to instantiate exactly these concrete Java classes.
+These names describe the required API responsibilities; they do not require Java classes or a specific storage library.
 
 ## Non-negotiable tests
 1. Attach, query, patch and remove creator-defined component while observing correct schema enforcement.
