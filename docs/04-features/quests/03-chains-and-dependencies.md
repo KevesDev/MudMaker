@@ -1,6 +1,6 @@
 # 03 | Quest Chains: Prerequisites, Branching, Sequencing, Exclusivity, Replay
 
-**Status:** REQUIRED breadth; PROPOSED graph policy. **Owner:** Quest Chain Graph Registry and Quest Progression Service; references [definition](01-quest-definition-and-lifecycle.md) and [conditions](../../03-contracts/quest-conditions-and-dialogue.md). **Research:** WoW-like quest chain data and exclusive group semantics in [TrinityCore quest_template_addon](https://trinitycore.info/database/master/world/quest_template_addon) and [Blizzard Party Sync](https://worldofwarcraft.blizzard.com/en-us/news/23451087). We adopt *capabilities*, not specific database fields or exact WoW behavior.
+**Status:** REQUIRED breadth; binding prerequisite and chain graph policy. **Owner:** Quest Chain Graph Registry and Quest Progression Service; references [definition](01-quest-definition-and-lifecycle.md) and [conditions](../../03-contracts/quest-conditions-and-dialogue.md). **Research:** WoW-like quest chain data and exclusive group semantics in [TrinityCore quest_template_addon](https://trinitycore.info/database/master/world/quest_template_addon) and [Blizzard Party Sync](https://worldofwarcraft.blizzard.com/en-us/news/23451087). We adopt *capabilities*, not specific database fields or exact WoW behavior.
 
 ## One explicit versioned chain graph
 Graph of quest definition references and typed conditional transitions (not just one `nextQuestId` pointer). Nodes may be quest starts, prerequisites, branch decisions, phase changes, parallel sets, episode checkpoints, completion outcomes, repeat windows, state actions, optional subquests and next-story endpoints.
@@ -54,3 +54,5 @@ Creator may bind a script or behavior graph to a conditional edge, branch evalua
 
 ## Testing
 A->B on completion vs turn-in timing; A/B AND/OR; one-of-many exclusive conflicts; skipped breadcrumb; delayed restart; class branch; party mismatch; fast consecutive events; failure alternate route; replay reset/reward; rejoin preserves choice history; inaccessible required NPC warns before publishing. See [verification](08-quest-verification-matrix.md).
+
+**Unknown/absent quest state:** a missing, invisible or uninitialized quest reference evaluates FALSE for positive completion/acceptance predicates. NOT over an absent quest is also FALSE unless the author explicitly requests the `NotStarted` predicate. This prevents hidden prerequisite disclosure. Short-circuit AND/OR evaluates only authorized typed conditions; cycles and unsatisfiable prerequisite chains block publishing.
