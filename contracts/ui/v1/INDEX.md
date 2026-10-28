@@ -1,11 +1,11 @@
 # UI Catalog v1 — Every Planned Visible Element
 
-**Status: SPECIFICATION ONLY — NOT IMPLEMENTED.** Four scoped machine-readable files: [Splash/Home](home-controls.v1.json), [Creator Editor](editor-controls.v1.json), [Player Client](client-controls.v1.json), [Host Operations](host-controls.v1.json). **365 visible elements** across the four catalogs and **283 distinct semantic actions**, each with stable ID, label, tooltip/help, active view, state owner, action (or explicit passive status), permission, visible/enabled condition and test ID. This is a *planning inventory*, extended by each implementation phase; not proof these widgets exist.
+**Status: SPECIFICATION ONLY — NOT IMPLEMENTED.** Four scoped machine-readable files: [Splash/Home](home-controls.v1.json), [Creator Editor](editor-controls.v1.json), [Player Client](client-controls.v1.json), [Host Operations](host-controls.v1.json). **390 visible elements** across the four catalogs and **308 distinct semantic actions**, each with stable ID, label, tooltip/help, active view, state owner, action (or explicit passive status), permission, visible/enabled condition and test ID. This is a *planning inventory*, extended by each implementation phase; not proof these widgets exist.
 
 | Workspace | Items | Primary owner |
 |---|---:|---|
 | home | 40 | HomeIntentRouter |
-| editor | 146 | EditorIntentRouter |
+| editor | 171 | EditorIntentRouter |
 | client | 116 | ClientIntentRouter |
 | host | 63 | HostAdminIntentRouter |
 
@@ -19,3 +19,5 @@
 
 ## Static audit
 Exactly one action owner per ActionId, catalog IDs unique, every interactive control has action + accessible label + help + relevant failure states, every passive status shows owner/safe value, all four catalog payloads validate with [control schema](ui-control.schema.json). No duplicate ThemeManager, service-bound UI primitive, unauthorized Actor/Host actions, or cross-workspace shortcut. An exhaustive live UI audit happens in **S18**, not S00.
+
+**Template Library:** `editor.templates.01`–`editor.templates.25` are integrated Asset Explorer/Blueprint controls, not a fourth workspace or a new detached dock. [Editor navigation and flows](../../../docs/03-contracts/ui-ux/04-editor-workspace.md#project-template-library--planned-first-class-editor-workflow) · [Universal templates](../../../docs/03-contracts/reusable-templates-and-variants.md).
