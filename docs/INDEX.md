@@ -110,3 +110,5 @@
 **Generic inventories:** [Any-entity storage, containers, stacks, equipment, access, trades and Creator presets](03-contracts/inventory-and-containers.md) · [Traveling Merchant's Chest worked example](04-features/scripting/09-inventory-technical-case-study.md). One containment model for every entity, with visual nodes and C# bindings.
 
 **LOOK and perception:** [Canonical LOOK/LOOK AT/LOOK IN/EXAMINE, virtual details, authorized appearance and Creator UX](03-contracts/look-and-perception.md) · [Midnight Express LOOK technical case](04-features/scripting/10-look-technical-case-study.md).
+
+**NPC creation:** [Composable templates, autonomous states, quests, services, AI and Creator NPC Studio](03-contracts/npc-templates-and-behaviors.md) · [Northgate NPC technical case study](04-features/scripting/11-npc-technical-case-study.md).
