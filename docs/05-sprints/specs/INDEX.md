@@ -1,6 +1,6 @@
 # MudMaker — Sprint Specifications (agent navigation)
 
-**Execution order:** [Dependency roadmap](../INDEX.md) — early S08 and S09C are required *before* S06/S06Q/S07 playable gameplay, even though their numeric IDs are later. **Architecture:** ONE overarching [repo-native tracker](../../SPRINT-TRACKING.md) for status, and ONE implementation spec per sprint below. **No per-phase files or duplicate checkboxes.** Phases should be narrow enough for multiple independently audited concrete deliverables in a normal Claude usage window; never require a Builder/Auditor to research technology. Read **only the active sprint's spec** plus its exact contract files, not this whole folder.
+**Execution order:** [Dependency roadmap](../INDEX.md) — early S08 and S09C are required *before* S06/S06Q/S07 playable gameplay, even though their numeric IDs are later. **Architecture:** ONE overarching [repo-native tracker](../../SPRINT-TRACKING.md) for status, and ONE implementation spec per sprint below. **No per-phase files or duplicate checkboxes.** S00 documentation phases require no Auditor; implementation phases do. Phases should be narrow enough for multiple independently audited concrete deliverables in a normal Claude usage window; never require a Builder/Auditor to research technology. Read **only the active sprint's spec** plus its exact contract files, not this whole folder.
 
 | Sprint | Focused spec |
 |---|---|
@@ -18,6 +18,7 @@
 | S09C | [S09C](./S09C.md) — standalone player Client and third-party MUD toolkit |
 | S10 | [S10](./S10.md) |
 | S11 | [S11](./S11.md) |
+| **S10A** | **[Account & Character Studio](./S10A.md)** — account policies, visual creation graphs, roles and lifecycle hooks |
 | S12 | [S12](./S12.md) |
 | S12Q | [S12Q](./S12Q.md) |
 | S13 | [S13](./S13.md) |
