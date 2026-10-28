@@ -1,6 +1,6 @@
 {
   "schema": "mudmaker.hook-registry.v1",
-  "version": 3,
+  "version": 4,
   "origin": "host-local-published-release",
   "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
   "hooks": [
@@ -1078,6 +1078,231 @@
       "ownerKind": "CombatParticipant",
       "returnClrType": "HookDecision",
       "behavior": "post-commit: host-computed session aggregate change, read-only connection state; EnqueueAfter validated effects only; cannot veto transport/auth",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.transfer.before",
+      "phase": "Before",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.transfer.after",
+      "phase": "After",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.get.before",
+      "phase": "Before",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.get.after",
+      "phase": "After",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.put.before",
+      "phase": "Before",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.put.after",
+      "phase": "After",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.drop.before",
+      "phase": "Before",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.drop.after",
+      "phase": "After",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.give.before",
+      "phase": "Before",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.give.after",
+      "phase": "After",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.use.before",
+      "phase": "Before",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.item.use.after",
+      "phase": "After",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.stack.split.after",
+      "phase": "After",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.stack.merge.after",
+      "phase": "After",
+      "eventClrType": "InventoryTransferEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.container.open.before",
+      "phase": "Before",
+      "eventClrType": "InventoryContainerEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.container.open.after",
+      "phase": "After",
+      "eventClrType": "InventoryContainerEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.container.close.before",
+      "phase": "Before",
+      "eventClrType": "InventoryContainerEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.container.close.after",
+      "phase": "After",
+      "eventClrType": "InventoryContainerEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.equipment.equip.before",
+      "phase": "Before",
+      "eventClrType": "InventoryEquipmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.equipment.equip.after",
+      "phase": "After",
+      "eventClrType": "InventoryEquipmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.equipment.unequip.before",
+      "phase": "Before",
+      "eventClrType": "InventoryEquipmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "native checks first; veto or bounded validated proposal",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.equipment.unequip.after",
+      "phase": "After",
+      "eventClrType": "InventoryEquipmentEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.trade.offer.after",
+      "phase": "After",
+      "eventClrType": "InventoryTradeEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.trade.commit.after",
+      "phase": "After",
+      "eventClrType": "InventoryTradeEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "inventory.trade.cancel.after",
+      "phase": "After",
+      "eventClrType": "InventoryTradeEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
       "runtimeImplemented": false
     }
   ]
