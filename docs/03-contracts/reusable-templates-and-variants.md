@@ -57,3 +57,5 @@ Host-authoritative APIs: `TemplateCreateDraft`, `TemplateSaveDraft`, `TemplateCr
 11. Two editors save same draft revision; one receives revision conflict, no lost changes.
 12. Backup/restore and cross-project import with ID remap, duplicate names and malicious executable asset references; preserve security and consistency.
 13. Screen-reader, keyboard and touch interactions support create/save/rename/tag/group/delete without custom scripts.
+
+**Universal tag owner:** [Universal tags and organization](universal-tags-and-organization.md) defines tag IDs, namespace separation, stable rename, bulk actions, tagged script/command assets, indexed queries and project recovery. `TemplateTag` uses that shared tag catalog rather than a second Template-only tag table. Folder placement stays independent of multi-valued tags.
