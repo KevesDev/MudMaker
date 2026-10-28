@@ -1,6 +1,6 @@
 # MudMaker Technical Documentation Index
 
-**Version:** architecture reset draft, 2026-10-28. **Authority:** this repository. **Implementation:** mostly not started. **Required** = owner-confirmed goal; **Proposed** = specification requiring review; **Open** = decision gate. Start here; open only relevant pages.
+**Version:** design contract set, 2026-10-28. **Authority:** this repository. **Implementation:** primarily not built. **REQUIRED/BINDING DESIGN** identifies the expected implementation and verification behavior, not a shipping feature. **RESEARCH** documents external comparisons. **OPEN** applies only to documented implementation/technology decision gates; no Builder may silently choose missing contract semantics. `TODO` in the tracker is a truthful implementation status, not an unspecified feature. Start here; open only relevant pages.
 
 | Need | Authority | Status |
 |---|---|---|
@@ -34,13 +34,13 @@
 | Quest sprint gates and order | [Quest dependencies](05-sprints/quest-implementation-dependencies.md) | PROPOSED |
 | Live sprint tracking checklist | [Sprint tracking](SPRINT-TRACKING.md) | LIVE |
 | Completed sprint history, rationale | [Sprint history](SPRINT-HISTORY.md) | HISTORY |
-| Per-sprint spec template | [Sprint template](05-sprints/specs/SPRINT-SPEC-TEMPLATE.md) | PROPOSED |
+| Per-sprint spec template | [Sprint template](05-sprints/specs/SPRINT-SPEC-TEMPLATE.md) | BINDING DESIGN |
 | Sprint scope, deliverables and acceptance | [Sprint specifications](05-sprints/sprint-specifications.md) | PROPOSED |
-| Project Lead/Builder/Auditor governance | [CLAUDE.md](../CLAUDE.md), [Builder](../.claude/agents/builder.md), [Auditor](../.claude/agents/auditor.md) | PROPOSED based on supplied agent rules |
-| Token and dispatch limits | [Token and dispatch policy](06-quality/token-and-dispatch-policy.md) | PROPOSED |
-| Rules for AI builders/reviewers | [Agent policy](06-quality/agent-policy.md) | REQUIRED prohibitions; PROPOSED enforcement |
-| Verifiable behavior matrix and test policy | [Test matrix](06-quality/test-matrix.md) | PROPOSED |
-| Trust boundaries, script sandbox, permissions | [Security policy](06-quality/security-policy.md) | PROPOSED |
+| Project Lead/Builder/Auditor governance | [CLAUDE.md](../CLAUDE.md), [Builder](../.claude/agents/builder.md), [Auditor](../.claude/agents/auditor.md) | BINDING DESIGN based on supplied agent rules |
+| Token and dispatch limits | [Token and dispatch policy](06-quality/token-and-dispatch-policy.md) | BINDING DESIGN |
+| Rules for AI builders/reviewers | [Agent policy](06-quality/agent-policy.md) | REQUIRED prohibitions; BINDING DESIGN enforcement |
+| Verifiable behavior matrix and test policy | [Test matrix](06-quality/test-matrix.md) | BINDING DESIGN |
+| Trust boundaries, script sandbox, permissions | [Security policy](06-quality/security-policy.md) | BINDING DESIGN |
 | Decisions intentionally not guessed | [Open decisions](07-decisions/OPEN_DECISIONS.md) | OPEN |
 | Unity, Godot, C++ Flecs / C# research | [Engine research](08-research/engine-and-scripting-architecture-comparison.md) | RESEARCH |
 | C# vs custom DSL and scripting editor references | [Scripting technology research](08-research/scripting-engine-research.md) | RESEARCH |
@@ -52,7 +52,7 @@
 - When a document proposes a choice, add a decision entry; do not silently promote it to confirmed.
 - Each owning subsystem should have one mutation boundary. The map editor, command parser, scripts and network are clients of the same authority.
 - Paths are case-sensitive; ensure all links resolve and index entries are updated for added/renamed files.
-- C++ and C# are **candidate engine/runtime technologies**, not an approved stack; the deprecated Java/Python proposals are historical. Engine/API decisions need evidence-backed ADR before implementation.
+- The source-level runtime boundary is native authoritative ECS with a typed C# 14/.NET 10 host-local worker, while performance-sensitive storage/platform/transport choices must still pass their technical ADR acceptance criteria. Deprecated Java/Python implementations are historical, not current source instructions.
 - Quest eligibility, dialogue, visibility and targetability reuse [one condition evaluator](03-contracts/quest-conditions-and-dialogue.md). Phasing is per-viewer filtering; private instances are distinct world/room copies.
 - Actor/location-specific narration is derived from committed events using [one observer projection](03-contracts/narration-and-observers.md), never from duplicate UI/script broadcasts.
 - The original Google Doc “MudMaker” records the earlier v1.1 design; use these versioned specifications for current planning.
