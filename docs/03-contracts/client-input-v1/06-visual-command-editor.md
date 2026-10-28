@@ -1,6 +1,6 @@
 # 06 — Built-In Visual Command Creator (No-Code First)
 
-**DECIDED feature UX; not implemented.** Graph and editor typography/colors use [one ThemeManager](../editor-theme-manager.md) and [dark graph-paper canvas](../scripting-v1/06-graph-parity-and-publishing.md). Command editor consumes [typed definition schema](../../../contracts/input/v1/command-definition.schema.json), [parser](04-command-parser-grammar.md) and [access rules](05-command-registry-and-access.md). The interface is built in S10 after S09 editor shell and S03 asset schema; advanced C# / visual graph hooks integrate in S11.
+**DECIDED feature UX; not implemented.** Graph and editor typography/colors use [one ThemeManager](../editor-theme-manager.md) and [dark graph-paper canvas](../scripting-v1/06-graph-parity-and-publishing.md). Command editor consumes [typed definition schema](../../../contracts/input/v1/command-definition.schema.json), [parser](04-command-parser-grammar.md) and [access rules](05-command-registry-and-access.md). The interface is built in S09 after S02 editor shell and S04 asset schema; advanced C# / visual graph hooks integrate in S13.
 
 ## Creation UX — user can make a command without code
 1. Open **Project > Commands > New Command** or inspector **Add Command** on NPC/room/item/exit/quest.
@@ -29,4 +29,4 @@ Sidebar project command library; central **Command Definition Form**; optional *
 - Include a no-code onboarding walkthrough: "Create a command and invite a second player to test it"; measure completion and drop-off, not only feature checklists.
 
 ## Phases
-S05: parser/types/registry/permissions in native harness. S08: hardened client ingress. S09: shell/ThemeManager. **S10: default command templates + form editor + visual permissions + command test harness**, then S11 advanced C#/graph binding. S13: real hosted publish/security. [Phase list](../../05-sprints/specs/INDEX.md).
+S06: parser/types/registry/permissions in native harness. S07: hardened client ingress. S02: shell/ThemeManager. **S09: default command templates + form editor + visual permissions + command test harness**, then S13 advanced C#/graph binding. S17: real hosted publish/security. [Phase list](../../05-sprints/specs/INDEX.md).
