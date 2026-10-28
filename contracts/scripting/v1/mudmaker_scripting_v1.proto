@@ -191,6 +191,13 @@ message DoorStateEvent { string event_id = 1; EntityRef actor = 2; EntityRef exi
 message TraversalOperationEvent { string event_id = 1; string operation_id = 2; EntityRef actor = 3; EntityRef exit = 4; EntityRef origin = 5; string operation_state = 6; string deadline_utc = 7; string safe_reason_code = 8; uint64 expected_revision = 9; }
 message ExitBehaviorEffect { EntityRef actor = 1; EntityRef exit = 2; string action_code = 3; EntityRef destination = 4; DoorState new_door_state = 5; string operation_id = 6; uint64 expected_revision = 7; }
 
+message CommunicationEvent { string event_id = 1; EntityRef sender = 2; EntityRef recipient = 3; string channel_id = 4; string mode = 5; string sanitized_text = 6; string scope_code = 7; string outcome_code = 8; uint64 expected_revision = 9; }
+message CraftRequirement { string tag_key = 1; int64 quantity = 2; }
+message CraftRequestEvent { string event_id = 1; EntityRef actor = 2; EntityRef station = 3; AssetRef output_template = 4; EntityRef destination = 5; repeated CraftRequirement requirements = 6; string outcome_code = 7; uint64 expected_revision = 8; }
+message CraftTransactionEffect { EntityRef actor = 1; EntityRef station = 2; AssetRef output_template = 3; EntityRef destination = 4; repeated CraftRequirement requirements = 5; uint64 expected_revision = 6; }
+message SocialRelationshipEvent { string event_id = 1; EntityRef subject = 2; EntityRef target = 3; string relationship_kind = 4; string action_code = 5; int64 value = 6; uint64 expected_revision = 7; }
+message SocialRelationshipEffect { EntityRef subject = 1; EntityRef target = 2; string relationship_kind = 3; string action_code = 4; int64 value = 5; uint64 expected_revision = 6; }
+
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -231,6 +238,9 @@ message HookEvent {
     ExitTraversalEvent exit_traversal = 36;
     DoorStateEvent door_state = 37;
     TraversalOperationEvent traversal_operation = 38;
+    CommunicationEvent communication = 39;
+    CraftRequestEvent craft_request = 40;
+    SocialRelationshipEvent social_relationship = 41;
   }
 }
 enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
@@ -309,6 +319,8 @@ message GameEffect {
     CombatManagerEffect combat_manager = 21;
     NpcBehaviorEffect npc_behavior = 22;
     ExitBehaviorEffect exit_behavior = 23;
+    CraftTransactionEffect craft_transaction = 24;
+    SocialRelationshipEffect social_relationship = 25;
   }
 }
 enum Disposition {
