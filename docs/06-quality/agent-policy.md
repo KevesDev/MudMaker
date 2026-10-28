@@ -2,7 +2,7 @@
 
 **Primary operational contract:** [CLAUDE.md](../../CLAUDE.md), [Builder](../../.claude/agents/builder.md), [Auditor](../../.claude/agents/auditor.md), and [token controls](token-and-dispatch-policy.md). This file supplies technical quality gates rather than duplicating complete role prompts.
 
-**Status:** REQUIRED prohibitions (user) and PROPOSED enforcement workflow. **Applies:** all contributors, including AI agents.
+**Status:** REQUIRED prohibitions (user) and binding enforcement workflow. **Applies:** all contributors, including AI agents.
 
 ## Roles
 **Lead architect:** plans, assigns owners, resolves dependency edges, maintains indexes/ADRs; does not casually bypass decisions by adding code. **Builder:** implements only approved bounded contract. **Independent auditor:** challenges contract conformance, deduplication, tests and measured performance; can reject. **Investigator:** gathers source-backed alternatives for OPEN decisions; does not silently decide product scope.
@@ -19,7 +19,7 @@
 ## Before touching code
 1. Read AGENTS.md and relevant docs INDEX entries; identify all overlapping functionality.
 2. Read implementation and tests using repository search; map callers, state writers and interfaces.
-3. State proposed changes, owner, invariants, integration impact and decisions needed.
+3. State concrete changes, owning subsystem, invariant preservation, integration impact and acceptance evidence. Unsupported implementation choices fail preflight rather than being guessed.
 4. Confirm prerequisites and that relevant ADRs are approved. If not, investigate/stop rather than guess.
 5. Specify acceptance criteria: observable state transition, failure case, persistence/permissions, measured limits where applicable.
 
@@ -56,7 +56,7 @@
 
 ## Native and code-script quality hard gates
 - Treat headless C++ ECS and C# scripts as **research candidates** until approved ADR. Do not mix in Unity IL2CPP as invented runtime compiler or blindly restore Java/GraalPy.
-- All script code/graph API uses typed world-scoped handles, component snapshots and proposed ECS commands; no untrusted raw native pointers, shared writable memory, unrestricted reflection/PInvoke or process-wide mutable game state.
+- All script code/graph API uses typed world-scoped handles, component snapshots and host-validated ECS command proposals; no untrusted raw native pointers, shared writable memory, unrestricted reflection/PInvoke or process-wide mutable game state.
 - Builder/Auditor must test stale entity refs, cross-world denial, worker termination, memory budget/CPU timeout, hot reload, exposed fields and code-to-graph parity; C++ core requires sanitizer and race/invariant evidence.
 - Source scripts never execute on player tablet; GUI/CLI host and remote editor use immutable release+compiler/sandbox protocol.
 
