@@ -14,6 +14,6 @@
 | 8 | S15 → S16 | Visual world systems and quest authoring |
 | 9 | S17 → S18 | Durable remote self-hosting (**E3**), release verification |
 
-**Legacy sprint IDs remain unchanged** because existing source contracts and links use them. Execution follows the actual rows above—not numeric sorting or hidden parallel exceptions. S02 must create a real app window before phases expecting human UI inspection. S09.16–18 require S04/S05 and the S02 shell. S07.9 requires the real native command authority; S08.6 requires S07.9 and the working S02 shell. E1 is a harness, E2 is local play, E3 is public hosting.
+**IDs are now sequential and canonical.** Execution follows the actual rows above—not numeric sorting or hidden parallel exceptions. S02 must create a real app window before phases expecting human UI inspection. S09.16–18 require S04/S05 and the S02 shell. S07.9 requires the real native command authority; S08.6 requires S07.9 and the working S02 shell. E1 is a harness, E2 is local play, E3 is public hosting.
 
 **Contracts:** [Local database](../03-contracts/local-database-and-data-manager.md), [prompt/map](../03-contracts/prompt-and-world-map.md), [accounts/character creation](../03-contracts/account-character-lifecycle.md). All phase status/evidence lives in [the tracker](../SPRINT-TRACKING.md).
