@@ -25,20 +25,20 @@
 | [S02](#s02) | Launchable application shell and shared UI | **0/10** | S01 UI/platform choice | PLANNED |
 | [S03](#s03) | Native ECS | **0/11** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/21** | S03 | PLANNED |
-| [S05](#s05) | Rooms and exits | **0/13** | S03,S04 | PLANNED |
-| [S06](#s06) | Command harness | **0/20** | S04,S05 | PLANNED |
+| [S05](#s05) | Rooms and exits | **0/14** | S03,S04 | PLANNED |
+| [S06](#s06) | Command harness | **0/21** | S04,S05 | PLANNED |
 | [S07](#s07) | Loopback host and secure input | **0/22** | S04,S06 | PLANNED |
 | [S08](#s08) | Playable client and toolkit | **0/24** | S07.9,S02.2–4 | PLANNED |
-| [S09](#s09) | Creator tools, real map and Data Manager | **0/29** | S04–S06,S02 | PLANNED |
+| [S09](#s09) | Creator tools, real map and Data Manager | **0/30** | S04–S06,S02 | PLANNED |
 | [S10](#s10) | World events | **0/7** | S08.6 | PLANNED |
 | [S11](#s11) | Quests | **0/7** | S08.6 | PLANNED |
 | [S12](#s12) | Transit | **0/5** | S10,S08.6 | PLANNED |
-| [S13](#s13) | Scripts and graphs | **0/22** | S07,S08.6,S09 | PLANNED |
+| [S13](#s13) | Scripts and graphs | **0/23** | S07,S08.6,S09 | PLANNED |
 | [S14](#s14) | Account/character Creator workflows | **0/9** | S04,S07,S08,S09,S13 | PLANNED |
 | [S15](#s15) | World authoring | **0/9** | S10,S12,S13 | PLANNED |
 | [S16](#s16) | Quest authoring | **0/6** | S11,S13 | PLANNED |
 | [S17](#s17) | Public hosting | **0/20** | S07,S08,S13 | PLANNED |
-| [S18](#s18) | Release audit | **0/19** | All preceding | PLANNED |
+| [S18](#s18) | Release audit | **0/20** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -170,6 +170,7 @@
 | **S05.11 S05.11 Authorized inventory custody** | Native get/put/drop/open/close and nested-container permission/range/capacity transaction with failure atomicity and authoritative observer output | TODO | — |
 | **S05.12 LOOK perception and detail resolver** | Visible entity/exit/room/detail candidate lookup, alias and disambiguation, per-observer sense/quest restrictions and hidden-target denial in shell | TODO | — |
 | **S05.13 NPC perception and navigation** | Per-observer entry/leave/hearing, safe area/path movement and blocked-route feedback through normal world topology | TODO | — |
+| **S05.14 ECS exits and door linkage** | ExitConnection/Traversal capabilities on ordinary entities, shared two-sided DoorState, distinct view/traverse rules and atomic open/lock state with live shell test | TODO | — |
 
 ## S06 — Command runtime
 
@@ -202,6 +203,7 @@
 | **S06.18 LOOK family commands and appearance composition** | Implement look/l/ls, look at/in/on/under/behind/through, examine, visible aliases, sections, bounded pagination through one real command executor | TODO | — |
 | **S06.19 LOOK in-app command tests** | Use S02 live shell to inspect two visible objects, ambiguous names, hidden details and a closed container; compare authoritative output and permission failures | TODO | — |
 | **S06.20 NPC interaction gateway** | Authorized interact/talk/service command resolution and typed NPC action intentions through native command service with real shell tests | TODO | — |
+| **S06.21 Exit commands and delayed traversal** | One traversal intent for named exits/go/enter/UI; persistence-safe SlowExit deadlines, stop/cancel, movement hook ordering and error text with real shell test | TODO | — |
 
 ## S07 — Remote player input
 
@@ -313,6 +315,7 @@
 | **S09.27 NPC Studio live preview** | In-app route/aggro/hearing overlays, trigger inspector, NPC state view, service transactions and two-player test UI | TODO | — |
 | **S09.28 Project Template Library UI** | Save any creator-authored asset as template; rename, search, filter, group/tag, duplicate, archive/restore, Where Used and safe referenced-delete controls | TODO | — |
 | **S09.29 Template variations and live roundtrip** | Create child variations, pinned parent revisions, field overrides and explicit rebase preview; test project close/reopen and 100k indexed templates in real Creator | TODO | — |
+| **S09.30 Exit presets and integrated editor** | Saveable passage/door/portal/slow-exit Blueprint presets in existing Map/Inspector, shared DoorState linking and test both sides | TODO | — |
 
 ## S10 — World systems
 
@@ -402,6 +405,7 @@
 | **S13.20 S13.20 Inventory graph and C# lifecycle** | Implement registered inventory hook DTOs, proposal effects and graph parity with exact JSON/CLR/Protobuf IDs, capability and negative tests | TODO | — |
 | **S13.21 LOOK hook and graph parity** | Implement registered look.query/observed and entity.appearance hook IDs across native, CLR, Proto and graph, ensure pure query and authorized post-read triggers | TODO | — |
 | **S13.22 NPC C# and graph lifecycle parity** | Implement exact npc.* registered events, NpcLifecycleEvent/NpcServiceEvent and NpcBehaviorEffect with native permission checks, graph parity and hostile inputs | TODO | — |
+| **S13.23 Exit scripting hook parity** | Implement exact registered exit.* source events and ExitBehaviorEffect in C#/Proto/graph, audit native-authority denial and delayed completion | TODO | — |
 
 ## S14 — Account & Character Studio
 
@@ -522,6 +526,7 @@
 | **S18.17 LOOK security and performance audit** | Fuzz hidden names, private containers, duplicate aliases, phasing, quest/time variants, stale reconnect, 10k room targets and accessibility | TODO | — |
 | **S18.18 NPC behavior and service audit** | Stress many idle/active NPCs, patrol locks, phased targets, quest split states, merchant/auction/bank custody, crash/restart, low-end CPU and privilege isolation | TODO | — |
 | **S18.19 Template management audit** | Test all asset-kind coverage, rename/reference stability, variation cycles, pinned releases, guarded delete, concurrent editing, project recovery and high-volume indexed search | TODO | — |
+| **S18.20 Exit/door integrity audit** | Audit shared door races, delayed cancellation/restart, hidden exits, train docking, 1000 pending traversals and object-vs-template behavior | TODO | — |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
