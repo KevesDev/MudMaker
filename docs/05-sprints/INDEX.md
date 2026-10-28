@@ -27,3 +27,5 @@
 **NPC delivery:** S03 capability → S04 persistence → S05 perception/navigation → S06 interact gateway → S08 Player services → S09 NPC Studio → S10 autonomous controllers/playtest → S11 quest roles → S13 typed C#/graph hooks → S15 service placements → S18 autonomous NPC audit. [NPC contract](../03-contracts/npc-templates-and-behaviors.md).
 
 **Reusable templates:** S04 stores/indexes immutable template revisions, variations and project metadata; S09 exposes Save as Template, variations, indexed search, folders/tags, rename/archive/delete and Where Used; S18 audits persistence and scale. [Binding specification](../03-contracts/reusable-templates-and-variants.md).
+
+**Composed gameplay and starter sample:** S06 inventory/speech commands → S07 scoped messages → S09 typed attributes and crafting graph → S10 relationships → S13 typed hooks and transactional craft → S15–17 bundled Tutorial World → S18 independent verification. [World tutorial](../04-features/tutorial-world-starter-project.md).
