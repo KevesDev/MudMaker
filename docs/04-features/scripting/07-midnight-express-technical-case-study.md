@@ -2,13 +2,13 @@
 
 **Status:** PROPOSED design/example, not implemented code. **Goal:** engineering-level worked example with exact proposed data structures, script entrypoints, host interactions, authoritative ECS commit, event/outbox handling, and negative tests. **Stack candidate only:** C++ ECS engine + isolated C# code worker + typed graph compiler. Read **this file** for a complete vertical slice. Consult general files only to implement specific parts: [Code](code/INDEX.md), [Visual](visual/INDEX.md), [Runtime ABI](../../03-contracts/scripting-runtime-and-capabilities.md), [Quest Hooks](../quests/09-custom-scripts-and-event-hooks.md), [Moving Locations](../../02-architecture/spatial-containment-transit.md), [Narration](../../03-contracts/narration-and-observers.md).
 
-> **Not source code.** The C# and C++ snippets below are typed pseudocode. Names such as \`Effects\`, \`MudHook\`, \`CommitAtomically\`, \`WorldActor\` and \`EntityRef\` are illustrative proposed interfaces, not shipped SDK classes or final APIs. Exact engine technology, script language, ABI, database, event delivery guarantees, and concurrency choices require ADR approval. The intent is precise behavioral and ownership semantics rather than pretending code compiles today.
+> **Not source code.** The C# and C++ snippets below are typed pseudocode. Names such as `Effects`, `MudHook`, `CommitAtomically`, `WorldActor` and `EntityRef` are illustrative proposed interfaces, not shipped SDK classes or final APIs. Exact engine technology, script language, ABI, database, event delivery guarantees, and concurrency choices require ADR approval. The intent is precise behavioral and ownership semantics rather than pretending code compiles today.
 
 ## 1. Scenario: creator-authored Midnight Express quest chain
 
 **Actors:** Bob (Northgate station NPC), Conductor (Car A NPC), Joe (Harbor NPC); players Alice and Pat; Midnight Express train with Car A and Car B; a storm world system; two stations and directed track route.
 
-**Quest graph:** \`TalkToBob\` (Q1) Active → Bob's accepted dialogue choice → Q1 Completed + \`FindJoe\` (Q2) Active + StormEvent StartRequested/Active. Q2 has ordered objectives \`BoardMidnightExpress\` → \`PassConductorQuiz\` → \`TalkToJoe\`. On Joe's quest-specific turn-in, Q2 completes, StormEvent moves to Stopping/Ended according to world-event lifecycle, a guaranteed rail-pass reward is granted, and a server-seeded random bonus-table reward is attempted **only if the player character's normalized display name starts with A**.
+**Quest graph:** `TalkToBob` (Q1) Active → Bob's accepted dialogue choice → Q1 Completed + `FindJoe` (Q2) Active + StormEvent StartRequested/Active. Q2 has ordered objectives `BoardMidnightExpress` → `PassConductorQuiz` → `TalkToJoe`. Joe's first quest-specific conversation credits `TalkToJoe` from a server-committed dialogue choice. A distinct subsequent **Confirm Turn-In** command then verifies all objectives are satisfied, completes Q2, requests stopping StormEvent, grants the guaranteed rail pass, and conditionally rolls an additional reward **only if the player character's normalized display name starts with A**.
 
 **World constraints:** The train follows tracks from Northgate to Harbor; its child carriage Locations are stable entities. Internal exits function while it moves. Boarding/disembarking are dynamic dock-conditional exits. Joe's one persistent shared-world entity is projected to observers only while Q2 is active or under a creator-configured post-completion rule. Pat can stand beside Alice in Harbor without seeing Joe. Room observer narration is event-derived, not printed directly by script.
 
@@ -22,26 +22,26 @@
 
 | Runtime object / asset | Conceptual schema and ownership | Important invariant |
 |---|---|---|
-| \`WorldInstance\` | worldId, releaseId, ECS registry, scheduler, command queue, event sequence, persistent cursor | One authoritative writer/transaction owner |
-| \`EntityRef\` | worldId, entityId, generation, kind, optional read version | Opaque handle; no native pointer to C# |
-| \`SpatialParent\` | child entityId → one parent Location/Container | Acyclic; player keeps Car A parent while train moves |
-| \`TrainMotion\` / \`RouteFollower\` | train entity, track edge, progress, docking/door state | Track movement doesn't rewrite occupant containment |
-| \`DynamicExit\` | source Location, destination resolver, lock predicates | Boarding permitted only on valid Docked snapshot |
-| \`QuestProgress\` | character ID, questId/version, attemptId, state, objective IDs/flags, cursor | Per-character durable owner, no NPC-local duplicated truth |
-| \`PhaseRule\` | Joe entity + condition \`QuestIs(Q2, Active, actor)\` | Filtering applies to look, search, target, interact and event projections |
-| \`DialogueSession\` | player/target, graph/version, node/choices, server expiry/revision | Never global Bob/Conductor dialogue cursor |
-| \`QuizSession\` | actor, instance, questionSet/version, shuffled option IDs, attempt/retry count, answer status | Server keeps correct answer; client receives only options |
-| \`HookBinding\` | target asset, hook point, mode, script/graph hash, condition, capabilities, priority | Editor and server bind one versioned handler |
-| \`WorldEventInstance\` | storm asset, world/region scope, lifecycle, cleanup/schedule, event key | Start/stop is durable, idempotent; not a free-floating timer |
-| \`RewardGrant\` | attemptId, rewardPlan, onceKey, RNG context, claimed results | One grant per intended attempt/period despite retries |
-| \`CommittedDomainEvent\` | eventId, sequence, causation, actor/source/destination, typed data | Facts recorded once, narration projected afterward |
-| \`OutboxRecord\` | eventId, payload, delivery cursor, retry/status | Publication recovers after crash; clients dedupe eventId |
+| `WorldInstance` | worldId, releaseId, ECS registry, scheduler, command queue, event sequence, persistent cursor | One authoritative writer/transaction owner |
+| `EntityRef` | worldId, entityId, generation, kind, optional read version | Opaque handle; no native pointer to C# |
+| `SpatialParent` | child entityId → one parent Location/Container | Acyclic; player keeps Car A parent while train moves |
+| `TrainMotion` / `RouteFollower` | train entity, track edge, progress, docking/door state | Track movement doesn't rewrite occupant containment |
+| `DynamicExit` | source Location, destination resolver, lock predicates | Boarding permitted only on valid Docked snapshot |
+| `QuestProgress` | character ID, questId/version, attemptId, state, objective IDs/flags, cursor | Per-character durable owner, no NPC-local duplicated truth |
+| `PhaseRule` | Joe entity + condition `QuestIs(Q2, Active, actor)` | Filtering applies to look, search, target, interact and event projections |
+| `DialogueSession` | player/target, graph/version, node/choices, server expiry/revision | Never global Bob/Conductor dialogue cursor |
+| `QuizSession` | actor, instance, questionSet/version, shuffled option IDs, attempt/retry count, answer status | Server keeps correct answer; client receives only options |
+| `HookBinding` | target asset, hook point, mode, script/graph hash, condition, capabilities, priority | Editor and server bind one versioned handler |
+| `WorldEventInstance` | storm asset, world/region scope, lifecycle, cleanup/schedule, event key | Start/stop is durable, idempotent; not a free-floating timer |
+| `RewardGrant` | attemptId, rewardPlan, onceKey, RNG context, claimed results | One grant per intended attempt/period despite retries |
+| `CommittedDomainEvent` | eventId, sequence, causation, actor/source/destination, typed data | Facts recorded once, narration projected afterward |
+| `OutboxRecord` | eventId, payload, delivery cursor, retry/status | Publication recovers after crash; clients dedupe eventId |
 
 The ECS can store data-oriented component tables and auxiliary indexes; the schema names above are illustrative, not a proposal to allocate a heavyweight C++ object per row.
 
 ## 3. Exact creator authoring / binding pipeline
 
-\`\`\`mermaid
+```mermaid
 flowchart TB
   subgraph Editor["Editor: versioned authoring workspace"]
     MAP["Map cells, rooms, track links, train blueprint"] 
@@ -80,13 +80,13 @@ flowchart TB
     CLIENTS["Player sessions in real hosted game"]
     PACKAGE --> LAUNCH --> SUP --> ROUTER --> WORKER --> EFFECT --> COMMIT --> PROJ --> CLIENTS
   end
-\`\`\`
+```
 
-**Compile/load boundary:** \`ScriptAsset\` source + \`GraphAsset\` layout become *versioned compiled executable behavior*; \`HookBinding\` points at handler+asset versions, not mutable source text. **Host boundary:** Tauri, desktop and browser are authoring/player clients; the authoritative engine + workers run on the server. **Live versioning:** saving a new draft does not mutate the host; publish/reload is a separately validated controlled operation.
+**Compile/load boundary:** `ScriptAsset` source + `GraphAsset` layout become *versioned compiled executable behavior*; `HookBinding` points at handler+asset versions, not mutable source text. **Host boundary:** Tauri, desktop and browser are authoring/player clients; the authoritative engine + workers run on the server. **Live versioning:** saving a new draft does not mutate the host; publish/reload is a separately validated controlled operation.
 
 ## 4. Proposed C#-style pseudocode: four complete hook handlers
 
-\`\`\`csharp
+```csharp
 // C#-STYLE PSEUDOCODE ONLY: exact SDK/API and binding names not approved.
 // Handler executes in isolated script host, receives safe snapshots,
 // and RETURNS actions. It never receives ECS pointers or DB access.
@@ -186,19 +186,19 @@ public sealed class MidnightExpressHooks
         return HookResult.ReplaceDefault(effects);
     }
 }
-\`\`\`
+```
 
 ### What the script DOES NOT do
-- No \`entity->components\` raw pointer, \`malloc/free\`, \`new Train()\`, \`database.ExecuteSql\`, \`File.ReadAllText\`, \`Thread.Sleep\`, private \`Network.Broadcast\` or \`player.QuestCompleted = true\`.
+- No `entity->components` raw pointer, `malloc/free`, `new Train()`, `database.ExecuteSql`, `File.ReadAllText`, `Thread.Sleep`, private `Network.Broadcast` or `player.QuestCompleted = true`.
 - No client-reported correct answer. Client only chooses a server-issued opaque choice ID.
-- No direct script-side \`Random.Shared\` controlling claimable loot. The engine selects/persists reward table result with stable idempotency key.
+- No direct script-side `Random.Shared` controlling claimable loot. The engine selects/persists reward table result with stable idempotency key.
 - No free-floating C# task responsible for making a storm stop. The world-system manager owns its durable lifecycle.
 - No direct player-to-player message broadcast. The authoritative events produce per-observer projections.
 - No guarantee that asynchronous storm cleanup is atomically finished with the quest completion; **request to stop** commits and cleanup proceeds durably, with visible pending/failed status and recovery policy.
 
 ### Script-to-graph equivalence
 Conductor quiz may be authored as typed graph:
-\`\`\`text
+```text
 [Event: NPC.OnInteract]
      |
      v
@@ -220,12 +220,12 @@ Conductor quiz may be authored as typed graph:
      |
      v
 [Emit: ConductorChallengePassed]
-\`\`\`
-The graph creates the same \`HookResult/EffectPlan\` as C# code. It does not call script-managed quest state or bypass the QuizService.
+```
+The graph creates the same `HookResult/EffectPlan` as C# code. It does not call script-managed quest state or bypass the QuizService.
 
 ## 5. Proposed C++-style world actor / transaction pseudocode
 
-\`\`\`cpp
+```cpp
 // C++-STYLE PSEUDOCODE, NOT AN IMPLEMENTATION.
 // Network I/O and sandbox calls are asynchronous, never block ECS world writer.
 
@@ -287,16 +287,16 @@ void WorldActor::OnWorkerResult(WorkerResult result) {
     projectionQueue.enqueue(changes.committedEvents); // after commit only
     pendingStore.finish(pending.invocationId);
 }
-\`\`\`
+```
 
-**Critical design caveat:** The precise \`store.beginWorldTransaction\` ordering, in-memory publish barrier and restart recovery protocol depend on the approved persistence ADR. A correct implementation must not make the database durable while keeping an inconsistent live ECS state if the process crashes between commits. Options include transactional outbox plus recoverable state journal/snapshot epochs. The pseudocode states the required atomic/recovery boundary, not that a particular database already provides it.
+**Critical design caveat:** The precise `store.beginWorldTransaction` ordering, in-memory publish barrier and restart recovery protocol depend on the approved persistence ADR. A correct implementation must not make the database durable while keeping an inconsistent live ECS state if the process crashes between commits. Options include transactional outbox plus recoverable state journal/snapshot epochs. The pseudocode states the required atomic/recovery boundary, not that a particular database already provides it.
 
 
 ## 5A. Typed wire messages between native engine and isolated C# worker
 
 **The host-to-script boundary is not a C++ function pointer or a C# direct registry read.** It is a versioned message protocol. Binary serialization format (e.g. protobuf or FlatBuffers) is an ADR, but the logical schema and validation requirements are concrete:
 
-\`\`\`text
+```text
 // Proposed IDL pseudocode; names, wire numbers and serialization undecided.
 type EntityRef { worldId: WorldId; entityId: EntityId; generation: u64; }
 type VersionedAssetRef { id: AssetId; revision: AssetVersion; }
@@ -341,16 +341,16 @@ union ProposedEffect {
   EmitDomainEvent { typeId, version, typedPayload }
   ShowDialogue { actorRef, dialogueAssetRef }
 }
-\`\`\`
+```
 
 **Wire validation and failure behavior:**
-- Gateway creates an authenticated \`requestId\`; the server creates and persists \`invocationId\`. User content cannot supply or forge actor/target/permissions or arbitrary effect types.
+- Gateway creates an authenticated `requestId`; the server creates and persists `invocationId`. User content cannot supply or forge actor/target/permissions or arbitrary effect types.
 - World performs schema and version checks on every field and reference. Payload lengths, recursion, collection sizes and worker execution cost are bounded by approved configuration. Unknown protocol/asset versions fail closed.
 - The script worker receives **filtered value snapshots**, not arbitrary registry query callbacks or C++ addresses. If a script needs extra data, it requests a **typed capability-limited read** and the engine may return a new versioned snapshot. Such round trips must be bounded, measured and not block the world writer.
 - The world actor **revalidates affected reads and preconditions after the worker reply**, because entity position, NPC visibility, quest progress, train docking or ownership may have changed while a script was executing.
-- \`ProposedEffect\` messages are instructions to validate, **not** a signed permission to modify ECS. Capability and actor/target authorization is recomputed by the authoritative server before commit.
-- For \`OpenQuiz\`, the worker returns a trusted \`questionSetRef\`; the Quest/Dialogue service creates a durable session, randomizes option order under server RNG policy and stores correct-answer data privately. The client receives option display text + opaque IDs, **never** the answer key.
-- For \`RollRewardTable\`, the engine chooses and records the result under a stable onceKey/seed; no script- or client-controlled reroll.
+- `ProposedEffect` messages are instructions to validate, **not** a signed permission to modify ECS. Capability and actor/target authorization is recomputed by the authoritative server before commit.
+- For `OpenQuiz`, the worker returns a trusted `questionSetRef`; the Quest/Dialogue service creates a durable session, randomizes option order under server RNG policy and stores correct-answer data privately. The client receives option display text + opaque IDs, **never** the answer key.
+- For `RollRewardTable`, the engine chooses and records the result under a stable onceKey/seed; no script- or client-controlled reroll.
 - Timeouts, worker crashes and stale revisions produce structured failures. Retry strategy must be idempotent and may re-invoke the handler only under explicit policy; fail-closed is required for state-mutating hooks.
 
 ### Performance rationale
@@ -358,7 +358,7 @@ A native world actor awaiting an out-of-process C# response synchronously on its
 
 ## 6. Live sequence: two-player interaction and exactly-once reward
 
-\`\`\`mermaid
+```mermaid
 sequenceDiagram
   autonumber
   actor Alice
@@ -395,9 +395,9 @@ sequenceDiagram
   UI->>GW: Retry same requestId R42 after reconnect
   GW->>WA: Duplicate request
   WA-->>UI: Return cached committed result; no second reward or storm stop
-\`\`\`
+```
 
-**Separate train movement events:** \`TrainDocked(Harbor, fromNorth)\` yields a platform narration event before the actor's later \`Disembarked\` event. \`ActorMoved(CarA,CarB)\` delivers source and destination room variants while the train remains InTransit. They do not need to call the Joe script.
+**Separate train movement events:** `TrainDocked(Harbor, fromNorth)` yields a platform narration event before the actor's later `Disembarked` event. `ActorMoved(CarA,CarB)` delivers source and destination room variants while the train remains InTransit. They do not need to call the Joe script.
 
 ## 7. Explicit state transition / sample test matrix
 
