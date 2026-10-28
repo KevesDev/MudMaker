@@ -27,3 +27,7 @@
 - `MudMaker.Scripting.V1` is an SDK **contract**, not a functioning ECS or hosting implementation. No placeholder simulator or fake integration is permitted as proof of runtime readiness.
 - Graph nodes call the same `Effect` union. No graph-only mutation, timer, RNG, query, scripting bypass.
 - Older [scripting runtime proposal](../scripting-runtime-and-capabilities.md), [language proposal](../script-languages-shortcuts-and-symbols.md), and [memory proposal](../script-memory-ownership-and-safety.md) are design history for any detail contradicted by this versioned contract. Avoid loading them unless researching a migration.
+
+## Account and character lifecycle hooks
+
+[Account/character/permissions design and proposed hook extensions](../account-character-lifecycle.md) documents Evennia's account and puppet events, durable AccountId, graph continuation, secure before/after restrictions, and tests. It is **not** an additional SDK authority: proposed IDs/signatures must first pass reviewed registry + CLR + Protobuf parity (S11.13–14) before compiled owner scripts can bind them. [Current exact registered IDs](03-hook-registry.md) retain precedence.
