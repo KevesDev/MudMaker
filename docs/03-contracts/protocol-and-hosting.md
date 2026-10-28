@@ -8,6 +8,9 @@ Proposed distinction: project/editor REST-style operations for CRUD, asset valid
 ## Mandatory protocol envelope
 Message carries protocolVersion, type, world/instance ID, session ID (where applicable), request/correlation ID, monotonic sequence for live events, payload schema version and structured errors. Contract versioning and compatibility matrix are mandatory. Connection retry/resume semantics must never duplicate a command or expose unauthorized state.
 
+## Per-observer phase and narration projection
+Server-to-client room lists, targetability, dialogue choices, descriptions, player-facing action messages and subscriptions must be filtered per actor/observer and quest progress. Two players in same room may see different NPCs. Direct hidden entity ID requests are denied server-side. See [quest runtime](../02-architecture/quest-progression-and-phasing.md) and [narration](narration-and-observers.md).
+
 ## Sessions
 - Authenticated player bound to authorized character entity. Socket address is not a secure identity.
 - Single-account/multiple-client and multiple-character policies are OPEN.

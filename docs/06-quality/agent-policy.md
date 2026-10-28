@@ -48,5 +48,11 @@
 - No first-class quest capability claim from a hardcoded Bob/Joe handler; the scenario is an integration oracle, not the scope limit.
 - Audit test fixture must check per-character quest states and server-side interaction denial, not only visible text.
 
+## Quest quality hard gates
+- One QuestProgress authority, one Condition Registry, one Dialogue interpreter and a true private instance owner; never a separate ad hoc quest store per NPC or editor.
+- Server-authoritative phase filtering and targetability, including direct ID calls and narration. A hidden Joe cannot leak via API or another player's messages.
+- Objective credit semantics and reward grants are independently defined and verified: provenance, combat participation, escort lifecycle, class/level thresholds, rarity/chance and exactly-once claims.
+- Complete visual category includes all eight dialogue stages, branching/choice/exclusive chains, phase and party options. Bob/Joe-only implementation cannot pass general quest acceptance.
+
 ## Completion
 Only mark VERIFIED when code, executed tests, runtime demonstration and independent audit agree. A plan or green smoke test alone never qualifies. Relevant red flags block merge; don't lower requirements to clear the sprint.

@@ -19,6 +19,9 @@ Create stations **Northgate** and **Harbor** as two Location entities with separ
 **T-11 Editor roundtrip.** Rearrange station grid cells, change color/icons, add a third station and route; playtest/publish. Existing stable location IDs, route references and runtime data remain correct unless explicit migration.
 **T-12 Two-client deployment.** Start same published package by Host button and equivalent headless CLI. Two players move/interact; changes persist; session reconnect does not duplicate pickup or transfer.
 
+## Observer narration acceptance
+Joe moves Car A -> Car B: Car A spectators see him leave; Car B occupants see "Joe enters from Car A."; Joe receives second-person confirmation; station spectators see nothing. When the train docks at Harbor from the north, Harbor spectators see "A train appears from the north."; when Joe disembarks, they see "Joe departs a train." Developer-selected templates, visibility and audience conditions determine these messages. They follow *committed ECS events*, not text guesses. See [narration](../03-contracts/narration-and-observers.md).
+
 ## Failure paths
 Invalid track link, unbound platform, missing destination, circular containment, capacity reached, locked door, route edit midtransit, script exception, unauthorized admin command and corrupted save each produce structured error with unchanged committed world (or documented quarantine/recovery), not silent success.
 

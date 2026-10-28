@@ -28,6 +28,9 @@ Trigger is an event subscription + condition + bounded action, optionally attach
 ## Timer and catch-up decisions
 Real-time games versus turn-based games are both REQUIRED capabilities from v1.1. Exact semantics for offline time, missed spawn windows, missed weather transitions, time zone handling and paused worlds are OPEN; choose policies before coding and test each. Per-entity tick cadence may override world defaults only under bounded scheduler budgets and documented fairness.
 
+## Quest events
+Quest progression receives typed committed events from interactable objects, weather, NPC spawners and train travel. All checks go through the central quest Condition Registry, never private system copies. See [quest progression](quest-progression-and-phasing.md).
+
 ## Verification
 - Fixed seed+event log produces reproducible weather/spawn outcomes within defined replay contract.
 - Pause/restart retains scheduled spawns, weather state, next-fire times and caps.

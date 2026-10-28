@@ -48,6 +48,9 @@ Use [Q-01 through Q-22](../04-features/bob-joe-quest-scenario.md): independent s
 ## Cost guardrails
 Builder **never** runs the unfiltered full suite. Auditor may run it once at actual full sprint close only when Lead explicitly names it. Prefer relevant exact test filters; repeat only for real nondeterminism; regression checks only where shared behavior is modified. Use runtime structured errors/diagnostics instead of padding tests, while preserving tests for silent wrong ECS state or information leaks. On re-audit, check repaired diff and directly impacted tests. See [token policy](token-and-dispatch-policy.md).
 
+## Quest-specific verification
+Use the [Quest System's full objective/chain/dialogue/reward matrix](../04-features/quests/08-quest-verification-matrix.md) rather than a giant duplicated test catalog here. Bob/Joe is one cross-feature oracle, not a substitute for escort, loot provenance, level milestones, reward choice/randomness, or party/instance rules.
+
 ## Explicit no-fake-test verification
 - Tests initially fail against absent/malformed behavior; provide at least one behavior mutation proving specific test catches regression.
 - The Spring Boot starter contextLoads smoke test is retained only as startup check, NEVER counted as ECS, editor, networking or persistence proof.

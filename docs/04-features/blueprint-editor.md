@@ -10,6 +10,7 @@ Unreal-style discoverable visual editing, without binding MudMaker to Unreal's r
 - Central composition graph: Entity Root, component nodes and typed links/slots; collapsible nested children for train cars/doors, item containers and AI actors.
 - Component inspector: schema-driven editor controls, defaults, validation, units, enumeration, range, rich text, references to other assets and optional exposed parameters.
 - Behavior graph tab: event hooks, conditions, actions and typed flow connections; visual errors and step-through trace.
+- Quest / Dialogue panel: bind NPCs/objects to conditional quest interactions, dialogue, phase visibility, typed events and narration using shared ECS services. See [Quest System](quests/INDEX.md).
 - Scripts panel: attach script asset with explicit input/output/capabilities/trigger binding, inspect compile/security errors and version.
 - Instance tab: compare blueprint defaults with instance overrides, apply/revert selected changes with visible consequences.
 - Live preview/test: spawn isolated sample entity into test world and inspect component state, emitted events and graph execution.

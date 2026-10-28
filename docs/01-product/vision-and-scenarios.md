@@ -23,6 +23,9 @@ MudMaker is an ECS-native, game-agnostic MUD construction, runtime and hosting p
 **P-08 Extensibility:** Advanced users can build mechanics not anticipated by the engine designers without forking engine core.
 **P-09 Portability:** Editor and player workflows remain usable on desktop and tablets; hosting model is independent of creator device.
 
+**P-10 Full quests and chains:** escort, discover, collect by loot/purchase/pickup, defeat, talk, class/level milestone, custom scripts, branching/repeatable quests, eight dialogue stages, configurable rewards/rarity, per-player phasing and private instances. See [quest specs](../04-features/quests/INDEX.md).
+**P-11 Observer narration:** other players see creator-authored messages from real committed interactions, movement and train events. See [narration](../03-contracts/narration-and-observers.md).
+
 ## Product-level acceptance
 - Every REQUIRED story has a narrated editor journey, saved asset schema, runtime contract, explicit failed-path UI, and end-to-end evidence in its owning documents.
 - Visual operations result in the same authoritative world mutations as scripted/admin operations.

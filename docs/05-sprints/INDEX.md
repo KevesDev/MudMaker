@@ -19,6 +19,7 @@ Parallel gates: 05 -> 06 World systems; 05 + 03 -> 08 Network/auth; 08 + 04 -> 0
 | S05 | Central commands, actor/session model, typed events, observer narration contract, world clock, scheduler | S04 | Deterministic commands and audience event projection |
 | S06 | World behaviors: weather, spawning, triggers and region scope | S05 | Durable scheduled regional systems |
 | S06Q | ECS quest engine, conditions, phase/instance authority, persistent quest progress | S03–S05 | Bob/Joe engine-level quest/visibility/reward invariants |
+| S06Q | ECS quest progression, typed objectives, conditions, private instances and phase projection | S03–S05 | Complete runtime quest semantics incl. Bob/Joe |
 | S07 | Vehicles, tracks, docking, moving interiors, dynamic exits | S04–S06 | Train scenarios T-01..T-10 at engine level |
 | S08 | Gateway protocol, sessions, authorization, multi-client runtime, phase-filtered observer events | S03, S05, S06Q for quest-aware projection | Two-client/auth/reconnect + visibility/narration tests |
 | S09 | Cross-device editor shell and cell-grid/map interaction | S04, S08 | Touch/keyboard and map roundtrip |
@@ -26,6 +27,7 @@ Parallel gates: 05 -> 06 World systems; 05 + 03 -> 08 Network/auth; 08 + 04 -> 0
 | S11 | Typed graph compiler/executor, approved scripting bridge and custom typed events | S05, S06, S10, S06Q for quest nodes | Behavior equivalence, sandbox and custom event tests |
 | S12 | Visual authoring for world systems, spawners, weather, transit, observer rules | S06, S07, S09–S11 | No-code authoring of integrated world |
 | S12Q | Full quest-chain/dialogue/conditional-content visual authoring | S06Q, S08–S11 | Bob/Joe built without code; real 2-player/phase tests |
+| S12Q | Full visual quest, chain, reward, dialogue and phased content authoring | S06Q, S08–S11 | Creator authors full quest families without code |
 | S13 | One-click and headless hosting, deployment, ops, backup/rollback | S03, S08, S11–S12, S12Q | GUI/CLI parity and crash restore incl. quests |
 | S14 | Full cross-platform, accessibility, security, performance and release audit | S02–S13 | Named measurable release thresholds |
 

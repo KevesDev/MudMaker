@@ -26,6 +26,11 @@
 | ADR-019 | Phasing vs private instance rules, observer filtering, cache invalidation, group sync/replay, private instance ownership/persistence | OPEN: blocks S06Q/S08 |
 | ADR-020 | Quest dialogue session semantics, branch precedence, condition schema and post-completion visibility | OPEN: blocks S06Q/S12Q |
 
+| ADR-021 | Quest objective provenance and milestone semantics: preaccept items, kill credit, escort recovery, level change | OPEN: S06Q |
+| ADR-022 | Chain prerequisites, mutually exclusive choices, branch replay and recurrence/reset windows | OPEN: S06Q / S12Q |
+| ADR-023 | Eight-stage dialogue precedence, random pools, concurrent sessions, interruption/turn-in | OPEN: S06Q / S12Q |
+| ADR-024 | Guaranteed/choice/random rewards, rarity weights, class/level gating, reveal/claim and overflow policy | OPEN: S06Q / S12Q |
+
 ## Confirmed non-negotiables
 ECS-native engine; nontrivial systems like moving trains with interiors and dynamic exits; visually created ECS blueprints/graphs and optional custom scripts; user-defined global/region weather/spawner/trigger systems; interactive cell map with color/icons, searchable pallet, room contents and exit editing including descriptions/locks; quest chains with conditional NPC visibility/interactivity, branching dialogue, solo/party/instance workflows and robust progression; action-dependent room/vehicle observer messages; nontechnical one-click hosting plus headless CLI; professional rather than mock implementations; deliberate performance, maintainability and multi-OS/tablet support.
 

@@ -25,6 +25,10 @@
 | Durable save/restore | Persistence service | Per-feature local files without schema |
 | Events | Typed event dispatcher | Unbounded listener side effects |
 | Script capabilities | Scripting gateway | Direct raw Java/DB/filesystem access |
+| Quest progress / rewards | ECS Quest Progression and Reward services | NPC UI state or ad hoc dialogue flags |
+| Conditional presence and targeting | Phase/Observer Projection | UI-only hide flags |
+| Private quest instances | ECS Instance Manager | Map grid/editor |
+| Observer messages | Narration Projection | Movement script and network broadcast duplicates |
 | World publishing | Hosting supervisor | Editor pretending local save = deploy |
 
 ## Inbound mutation path

@@ -2,6 +2,8 @@
 
 **Status:** REQUIRED no-code power + all quest/chain types requested; PROPOSED interaction design. **Owner:** quest editor UI + shared Blueprint graph editor; runtime authority remains ECS.
 
+**Detailed objective/chain/dialogue/reward/eligibility subtabs:** [Quest System Index](quests/INDEX.md). This document is the higher-level Quest Editor overview. Do not duplicate full reference catalogs here.
+
 ## Product goal
 A beginner should create “Talk to Bob -> Find Joe” by selecting NPCs and simple plain-language options, without understanding state machines, components, JSON, scripting or network sessions. An advanced author must be able to create branching, conditional, party/world scoped, timed, repeatable and highly customized quests with the same visual graph plus custom script hooks. No genre-specific template restrictions.
 

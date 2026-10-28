@@ -2,6 +2,9 @@
 
 **Date:** 2026-10-28. **Status:** source-backed research + MudMaker recommendations; NOT an assertion that MudMaker implements any of these mechanics. **Task:** translate mature WoW/MMO/MUD quest capabilities into game-agnostic ECS contracts and visual authoring, without copying proprietary systems or branded UI.
 
+## Further verified references
+[TrinityCore QuestDef.h](https://github.com/TrinityCore/TrinityCore/blob/master/src/server/game/Quests/QuestDef.h) distinguishes possession from acquisition, optional/ordered/hidden objectives, talk and area events. [Quest template](https://trinitycore.info/database/master/world/quest_template) distinguishes guaranteed and choice rewards. [Quest template addon](https://trinitycore.info/database/master/world/quest_template_addon) records prerequisite/next quest and exclusion patterns. [Blizzard Party Sync](https://worldofwarcraft.blizzard.com/en-us/news/23451087) demonstrates temporary aligned quest phases and configurable-equivalent replay boundaries. [Blizzard War Within quest UI](https://news.blizzard.com/en-us/article/24117139/user-interface-and-quest-updates-in-the-war-withintm) categorizes main/side/repeatable/meta content; those labels should be presentation, not hardcoded quest-engine subclasses. See eight-part [Quest System](../04-features/quests/INDEX.md).
+
 ## Evidence and conclusions
 
 ### World of Warcraft: presentation categories and quest breadth

@@ -37,5 +37,8 @@ Changes are transactional and versioned. Invalid refs/cycles, deleting occupied 
 - Add trigger to ticket machine, edit typed ticket data and graph; test success/failure.
 - Define region for weather/spawner from selected cells, adjust conditions, preview timeline.
 
+## Quest and phase-aware maps
+Each cell/NPC/entity inspector links to the shared quest/condition asset, and can preview per-player presence and interaction. Hidden Joe is protected by server-authoritative filtering, not just a frontend icon toggle. See [Quest System](quests/INDEX.md).
+
 ## Acceptance
 Recorded desktop+tablet user journeys demonstrate all above with project roundtrip, accessibility keyboard route, invalid exits and locks reporting, undo/redo correctness, multi-cell operations and non-destructive deletion preview. No fake click targets or in-memory-only save.

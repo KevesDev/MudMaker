@@ -17,6 +17,7 @@
 | Quest condition evaluator, dialogue, typed objective event | [Quest conditions/dialogue](03-contracts/quest-conditions-and-dialogue.md) | PROPOSED |
 | Nodes, custom scripts, execution and APIs | [Scripting + graph](03-contracts/scripting-and-graph.md) | REQUIRED capability; PROPOSED interfaces |
 | Remote protocol, sessions, hosting runtime | [Protocol + hosting](03-contracts/protocol-and-hosting.md) | PROPOSED |
+| Quest system detailed tabs and subtabs | [Quest specifications](04-features/quests/INDEX.md) | REQUIRED scope; PROPOSED contracts |
 | Clickable color/icon cells; room panel; exits | [Map editor](04-features/map-editor.md) | REQUIRED behavior; PROPOSED interaction detail |
 | ECS object/Blueprint graphs and inspectors | [Blueprint editor](04-features/blueprint-editor.md) | REQUIRED behavior; PROPOSED graph semantics |
 | Quest and dialogue visual graph editor | [Quest editor](04-features/quest-and-dialogue-editor.md) | REQUIRED UX; PROPOSED mechanics |

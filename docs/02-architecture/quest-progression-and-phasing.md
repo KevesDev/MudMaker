@@ -2,6 +2,8 @@
 
 **Status:** REQUIRED behavior by owner example; PROPOSED detailed contract. **Owner:** Quest Progression System, Conditional Projection System, Instance Manager; all built on **one ECS runtime authority**. **Dependencies:** ecs-core, spatial/containment, world events/time, persistence, commands, narration, protocol.
 
+**Full product-specific feature index:** [Quest System](../04-features/quests/INDEX.md). This file owns the shared ECS runtime contract rather than every visual option.
+
 ## Non-negotiable separation
 1. **Quest Definition:** immutable versioned authoring asset describing eligibility, objectives, branches, rewards, resets and presentation.
 2. **Quest Progress State:** durable state per named **owner scope** (character/account/party/world/instance according to creator choice and policy). Lives in world/owner ECS state and persistence; not duplicated in UI, NPC entity, dialogue runtime and network.
