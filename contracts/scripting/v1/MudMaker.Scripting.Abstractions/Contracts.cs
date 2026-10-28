@@ -95,7 +95,7 @@ public sealed record QuestAttemptSnapshot(
 public sealed record ActorSnapshot(
     EntityRef Ref,
     string DisplayName,
-    // Canonical, server-produced Unicode-normalized + case-folded key;
+    // Canonical, server-produced NFKC-normalized and invariant-lowercase key;
     // the worker must never derive authorization from client-provided text.
     string NameKey,
     IReadOnlyDictionary<Guid, QuestAttemptSnapshot> QuestAttempts,

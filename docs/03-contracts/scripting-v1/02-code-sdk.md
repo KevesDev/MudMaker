@@ -25,6 +25,8 @@
 | `GameEffect` union records | Effect intent only. C++ validates, commits, records idempotency and events |
 | `[MudHook]`, `[MudGraphCallable]` | Attribute registry metadata. Not a security gate |
 
+**Character name predicates:** `ActorSnapshot.NameKey` is computed by the authoritative server using NFKC normalization and invariant lowercase. Creator scripts compare this normalized snapshot to lowercase literals (for the name-prefix bonus: `StartsWith("a", StringComparison.Ordinal)`). This is a gameplay predicate, not an authentication identity or claim that visually confusable Unicode names are identical.
+
 ## Before/After rules
 - `Continue`: pass through default; may not carry effects.
 - `Append`: stage additional effects **with** default in one before-hook transaction; default remains enforced.

@@ -106,7 +106,7 @@ public sealed class MidnightExpressHooks
                                  Once(ctx, "storm-stop")),
             new GrantRewardPlan(ctx.Actor.Ref, RailPass, q.AttemptId, Once(ctx, "rail-pass"))
         };
-        if (ctx.Actor.NameKey.StartsWith("A", StringComparison.Ordinal))
+        if (ctx.Actor.NameKey.StartsWith("a", StringComparison.Ordinal))
             completion.Add(new RollRewardTable(
                 ctx.Actor.Ref, BonusTable, q.AttemptId, Once(ctx, "bonus-roll")));
 
