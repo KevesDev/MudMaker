@@ -1,6 +1,6 @@
 {
   "schema": "mudmaker.hook-registry.v1",
-  "version": 4,
+  "version": 5,
   "origin": "host-local-published-release",
   "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
   "hooks": [
@@ -1303,6 +1303,528 @@
       "ownerKind": "Entity",
       "returnClrType": "HookDecision",
       "behavior": "postcommit read-only fact; EnqueueAfter separately validated operations only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.manager.activate.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.manager.activate.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.manager.restore.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.manager.stop.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.create.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.create.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.join.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.join.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.leave.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.leave.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.merge.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.merge.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.split.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.split.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.end.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.encounter.end.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.actor.perceived.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.actor.targeted.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.actor.moved.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.actor.disconnected.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.actor.reconnected.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.actor.defeated.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.intent.received.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.intent.validated.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.intent.rejected.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.intent.queued.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.intent.cancelled.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.round.open.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.round.lock.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.round.resolve.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.round.resolve.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.round.close.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.clock.tick.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.timer.due.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.timer.cancelled.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.ability.start.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.ability.start.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.ability.resolve.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.ability.resolve.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.ability.interrupted.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.ability.completed.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.reaction.requested.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.reaction.resolved.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.effect.before_commit.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.effect.committed.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.effect.rejected.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.sound.heard.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.aid.requested.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.flee.requested.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.pursuit.updated.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.condition.applied.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.condition.ticked.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.condition.removed.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.equipment.changed.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.durability.changed.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.reward.requested.before",
+      "phase": "Before",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "host authorization first; veto/validated proposals only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.reward.committed.after",
+      "phase": "After",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookDecision",
+      "behavior": "committed event snapshot; enqueue independently validated commands only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "combat.narration.project.query",
+      "phase": "Query",
+      "eventClrType": "CombatLifecycleEvent",
+      "ownerKind": "CombatManager",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure observer-scoped narration projection; no effects",
       "runtimeImplemented": false
     }
   ]
