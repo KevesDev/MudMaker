@@ -156,6 +156,16 @@ message CombatControlEvent {
   string cause_code = 7;
 }
 
+// Inventory: all references/version numbers rechecked at native commit.
+message InventoryTransferEvent { string event_id = 1; EntityRef actor = 2; EntityRef item = 3; EntityRef source = 4; EntityRef destination = 5; int64 quantity = 6; uint64 item_version = 7; uint64 source_version = 8; uint64 destination_version = 9; string action_code = 10; }
+message InventoryContainerEvent { string event_id = 1; EntityRef actor = 2; EntityRef container = 3; string action_code = 4; uint64 expected_version = 5; }
+message InventoryEquipmentEvent { string event_id = 1; EntityRef actor = 2; EntityRef holder = 3; EntityRef item = 4; string slot_key = 5; string action_code = 6; uint64 expected_version = 7; }
+message InventoryTradeEvent { string event_id = 1; string trade_id = 2; EntityRef actor = 3; EntityRef counterparty = 4; string action_code = 5; uint64 expected_version = 6; }
+message InventoryMutationEffect { EntityRef actor = 1; EntityRef item = 2; EntityRef source = 3; EntityRef destination = 4; int64 quantity = 5; uint64 expected_item_version = 6; }
+message InventoryOpenCloseEffect { EntityRef actor = 1; EntityRef container = 2; bool open = 3; uint64 expected_version = 4; }
+message InventoryEquipEffect { EntityRef actor = 1; EntityRef holder = 2; EntityRef item = 3; string slot_key = 4; bool equip = 5; uint64 expected_version = 6; }
+message InventoryTradeEffect { EntityRef actor = 1; string trade_id = 2; string action_code = 3; uint64 expected_version = 4; }
+
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -184,6 +194,10 @@ message HookEvent {
     AccessHook access_hook = 24;
     QueryHook query_hook = 25;
     CombatControlEvent combat_control = 26;
+    InventoryTransferEvent inventory_transfer = 27;
+    InventoryContainerEvent inventory_container = 28;
+    InventoryEquipmentEvent inventory_equipment = 29;
+    InventoryTradeEvent inventory_trade = 30;
   }
 }
 enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
@@ -255,6 +269,10 @@ message GameEffect {
     ClearComponentOverride clear_component_override = 14;
     WriteStateSlot write_state_slot = 15;
     DeleteStateSlot delete_state_slot = 16;
+    InventoryMutationEffect inventory_mutation = 17;
+    InventoryOpenCloseEffect inventory_open_close = 18;
+    InventoryEquipEffect inventory_equip = 19;
+    InventoryTradeEffect inventory_trade = 20;
   }
 }
 enum Disposition {
