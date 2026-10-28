@@ -178,6 +178,12 @@ enum LookTargetKind { LOOK_TARGET_KIND_UNSPECIFIED = 0; LOOK_LOCATION_TARGET = 1
 message LookQueryEvent { string event_id = 1; EntityRef viewer = 2; EntityRef target = 3; LookMode mode = 4; LookTargetKind target_kind = 5; string query = 6; string relation_key = 7; string authorized_text = 8; uint64 snapshot_revision = 9; }
 message LookObservedEvent { string event_id = 1; EntityRef viewer = 2; EntityRef target = 3; LookMode mode = 4; LookTargetKind target_kind = 5; string detail_key = 6; uint64 snapshot_revision = 7; bool succeeded = 8; string result_code = 9; }
 
+// NPC: source-level typed observer-scoped events and host-validated proposals.
+enum NpcBehaviorState { NPC_BEHAVIOR_UNSPECIFIED = 0; NPC_IDLE = 1; NPC_TRAVEL = 2; NPC_INTERACT = 3; NPC_ALERT = 4; NPC_ENGAGED = 5; NPC_RETREAT = 6; NPC_UNAVAILABLE = 7; NPC_CUSTOM = 8; }
+message NpcLifecycleEvent { string event_id = 1; EntityRef npc = 2; EntityRef actor = 3; EntityRef subject = 4; AssetRef blueprint = 5; string lifecycle_code = 6; string trigger_key = 7; string current_state = 8; string next_state = 9; string reason_code = 10; string scheduled_occurrence_id = 11; uint64 expected_revision = 12; }
+message NpcServiceEvent { string event_id = 1; EntityRef npc = 2; EntityRef customer = 3; AssetRef service = 4; string operation_code = 5; EntityRef item = 6; int64 quantity = 7; uint64 expected_revision = 8; string request_key = 9; }
+message NpcBehaviorEffect { EntityRef npc = 1; string action_code = 2; EntityRef target = 3; AssetRef asset = 4; string argument_key = 5; PropertyValue value = 6; uint64 expected_revision = 7; }
+
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -213,6 +219,8 @@ message HookEvent {
     CombatLifecycleEvent combat_lifecycle = 31;
     LookQueryEvent look_query = 32;
     LookObservedEvent look_observed = 33;
+    NpcLifecycleEvent npc_lifecycle = 34;
+    NpcServiceEvent npc_service = 35;
   }
 }
 enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
@@ -289,6 +297,7 @@ message GameEffect {
     InventoryEquipEffect inventory_equip = 19;
     InventoryTradeEffect inventory_trade = 20;
     CombatManagerEffect combat_manager = 21;
+    NpcBehaviorEffect npc_behavior = 22;
   }
 }
 enum Disposition {
