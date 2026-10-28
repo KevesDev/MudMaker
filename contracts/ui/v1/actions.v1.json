@@ -3271,6 +3271,126 @@
       "input": "typedByControlSchema",
       "outcome": "confirmedOrStructuredError",
       "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagManager",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagCreate",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagSearch",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagAssign",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagBulk",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagRename",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagMerge",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagWhereUsed",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagArchive",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagDelete",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagFilter",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.tagNamespace",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
     }
   ]
 }
