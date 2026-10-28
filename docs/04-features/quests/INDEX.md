@@ -1,6 +1,6 @@
 # Quest System | Topic Index
 
-**Status:** owner-confirmed goals, detailed behavior PROPOSED for review. **Source:** [MudMaker docs root](../../INDEX.md). This folder is the *quest feature-domain index*. Do not load every file at once. Read this index, then ONLY the tab/subtopic relevant to the task.
+**Status:** owner-confirmed goals, detailed behavior specified as binding source contracts. **Source:** [MudMaker docs root](../../INDEX.md). This folder is the *quest feature-domain index*. Do not load every file at once. Read this index, then ONLY the tab/subtopic relevant to the task.
 
 ## One-sentence design
 A Quest is a versioned, creator-defined workflow combining **eligibility + an objective graph + progression state + dialogue + visibility/instancing + rewards + lifecycle + multiplayer policies + custom hooks**; all state mutations are performed by ECS authority. *Quest types* are combinations of these properties, not separate hardcoded subsystems.
