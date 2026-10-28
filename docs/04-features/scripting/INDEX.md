@@ -17,7 +17,7 @@
 - [Generic graph contract](../../03-contracts/scripting-and-graph.md).
 - [Quest-specific hook modes](../quests/09-custom-scripts-and-event-hooks.md).
 - [C# / custom DSL / runtime research](../../08-research/scripting-engine-research.md) and [Unity/Godot engine comparison](../../08-research/engine-and-scripting-architecture-comparison.md).
-- [Open ADRs](../../07-decisions/OPEN_DECISIONS.md).
+- [Open ADRs](../../02-architecture/architecture-decisions.md).
 - [Agent cost rules](../../06-quality/token-and-dispatch-policy.md).
 
 ## Hard boundaries
