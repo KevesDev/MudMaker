@@ -21,3 +21,5 @@
 **Combat delivery:** S05 spatial adapters → S06 real duel UI → S07 clock modes and live host test → S08 Player action controls → S09 Creator combat presets and graph playtest → S10 hostile NPC assistance → S12 escape/pursuit → S13 C# hook parity → S15 encounter authoring → S18 adversarial audit. [Combat contract](../03-contracts/combat-and-encounters.md). Each functional gate includes real in-app testing, not a postponed GUI.
 
 **Inventory delivery:** S03 generic containment → S04 durable item inventory + in-app explorer → S05 authorized custody → S06 get/put/equip/trade commands → S08 Player inventory → S09 one-click Creator container presets → S13 typed C#/graph parity → S15 merchant/loot placement → S18 adversarial audits. [Inventory contract](../03-contracts/inventory-and-containers.md).
+
+**LOOK delivery:** S05 observer-scoped target/detail resolver → S06 full LOOK command with live shell test → S08 native Player inspection → S09 Creator Appearance & LOOK editing → S13 registered C#/visual hook parity → S18 privacy/scale audit. [Contract](../03-contracts/look-and-perception.md).
