@@ -126,3 +126,5 @@
 **Parties, groups, factions and reputation:** [Shared ECS relationship contract](03-contracts/groups-factions-and-reputation.md).
 
 **Bundled sample:** [MudMaker Tutorial World project and acceptance](04-features/tutorial-world-starter-project.md).
+
+**Command aliases and scope resolution:** [Evennia-inspired alias matching, command-set layering, collision policy and Creator editing](03-contracts/command-aliases-and-resolution.md).
