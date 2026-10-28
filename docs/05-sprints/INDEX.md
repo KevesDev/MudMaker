@@ -25,3 +25,5 @@
 **LOOK delivery:** S05 observer-scoped target/detail resolver → S06 full LOOK command with live shell test → S08 native Player inspection → S09 Creator Appearance & LOOK editing → S13 registered C#/visual hook parity → S18 privacy/scale audit. [Contract](../03-contracts/look-and-perception.md).
 
 **NPC delivery:** S03 capability → S04 persistence → S05 perception/navigation → S06 interact gateway → S08 Player services → S09 NPC Studio → S10 autonomous controllers/playtest → S11 quest roles → S13 typed C#/graph hooks → S15 service placements → S18 autonomous NPC audit. [NPC contract](../03-contracts/npc-templates-and-behaviors.md).
+
+**Reusable templates:** S04 stores/indexes immutable template revisions, variations and project metadata; S09 exposes Save as Template, variations, indexed search, folders/tags, rename/archive/delete and Where Used; S18 audits persistence and scale. [Binding specification](../03-contracts/reusable-templates-and-variants.md).
