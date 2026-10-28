@@ -1,6 +1,6 @@
 # Product Vision, User Roles and Reference Workflows
 
-**Status:** REQUIRED goals, PROPOSED acceptance elaboration. **Owner:** product requirements. **Depends on:** none.
+**Status:** REQUIRED goals, binding acceptance scenarios. **Owner:** product requirements. **Depends on:** none.
 
 ## Vision
 MudMaker is an ECS-native, game-agnostic MUD construction, runtime and hosting platform. It must be approachable to a creator without coding knowledge while exposing advanced extensibility comparable in breadth to mature MUD frameworks. The visual creator should not limit mechanics to combat, fixed room types or a predefined inventory model. A game can model moving trains, populated vessels, complex doors and locks, dynamic environment, economies, item behavior, world weather, spawners, and custom interactions.
