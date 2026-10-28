@@ -304,6 +304,21 @@ public sealed record CombatManagerEffect(
 // deadline; request authorized field/resource/condition/equipment/movement mutation;
 // emit authorized sound/narration; request reward. All are transactionally validated.
 
+// LOOK queries are viewer-authorized; SDK cannot elevate target visibility.
+public enum LookMode { Location, Target, Contents, Detail, DetailRelation, Examine }
+public enum LookTargetKind { Location, Entity, Exit, Detail }
+public sealed record LookQueryEvent(
+    Guid EventId, EntityRef Viewer, EntityRef? Target, LookMode Mode,
+    LookTargetKind TargetKind, string Query, string RelationKey,
+    string AuthorizedText, ulong SnapshotRevision) : MudEvent(EventId);
+public sealed record LookObservedEvent(
+    Guid EventId, EntityRef Viewer, EntityRef? Target, LookMode Mode,
+    LookTargetKind TargetKind, string DetailKey, ulong SnapshotRevision,
+    bool Succeeded, string ResultCode) : MudEvent(EventId);
+// HookQueryResult already provides KeepDefault / ReplaceText / Deny.
+// Only after-look callbacks may queue separately checked game effects;
+// no LOOK effect mutates or makes hidden entities visible by itself.
+
 // AUTHORING CONTRACT: every entrypoint must be a public instance method
 // HookDecision Handler(HookContext ctx, TEvent evt) for before/after hooks;
 // HookQueryResult Handler(HookContext ctx, TEvent evt) for read-only query hooks.
