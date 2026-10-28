@@ -1,6 +1,6 @@
 # Canonical End-to-End Scenario — Moving Train and Station
 
-**Status:** user example CONFIRMED; scenario criteria PROPOSED. **Purpose:** integration oracle binding ECS, map editor, transit, exits, commands, scripting, persistence and hosting.
+**Status:** user example CONFIRMED; binding integration acceptance scenarios. **Purpose:** integration oracle binding ECS, map editor, transit, exits, commands, scripting, persistence and hosting.
 
 ## Author a world using UI only
 Create stations **Northgate** and **Harbor** as two Location entities with separate colored/iconed map cells and descriptions. Create a track graph with Station/Platform bindings, segments and an ordered route Northgate -> Harbor -> Northgate. Create a **Train** Blueprint with a RouteFollower, MotionState, door bindings, child compartment Locations **Car A** and **Car B**, connected by internal east/west exits. Add an NPC **Conductor** inside Car A, an Item **Ticket** inside a carriage, a player character at Northgate platform, and an interactive **Ticket Dispenser** whose persistent stock and event trigger are configurable. All assets and behaviors are created in map/Blueprint editors without Java code.
