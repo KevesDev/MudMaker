@@ -106,3 +106,5 @@
 **Optional local NPC dialogue:** [CPU-first embedded model research, roleplay boundaries and hardware gates](03-contracts/optional-local-npc-dialogue.md). Off by default; the wizard is S02, verified model packs S04, first real NPC dialogue S07, Play testing S08, visual nodes S09, C# hooks S13, and later Host/release checks S17–S18.
 
 **Combat and encounters:** [Configurable rulesets, aggression, fleeing, hearing, timing and UI](03-contracts/combat-and-encounters.md) · [Tollbridge Ambush technical case with visual graphs and illustrative C#/C++](04-features/scripting/08-combat-technical-case-study.md).
+
+**Generic inventories:** [Any-entity storage, containers, stacks, equipment, access, trades and Creator presets](03-contracts/inventory-and-containers.md) · [Traveling Merchant's Chest worked example](04-features/scripting/09-inventory-technical-case-study.md). One containment model for every entity, with visual nodes and C# bindings.
