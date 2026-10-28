@@ -1,6 +1,6 @@
 # UX, Accessibility and Device Support
 
-**Status:** REQUIRED cross-platform and visual-first goals; PROPOSED interaction contract. **Owner:** frontend/editor. **Dependencies:** vision, spatial, command contracts.
+**Status:** REQUIRED cross-platform and visual-first goals; binding interaction contract. **Owner:** frontend/editor. **Dependencies:** vision, spatial, command contracts.
 
 ## Main experiences
 1. **Project hub:** create/import/open/duplicate/backup project; recognize project schema version, health, and engine compatibility; offer safe recovery.
@@ -19,7 +19,7 @@ Selecting a cell opens a contextual side panel without losing map position. Show
 - Tap selects; explicit toolbar/overflow actions support add/remove/configure; long-press is an optional shortcut, never the only path.
 - Pan/zoom by touch gestures with safe separation from editing; moving cells or nodes requires clear drag handles/mode so scroll gestures do not corrupt worlds.
 - Large enough interactive targets, responsive split view/panel drawer, no permanently offscreen inspector. Keyboard/pencil input may improve UX but must not be required.
-- Mobile browser can edit a hosted workspace without embedding a Java runtime in the tablet. Running a locally hosted server on tablets is OPEN.
+- Mobile browser can edit a hosted workspace without embedding a Java runtime in the tablet. Tablets use the supported remote Creator/Player interface; local headless hosting is desktop/server-only for v1. Tablet users can still connect to and manage an authorized remote host.
 - Keyboard shortcuts are routed by centralized Input Manager with focus awareness: typing in descriptions/script editor never triggers map/game commands.
 
 ## Essential safeguards
