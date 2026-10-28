@@ -93,3 +93,8 @@
 | Local mini mapper, hotkeys, aliases, triggers, timers | [Client mapper/automation](03-contracts/ui-ux/07-mapper-and-automation.md) |
 | Common ThemeManager with independent client/editor preferences | [UI theme scopes](03-contracts/ui-ux/03-theme-and-preferences.md), [original theme rules](03-contracts/editor-theme-manager.md) |
 | Small scoped implementation after S08 + S09 | [S09C Player Client sprint](05-sprints/specs/S09C.md) |
+
+
+## Prompt and map integration
+
+[Evennia-informed authoritative map and prompt/HUD contract](03-contracts/prompt-and-world-map.md): typed per-observer location/status projections, Creator map metadata and prompt presets, local Player UI customization, and third-party text fallback. Implement only the phases assigned to this sprint in the [canonical tracker](SPRINT-TRACKING.md). A prompt is a player-facing status display, not an input parser or an LLM prompt. Never reveal hidden room/exit data, fake a status value, or allow client presentation to mutate world state.
