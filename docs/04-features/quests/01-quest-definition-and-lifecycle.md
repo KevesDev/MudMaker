@@ -1,11 +1,11 @@
 # 01 | Quest Definition, Data Model and Lifecycle
 
-**Status:** REQUIRED extensibility, PROPOSED detailed schema. **Owner:** Quest Definition Registry and ECS QuestProgress System. **Read with:** [runtime architecture](../../02-architecture/quest-progression-and-phasing.md) only if implementing. **Do not duplicate** reward rules, objective semantics, dialogue or phase policies here; use linked subtabs.
+**Status:** REQUIRED extensibility, binding versioned quest schema. **Owner:** Quest Definition Registry and ECS QuestProgress System. **Read with:** [runtime architecture](../../02-architecture/quest-progression-and-phasing.md) only if implementing. **Do not duplicate** reward rules, objective semantics, dialogue or phase policies here; use linked subtabs.
 
 ## Quest is not a subclass per type
 "Escort quest", "daily quest", "class quest", "world quest" and "main story" describe different dimensions: objective, recurrence, eligibility, scope and presentation category. One quest can be a daily class-specific escort with optional collection, a randomized reward and a world phase change. A rigid `QuestType` enum cannot express this. Registry is extensible through typed objective/action/condition providers and shared ECS services.
 
-## Proposed saved QuestDefinition fields, every field explicit
+## Canonical saved QuestDefinition fields
 | Area | Field / contract |
 |---|---|
 | Identity | stable namespaced QuestId; version; title; localized description; category/tags; creator ownership; content package; assets/dependency versions |
