@@ -1,9 +1,9 @@
 # Client Protocol, Game Sessions and Hosting Interface
 
-**Status:** PROPOSED. **Owner:** gateway + sessions + hosting supervisor. **Depends:** command pipeline, persistence, security.
+**Status:** binding transport/hosting responsibilities; runtime pending. **Owner:** gateway + sessions + hosting supervisor. **Depends:** command pipeline, persistence, security.
 
 ## Interfaces
-Proposed distinction: project/editor REST-style operations for CRUD, asset validation, preview and deployment; authenticated live WebSocket-style channel for commands and server-origin events; headless CLI for host operations. Transport implementations are candidates, not finalized technology commitments. Preserve the same domain payloads and validation for desktop/tablet/browser clients. Traditional telnet, SSH or other legacy MUD protocols are OPEN and should be adapter work, not alternate engine implementations.
+Project/editor requests use authenticated typed local service operations for CRUD, preview and publishing; live game commands/events use an authenticated versioned bidirectional channel, with pluggable adapters including telnet/structured protocols where supported. Headless hosting uses the same HostSupervisor as GUI hosting. Preserve the same domain payloads and validation for desktop/tablet/browser clients. Traditional telnet, SSH or other legacy MUD protocols are OPEN and should be adapter work, not alternate engine implementations.
 
 ## Mandatory protocol envelope
 Message carries protocolVersion, type, world/instance ID, session ID (where applicable), request/correlation ID, monotonic sequence for live events, payload schema version and structured errors. Contract versioning and compatibility matrix are mandatory. Connection retry/resume semantics must never duplicate a command or expose unauthorized state.
@@ -13,7 +13,7 @@ Server-to-client room lists, targetability, dialogue choices, descriptions, play
 
 ## Sessions
 - Authenticated player bound to authorized character entity. Socket address is not a secure identity.
-- Single-account/multiple-client and multiple-character policies are OPEN.
+- A single account may authorize multiple sessions and multiple character records; character control must be explicit per session, and conflicting control follows owner-published policy with host-exclusive intent admission and audit.
 - Disconnect, resume, reconnect, session expiry, character ownership and queued command cancellation have explicit state machine and tests.
 - Authorization applies to editing, publishing, viewing world admin data, playing, scripting, and export/import.
 - Event views are filtered by world, visibility, actor permissions and subscription; clients cannot subscribe to arbitrary private component data.
@@ -24,11 +24,11 @@ Game client submits InvokeAction. Server validates session->world and command->E
 
 ## Hosting contract
 Define WorldPackage (project artifact+engine compatibility+dependencies+manifest+checksums), RuntimeConfig (network binds, visibility, secrets references, storage, resources, startup policy), and InstanceState (Stopped, Starting, Healthy, Degraded, Stopping, Failed). State transitions are observable and idempotent.
-A GUI “Host” button and headless "mudmaker host ..." command MUST invoke the same underlying HostingSupervisor operations. Actual CLI spelling is PROPOSED pending tooling ADR; do not hardcode as final until accepted.
+A GUI “Host” button and headless "mudmaker host ..." command MUST invoke the same underlying HostingSupervisor operations. The canonical CLI entry is `mudmaker host --project <project-path> --release <release-id>` with validated arguments, local owner credentials and explicit lifecycle result codes.
 One-click host must handle preflight, published artifact consistency, port conflict detection, storage readiness, script compile/sandbox checks, address/status and error reporting, and persistence. Hosting cannot be treated as an editor-only UI toggle.
 
 ## Local and remote
-Browser/tablet uses hosted runtime; does not require Java process on tablet. Desktop may optionally bundle local runtime. Server/cloud uses headless service. Network discovery, local NAT/port forwarding and managed-hosting offerings are OPEN: do not promise public reachability just because local process started. Connection instructions must distinguish localhost/LAN/public address and TLS requirements.
+Browser/tablet uses hosted runtime; does not require Java process on tablet. Desktop may optionally bundle local runtime. Server/cloud uses headless service. Host must clearly distinguish loopback/LAN/public reachability, test actual listener/TLS conditions and present manual networking diagnostics. Managed hosting is not a v1 dependency; no public reachability claim follows from local startup. Connection instructions must distinguish localhost/LAN/public address and TLS requirements.
 
 ## Deployment and operations
 - No deployment of invalid graph/components; exact failures shown to creator.
