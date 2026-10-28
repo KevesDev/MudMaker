@@ -1,0 +1,1088 @@
+{
+  "schema": "mudmaker.evennia-hooks-parity.v1",
+  "evidence": "Evennia upstream commit 98b9df21c91b111dda7c51c8ab62f42faf4d9dae; official docs checked 2026-10-28",
+  "explanation": "108 distinct core Evennia hook/overridable methods from seven modules are mapped to 89 exact MudMaker hook IDs. All targets have C# hook catalog contracts; native runtime implementations remain unverified.",
+  "entries": [
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_object_post_copy",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1527",
+      "mudmakerHook": "entity.copied.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "format_appearance",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1864",
+      "mudmakerHook": "entity.appearance.format.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "return_appearance",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1878",
+      "mudmakerHook": "entity.appearance.resolve.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_first_save",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1929",
+      "mudmakerHook": "entity.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_object_creation",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2042",
+      "mudmakerHook": "entity.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_object_post_creation",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2050",
+      "mudmakerHook": "entity.initialized.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_object_delete",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2059",
+      "mudmakerHook": "entity.delete.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_object_post_spawn",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2068",
+      "mudmakerHook": "entity.prototype.applied.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_init",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2078",
+      "mudmakerHook": "entity.hydrated.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_cmdset_get",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2089",
+      "mudmakerHook": "command.available.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_puppet",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2120",
+      "mudmakerHook": "character.control.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_post_puppet",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2134",
+      "mudmakerHook": "character.control.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_unpuppet",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2151",
+      "mudmakerHook": "character.release.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_post_unpuppet",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2168",
+      "mudmakerHook": "character.release.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_server_reload",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2185",
+      "mudmakerHook": "host.stopping.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_server_shutdown",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2194",
+      "mudmakerHook": "host.stopping.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_access",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2202",
+      "mudmakerHook": "access.checked.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_move",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2221",
+      "mudmakerHook": "entity.move.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_object_leave",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2245",
+      "mudmakerHook": "container.leave.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_object_receive",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2266",
+      "mudmakerHook": "container.receive.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "announce_move_from",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2293",
+      "mudmakerHook": "narration.move.origin.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "announce_move_to",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2349",
+      "mudmakerHook": "narration.move.destination.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_post_move",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2422",
+      "mudmakerHook": "entity.move.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_object_leave",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2443",
+      "mudmakerHook": "container.leave.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_object_receive",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2460",
+      "mudmakerHook": "container.receive.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_traverse",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2478",
+      "mudmakerHook": "exit.traverse.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_post_traverse",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2497",
+      "mudmakerHook": "exit.traverse.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_failed_traverse",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2517",
+      "mudmakerHook": "exit.traverse.failed.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_msg_receive",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2535",
+      "mudmakerHook": "message.receive.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_msg_send",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2563",
+      "mudmakerHook": "message.send.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_look",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2657",
+      "mudmakerHook": "entity.look.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_desc",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2692",
+      "mudmakerHook": "entity.description.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_get",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2704",
+      "mudmakerHook": "item.pickup.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_get",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2726",
+      "mudmakerHook": "item.pickup.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_give",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2743",
+      "mudmakerHook": "item.transfer.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_give",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2767",
+      "mudmakerHook": "item.transfer.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_drop",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2785",
+      "mudmakerHook": "item.drop.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_drop",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2814",
+      "mudmakerHook": "item.drop.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_pre_say",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2831",
+      "mudmakerHook": "chat.say.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_say",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2859",
+      "mudmakerHook": "chat.say.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "at_rename",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L2999",
+      "mudmakerHook": "entity.renamed.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "func",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L3475",
+      "mudmakerHook": "exit.traverse.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_post_add_character",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L378",
+      "mudmakerHook": "account.character.assigned.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_post_remove_character",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L389",
+      "mudmakerHook": "account.character.unassigned.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_post_create_character",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L979",
+      "mudmakerHook": "character.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_pre_channel_msg",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1266",
+      "mudmakerHook": "channel.recipient.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_post_channel_msg",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1333",
+      "mudmakerHook": "channel.recipient.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_account_creation",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1499",
+      "mudmakerHook": "account.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_init",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1512",
+      "mudmakerHook": "account.hydrated.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_first_save",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1531",
+      "mudmakerHook": "account.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_access",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1577",
+      "mudmakerHook": "access.checked.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_cmdset_get",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1602",
+      "mudmakerHook": "command.available.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_first_login",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1633",
+      "mudmakerHook": "account.first_login.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_password_change",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1648",
+      "mudmakerHook": "account.credentials.changed.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_pre_login",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1659",
+      "mudmakerHook": "account.login.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_post_login",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1710",
+      "mudmakerHook": "account.login.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_failed_login",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1749",
+      "mudmakerHook": "account.login.failed.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_disconnect",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1762",
+      "mudmakerHook": "account.disconnect.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_post_disconnect",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1779",
+      "mudmakerHook": "account.disconnect.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_msg_receive",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1794",
+      "mudmakerHook": "message.receive.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_msg_send",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1824",
+      "mudmakerHook": "message.send.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_server_reload",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1844",
+      "mudmakerHook": "host.stopping.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_server_shutdown",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1853",
+      "mudmakerHook": "host.stopping.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "accounts",
+      "evenniaHook": "at_look",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/accounts/accounts.py#L1878",
+      "mudmakerHook": "entity.look.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_first_save",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L401",
+      "mudmakerHook": "scheduler.job.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_init",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L499",
+      "mudmakerHook": "scheduler.job.hydrated.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_script_creation",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L507",
+      "mudmakerHook": "scheduler.job.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_script_delete",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L514",
+      "mudmakerHook": "scheduler.job.delete.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "is_valid",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L524",
+      "mudmakerHook": "scheduler.job.validity.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_repeat",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L531",
+      "mudmakerHook": "timer.fired.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_start",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L543",
+      "mudmakerHook": "scheduler.job.started.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_pause",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L546",
+      "mudmakerHook": "scheduler.job.paused.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_stop",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L549",
+      "mudmakerHook": "scheduler.job.stopped.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_server_reload",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L866",
+      "mudmakerHook": "host.stopping.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_server_shutdown",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L875",
+      "mudmakerHook": "host.stopping.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "scripts",
+      "evenniaHook": "at_server_start",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/scripts/scripts.py#L882",
+      "mudmakerHook": "host.started.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "at_first_save",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L138",
+      "mudmakerHook": "channel.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "at_channel_creation",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L179",
+      "mudmakerHook": "channel.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "channel_prefix",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L509",
+      "mudmakerHook": "channel.prefix.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "at_pre_msg",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L590",
+      "mudmakerHook": "channel.message.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "at_post_msg",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L671",
+      "mudmakerHook": "channel.message.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "pre_join_channel",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L689",
+      "mudmakerHook": "channel.member.join.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "post_join_channel",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L705",
+      "mudmakerHook": "channel.member.join.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "pre_leave_channel",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L722",
+      "mudmakerHook": "channel.member.leave.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "post_leave_channel",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L738",
+      "mudmakerHook": "channel.member.leave.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "at_init",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L755",
+      "mudmakerHook": "channel.hydrated.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "format_senders",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L934",
+      "mudmakerHook": "channel.senders.format.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "format_external",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L946",
+      "mudmakerHook": "channel.external.format.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "format_message",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L952",
+      "mudmakerHook": "channel.message.format.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "pre_send_message",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L958",
+      "mudmakerHook": "channel.message.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "channels",
+      "evenniaHook": "post_send_message",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/comms/comms.py#L961",
+      "mudmakerHook": "channel.message.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "commands",
+      "evenniaHook": "at_pre_cmd",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/commands/command.py#L465",
+      "mudmakerHook": "command.execute.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "commands",
+      "evenniaHook": "at_post_cmd",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/commands/command.py#L474",
+      "mudmakerHook": "command.execute.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "commands",
+      "evenniaHook": "parse",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/commands/command.py#L482",
+      "mudmakerHook": "command.parse.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "commands",
+      "evenniaHook": "func",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/commands/command.py#L527",
+      "mudmakerHook": "command.execute.before",
+      "mode": "intercept",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "adapted-lifecycle",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "cmdsets",
+      "evenniaHook": "at_cmdset_creation",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/commands/cmdset.py#L749",
+      "mudmakerHook": "command.set.created.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "sessions",
+      "evenniaHook": "at_sync",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/server/serversession.py#L97",
+      "mudmakerHook": "session.synchronized.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "sessions",
+      "evenniaHook": "at_login",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/server/serversession.py#L131",
+      "mudmakerHook": "session.login.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "sessions",
+      "evenniaHook": "at_disconnect",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/server/serversession.py#L155",
+      "mudmakerHook": "session.disconnect.after",
+      "mode": "post-commit",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "sessions",
+      "evenniaHook": "at_cmdset_get",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/server/serversession.py#L400",
+      "mudmakerHook": "command.available.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "equivalence": "direct-function",
+      "runtimeImplemented": false
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "get_display_name",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1639",
+      "mudmakerHook": "entity.appearance.name.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "runtimeImplemented": false,
+      "equivalence": "direct-function"
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "get_numbered_name",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1677",
+      "mudmakerHook": "entity.appearance.numbered_name.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "runtimeImplemented": false,
+      "equivalence": "direct-function"
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "get_display_header",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1738",
+      "mudmakerHook": "entity.appearance.header.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "runtimeImplemented": false,
+      "equivalence": "direct-function"
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "get_display_desc",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1751",
+      "mudmakerHook": "entity.appearance.desc.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "runtimeImplemented": false,
+      "equivalence": "direct-function"
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "get_display_exits",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1764",
+      "mudmakerHook": "entity.appearance.exits.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "runtimeImplemented": false,
+      "equivalence": "direct-function"
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "get_display_characters",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1803",
+      "mudmakerHook": "entity.appearance.characters.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "runtimeImplemented": false,
+      "equivalence": "direct-function"
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "get_display_things",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1823",
+      "mudmakerHook": "entity.appearance.things.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "runtimeImplemented": false,
+      "equivalence": "direct-function"
+    },
+    {
+      "evenniaGroup": "objects",
+      "evenniaHook": "get_display_footer",
+      "evenniaSource": "https://github.com/evennia/evennia/blob/98b9df21c91b111dda7c51c8ab62f42faf4d9dae/evennia/objects/objects.py#L1851",
+      "mudmakerHook": "entity.appearance.footer.query",
+      "mode": "pure-query",
+      "status": "v1-sdk-contract-defined",
+      "runtimeImplemented": false,
+      "equivalence": "direct-function"
+    }
+  ],
+  "upstreamCommit": "98b9df21c91b111dda7c51c8ab62f42faf4d9dae"
+}

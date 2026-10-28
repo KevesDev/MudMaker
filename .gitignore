@@ -1,39 +1,52 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-.kotlin
-
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
-
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Local/build output (C++, CMake, .NET and tooling)
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+out/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+*.obj
+*.o
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.exe
+*.pdb
+*.ilk
+*.pch
+*.dSYM/
+[Bb]in/
+[Oo]bj/
+TestResults/
+.coverage*
+*.user
+*.suo
+.vs/
 .vscode/
+.idea/
+*.sln.docstates
 
-### Mac OS ###
+# Locally published content and temp
+local-releases/
+artifacts/
+*.tmp
+*.bak
+*.log
+logs/
+.cache/
+tmp/
+
+# Secrets/host config, never commit real credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets/
+
+# OS
 .DS_Store
+Thumbs.db

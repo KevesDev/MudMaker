@@ -1,0 +1,67 @@
+{
+  "schema": "mudmaker.effect-registry.v1",
+  "version": 1,
+  "notes": "Capability IDs required per effect; actor/world/field/quest ownership checks additionally enforced by native engine.",
+  "effects": [
+    {
+      "effectClrType": "StartQuest",
+      "capability": "Quest.Start"
+    },
+    {
+      "effectClrType": "CompleteQuest",
+      "capability": "Quest.Complete"
+    },
+    {
+      "effectClrType": "CreditObjective",
+      "capability": "Quest.Credit"
+    },
+    {
+      "effectClrType": "ChangeWorldEvent",
+      "capability": "WorldEvent.Control"
+    },
+    {
+      "effectClrType": "OpenQuiz",
+      "capability": "Quiz.Open"
+    },
+    {
+      "effectClrType": "RecordQuizResult",
+      "capability": "Quiz.Record"
+    },
+    {
+      "effectClrType": "GrantRewardPlan",
+      "capability": "Reward.Grant"
+    },
+    {
+      "effectClrType": "RollRewardTable",
+      "capability": "Reward.Roll"
+    },
+    {
+      "effectClrType": "ShowDialogue",
+      "capability": "Dialogue.Show"
+    },
+    {
+      "effectClrType": "EmitDomainEvent",
+      "capability": "Event.Emit"
+    },
+    {
+      "effectClrType": "SetComponentField",
+      "capability": "Component.Write"
+    },
+    {
+      "effectClrType": "AdjustComponentNumber",
+      "capability": "Component.Write"
+    },
+    {
+      "effectClrType": "ClearComponentOverride",
+      "capability": "Component.Write"
+    },
+    {
+      "effectClrType": "WriteStateSlot",
+      "capability": "State.Write"
+    },
+    {
+      "effectClrType": "DeleteStateSlot",
+      "capability": "State.Write"
+    }
+  ]
+}

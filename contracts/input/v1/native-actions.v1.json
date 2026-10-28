@@ -1,0 +1,109 @@
+{
+  "schema": "mudmaker.command-native-actions.v1",
+  "version": 1,
+  "status": "DECIDED_TARGET_REGISTRY_UNIMPLEMENTED",
+  "actions": [
+    {
+      "id": "World.Look",
+      "rateClass": "interaction",
+      "mutatesWorld": false,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.Move",
+      "rateClass": "navigation",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.Say",
+      "rateClass": "chat",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.Emote",
+      "rateClass": "chat",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.Interact",
+      "rateClass": "interaction",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.InventoryList",
+      "rateClass": "interaction",
+      "mutatesWorld": false,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.TakeItem",
+      "rateClass": "interaction",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.DropItem",
+      "rateClass": "interaction",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.GiveItem",
+      "rateClass": "interaction",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.UseItem",
+      "rateClass": "interaction",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.EmitDomainEvent",
+      "rateClass": "interaction",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.Help",
+      "rateClass": "interaction",
+      "mutatesWorld": false,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "World.Who",
+      "rateClass": "search",
+      "mutatesWorld": false,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "Session.Logout",
+      "rateClass": "interaction",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "Text.BeginRoleplay",
+      "rateClass": "rp_post",
+      "mutatesWorld": false,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "Text.BeginDescription",
+      "rateClass": "profile_edit",
+      "mutatesWorld": false,
+      "serverAuthoritative": true
+    },
+    {
+      "id": "Text.Submit",
+      "rateClass": "rp_post",
+      "mutatesWorld": true,
+      "serverAuthoritative": true
+    }
+  ]
+}

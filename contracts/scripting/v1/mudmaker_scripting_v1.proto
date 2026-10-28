@@ -1,0 +1,275 @@
+syntax = "proto3";
+package mudmaker.scripting.v1;
+option csharp_namespace = "MudMaker.Scripting.V1.Wire";
+
+// Contract schema, not yet generated or exercised by a host.
+// Every message is size-limited by transport; UUID fields are canonical UUID strings.
+// Field numbers MUST be reserved on deletion; never reuse them.
+message AssetRef { string id = 1; uint32 revision = 2; }
+message EntityRef { string world_id = 1; uint64 entity_id = 2; uint32 generation = 3; }
+message ScopeRef { string id = 1; uint32 revision = 2; }
+message FieldRef { string component_type_id = 1; string field_id = 2; uint32 schema_revision = 3; }
+enum StateScope { STATE_SCOPE_UNSPECIFIED = 0; SCOPE_WORLD = 1; SCOPE_REGION = 2; SCOPE_ENTITY = 3; SCOPE_PLAYER = 4; SCOPE_QUEST_ATTEMPT = 5; }
+message StateSlotRef {
+  StateScope scope = 1;
+  string world_id = 2;
+  string schema_id = 3;
+  string key = 4;
+  EntityRef entity_owner = 5;
+  string scoped_owner_id = 6;
+}
+message PropertyValue {
+  oneof value {
+    bool boolean_value = 1;
+    sint64 integer_value = 2;
+    double floating_value = 3;
+    string text_value = 4;
+    EntityRef entity_value = 5;
+    AssetRef asset_value = 6;
+    bool explicit_null = 7;
+  }
+}
+message ComponentFieldSnapshot {
+  EntityRef owner = 1; FieldRef field = 2; PropertyValue value = 3; uint64 version = 4;
+}
+message StateSlotSnapshot {
+  StateSlotRef slot = 1; PropertyValue value = 2; uint64 version = 3;
+}
+message QuestAttempt {
+  AssetRef quest = 1;
+  string attempt_id = 2;
+  QuestState state = 3;
+  repeated string credited_objectives = 4;
+}
+enum QuestState {
+  QUEST_STATE_UNSPECIFIED = 0;
+  QUEST_ABSENT = 1;
+  QUEST_OFFERED = 2;
+  QUEST_ACTIVE = 3;
+  QUEST_READY = 4;
+  QUEST_COMPLETED = 5;
+  QUEST_FAILED = 6;
+  QUEST_ABANDONED = 7;
+}
+enum ActorKind { ACTOR_KIND_UNSPECIFIED = 0; ACTOR_PLAYER = 1; ACTOR_WORLD_SYSTEM = 2; }
+message ActorSnapshot {
+  EntityRef actor = 1;
+  string display_name = 2;
+  string name_key = 3;
+  repeated QuestAttempt quest_attempts = 4;
+  repeated AssetRef aboard_vehicles = 5;
+  ActorKind kind = 6;
+}
+message WorldReadSnapshot {
+  string world_id = 1;
+  uint64 revision = 2;
+  repeated AssetRef in_transit_vehicles = 3;
+  repeated AssetRef active_world_event_definitions = 4;
+}
+message EntityVersion { EntityRef entity = 1; uint64 version = 2; }
+message BaseEvent { string event_id = 1; }
+message DialogueChoice { string event_id = 1; string session_id = 2; string choice_key = 3; }
+message QuizEvaluated {
+  string event_id = 1;
+  string session_id = 2;
+  bool is_correct = 3;
+  bool session_owned_by_actor = 4;
+}
+message QuestTurnIn { string event_id = 1; string attempt_id = 2; }
+message QuestLifecycle {
+  string event_id = 1;
+  string attempt_id = 2;
+  QuestState before_state = 3;
+  QuestState after_state = 4;
+}
+message ObjectiveCredit { string event_id = 1; string attempt_id = 2; string objective_key = 3; }
+message RewardClaim { string event_id = 1; string attempt_id = 2; AssetRef reward = 3; }
+message EntityMove {
+  string event_id = 1; EntityRef entity = 2;
+  EntityRef origin = 3; EntityRef destination = 4;
+}
+message Transit { string event_id = 1; EntityRef vehicle = 2; EntityRef station = 3; }
+message WorldEventLifecycle {
+  string event_id = 1; AssetRef definition = 2; ScopeRef scope = 3;
+  WorldEventAction action = 4;
+}
+message ItemEvent { string event_id = 1; EntityRef item = 2; EntityRef other_party = 3; }
+message EntityLifecycle { string event_id = 1; EntityRef entity = 2; AssetRef prototype = 3; }
+message TimerFired { string event_id = 1; AssetRef timer = 2; string occurrence_id = 3; }
+
+
+message EntityLifecycleHook {
+  string event_id = 1; EntityRef subject = 2; EntityRef related = 3; AssetRef prototype = 4;
+}
+message MovementHook {
+  string event_id = 1; EntityRef mover = 2; EntityRef origin = 3;
+  EntityRef destination = 4; EntityRef exit = 5;
+}
+message PresentationQuery {
+  string event_id = 1; EntityRef viewer = 2; EntityRef subject = 3; string current_text = 4;
+  uint32 count = 5;
+}
+message CommandHook {
+  string event_id = 1; string command_key = 2; string arguments = 3;
+}
+message AccountHook {
+  string event_id = 1; string account_id = 2;
+  EntityRef character = 3; string reason_code = 4;
+}
+message ChannelHook {
+  string event_id = 1; string channel_id = 2; EntityRef sender = 3;
+  string message = 4; string recipient_account_id = 5;
+}
+message ScheduleHook {
+  string event_id = 1; string schedule_id = 2; string occurrence_id = 3;
+}
+message HostHook { string event_id = 1; string lifecycle_code = 2; }
+message AccessHook {
+  string event_id = 1; EntityRef subject = 2; EntityRef object = 3;
+  string access_key = 4; bool engine_allowed = 5;
+}
+message QueryHook { string event_id = 1; string key = 2; string default_value = 3; }
+message HookEvent {
+  oneof kind {
+    BaseEvent npc_interact = 1;
+    DialogueChoice dialogue_choice = 2;
+    QuizEvaluated quiz_evaluated = 3;
+    QuestTurnIn quest_turn_in = 4;
+    QuestLifecycle quest_lifecycle = 5;
+    ObjectiveCredit objective_credit = 6;
+    RewardClaim reward_claim = 7;
+    EntityMove entity_move = 8;
+    Transit transit = 9;
+    WorldEventLifecycle world_event_lifecycle = 10;
+    ItemEvent item_event = 11;
+    TimerFired timer_fired = 12;
+    BaseEvent player_session = 13;
+    EntityLifecycle entity_spawn = 14;
+    EntityLifecycle entity_despawn = 15;
+    EntityLifecycleHook entity_lifecycle_hook = 16;
+    MovementHook movement_hook = 17;
+    PresentationQuery presentation_query = 18;
+    CommandHook command_hook = 19;
+    AccountHook account_hook = 20;
+    ChannelHook channel_hook = 21;
+    ScheduleHook schedule_hook = 22;
+    HostHook host_hook = 23;
+    AccessHook access_hook = 24;
+    QueryHook query_hook = 25;
+  }
+}
+enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
+message HookInvoke {
+  uint32 protocol_major = 1;
+  uint32 protocol_minor = 2;
+  string invocation_id = 3;
+  string request_id = 4;
+  string release_hash = 5;
+  AssetRef binding = 6;
+  string hook_id = 7;
+  string module_id = 8;
+  string handler_name = 9;
+  EntityRef owner = 10;
+  ActorSnapshot actor = 11;
+  EntityRef target = 12;
+  WorldReadSnapshot world = 13;
+  HookPhase phase = 14;
+  HookEvent event = 15;
+  repeated EntityVersion observed_entity_versions = 16;
+  repeated string allowed_capabilities = 17;
+  uint32 execution_budget_ms = 18; // host enforces expiry using its own monotonic clock
+  string trace_id = 19;
+  repeated ComponentFieldSnapshot fields = 20;
+  repeated StateSlotSnapshot state_slots = 21;
+}
+
+enum WorldEventAction {
+  WORLD_EVENT_ACTION_UNSPECIFIED = 0;
+  START = 1;
+  STOP = 2;
+}
+message StartQuest { EntityRef actor = 1; AssetRef quest = 2; }
+message CompleteQuest { string attempt_id = 1; string evidence_event_id = 2; }
+message CreditObjective { string attempt_id = 1; string objective_key = 2; string evidence_event_id = 3; }
+message ChangeWorldEvent { AssetRef definition = 1; ScopeRef scope = 2; WorldEventAction action = 3; }
+message OpenQuiz { EntityRef actor = 1; AssetRef question_set = 2; string quest_attempt_id = 3; }
+message RecordQuizResult { string quiz_session_id = 1; bool is_correct = 2; }
+message GrantRewardPlan { EntityRef actor = 1; AssetRef reward_plan = 2; string quest_attempt_id = 3; }
+message RollRewardTable { EntityRef actor = 1; AssetRef reward_table = 2; string quest_attempt_id = 3; }
+message ShowDialogue { EntityRef actor = 1; AssetRef dialogue = 2; }
+message EmitDomainEvent { EntityRef actor = 1; AssetRef definition = 2; }
+message SetComponentField {
+  EntityRef owner = 1; FieldRef field = 2; PropertyValue value = 3; uint64 expected_version = 4;
+}
+message AdjustComponentNumber {
+  EntityRef owner = 1; FieldRef field = 2; double delta = 3; uint64 expected_version = 4;
+}
+message ClearComponentOverride { EntityRef owner = 1; FieldRef field = 2; uint64 expected_version = 3; }
+message WriteStateSlot {
+  StateSlotRef slot = 1; PropertyValue value = 2; uint64 expected_version = 3;
+}
+message DeleteStateSlot { StateSlotRef slot = 1; uint64 expected_version = 2; }
+message GameEffect {
+  string once_key = 1;
+  oneof action {
+    StartQuest start_quest = 2;
+    CompleteQuest complete_quest = 3;
+    CreditObjective credit_objective = 4;
+    ChangeWorldEvent change_world_event = 5;
+    OpenQuiz open_quiz = 6;
+    RecordQuizResult record_quiz_result = 7;
+    GrantRewardPlan grant_reward_plan = 8;
+    RollRewardTable roll_reward_table = 9;
+    ShowDialogue show_dialogue = 10;
+    EmitDomainEvent emit_domain_event = 11;
+    SetComponentField set_component_field = 12;
+    AdjustComponentNumber adjust_component_number = 13;
+    ClearComponentOverride clear_component_override = 14;
+    WriteStateSlot write_state_slot = 15;
+    DeleteStateSlot delete_state_slot = 16;
+  }
+}
+enum Disposition {
+  DISPOSITION_UNSPECIFIED = 0;
+  CONTINUE_DEFAULT = 1;
+  APPEND_BEFORE = 2;
+  REPLACE_DEFAULT = 3;
+  VETO = 4;
+  DEFER = 5;
+  ENQUEUE_AFTER = 6;
+}
+message HookQueryResult {
+  oneof result { bool keep_default = 1; string replace_text = 2; string deny_error_code = 3; }
+}
+message HookReply {
+  uint32 protocol_major = 1;
+  string invocation_id = 2;
+  AssetRef binding = 3;
+  Disposition disposition = 4;
+  repeated GameEffect effects = 5;
+  string safe_error_code = 6;
+  AssetRef deferred_prompt = 7;
+  string trace_id = 8;
+  HookQueryResult query_result = 9;
+}
+message ProtocolHello {
+  uint32 min_major = 1;
+  uint32 max_major = 2;
+  string worker_build_hash = 3;
+  string sdk_contract_hash = 4;
+  string release_hash = 5;
+}
+
+message WorkerReady {
+  uint32 protocol_major = 1;
+  string release_hash = 2;
+  uint32 bound_handlers = 3;
+}
+message WorkerFrame {
+  oneof payload {
+    ProtocolHello hello = 1;
+    WorkerReady ready = 2;
+    HookInvoke invoke = 3;
+    HookReply reply = 4;
+  }
+}

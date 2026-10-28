@@ -1,0 +1,102 @@
+syntax = "proto3";
+package mudmaker.player_input.v1;
+option csharp_namespace = "MudMaker.PlayerInput.V1";
+// Client-facing payloads for a host-owned game. Never accepts code, hooks,
+// arbitrary ECS field mutation, project editing or release deployment.
+// The game host enforces UTF-8 byte, nesting and quotas BEFORE decoding.
+
+message ClientHello {
+  uint32 requested_protocol_major = 1;
+  uint32 requested_protocol_minor = 2;
+  string requested_world = 3; // routing hint, not permission
+  string client_build = 4;
+}
+message Authenticate {
+  string session_ticket = 1; // short-lived ticket issued by separate auth flow
+}
+message CommandText { string raw_line = 1; } // ONE logical command. LF/CR inside typed arguments allowed only by published grammar; never splits into further commands.
+message Argument {
+  string name = 1;
+  oneof value {
+    string text = 2;
+    sint64 integer = 3;
+    double number = 4;
+    bool boolean = 5;
+    string candidate_token = 6; // server issued; never trust as entity ID
+  }
+}
+message InvokeAction {
+  string command_definition_id = 1; // host-published UUID, not a hook name
+  uint32 command_revision = 2;
+  repeated Argument args = 3;
+}
+enum TextKind {
+  TEXT_KIND_UNSPECIFIED = 0;
+  ROLEPLAY_POST = 1;
+  CHARACTER_DESCRIPTION = 2;
+  PROFILE_BIOGRAPHY = 3;
+  QUICK_CHAT = 4;
+}
+message SubmitText {
+  TextKind kind = 1;
+  string body = 2;
+  string owner_selection_token = 3; // omitted for actor-owned profile
+  uint64 expected_revision = 4;
+}
+message SelectCandidate {
+  string candidate_token = 1; // opaque, expiring, per-actor/command scoped
+}
+message Heartbeat { uint64 client_tick = 1; }
+message ClientEnvelope {
+  uint32 protocol_major = 1;
+  uint32 protocol_minor = 2;
+  string request_id = 3; // UUID for dedupe, verified against actor/session; never classifies by length
+  uint64 session_sequence = 4;
+  oneof payload {
+    ClientHello hello = 10;
+    Authenticate authenticate = 11;
+    CommandText command_text = 12;
+    InvokeAction invoke_action = 13;
+    SubmitText submit_text = 14;
+    SelectCandidate select_candidate = 15;
+    Heartbeat heartbeat = 16;
+  }
+}
+enum ResultCode {
+  RESULT_CODE_UNSPECIFIED = 0;
+  OK = 1;
+  INPUT_TOO_LONG = 2;
+  INPUT_INVALID = 3;
+  RATE_LIMITED = 4;
+  UNAUTHENTICATED = 5;
+  PERMISSION_DENIED = 6;
+  COMMAND_NO_MATCH = 7;
+  COMMAND_AMBIGUOUS = 8;
+  BAD_ARGUMENT = 9;
+  CHOICE_EXPIRED = 10;
+  TARGET_UNAVAILABLE = 11;
+  STATE_CONFLICT = 12;
+  SERVER_BUSY = 13;
+  INTERNAL_SAFE_ERROR = 14;
+}
+message CandidateOption {
+  string token = 1; // server-issued; expires and is bound to current actor
+  string safe_label = 2; // phase-filtered, no private IDs
+}
+message CommandReceipt {
+  string request_id = 1;
+  ResultCode result = 2;
+  uint32 retry_after_ms = 3;
+  string safe_message = 4;
+  repeated CandidateOption candidates = 5;
+  uint64 committed_world_revision = 6;
+}
+message ServerEnvelope {
+  uint32 protocol_major = 1;
+  uint64 server_event_sequence = 2;
+  oneof payload {
+    CommandReceipt receipt = 10;
+    string authorized_narration = 11; // server projected already-committed text
+    string resync_cursor = 12;
+  }
+}

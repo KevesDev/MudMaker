@@ -1,0 +1,1057 @@
+{
+  "schema": "mudmaker.hook-registry.v1",
+  "version": 2,
+  "origin": "host-local-published-release",
+  "notes": "Exact creator-facing hook IDs, event and result DTOs; all source-level contracts only. Locally host-authored published scripts; none claims native engine integration.",
+  "hooks": [
+    {
+      "id": "npc.interact.before",
+      "phase": "Before",
+      "eventClrType": "NpcInteractEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "npc.interact.after",
+      "phase": "After",
+      "eventClrType": "NpcInteractEvent",
+      "ownerKind": "Npc",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "dialogue.choice.before",
+      "phase": "Before",
+      "eventClrType": "DialogueChoiceEvent",
+      "ownerKind": "Dialogue",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "dialogue.choice.after",
+      "phase": "After",
+      "eventClrType": "DialogueChoiceEvent",
+      "ownerKind": "Dialogue",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quiz.evaluated.before",
+      "phase": "Before",
+      "eventClrType": "QuizEvaluatedEvent",
+      "ownerKind": "QuestionSet",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quiz.evaluated.after",
+      "phase": "After",
+      "eventClrType": "QuizEvaluatedEvent",
+      "ownerKind": "QuestionSet",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.offer.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.accept.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.accept.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.objective.credit.before",
+      "phase": "Before",
+      "eventClrType": "ObjectiveCreditEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.objective.credit.after",
+      "phase": "After",
+      "eventClrType": "ObjectiveCreditEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.turn_in.before",
+      "phase": "Before",
+      "eventClrType": "QuestTurnInEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.turn_in.after",
+      "phase": "After",
+      "eventClrType": "QuestTurnInEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.completed.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.fail.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.fail.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.abandon.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.abandon.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.reset.before",
+      "phase": "Before",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.reset.after",
+      "phase": "After",
+      "eventClrType": "QuestLifecycleEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.reward.claim.before",
+      "phase": "Before",
+      "eventClrType": "RewardClaimEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "quest.reward.claim.after",
+      "phase": "After",
+      "eventClrType": "RewardClaimEvent",
+      "ownerKind": "Quest",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.traverse.before",
+      "phase": "Before",
+      "eventClrType": "EntityMoveEvent",
+      "ownerKind": "Exit",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.traverse.after",
+      "phase": "After",
+      "eventClrType": "EntityMoveEvent",
+      "ownerKind": "Exit",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.move.after",
+      "phase": "After",
+      "eventClrType": "EntityMoveEvent",
+      "ownerKind": "World",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "transit.departed.after",
+      "phase": "After",
+      "eventClrType": "TransitEvent",
+      "ownerKind": "Vehicle",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "transit.arrived.after",
+      "phase": "After",
+      "eventClrType": "TransitEvent",
+      "ownerKind": "Vehicle",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "world_event.started.after",
+      "phase": "After",
+      "eventClrType": "WorldEventLifecycleEvent",
+      "ownerKind": "WorldEvent",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "world_event.stopped.after",
+      "phase": "After",
+      "eventClrType": "WorldEventLifecycleEvent",
+      "ownerKind": "WorldEvent",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "item.use.before",
+      "phase": "Before",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "item.use.after",
+      "phase": "After",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "item.pickup.before",
+      "phase": "Before",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "item.pickup.after",
+      "phase": "After",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "item.transfer.before",
+      "phase": "Before",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "item.transfer.after",
+      "phase": "After",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.spawn.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleEvent",
+      "ownerKind": "World",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.despawn.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleEvent",
+      "ownerKind": "World",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "timer.fired.after",
+      "phase": "After",
+      "eventClrType": "TimerFiredEvent",
+      "ownerKind": "Timer",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "player.login.after",
+      "phase": "After",
+      "eventClrType": "PlayerSessionEvent",
+      "ownerKind": "World",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "player.logout.after",
+      "phase": "After",
+      "eventClrType": "PlayerSessionEvent",
+      "ownerKind": "World",
+      "returnClrType": "HookDecision",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.copied.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.format.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.resolve.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.created.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.initialized.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.delete.before",
+      "phase": "Before",
+      "eventClrType": "EntityLifecycleHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.prototype.applied.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.hydrated.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "command.available.query",
+      "phase": "Query",
+      "eventClrType": "QueryHookEvent",
+      "ownerKind": "Command",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "character.control.before",
+      "phase": "Before",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "character.control.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "character.release.before",
+      "phase": "Before",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "character.release.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "host.stopping.before",
+      "phase": "Before",
+      "eventClrType": "HostHookEvent",
+      "ownerKind": "Host",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "access.checked.after",
+      "phase": "After",
+      "eventClrType": "AccessHookEvent",
+      "ownerKind": "Access",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.move.before",
+      "phase": "Before",
+      "eventClrType": "MovementHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "container.leave.before",
+      "phase": "Before",
+      "eventClrType": "MovementHookEvent",
+      "ownerKind": "Container",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "container.receive.before",
+      "phase": "Before",
+      "eventClrType": "MovementHookEvent",
+      "ownerKind": "Container",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "narration.move.origin.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Narration",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "narration.move.destination.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Narration",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "container.leave.after",
+      "phase": "After",
+      "eventClrType": "MovementHookEvent",
+      "ownerKind": "Container",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "container.receive.after",
+      "phase": "After",
+      "eventClrType": "MovementHookEvent",
+      "ownerKind": "Container",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "exit.traverse.failed.after",
+      "phase": "After",
+      "eventClrType": "MovementHookEvent",
+      "ownerKind": "Exit",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "message.receive.before",
+      "phase": "Before",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "message.send.before",
+      "phase": "Before",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.look.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.description.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "item.drop.before",
+      "phase": "Before",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "item.drop.after",
+      "phase": "After",
+      "eventClrType": "ItemEvent",
+      "ownerKind": "Item",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "chat.say.before",
+      "phase": "Before",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "chat.say.after",
+      "phase": "After",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.renamed.after",
+      "phase": "After",
+      "eventClrType": "EntityLifecycleHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.character.assigned.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.character.unassigned.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "character.created.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.recipient.before",
+      "phase": "Before",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.recipient.after",
+      "phase": "After",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.created.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.hydrated.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.first_login.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.credentials.changed.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.login.before",
+      "phase": "Before",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.login.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.login.failed.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.disconnect.before",
+      "phase": "Before",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "account.disconnect.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Account",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "scheduler.job.created.after",
+      "phase": "After",
+      "eventClrType": "ScheduleHookEvent",
+      "ownerKind": "Scheduler",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "scheduler.job.hydrated.after",
+      "phase": "After",
+      "eventClrType": "ScheduleHookEvent",
+      "ownerKind": "Scheduler",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "scheduler.job.delete.before",
+      "phase": "Before",
+      "eventClrType": "ScheduleHookEvent",
+      "ownerKind": "Scheduler",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "scheduler.job.validity.query",
+      "phase": "Query",
+      "eventClrType": "QueryHookEvent",
+      "ownerKind": "Scheduler",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "scheduler.job.started.after",
+      "phase": "After",
+      "eventClrType": "ScheduleHookEvent",
+      "ownerKind": "Scheduler",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "scheduler.job.paused.after",
+      "phase": "After",
+      "eventClrType": "ScheduleHookEvent",
+      "ownerKind": "Scheduler",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "scheduler.job.stopped.after",
+      "phase": "After",
+      "eventClrType": "ScheduleHookEvent",
+      "ownerKind": "Scheduler",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "host.started.after",
+      "phase": "After",
+      "eventClrType": "HostHookEvent",
+      "ownerKind": "Host",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.created.after",
+      "phase": "After",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.prefix.query",
+      "phase": "Query",
+      "eventClrType": "QueryHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.message.before",
+      "phase": "Before",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.message.after",
+      "phase": "After",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.member.join.before",
+      "phase": "Before",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.member.join.after",
+      "phase": "After",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.member.leave.before",
+      "phase": "Before",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.member.leave.after",
+      "phase": "After",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.hydrated.after",
+      "phase": "After",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.senders.format.query",
+      "phase": "Query",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.external.format.query",
+      "phase": "Query",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "channel.message.format.query",
+      "phase": "Query",
+      "eventClrType": "ChannelHookEvent",
+      "ownerKind": "Channel",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "command.execute.before",
+      "phase": "Before",
+      "eventClrType": "CommandHookEvent",
+      "ownerKind": "Command",
+      "returnClrType": "HookDecision",
+      "behavior": "pre-commit: veto/append/replace subject to base invariants",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "command.execute.after",
+      "phase": "After",
+      "eventClrType": "CommandHookEvent",
+      "ownerKind": "Command",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "command.parse.query",
+      "phase": "Query",
+      "eventClrType": "CommandHookEvent",
+      "ownerKind": "Command",
+      "returnClrType": "HookQueryResult",
+      "behavior": "pure query: returns presentation/availability only",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "command.set.created.after",
+      "phase": "After",
+      "eventClrType": "CommandHookEvent",
+      "ownerKind": "Command",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "session.synchronized.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Session",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "session.login.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Session",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "session.disconnect.after",
+      "phase": "After",
+      "eventClrType": "AccountHookEvent",
+      "ownerKind": "Session",
+      "returnClrType": "HookDecision",
+      "behavior": "post-commit: EnqueueAfter for new durable changes",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.name.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.numbered_name.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.header.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.desc.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.exits.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.characters.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.things.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    },
+    {
+      "id": "entity.appearance.footer.query",
+      "phase": "Query",
+      "eventClrType": "PresentationQueryEvent",
+      "ownerKind": "Entity",
+      "returnClrType": "HookQueryResult",
+      "behavior": "Pure view-specific presentation query; native visibility is checked first; no effects",
+      "runtimeImplemented": false
+    }
+  ]
+}
