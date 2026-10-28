@@ -23,22 +23,22 @@
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **0/8** | S00 + owner ADRs | PLANNED |
 | [S02](#s02) | Launchable application shell and shared UI | **0/10** | S01 UI/platform choice | PLANNED |
-| [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
-| [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
-| [S05](#s05) | Rooms and exits | **0/12** | S03,S04 | PLANNED |
-| [S06](#s06) | Command harness | **0/19** | S04,S05 | PLANNED |
+| [S03](#s03) | Native ECS | **0/11** | S01 | PLANNED |
+| [S04](#s04) | Assets and persistence | **0/20** | S03 | PLANNED |
+| [S05](#s05) | Rooms and exits | **0/13** | S03,S04 | PLANNED |
+| [S06](#s06) | Command harness | **0/20** | S04,S05 | PLANNED |
 | [S07](#s07) | Loopback host and secure input | **0/22** | S04,S06 | PLANNED |
-| [S08](#s08) | Playable client and toolkit | **0/23** | S07.9,S02.2–4 | PLANNED |
-| [S09](#s09) | Creator tools, real map and Data Manager | **0/25** | S04–S06,S02 | PLANNED |
-| [S10](#s10) | World events | **0/5** | S08.6 | PLANNED |
-| [S11](#s11) | Quests | **0/6** | S08.6 | PLANNED |
+| [S08](#s08) | Playable client and toolkit | **0/24** | S07.9,S02.2–4 | PLANNED |
+| [S09](#s09) | Creator tools, real map and Data Manager | **0/27** | S04–S06,S02 | PLANNED |
+| [S10](#s10) | World events | **0/7** | S08.6 | PLANNED |
+| [S11](#s11) | Quests | **0/7** | S08.6 | PLANNED |
 | [S12](#s12) | Transit | **0/5** | S10,S08.6 | PLANNED |
-| [S13](#s13) | Scripts and graphs | **0/21** | S07,S08.6,S09 | PLANNED |
+| [S13](#s13) | Scripts and graphs | **0/22** | S07,S08.6,S09 | PLANNED |
 | [S14](#s14) | Account/character Creator workflows | **0/9** | S04,S07,S08,S09,S13 | PLANNED |
-| [S15](#s15) | World authoring | **0/8** | S10,S12,S13 | PLANNED |
+| [S15](#s15) | World authoring | **0/9** | S10,S12,S13 | PLANNED |
 | [S16](#s16) | Quest authoring | **0/6** | S11,S13 | PLANNED |
 | [S17](#s17) | Public hosting | **0/20** | S07,S08,S13 | PLANNED |
-| [S18](#s18) | Release audit | **0/17** | All preceding | PLANNED |
+| [S18](#s18) | Release audit | **0/18** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -115,6 +115,7 @@
 | **S03.8 Core harness** | Lifecycle tests and metrics | TODO | — |
 | **S03.9 Authorization primitives** | Typed Account/Character/Session references, scoped capability checks and deny-safe evaluator | TODO | — |
 | **S03.10 S03.10 Generic container capability** | Add ContainerCapability to any ECS entity, acyclic single-parent custody, versioned capacity/index queries and native hierarchy tests | TODO | — |
+| **S03.11 NPC actor ECS capability** | NpcActorCapability and versioned Blueprint/role composition on ordinary entities; no Character subclass or mandatory combat stats | TODO | — |
 
 ## S04 — Assets and persistence
 
@@ -144,6 +145,7 @@
 | **S04.17 Model setup wizard integration** | Use real pack manager from S02 wizard: hardware-recommended compatible models, live download/retry/resume/progress, verification, disk/free-space check and uninstall in-app | TODO | — |
 | **S04.18 S04.18 Durable item stacks and inventory state** | Persist item definitions/instances, quantities, parent/version, container/equipment bindings, recovery and indexed paged contents | TODO | — |
 | **S04.19 S04.19 Inventory explorer UI** | Open a world and move test items between real generic ECS containers; verify inventory persists across restart in app | TODO | — |
+| **S04.20 NPC Blueprint and controller persistence** | Save template inheritance/overrides, NPC instance state, spawn origin, patrol index, scheduled state and service inventory with restart verification | TODO | — |
 
 ## S05 — Spatial containment
 
@@ -166,6 +168,7 @@
 | **S05.10 Combat spatial queries** | Authenticated combat range/LOS/hearing topology queries with grid cells, room hops, obstacles and visibility; show range overlay in existing room test UI | TODO | — |
 | **S05.11 S05.11 Authorized inventory custody** | Native get/put/drop/open/close and nested-container permission/range/capacity transaction with failure atomicity and authoritative observer output | TODO | — |
 | **S05.12 LOOK perception and detail resolver** | Visible entity/exit/room/detail candidate lookup, alias and disambiguation, per-observer sense/quest restrictions and hidden-target denial in shell | TODO | — |
+| **S05.13 NPC perception and navigation** | Per-observer entry/leave/hearing, safe area/path movement and blocked-route feedback through normal world topology | TODO | — |
 
 ## S06 — Command runtime
 
@@ -197,6 +200,7 @@
 | **S06.17 S06.17 Trade and stack operations** | Atomic split/merge, transfer and bounded trade escrow with retry/reconnect dedup and in-app two-actor tests | TODO | — |
 | **S06.18 LOOK family commands and appearance composition** | Implement look/l/ls, look at/in/on/under/behind/through, examine, visible aliases, sections, bounded pagination through one real command executor | TODO | — |
 | **S06.19 LOOK in-app command tests** | Use S02 live shell to inspect two visible objects, ambiguous names, hidden details and a closed container; compare authoritative output and permission failures | TODO | — |
+| **S06.20 NPC interaction gateway** | Authorized interact/talk/service command resolution and typed NPC action intentions through native command service with real shell tests | TODO | — |
 
 ## S07 — Remote player input
 
@@ -266,6 +270,7 @@
 | **S08.21 Player combat interface** | Action palette, target selection, turn/tick or cast state, cooldown and combat narration; visible disconnected/reconnecting state and resynced turn on reattach; no client-side resolution | TODO | — |
 | **S08.22 S08.22 Inventory and equipment Player UI** | Accessible inventory, nested containers, drag/drop and text command parity, stack split, equipment slots and errors through real client | TODO | — |
 | **S08.23 Player LOOK inspector** | Touchable/keyboard room, object, character, exit, detail and container inspection; same scoped look results as typed text command | TODO | — |
+| **S08.24 Player NPC services interface** | Real Player dialog, inspect, trade/service access and NPC interaction feedback with authorization and text fallback | TODO | — |
 
 ## S09 — Visual command editor
 
@@ -303,6 +308,8 @@
 | **S09.23 S09.23 Inventory Studio presets** | In existing Blueprint inspector make any entity a container via Basic Bag/Chest/Character/Equipment/Storage/Vendor/Stash/Custom presets | TODO | — |
 | **S09.24 S09.24 Inventory live Creator test** | In-app item/container inspector tests capacities, permissions, nesting, equipment, two-player transfers and persistence; no fake state | TODO | — |
 | **S09.25 Appearance and LOOK authoring** | Existing Creator inspector edits description variants, named virtual details, relations, conditional views, layout and per-role visibility with live View-as-Character preview | TODO | — |
+| **S09.26 NPC Studio presets and combined roles** | One-click Idle/Wanderer/Guard/Enemy/Flee/Quest/Merchant/Trader/Auctioneer/Banker/Custom assets via existing Blueprint inspector | TODO | — |
+| **S09.27 NPC Studio live preview** | In-app route/aggro/hearing overlays, trigger inspector, NPC state view, service transactions and two-player test UI | TODO | — |
 
 ## S10 — World systems
 
@@ -320,6 +327,8 @@
 | **S10.3 Spawner** | Timed/entity spawning and despawning | TODO | — |
 | **S10.4 World interaction** | Conditional world systems and environmental effects | TODO | — |
 | **S10.5 NPC combat disposition and aid** | Typed neutral/aggressive/passive, level/range/faction aggro, threat, authorized sound calls, ally assistance and leash behavior with in-app trigger controls | TODO | — |
+| **S10.6 NPC controller, patrol and bounded reactions** | Event-driven idle/wander/patrol/assist/retreat state machine using shared scheduler, bounded action queue and real hosted movement | TODO | — |
+| **S10.7 NPC runtime playtest** | Live test patrolling guard, coward enemy, passive NPC and ally aid with interruption/recovery and multiple simultaneous NPCs | TODO | — |
 
 ## S11 — Quests
 
@@ -338,6 +347,7 @@
 | **S11.4 Quest testing panel** | In-app quest accept/dialogue/objective/reward view using real character and live quest service | TODO | — |
 | **S11.5 Rewards/phasing** | Atomic claim, bonus roll and phased NPC | TODO | — |
 | **S11.6 Quest recovery** | Persist and resume quest/session after restart | TODO | — |
+| **S11.7 NPC quest role integration** | Same NPC can offer, intermediate-credit, remind and turn in distinct quests per player without duplicating quest ledger | TODO | — |
 
 ## S12 — Transit
 
@@ -388,6 +398,7 @@
 | **S13.19 Custom combat end-to-end UI test** | In running Creator and two-player Client, publish a C# manager with entirely custom rules, actions and result display; audit hooks, crashes, movement/permission denial, restart and no duplicate effects | TODO | — |
 | **S13.20 S13.20 Inventory graph and C# lifecycle** | Implement registered inventory hook DTOs, proposal effects and graph parity with exact JSON/CLR/Protobuf IDs, capability and negative tests | TODO | — |
 | **S13.21 LOOK hook and graph parity** | Implement registered look.query/observed and entity.appearance hook IDs across native, CLR, Proto and graph, ensure pure query and authorized post-read triggers | TODO | — |
+| **S13.22 NPC C# and graph lifecycle parity** | Implement exact npc.* registered events, NpcLifecycleEvent/NpcServiceEvent and NpcBehaviorEffect with native permission checks, graph parity and hostile inputs | TODO | — |
 
 ## S14 — Account & Character Studio
 
@@ -426,6 +437,7 @@
 | **S15.6 NPC world authoring integration** | World designers place/configure NPC Blueprint and dialogue triggers via existing visual nodes and published script effects; test real room events | TODO | — |
 | **S15.7 Encounter Blueprint authoring** | Place encounters, NPC combat behaviors, aid/chase and boss stages using existing node graph and published asset pipeline; full in-app playtest | TODO | — |
 | **S15.8 S15.8 Item/loot/merchant authoring** | Creator places stock, loot, corpse containers, escrow and crafting-related inventories with real transfer and Player playtest | TODO | — |
+| **S15.9 NPC service world authoring** | Place/publish mixed-role NPCs, trader/auction/bank services, route plans and spawn ownership with actual Player playtest | TODO | — |
 
 ## S16 — Quest editing
 
@@ -505,6 +517,7 @@
 | **S18.15 Combat scenario audit** | Independently test pulse/turn/realtime/hybrid, PvP, hearing/chase, custom stats, durability, replay, disconnect, safe zones, low-end load and malicious scripts | TODO | — |
 | **S18.16 S18.16 Inventory integrity audit** | Audit duplicate custody, loops, stack overflow, theft/permissions, deadlock/races, reconnect, equip conflicts, moving transport and million-item paging | TODO | — |
 | **S18.17 LOOK security and performance audit** | Fuzz hidden names, private containers, duplicate aliases, phasing, quest/time variants, stale reconnect, 10k room targets and accessibility | TODO | — |
+| **S18.18 NPC behavior and service audit** | Stress many idle/active NPCs, patrol locks, phased targets, quest split states, merchant/auction/bank custody, crash/restart, low-end CPU and privilege isolation | TODO | — |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
