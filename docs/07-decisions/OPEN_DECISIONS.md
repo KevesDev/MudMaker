@@ -6,22 +6,22 @@
 |---|---|---|
 | ADR-001 | Headless engine selection: C++ ECS (preferred candidate under research) vs managed engine/legacy Java; portable packaging, runtime threading/memory safety, engine independent of UI framework | OPEN: blocks S03 implementation stack |
 | ADR-002 | ECS internal storage (archetype/sparse-set/hybrid), component value model, entity ID generation, dynamic schema layout | OPEN: blocks S03 |
-| ADR-003 | World writer concurrency, system phases, deterministic ordering and transaction semantics | OPEN: blocks S03 |
+| ADR-003 | World writer concurrency, system phases, deterministic ordering and transaction semantics | DECIDED behavioral boundary: one serialized world writer, immutable read snapshots, bounded proposal queues, stable commit order; see ECS core. Internal scheduling performance remains an implementation test. |
 | ADR-004 | Project asset format, world persistence database (SQLite/H2/other), snapshot/event log, schema migration | OPEN: blocks S04 |
 | ADR-005 | Editor/platform architecture: browser-first/PWA + optional Tauri vs alternative; offline editing/hosting and tablet support matrix | OPEN: blocks UI packaging S02 |
 | ADR-006 | Creator scripting language and worker interface | **DECIDED v1:** standard C# 14 / .NET 10, local host-published only, separate bounded worker, Protobuf IPC. [Source](../03-contracts/scripting-v1/01-decisions-and-evidence.md). OS profiles pending verification, not selection. |
 | ADR-007 | Graph semantics and integration | **DECIDED v1:** typed graph plan, identical HookDecision/GameEffect API to code. Compiler internals/performance remain implementation evidence gate. [Graph contract](../03-contracts/scripting-v1/06-graph-parity-and-publishing.md). |
 | ADR-008 | Runtime wire protocol, legacy MUD adapters, reconnection semantics, auth provider | OPEN: blocks S07 |
 | ADR-009 | MudMaker game hosting model | **DECIDED:** every user may create/host games and play games hosted by others; only game host's locally authored/published scripts execute. GUI/headless host parity required; transport/NAT/TLS details still OPEN. [Host contract](../03-contracts/scripting-v1/08-local-host-integration.md). |
-| ADR-010 | Spatial parent semantics for nested rooms, route progress interpolation, dynamic exit binding/capacity policy | PROPOSED spec requires confirmation before S05/S12 |
-| ADR-011 | World time: real-time vs turn-based coexistence, pause/catch-up, persistent timers, event delivery guarantee | OPEN: blocks S06/S10 |
+| ADR-010 | Spatial parent semantics for nested rooms, route progress interpolation, dynamic exit binding/capacity policy | DECIDED location semantics: one physical parent, separately typed graph exit links, trusted dynamic destination and atomic move/docking transaction; see spatial/containment and ECS exits. |
+| ADR-011 | World time: real-time vs turn-based coexistence, pause/catch-up, persistent timers, event delivery guarantee | DECIDED clock/recovery: UTC world-clock mapping, pause freezes simulation deadlines, one coalesced recovery per periodic scheduler entry, durable deduped events; see time/events world systems. |
 | ADR-012 | Quantitative workload and resource budgets, OS/test devices and accessibility conformance target | OPEN: blocks performance/release claims |
 | ADR-013 | Editing/deploying script releases | **DECIDED:** stop → edit/compile → validate/publish → restart; no hot reload required. Persistent migration/rollback must be verified before S17. |
-| ADR-014 | Blueprint inheritance/child templates, component schema permissions and custom type UI | OPEN: blocks S04/S09 details |
+| ADR-014 | Blueprint inheritance/child templates, component schema permissions and custom type UI | DECIDED template inheritance and UI semantics: one parent pin, max 16 ancestry, typed overrides/tombstones, one universal template library with project tags; see reusable templates and variants. |
 | ADR-015 | Default product game template/command set, onboarding, traditional telnet/SSH clients | OPEN: design and release documentation |
 | ADR-016 | Host isolation and script fault containment | **DECIDED boundary:** locally host-authored scripts only; no incoming player code/script uploads. Separate bounded worker; exact OS profile/benchmarks OPEN. [Host security](../03-contracts/scripting-v1/05-wire-security-recovery.md). |
 
-| ADR-017 | Event narration template precedence, audience snapshot timing, idempotent message delivery, visibility/hidden identities | OPEN: blocks observer delivery implementation |
+| ADR-017 | Event narration template precedence, audience snapshot timing, idempotent message delivery, visibility/hidden identities | DECIDED observer transport guarantee: host committed event/outbox, at-least-once transport with recipient+event deduplication, viewer-redacted snapshots and idempotent rendering; see narration/observers. |
 | ADR-018 | Quest state scopes and lifecycle / objective attribution; prerequisite and reward atomicity; repeat policies | OPEN: blocks S11 |
 | ADR-019 | Phasing vs private instance rules, observer filtering, cache invalidation, group sync/replay, private instance ownership/persistence | OPEN: blocks S11/S07 |
 | ADR-020 | Quest dialogue session semantics, branch precedence, condition schema and post-completion visibility | OPEN: blocks S11/S16 |
