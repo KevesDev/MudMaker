@@ -73,3 +73,7 @@ Host UI: database Ready / Starting / Migrating / Busy / Recovery Needed status; 
 - **S18:** full cross-platform, concurrency, security, high-volume and disaster recovery audit.
 
 No new separate giant “database sprint”: database foundations belong early in S04, management belongs in Creator work, hosting/backup lifecycle belongs in S17. All tracker phases retain central status/evidence ownership.
+
+## Universal template library persistence
+
+[Canonical template management and variations](reusable-templates-and-variants.md) use the project's embedded DB and immutable published asset revisions. Persist folders, tags, searches/saved views, lineage, instance overrides, aliases, audit and where-used indexes across reopen/restart/backup. Rename by stable ID; delete only unreferenced draft assets after review; archive otherwise. S04 stores/indexes it and S09 exposes the full searchable graphical library.
