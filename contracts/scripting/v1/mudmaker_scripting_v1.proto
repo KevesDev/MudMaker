@@ -184,6 +184,13 @@ message NpcLifecycleEvent { string event_id = 1; EntityRef npc = 2; EntityRef ac
 message NpcServiceEvent { string event_id = 1; EntityRef npc = 2; EntityRef customer = 3; AssetRef service = 4; string operation_code = 5; EntityRef item = 6; int64 quantity = 7; uint64 expected_revision = 8; string request_key = 9; }
 message NpcBehaviorEffect { EntityRef npc = 1; string action_code = 2; EntityRef target = 3; AssetRef asset = 4; string argument_key = 5; PropertyValue value = 6; uint64 expected_revision = 7; }
 
+// Exit traversal and linked door-state operations (native authority).
+enum DoorState { DOOR_STATE_UNSPECIFIED = 0; DOOR_OPEN = 1; DOOR_CLOSED = 2; DOOR_LOCKED = 3; DOOR_SEALED = 4; DOOR_DESTROYED = 5; }
+message ExitTraversalEvent { string event_id = 1; EntityRef actor = 2; EntityRef exit = 3; EntityRef origin = 4; EntityRef authorized_destination = 5; string outcome_code = 6; string safe_reason_code = 7; uint64 expected_exit_revision = 8; }
+message DoorStateEvent { string event_id = 1; EntityRef actor = 2; EntityRef exit = 3; EntityRef door_state_owner = 4; DoorState previous_state = 5; DoorState next_state = 6; string action_code = 7; uint64 expected_revision = 8; }
+message TraversalOperationEvent { string event_id = 1; string operation_id = 2; EntityRef actor = 3; EntityRef exit = 4; EntityRef origin = 5; string operation_state = 6; string deadline_utc = 7; string safe_reason_code = 8; uint64 expected_revision = 9; }
+message ExitBehaviorEffect { EntityRef actor = 1; EntityRef exit = 2; string action_code = 3; EntityRef destination = 4; DoorState new_door_state = 5; string operation_id = 6; uint64 expected_revision = 7; }
+
 message HookEvent {
   oneof kind {
     BaseEvent npc_interact = 1;
@@ -221,6 +228,9 @@ message HookEvent {
     LookObservedEvent look_observed = 33;
     NpcLifecycleEvent npc_lifecycle = 34;
     NpcServiceEvent npc_service = 35;
+    ExitTraversalEvent exit_traversal = 36;
+    DoorStateEvent door_state = 37;
+    TraversalOperationEvent traversal_operation = 38;
   }
 }
 enum HookPhase { HOOK_PHASE_UNSPECIFIED = 0; BEFORE = 1; AFTER = 2; QUERY = 3; }
@@ -298,6 +308,7 @@ message GameEffect {
     InventoryTradeEffect inventory_trade = 20;
     CombatManagerEffect combat_manager = 21;
     NpcBehaviorEffect npc_behavior = 22;
+    ExitBehaviorEffect exit_behavior = 23;
   }
 }
 enum Disposition {
