@@ -119,7 +119,7 @@
     "Message kind is EXPLICIT and authenticated; length is never used to infer whether input is a command, RP post, or description.",
     "A command may have long or multiline typed arguments when its host-published grammar explicitly allows them; the server parses ONE command and never executes embedded lines as commands.",
     "All command and prose paths are subject to per-field/command budgets and the same hard frame and resource ceilings.",
-    "These are selected initial defaults, not Evennia/OWASP prescribed numbers; benchmark S08/S13/S14 before declaring safe operational capacity.",
+    "These are selected initial defaults, not Evennia/OWASP prescribed numbers; benchmark S07/S17/S18 before declaring safe operational capacity.",
     "The host can change per-command and per-field limits within non-disableable protective hard ceilings."
   ]
 }
