@@ -23,3 +23,5 @@
 **Inventory delivery:** S03 generic containment → S04 durable item inventory + in-app explorer → S05 authorized custody → S06 get/put/equip/trade commands → S08 Player inventory → S09 one-click Creator container presets → S13 typed C#/graph parity → S15 merchant/loot placement → S18 adversarial audits. [Inventory contract](../03-contracts/inventory-and-containers.md).
 
 **LOOK delivery:** S05 observer-scoped target/detail resolver → S06 full LOOK command with live shell test → S08 native Player inspection → S09 Creator Appearance & LOOK editing → S13 registered C#/visual hook parity → S18 privacy/scale audit. [Contract](../03-contracts/look-and-perception.md).
+
+**NPC delivery:** S03 capability → S04 persistence → S05 perception/navigation → S06 interact gateway → S08 Player services → S09 NPC Studio → S10 autonomous controllers/playtest → S11 quest roles → S13 typed C#/graph hooks → S15 service placements → S18 autonomous NPC audit. [NPC contract](../03-contracts/npc-templates-and-behaviors.md).
