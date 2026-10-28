@@ -17,3 +17,5 @@
 **IDs are now sequential and canonical.** Execution follows the actual rows above—not numeric sorting or hidden parallel exceptions. S02 must create a real app window before phases expecting human UI inspection. S09.16–18 require S04/S05 and the S02 shell. S07.9 requires the real native command authority; S08.6 requires S07.9 and the working S02 shell. E1 is a harness, E2 is local play, E3 is public hosting.
 
 **Contracts:** [Local database](../03-contracts/local-database-and-data-manager.md), [prompt/map](../03-contracts/prompt-and-world-map.md), [accounts/character creation](../03-contracts/account-character-lifecycle.md). All phase status/evidence lives in [the tracker](../SPRINT-TRACKING.md).
+
+**Combat delivery:** S05 spatial adapters → S06 real duel UI → S07 clock modes and live host test → S08 Player action controls → S09 Creator combat presets and graph playtest → S10 hostile NPC assistance → S12 escape/pursuit → S13 C# hook parity → S15 encounter authoring → S18 adversarial audit. [Combat contract](../03-contracts/combat-and-encounters.md). Each functional gate includes real in-app testing, not a postponed GUI.
