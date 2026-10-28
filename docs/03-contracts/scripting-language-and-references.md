@@ -20,4 +20,4 @@ Native C# punctuation is never rewritten. Use Roslyn diagnostics/autocomplete an
 A game creator edits their **local** script assets while the host is stopped, compiles, publishes an immutable release and restarts their hosted world. The isolated C# worker loads only that published module. Remote players send authenticated gameplay commands, never scripts or code. [Concrete compile/publish/restart flow](scripting-v1/09-build-publish-restart-run.md) and [worker IPC](scripting-v1/05-wire-security-recovery.md) are authoritative.
 
 ## Verification
-All source and protocol projects must pass real toolchain compilation and integration before called functional; exact [S13 phases](../05-sprints/specs/S13.md) and [S17 phases](../05-sprints/specs/S17.md). Do not infer behavior from C# examples alone.
+All source and protocol projects must pass real toolchain compilation and integration before called functional; exact [S13 phases](../05-sprints/specs/S17.md) and [S17 phases](../05-sprints/specs/S17.md). Do not infer behavior from C# examples alone.
