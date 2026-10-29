@@ -99,7 +99,7 @@ This section maps **every currently registered control** to a visual home. It is
 
 **Presentation:** List affected sessions; preserve local drafts; never Keep Connected & Switch.
 
-**Registered features (5):** `client.navigationGuard.01` Connected Games; `client.navigationGuard.02` Keep Connected and Switch; `client.navigationGuard.03` Disconnect and Switch; `client.navigationGuard.04` Cancel; `client.navigationGuard.05` Unsent Draft.
+**Registered features (4):** `client.navigationGuard.01` Connected Games; `client.navigationGuard.03` Disconnect and Switch; `client.navigationGuard.04` Cancel; `client.navigationGuard.05` Unsent Draft.
 
 ## Visual audit rule for this workspace
 
