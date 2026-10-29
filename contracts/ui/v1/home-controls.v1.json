@@ -806,12 +806,12 @@
       "workspace": "home",
       "surface": "home.splash",
       "kind": "status",
-      "label": "Background Hosting",
-      "tooltip": "Show running hosted project and health when applicable",
+      "label": "Active World",
+      "tooltip": "Show Active World: {world} only while a world is hosted by this app",
       "actionId": null,
       "stateOwner": "HomeState",
       "permission": "localUser",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "hostIsRunning",
       "enabledWhen": "notApplicable",
       "stateVariants": [
         "visible",
@@ -821,27 +821,6 @@
       ],
       "keyboard": "semanticRead",
       "testId": "UI-home-splash-09"
-    },
-    {
-      "id": "home.splash.10",
-      "workspace": "home",
-      "surface": "home.splash",
-      "kind": "status",
-      "label": "Connected Worlds",
-      "tooltip": "Show active client sessions without implying Editor is connected",
-      "actionId": null,
-      "stateOwner": "HomeState",
-      "permission": "localUser",
-      "visibleWhen": "surfaceActive",
-      "enabledWhen": "notApplicable",
-      "stateVariants": [
-        "visible",
-        "empty",
-        "loading",
-        "error"
-      ],
-      "keyboard": "semanticRead",
-      "testId": "UI-home-splash-10"
     },
     {
       "id": "home.splash.11",
@@ -865,12 +844,12 @@
       "testId": "UI-home-splash-11"
     },
     {
-      "id": "home.splash.12",
+      "id": "home.settings.07",
       "workspace": "home",
-      "surface": "home.splash",
+      "surface": "home.settings",
       "kind": "dropdown",
-      "label": "Appearance",
-      "tooltip": "Choose the color preset for every MudMaker screen",
+      "label": "Appearance Preset",
+      "tooltip": "Choose the appearance preset in Settings > Appearance",
       "actionId": "ui.settings.appearance.preset",
       "stateOwner": "HomeState",
       "permission": "localUser",
