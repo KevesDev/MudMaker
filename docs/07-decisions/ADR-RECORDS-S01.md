@@ -25,6 +25,14 @@
 **Alternatives rejected:** Electron (larger footprint, no tablet target), browser-only (no native window or one-click hosting).
 **Launch command:** `npm run tauri dev` from `app/` (see S01.7).
 
+## S01.5 measured outcome (2026-10-28)
+Evidence: [spike results](../../engine/spikes/ecs-storage/results/results-2026-10-29.md), [spec](../05-sprints/specs/S01-5-SPEC.md). Single machine (i9-14900K, pinned P-core, MSVC Release); numbers are a floor for S03, not release budgets.
+**ADR-002 confirmed, with two binding refinements:**
+- Components read together by hot multi-component queries live in archetype storage. After churn, archetype iteration was 2.3x to 11.4x faster than sparse (2-term and 3-term at 1M entities, fragmented world), and archetype iteration barely degrades with fragmentation.
+- Sparse-set storage is for tags and components toggled at high rates: tag add/remove was 3.6x to 5.9x faster than archetype in steady state. Sparse components must not appear in hot multi-component queries. Sparse destroy was slower (p50 89 ns vs 34 ns at 100k).
+**ADR-012:** engine regression rule for S03 is that each matching S03 workload must not be slower than the spike's on the same hardware, with the workload definitions in the spike. Device matrix, accessibility target and release budgets stay OPEN and require measurement on supported devices.
+**Limits of this evidence:** one machine, one thread, 9 to 17 archetypes, UBSan unavailable on this MSVC toolchain (ASan ran on tests only). Latency rows flagged in the results are reported as measured.
+
 ## Versioning
 SemVer. Pre-release `0.x` until S18. The repo-root `VERSION` file is the single source; `app/package.json`, `app/src-tauri/Cargo.toml`, `app/src-tauri/tauri.conf.json` and the engine CMake project must equal it. A check script fails the build on drift.
 
