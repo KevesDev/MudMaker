@@ -5,43 +5,43 @@
 | Need | Authority | Status |
 |---|---|---|
 | What are we building and why? | [Vision + scenarios](01-product/vision-and-scenarios.md) | REQUIRED |
-| Desktop, tablet, nontechnical editor workflows | [UX + platforms](01-product/ux-and-platform.md) | REQUIRED goals; PROPOSED interaction contract |
-| Module boundaries and ownership | [System boundaries](02-architecture/system-boundaries.md) | PROPOSED |
-| Entity/component/system/query semantics | [ECS core](02-architecture/ecs-core.md) | REQUIRED architecture; PROPOSED contract |
-| Rooms, containers, moving trains, exits, spatial graph | [Spatial / containment / transit](02-architecture/spatial-containment-transit.md) | REQUIRED scenario; PROPOSED invariants |
-| Weather, spawners, events, time and scheduling | [Time / events / world systems](02-architecture/time-events-world-systems.md) | REQUIRED features; PROPOSED mechanics |
-| Quest runtime, progression, phased NPCs, private instances | [Quest progression and phasing](02-architecture/quest-progression-and-phasing.md) | REQUIRED behavior; PROPOSED engine contract |
-| **Automatic local databases, Creator Data Manager, optional backup, safe restore, access controls** | [Local storage and Data Manager](03-contracts/local-database-and-data-manager.md) | REQUIRED experience; PROPOSED implementation pending ADR |
-| Durable state, prototypes, versions, save/restore | [State / persistence](02-architecture/state-persistence.md) | PROPOSED |
-| Keyboard/touch/text input and game command pipeline | [Commands + input](03-contracts/commands-and-input.md) | REQUIRED ownership; PROPOSED contract |
-| Player-visible room/train/interactions narration and audiences | [Narration/observers](03-contracts/narration-and-observers.md) | REQUIRED behavior; PROPOSED contract |
-| Quest condition evaluator, dialogue, typed objective event | [Quest conditions/dialogue](03-contracts/quest-conditions-and-dialogue.md) | PROPOSED |
-| Modern Code & Visual Graph scripting UI (indexed tabs) | [Scripting UX](04-features/scripting/INDEX.md) | REQUIRED modes; PROPOSED UI |
+| Desktop, tablet, nontechnical editor workflows | [UX + platforms](01-product/ux-and-platform.md) | REQUIRED goals; BINDING DESIGN interaction contract |
+| Module boundaries and ownership | [System boundaries](02-architecture/system-boundaries.md) | BINDING DESIGN |
+| Entity/component/system/query semantics | [ECS core](02-architecture/ecs-core.md) | REQUIRED architecture; BINDING DESIGN contract |
+| Rooms, containers, moving trains, exits, spatial graph | [Spatial / containment / transit](02-architecture/spatial-containment-transit.md) | REQUIRED scenario; BINDING DESIGN invariants |
+| Weather, spawners, events, time and scheduling | [Time / events / world systems](02-architecture/time-events-world-systems.md) | REQUIRED features; BINDING DESIGN mechanics |
+| Quest runtime, progression, phased NPCs, private instances | [Quest progression and phasing](02-architecture/quest-progression-and-phasing.md) | REQUIRED behavior; BINDING DESIGN engine contract |
+| **Automatic local databases, Creator Data Manager, optional backup, safe restore, access controls** | [Local storage and Data Manager](03-contracts/local-database-and-data-manager.md) | REQUIRED experience; BINDING DESIGN implementation pending ADR |
+| Durable state, prototypes, versions, save/restore | [State / persistence](02-architecture/state-persistence.md) | BINDING DESIGN |
+| Keyboard/touch/text input and game command pipeline | [Commands + input](03-contracts/commands-and-input.md) | REQUIRED ownership; BINDING DESIGN contract |
+| Player-visible room/train/interactions narration and audiences | [Narration/observers](03-contracts/narration-and-observers.md) | REQUIRED behavior; BINDING DESIGN contract |
+| Quest condition evaluator, dialogue, typed objective event | [Quest conditions/dialogue](03-contracts/quest-conditions-and-dialogue.md) | BINDING DESIGN |
+| Modern Code & Visual Graph scripting UI (indexed tabs) | [Scripting UX](04-features/scripting/INDEX.md) | REQUIRED modes; BINDING DESIGN UI |
 | Native engine vs C# vs DSL technical comparison | [Engine/scripting architecture research](08-research/engine-and-scripting-architecture-comparison.md) | RESEARCH / CHOICE RECORDED |
 | Script language, API references, # @ {} shorthand proposals | [Language and syntax](03-contracts/script-languages-shortcuts-and-symbols.md) | HISTORICAL / CHOICE RECORDED |
-| Memory ownership, C++ handles and script isolation | [Memory and script safety](03-contracts/script-memory-ownership-and-safety.md) | REQUIRED safety; PROPOSED contract |
-| Unified code/graph runtime and API | [Scripting runtime/ABI](03-contracts/scripting-runtime-and-capabilities.md) | PROPOSED |
-| Nodes, custom scripts, execution and APIs | [Scripting + graph](03-contracts/scripting-and-graph.md) | REQUIRED capability; PROPOSED interfaces |
-| Remote protocol, sessions, hosting runtime | [Protocol + hosting](03-contracts/protocol-and-hosting.md) | PROPOSED |
-| Quest system detailed tabs and subtabs | [Quest specifications](04-features/quests/INDEX.md) | REQUIRED scope; PROPOSED contracts |
-| Clickable color/icon cells; room panel; exits | [Map editor](04-features/map-editor.md) | REQUIRED behavior; PROPOSED interaction detail |
-| ECS object/Blueprint graphs and inspectors | [Blueprint editor](04-features/blueprint-editor.md) | REQUIRED behavior; PROPOSED graph semantics |
-| Quest and dialogue visual graph editor | [Quest editor](04-features/quest-and-dialogue-editor.md) | REQUIRED UX; PROPOSED mechanics |
-| Bob -> Joe quest visibility/party/instance test oracle | [Bob/Joe scenario](04-features/bob-joe-quest-scenario.md) | REQUIRED story; PROPOSED test matrix |
-| One-click / CLI launch and operations | [Hosting + admin](04-features/hosting-and-admin.md) | REQUIRED behavior; PROPOSED operations |
-| Cross-feature train example and end-to-end oracle | [Train station reference scenario](04-features/train-reference-scenario.md) | REQUIRED story; PROPOSED exact cases |
-| Dependency graph and sprint gate list | [Sprint index](05-sprints/INDEX.md) | PROPOSED |
-| Quest sprint gates and order | [Quest dependencies](05-sprints/quest-implementation-dependencies.md) | PROPOSED |
+| Memory ownership, C++ handles and script isolation | [Memory and script safety](03-contracts/script-memory-ownership-and-safety.md) | REQUIRED safety; BINDING DESIGN contract |
+| Unified code/graph runtime and API | [Scripting runtime/ABI](03-contracts/scripting-runtime-and-capabilities.md) | BINDING DESIGN |
+| Nodes, custom scripts, execution and APIs | [Scripting + graph](03-contracts/scripting-and-graph.md) | REQUIRED capability; BINDING DESIGN interfaces |
+| Remote protocol, sessions, hosting runtime | [Protocol + hosting](03-contracts/protocol-and-hosting.md) | BINDING DESIGN |
+| Quest system detailed tabs and subtabs | [Quest specifications](04-features/quests/INDEX.md) | REQUIRED scope; BINDING DESIGN contracts |
+| Clickable color/icon cells; room panel; exits | [Map editor](04-features/map-editor.md) | REQUIRED behavior; BINDING DESIGN interaction detail |
+| ECS object/Blueprint graphs and inspectors | [Blueprint editor](04-features/blueprint-editor.md) | REQUIRED behavior; BINDING DESIGN graph semantics |
+| Quest and dialogue visual graph editor | [Quest editor](04-features/quest-and-dialogue-editor.md) | REQUIRED UX; BINDING DESIGN mechanics |
+| Bob -> Joe quest visibility/party/instance test oracle | [Bob/Joe scenario](04-features/bob-joe-quest-scenario.md) | REQUIRED story; BINDING DESIGN test matrix |
+| One-click / CLI launch and operations | [Hosting + admin](04-features/hosting-and-admin.md) | REQUIRED behavior; BINDING DESIGN operations |
+| Cross-feature train example and end-to-end oracle | [Train station reference scenario](04-features/train-reference-scenario.md) | REQUIRED story; BINDING DESIGN exact cases |
+| Dependency graph and sprint gate list | [Sprint index](05-sprints/INDEX.md) | BINDING DESIGN |
+| Quest sprint gates and order | [Quest dependencies](05-sprints/quest-implementation-dependencies.md) | BINDING DESIGN |
 | Live sprint tracking checklist | [Sprint tracking](SPRINT-TRACKING.md) | LIVE |
 | Completed sprint history, rationale | [Sprint history](SPRINT-HISTORY.md) | HISTORY |
 | Per-sprint spec template | [Sprint template](05-sprints/specs/SPRINT-SPEC-TEMPLATE.md) | BINDING DESIGN |
-| Sprint scope, deliverables and acceptance | [Sprint specifications](05-sprints/sprint-specifications.md) | PROPOSED |
+| Sprint scope, deliverables and acceptance | [Sprint specifications](05-sprints/sprint-specifications.md) | BINDING DESIGN |
 | Project Lead/Builder/Auditor governance | [CLAUDE.md](../CLAUDE.md), [Builder](../.claude/agents/builder.md), [Auditor](../.claude/agents/auditor.md) | BINDING DESIGN based on supplied agent rules |
 | Token and dispatch limits | [Token and dispatch policy](06-quality/token-and-dispatch-policy.md) | BINDING DESIGN |
 | Rules for AI builders/reviewers | [Agent policy](06-quality/agent-policy.md) | REQUIRED prohibitions; BINDING DESIGN enforcement |
 | Verifiable behavior matrix and test policy | [Test matrix](06-quality/test-matrix.md) | BINDING DESIGN |
 | Trust boundaries, script sandbox, permissions | [Security policy](06-quality/security-policy.md) | BINDING DESIGN |
-| Decisions intentionally not guessed | [Architecture decisions](02-architecture/architecture-decisions.md) | OPEN |
+| Architecture decisions, ownership and release gates | [Architecture decisions](02-architecture/architecture-decisions.md) | BINDING DESIGN; TESTS REQUIRED |
 | Unity, Godot, C++ Flecs / C# research | [Engine research](08-research/engine-and-scripting-architecture-comparison.md) | RESEARCH |
 | C# vs custom DSL and scripting editor references | [Scripting technology research](08-research/scripting-engine-research.md) | RESEARCH |
 | Source-backed quest / WoW / Evennia / dialogue research | [Quest research](08-research/quest-design-research.md) | RESEARCH |
@@ -65,7 +65,7 @@
 - [Native C++ and C# scripting architecture research](08-research/native-engine-and-scripting-options.md)
 
 ## Technical case studies (read only when the task requires the full vertical slice)
-- [Midnight Express: exact proposed ECS data types, four C#-style scripts, C++ ECS world actor, script-worker protocol, graph equivalence, transactional outbox, diagrams and tests](04-features/scripting/07-midnight-express-technical-case-study.md) — PROPOSED technical example, not implemented code.
+- [Midnight Express: exact proposed ECS data types, four C#-style scripts, C++ ECS world actor, script-worker protocol, graph equivalence, transactional outbox, diagrams and tests](04-features/scripting/07-midnight-express-technical-case-study.md) — BINDING DESIGN technical example, not implemented code.
 
 ## Scripting v1 — current agent authority
 - [Scripting API v1: indexed technical contracts, local-host deployment, hooks, refs, persistent engine overrides, C# source, protobuf, test gates](03-contracts/scripting-v1/INDEX.md) — **DECIDED CONTRACT / NOT IMPLEMENTED**. Begin here for scripting work; preceding proposal pages are historical context.
@@ -101,7 +101,7 @@
 
 ## Accounts, character creation and hooks
 
-[Account, character, session, permission, registration/login/logout and one visual workflow graph](03-contracts/account-character-lifecycle.md) — REQUIREMENTS / PROPOSED contract; includes Evennia lifecycle research and version-gated C# hooks. [Dedicated Creator sprint](05-sprints/specs/S14.md) builds on early identity/auth and S13 graphs. Exact hook IDs remain governed by the [scripting registry](03-contracts/scripting-v1/03-hook-registry.md).
+[Account, character, session, permission, registration/login/logout and one visual workflow graph](03-contracts/account-character-lifecycle.md) — REQUIREMENTS / BINDING DESIGN contract; includes Evennia lifecycle research and version-gated C# hooks. [Dedicated Creator sprint](05-sprints/specs/S14.md) builds on early identity/auth and S13 graphs. Exact hook IDs remain governed by the [scripting registry](03-contracts/scripting-v1/03-hook-registry.md).
 
 **Optional local NPC dialogue:** [CPU-first embedded model research, roleplay boundaries and hardware gates](03-contracts/optional-local-npc-dialogue.md). Off by default; the wizard is S02, verified model packs S04, first real NPC dialogue S07, Play testing S08, visual nodes S09, C# hooks S13, and later Host/release checks S17–S18.
 
