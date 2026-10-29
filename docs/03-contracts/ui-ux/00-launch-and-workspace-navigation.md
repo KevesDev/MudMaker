@@ -12,6 +12,8 @@ Current destination shown selected/non-action; other destinations available.
 ```
 Startup is safe even when a previous host is configured: **do not silently start an internet listener** or reconnect a remote server merely because the launcher opened. If a host is running in this app session, Splash shows only `Active World: {world}`; when no host runs, it shows no hosting status. Host shows its own operational state. Closing the entire application always stops the host and its listener; no host service survives app exit. Closing a UI view or using Go To must not destroy the host supervisor, profile store or editor document model.
 
+Splash shows no client-connected-worlds indicator and no appearance selector. Appearance settings belong under `Settings > Appearance`.
+
 ## Top toolbar
 Every Create, Play and Host workspace shows the same **Go To** dropdown in a stable discoverable location. Items: `Create`, `Play`, `Host`, and `Splash` / `Home`. The active workspace is checked and not redundantly navigable. Toolbar also shows a compact **Host Running** indicator if active, a Client connection indicator only while in Play, and an Editor dirty marker only in Editor. The Host indicator may open Host after normal transition checks. Switches are explicit user gestures, not remote server-requested URLs or commands.
 
