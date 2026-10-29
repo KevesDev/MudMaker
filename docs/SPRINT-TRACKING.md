@@ -2,7 +2,7 @@
 
 **Canonical sprint order and phase status.** Each sprint owns a cohesive milestone; phases are small Builder/Auditor handoffs. Sprint and phase IDs follow this table's execution order; matching specs and references must use these canonical IDs.
 
-**Current:** S00 10/10 DONE. Engine, UI shell and database decisions approved 2026-10-28 ([records](07-decisions/ADR-RECORDS-S01.md)). S01.1-S01.3, S01.5, S01.7 done; S01.7 launch smoke DONE (launch with `npm run dev`); S01.4, S01.6, S01.8 decision records are written before their dependents.
+**Current:** S00 and S01 complete. Decisions: [ADR records](07-decisions/ADR-RECORDS-S01.md). Next: S02 launchable application shell (launch with `npm run dev`).
 
 ## Real application and testing milestones
 
@@ -21,7 +21,7 @@
 | Sprint | Focus | Verified | Depends on | Status |
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
-| [S01](#s01) | Architecture gates and native launch smoke | **5/8** | S00 + owner ADRs | PLANNED |
+| [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
 | [S02](#s02) | Launchable application shell and shared UI | **0/10** | S01 UI/platform choice | PLANNED |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
@@ -68,11 +68,11 @@
 | **S01.1 ECS identities** | Finalize world+generation handle ADR | DONE | [ADR-RECORDS-S01](07-decisions/ADR-RECORDS-S01.md) |
 | **S01.2 Writer model** | Finalize one authoritative writer | DONE | [ADR-RECORDS-S01](07-decisions/ADR-RECORDS-S01.md) |
 | **S01.3 Persistence ADR** | Approve bundled embedded database (no Docker, service install or external runtime), isolation, transactions, migration, recovery and backups | DONE | [ADR-RECORDS-S01](07-decisions/ADR-RECORDS-S01.md) |
-| **S01.4 Wire ABI** | Freeze versioned SDK/proto rules | TODO | — |
+| **S01.4 Wire ABI** | Freeze versioned SDK/proto rules | DONE | [ADR-RECORDS-S01](07-decisions/ADR-RECORDS-S01.md) |
 | **S01.5 Native benchmark** | Baseline ECS hot-path under load | DONE | Auditor PASS after 3 rounds; [results](../engine/spikes/ecs-storage/results/results-2026-10-29.md), [outcome](07-decisions/ADR-RECORDS-S01.md) |
-| **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | TODO | — |
+| **S01.6 Account identity ADR** | Approve immutable world-scoped AccountId, session and character identity, lifecycle and retention rules | DONE | [ADR-RECORDS-S01](07-decisions/ADR-RECORDS-S01.md) |
 | **S01.7 Platform launch smoke test** | Build and launch a minimal real native MudMaker app window on the selected platform; verify packaged startup and shutdown, with no fake engine state | DONE | Auditor PASS; owner confirmed window shows 0.1.0, build 041d33a, windows x86_64 (2026-10-28). Spec [S01-7](05-sprints/specs/S01-7-SPEC.md) |
-| **S01.8 Optional inference ADR** | Approve embedded inference runtime and hardware safety/acceptance limits; initial selectable models are fixed in S02 specification and are installed only through the wizard | TODO | — |
+| **S01.8 Optional inference ADR** | Approve embedded inference runtime and hardware safety/acceptance limits; initial selectable models are fixed in S02 specification and are installed only through the wizard | DONE | [ADR-RECORDS-S01](07-decisions/ADR-RECORDS-S01.md) |
 
 ## S02 — Editor and shared UI foundation
 

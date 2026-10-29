@@ -33,6 +33,32 @@ Evidence: [spike results](../../engine/spikes/ecs-storage/results/results-2026-1
 **ADR-012:** engine regression rule for S03 is that each matching S03 workload must not be slower than the spike's on the same hardware, with the workload definitions in the spike. Device matrix, accessibility target and release budgets stay OPEN and require measurement on supported devices.
 **Limits of this evidence:** one machine, one thread, 9 to 17 archetypes, UBSan unavailable on this MSVC toolchain (ASan ran on tests only). Latency rows flagged in the results are reported as measured.
 
+## S01.4: Wire ABI freeze rules (supports ADR-030)
+**Decision:** The worker protocol stays `proto3`, package `mudmaker.scripting.v1`, as in [the existing proto](../../contracts/scripting/v1/mudmaker_scripting_v1.proto). Rules, binding from S13.2:
+- Field numbers are never reused or renumbered. A removed field is `reserved` by number and name in the same change.
+- Wire changes within v1 are additive only. A breaking change creates `v2` as a new package, with the Lead and owner approving the migration.
+- Every envelope carries the protocol version; the worker and engine refuse a different major version at handshake with a structured error.
+- IPC is local only: Windows named pipe or Unix domain socket, access-restricted to the supervisor and its worker, length-prefixed frames with a configured maximum size. No network port.
+- Generated codecs: C++ and C# from the one proto file, built in S13.2; hook IDs and effect kinds come only from the registry JSON, never invented in code.
+- A frozen descriptor-set snapshot is committed with each release and a breaking-change check against it must pass before publish.
+- Engine handles crossing the wire are opaque world-and-generation scoped values, revalidated by the engine on every use.
+**Why:** locks evolution rules now so S03 to S13 do not drift. Frame size limits and budgets are named configuration set from S13 measurements.
+
+## S01.6: Account identity, credentials and retention
+**Decision:**
+- `AccountId`, `CharacterId`, `SessionId` and `WorldId` are 128-bit random opaque identifiers from a cryptographically secure source, stored as 16-byte values. They are never sequential, derived from names, or reused. Deleting an account leaves a permanent tombstone so the ID can never be reissued.
+- A separate per-world public reference is generated for any player-visible identifier; AccountId is never sent to ordinary clients.
+- Passwords are stored only as Argon2id verifiers with a per-account salt. Cost parameters are named configuration calibrated on the host machine at first run and stored with each verifier so they can be raised later. No plaintext or reversible password is ever stored or logged.
+- Session tokens are 256-bit random values; only a hash is stored server-side. They rotate on login and privilege change, expire, and are not bearer credentials after a host restart without fresh validation.
+- Retention: account deletion erases personal data (name, email, credentials) and keeps the tombstone plus AccountId on immutable audit records. Audit-log retention duration and guest expiry are host-configurable named settings with no engine default hidden in code. Backups follow the host's retention choice and the restore path must re-apply tombstones.
+- Authorization stays capability-based as in the [account contract](../03-contracts/account-character-lifecycle.md); owner and root protections cannot be overridden by scripts.
+**Why:** matches the contract's lifecycle and threat boundary; Argon2id is the current recommended password-hashing algorithm, to be verified by test in S07.7.
+
+## S01.8: Optional local inference runtime
+**Decision:** The optional NPC model runs in **llama.cpp** (MIT licensed) built as a bundled native library, in a **separate supervised worker process** with its own CPU thread and memory ceilings, one shared loaded model per host, bounded request queue and a kill switch. CPU-only operation is the baseline and the feature is off unless a verified model pack is installed. Models are GGUF files from the fixed catalog in [S02](../05-sprints/specs/S02.md); no external server, Python, Docker or cloud service. Speed and quality thresholds are named configuration derived from S07.19 measurements on a 2-core and a 4-core CPU-only machine with 8 GB RAM; if a host's measured latency exceeds the creator's response budget, replies fall back to authored lines or silence. Redistribution licensing is checked per exact model artifact when the catalog is built (S02.10), not assumed from the runtime license.
+**Why:** matches [the NPC contract](../03-contracts/optional-local-npc-dialogue.md); process isolation keeps inference from stalling the single-writer simulation.
+**Open until measured:** acceptance numbers for latency and roleplay fidelity (S07.19, S18.13, S18.14).
+
 ## Versioning
 SemVer. Pre-release `0.x` until S18. The repo-root `VERSION` file is the single source; `app/package.json`, `app/src-tauri/Cargo.toml`, `app/src-tauri/tauri.conf.json` and the engine CMake project must equal it. A check script fails the build on drift.
 
@@ -40,4 +66,4 @@ SemVer. Pre-release `0.x` until S18. The repo-root `VERSION` file is the single 
 `master` stays at the last audited state. Each completed phase group is committed by the Lead to the **`working`** branch on `origin` after Auditor PASS.
 
 ## Not decided here (remain OPEN, gated by their sprint)
-ADR-006..027 not listed above are unchanged. ADR-008 (S07), ADR-010 (S05/S12), ADR-011 (S06/S10), ADR-014 (S04/S09), ADR-015, ADR-017 to ADR-027 (S10, S11, S13, S16) block only their named sprints and are resolved just before that sprint's spec. ADR-012 budgets are set from S01.5 measurements; release performance claims stay blocked until then. S01.6 (account identity) and S01.8 (inference runtime) records are written before S04.14 and S07.19.
+ADR-006..027 not listed above are unchanged. ADR-008 (S07), ADR-010 (S05/S12), ADR-011 (S06/S10), ADR-014 (S04/S09), ADR-015, ADR-017 to ADR-027 (S10, S11, S13, S16) block only their named sprints and are resolved just before that sprint's spec. ADR-012 budgets are set from S01.5 measurements; release performance claims stay blocked until then. S01.4, S01.6 and S01.8 are recorded above.
