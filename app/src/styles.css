@@ -1,25 +1,28 @@
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #14161a;
-  color: #e6e8eb;
+  font-family: var(--font-family-interface);
+  font-size: var(--font-size-body);
+  line-height: var(--font-lineHeight-body);
+  background: var(--color-surface-app);
+  color: var(--color-text-primary);
 }
 .launch {
-  max-width: 28rem;
-  margin: 4rem auto;
-  padding: 0 1rem;
+  max-width: var(--layout-contentMaxWidth);
+  margin: var(--spacing-page) auto;
+  padding: 0 var(--spacing-stack);
 }
 h1 {
-  line-height: 1.2;
-  min-height: 1.2em;
+  font-size: var(--font-size-heading);
+  line-height: var(--font-lineHeight-heading);
+  min-height: calc(1em * var(--font-lineHeight-heading));
 }
 dl {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 0.25rem 1rem;
+  gap: var(--spacing-row) var(--spacing-stack);
 }
 dt {
-  opacity: 0.7;
+  color: var(--color-text-muted);
 }
 dd {
   margin: 0;

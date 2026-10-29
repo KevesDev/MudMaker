@@ -22,7 +22,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **0/10** | S01 UI/platform choice | PLANNED |
+| [S02](#s02) | Launchable application shell and shared UI | **1/10** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -85,7 +85,7 @@
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S02.1 ThemeManager** | Resolve independent Editor/Client themes from one shared token schema; replace the hard-coded colors and font in app/src/styles.css | TODO | — |
+| **S02.1 ThemeManager** | Resolve independent Editor/Client themes from one shared token schema; no hard-coded colors or fonts in app styles | DONE | Auditor PASS after 4 rounds (112 theme tests). Presets: default "Neon Lights" and alternative "Neon Dark Mode" (owner palettes, 2026-10-28), values and derivations in [theme-presets](03-contracts/ui-ux/theme-presets.md). On-screen look is unverified until the S02.3 preset switch; token file still marked not render tested. |
 | **S02.2 UI primitives** | Implement shared accessible, themed UI primitives and typed action descriptors | TODO | — |
 | **S02.3 Loading and splash** | Boot the real app window, verify installed build/UI health, display name/version and Create/Play/Host; show unavailable engine services honestly | TODO | — |
 | **S02.4 Workspace navigation** | Switch real Create/Play/Host shells and retain unsaved UI drafts; host/session retention integrates when those services exist | TODO | — |
