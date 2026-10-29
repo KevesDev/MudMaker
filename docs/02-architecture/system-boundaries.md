@@ -1,6 +1,6 @@
 # Architecture Boundaries and Single Ownership
 
-**Status:** binding subsystem responsibilities; implementation pending. **Owner:** architecture. **Dependencies:** vision and open decisions.
+**Status:** binding subsystem responsibilities; implementation pending. **Owner:** architecture. **Dependencies:** vision and architecture decisions.
 
 ## Logical components
 - **Editor / Player UI:** Cross-device user interface using the shared UI catalog. UI owns ephemeral presentation, gestures, keyboard focus, selection and optimistic state only when reconciled. UI never mutates authoritative ECS state directly.
