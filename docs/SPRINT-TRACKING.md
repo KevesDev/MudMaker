@@ -80,7 +80,7 @@
 
 **Spec:** [S02](05-sprints/specs/S02.md) · **Requires:** S01 UI/platform decision; application shell starts before ECS implementation
 
-**Proof:** MudMaker launches with real Create/Play/Host workspace shells, ThemeManager, navigation, responsive controls and persistent preferences; no fake ECS/editor data.
+**Proof:** MudMaker launches with real Create/Play/Host workspace shells, ThemeManager, navigation, responsive controls and persistent preferences; no fake ECS/editor data. Leaving Play must disconnect all player connections; only an active host may continue when switching workspaces, and app exit stops it.
 
 
 **User checkpoints:** S02.3 splash/window visible; S02.4 switch between Create, Play and Host without losing drafts; S02.6 pan/zoom graph-paper canvas and S02.7 keyboard/touch navigation. Back-end world editing begins in S09.
@@ -98,9 +98,9 @@
 | **S02.3b Create/Play/Host entries** | Create, Play and Host controls from the catalog, honest unavailable states and recent-items empty states (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29); look of both presets still to be judged by the owner |
 | **S02.3d Diagnostic log** | Launch correlation id from the shell and a bounded local structured diagnostic log written by the shell, fed by the UI diagnostic sink with severity levels | DONE | Auditor PASS (final 2026-10-29). Unix permission test compiles for Linux but has not run: run `diagnostic_log_is_private_to_the_owner` on Linux and macOS in S18.1 |
-| **S02.4a Workspace navigator** | One navigator owning Create/Play/Host/Splash routing and per-workspace session retention | TODO | — |
+| **S02.4a Workspace navigator** | One navigator for Create/Play/Host/Splash: preserve editor drafts and active hosting across workspace changes, never a Play network connection | TODO | — |
 | **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | TODO | — |
-| **S02.4c Draft retention and transition guard** | Switch without losing editor drafts; Keep Draft, Save, Cancel dialog; guards for Play and Host plug in later (USER TEST) | TODO | — |
+| **S02.4c Draft retention and transition guard** | Retain editor drafts; Save/Keep Draft/Cancel. Define Play Disconnect & Switch/Cancel (no background Play sockets) and Host Keep Hosting/Stop Hosting/Cancel; S08/S17 wire real services (USER TEST) | TODO | — |
 | **S02.5a Docking and split layout** | DockPanel and SplitView with keyboard resize and tablet drawer behavior | TODO | — |
 | **S02.5b Tabs** | TabStrip with overflow, reorder, close and dirty markers | TODO | — |
 | **S02.5c Inspector container** | Inspector panel and InspectorField shell with grouped tabs and collapsible categories; no fake data | TODO | — |
@@ -273,7 +273,7 @@
 | **S08.4 Basic composer** | Send explicit action/command and display response | TODO | — |
 | **S08.5 Account lobby** | Login, registration, auto-enter or character roster with valid session attachment and text fallback | TODO | — |
 | **S08.6 FIRST PLAYABLE** | Two real players can look, move and receive scoped output | TODO | — |
-| **S08.7 Navigation retention** | Keep session and drafts on safe workspace switch | TODO | — |
+| **S08.7 Disconnect on Play leave** | Leaving Play for Create, Host or Splash requires Disconnect & Switch or Cancel; close every active Play connection before switching, never retain client sockets in background; preserve local draft/preferences, require explicit reconnect (USER TEST) | TODO | — |
 | **S08.8 Text rendering** | Bounded ANSI/UTF-8 spans and safe output | TODO | — |
 | **S08.9 Transcript tools** | Scrollback, search, copy, timestamps and wrapping | TODO | — |
 | **S08.10 Appearance** | Independent Client theme and font settings | TODO | — |
@@ -480,7 +480,7 @@
 | **S17.1 Hosting and database lease** | Enforce one active host/project database writer, local-only store handles and runtime ownership; single app instance per data folder (the diagnostic log lock is per process, S02.3d) | TODO | — |
 | **S17.2 Storage and host preflight** | Automatically open/check local database and validate scripts, schema, permissions and limits before player port opens | TODO | — |
 | **S17.3 GUI hosting** | Start a validated immutable release from Host workspace | TODO | — |
-| **S17.4 Background host navigation** | Keep host A running when switching to Create, Play or Splash; guarded stop | TODO | — |
+| **S17.4 Background host navigation and exit** | Keep host A running when switching to Create, Play or Splash; Splash shows `Active World: {world}` only when hosting. App exit stops listener and disconnects players (or Cancel keeps app open); no detached host service (USER TEST) | TODO | — |
 | **S17.5 Headless hosting** | Start same release using CLI under identical single-host rule | TODO | — |
 | **S17.6 Host operations dashboard** | In-app startup, health, sessions, backup/restore and safe server-stop controls | TODO | — |
 | **S17.7 Database and world recovery** | Restore ECS, quests, posts, timers and outbox; detect corrupt storage without silent rollback | TODO | — |
