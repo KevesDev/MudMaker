@@ -1,0 +1,10 @@
+{
+  "name": "mudmaker-root",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix app run tauri dev",
+    "build": "npm --prefix app run tauri build -- --no-bundle",
+    "version:check": "node scripts/check-version.mjs"
+  }
+}

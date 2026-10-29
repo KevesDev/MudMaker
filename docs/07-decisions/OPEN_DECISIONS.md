@@ -1,14 +1,14 @@
 # Open Architecture Decisions — No Agent Guessing
 
-**Status:** v1 scripting decisions approved as design contracts by project owner instruction to settle scripting proposals, recorded at [v1 decisions](../03-contracts/scripting-v1/01-decisions-and-evidence.md). Non-scripting architecture decisions still OPEN until their separate approval. Decided contracts are not proof of implemented or tested behavior. The old v1.1 document supplies historical proposals, **not automatically locked decisions**.
+**Status:** v1 scripting decisions approved as design contracts by project owner instruction to settle scripting proposals, recorded at [v1 decisions](../03-contracts/scripting-v1/01-decisions-and-evidence.md). Platform, engine and persistence decisions (ADR-001 to 005, 028) approved 2026-10-28 in [ADR-RECORDS-S01](ADR-RECORDS-S01.md). Remaining non-scripting decisions stay OPEN until resolved before their sprint. Decided contracts are not proof of implemented or tested behavior. The old v1.1 document supplies historical proposals, **not automatically locked decisions**.
 
 | ID | Question / constraint | Current status and blocking scope |
 |---|---|---|
-| ADR-001 | Headless engine selection: C++ ECS (preferred candidate under research) vs managed engine/legacy Java; portable packaging, runtime threading/memory safety, engine independent of UI framework | OPEN: blocks S03 implementation stack |
-| ADR-002 | ECS internal storage (archetype/sparse-set/hybrid), component value model, entity ID generation, dynamic schema layout | OPEN: blocks S03 |
-| ADR-003 | World writer concurrency, system phases, deterministic ordering and transaction semantics | OPEN: blocks S03 |
-| ADR-004 | Project asset format, world persistence database (SQLite/H2/other), snapshot/event log, schema migration | OPEN: blocks S04 |
-| ADR-005 | Editor/platform architecture: browser-first/PWA + optional Tauri vs alternative; offline editing/hosting and tablet support matrix | OPEN: blocks UI packaging S02 |
+| ADR-001 | Headless engine selection: C++ ECS (preferred candidate under research) vs managed engine/legacy Java; portable packaging, runtime threading/memory safety, engine independent of UI framework | **DECIDED 2026-10-28:** C++20 engine. [Record](ADR-RECORDS-S01.md). Benchmark gate S01.5. |
+| ADR-002 | ECS internal storage (archetype/sparse-set/hybrid), component value model, entity ID generation, dynamic schema layout | **DECIDED 2026-10-28:** hybrid archetype + sparse-set, world-scoped generational IDs. [Record](ADR-RECORDS-S01.md). Benchmark may amend. |
+| ADR-003 | World writer concurrency, system phases, deterministic ordering and transaction semantics | **DECIDED 2026-10-28:** single writer per world, fixed phases. [Record](ADR-RECORDS-S01.md). |
+| ADR-004 | Project asset format, world persistence database (SQLite/H2/other), snapshot/event log, schema migration | **DECIDED 2026-10-28:** bundled SQLite WAL, outbox in same transaction. [Record](ADR-RECORDS-S01.md). |
+| ADR-005 | Editor/platform architecture: browser-first/PWA + optional Tauri vs alternative; offline editing/hosting and tablet support matrix | **DECIDED 2026-10-28:** Tauri 2 + React/TypeScript/Vite, engine as sidecar. [Record](ADR-RECORDS-S01.md). |
 | ADR-006 | Creator scripting language and worker interface | **DECIDED v1:** standard C# 14 / .NET 10, local host-published only, separate bounded worker, Protobuf IPC. [Source](../03-contracts/scripting-v1/01-decisions-and-evidence.md). OS profiles pending verification, not selection. |
 | ADR-007 | Graph semantics and integration | **DECIDED v1:** typed graph plan, identical HookDecision/GameEffect API to code. Compiler internals/performance remain implementation evidence gate. [Graph contract](../03-contracts/scripting-v1/06-graph-parity-and-publishing.md). |
 | ADR-008 | Runtime wire protocol, legacy MUD adapters, reconnection semantics, auth provider | OPEN: blocks S07 |
@@ -35,7 +35,7 @@
 | ADR-026 | Durable custom world event lifecycle; start/stop atomic vs async outbox, rollback and restart; script/graph workflow session handling | OPEN: S10/S11/S13 |
 | ADR-027 | Character name predicate source/normalization/visibility, quiz answer secrecy/retry/idempotency, script resource/capability limits | OPEN: S11/S13/S16 |
 
-| ADR-028 | Unity/Godot model vs MudMaker: reject assumption all scripts transpile to C++; choose native C++ ECS, library, scripting ABI by benchmarked ADR | OPEN: S01/S03/S13 |
+| ADR-028 | Unity/Godot model vs MudMaker: reject assumption all scripts transpile to C++; choose native C++ ECS, library, scripting ABI by benchmarked ADR | **DECIDED 2026-10-28:** native C++ ECS; scripts stay C# worker. [Record](ADR-RECORDS-S01.md). |
 | ADR-029 | Script language and special symbols | **DECIDED v1:** standard C# 14 syntax, no special MudMaker remapping of @, #, or braces; typed editor references. [SDK](../03-contracts/scripting-v1/02-code-sdk.md). |
 | ADR-030 | Native engine ↔ worker references/ABI | **DECIDED v1:** world/gen-scoped opaque handles, typed Protobuf IPC, no native pointers and server revalidation; operational OS hardening/tests pending. [Wire/security](../03-contracts/scripting-v1/05-wire-security-recovery.md). |
 | ADR-031 | Script fields, scopes, persistence and override authority | **DECIDED v1:** typed registered writable engine fields and persistent/transient state slots, 3-layer precedence, guarded migrations; integration/persistence backend tests pending. [Fields/state](../03-contracts/scripting-v1/04-references-and-state.md). |

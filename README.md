@@ -31,3 +31,7 @@ Remote players send **authenticated gameplay commands, actions and bounded text*
 - Small checkable phases, one Builder and one scoped independent Auditor per phase; research and open decisions belong to the owner before dispatch.
 
 The repo contains specifications, schemas, C# examples and developer/agent instructions. Build and verification must be completed before features can be called functional.
+
+## Run the app
+
+From the repo root: `npm --prefix app install` once, then `npm run dev` (Tauri window; first run compiles Rust). Version is single-sourced in `VERSION`; `npm run version:check` verifies it.

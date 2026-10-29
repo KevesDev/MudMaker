@@ -50,3 +50,9 @@ secrets/
 # OS
 .DS_Store
 Thumbs.db
+
+# Application shell
+node_modules/
+dist/
+target/
+**/src-tauri/gen/
