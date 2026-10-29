@@ -2356,27 +2356,6 @@
       "testId": "UI-client-navigationGuard-01"
     },
     {
-      "id": "client.navigationGuard.02",
-      "workspace": "client",
-      "surface": "client.navigationGuard",
-      "kind": "button",
-      "label": "Keep Connected and Switch",
-      "tooltip": "Retain game sessions in background with bounded output buffers",
-      "actionId": "ui.nav.clientKeepConnected",
-      "stateOwner": "ClientState",
-      "permission": "localPlayer",
-      "visibleWhen": "transitionGuardActive",
-      "enabledWhen": "authorizedAndReady",
-      "stateVariants": [
-        "ready",
-        "disabled",
-        "pending",
-        "error"
-      ],
-      "keyboard": "focusAndActivate",
-      "testId": "UI-client-navigationGuard-02"
-    },
-    {
       "id": "client.navigationGuard.03",
       "workspace": "client",
       "surface": "client.navigationGuard",
