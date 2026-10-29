@@ -1,7 +1,7 @@
 # 01 — Workspace separation, authority and data ownership
 
 ## Routes (product decision)
-`Home` chooses three distinct workspaces: **Create/Edit** → Creator Editor; **Play** → Player Client; **Host** → Host Operations. A user can open several windows and play a game they host, but each uses separate scoped permissions, window layouts, input focus and persistence. Host/Editor actions are never made available inside a remote game's supplied metadata. Closing a game connection does not discard local edits or edit project files.
+`Home` chooses three distinct workspaces: **Create/Edit** → Creator Editor; **Play** → Player Client; **Host** → Host Operations. A user can open several windows and play a game they host, but each uses separate scoped permissions, window layouts, input focus and persistence. Host/Editor actions are never made available inside a remote game's supplied metadata. Closing a game connection does not discard local edits or edit project files. All player-client connections terminate on leaving Play; hosting may remain active across workspace switches only while MudMaker remains open.
 
 | Workspace | Data owned / can mutate | Data it must never own |
 |---|---|---|
@@ -33,8 +33,13 @@ world host -> authorized game projection -> client (no editor content)
 - App global: locale, access needs, recent profiles, security trust defaults.
 - Editor: theme selection and overrides, panel layout, editor shortcuts, project UI state; project world data is separately versioned and publishable.
 - Client: global display/theme, per-server/per-character overrides (hotkeys, triggers, mapper, filters, logging opt-in), safe connection credentials in OS keychain where available; not exported without redaction.
-- Host: local server settings, monitoring layout and admin history (separate privileged configuration).
+- Host: local server settings, monitoring layout and admin history (separate privileged configuration). Hosting persists when navigating to Create, Play, or Splash, but stops when MudMaker exits. Only one active hosted world is permitted.
 - Presentation metadata from MudMaker host cannot overwrite user settings, enable automation or install assets. All files have schema version, validation, atomic save and rollback on malformed import.
+
+## Session lifetime rules
+- Leaving Play for Create, Host, or Splash requires **Disconnect & Switch** or **Cancel** when connected. No player session, network socket, or background transcript stream survives the switch. Local preferences and unsent drafts may persist for later explicit reconnection.
+- Leaving Host does not automatically stop a running host. The Host supervisor remains owned by the application process. Exiting the application stops the host and disconnects its players; canceling exit leaves it running.
+- On Splash, display `Active World: {world}` only while hosting. Do not show Connected Worlds or an idle-host status.
 
 ## Threat/UX tests
 - Malicious remote game sends label pretending to be 'Delete Project', `commandId=host.stop`, theme hex, or local file path ⇒ inert data/no UI action.
