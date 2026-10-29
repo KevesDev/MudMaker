@@ -23,6 +23,10 @@
 | S18 Accessibility | Keyboard, tablet, screen reader, high contrast/reduced motion across all active surfaces | unlabeled control, focus trap, insufficient contrast |
 | S18 Registry parity | Enumerate all rendered controls and check UI registry reverse mappings | any unregistered JSX/widget, orphan ActionId, untranslated copy |
 
+## Navigation lifetime acceptance
+- Connect a Play client to an external MUD; request Splash, Create, or Host. Cancel leaves it connected in Play. Disconnect & Switch closes the socket before transition; returning to Play does not reconnect automatically.
+- Start a local world in Host, then navigate to Splash and Create. Host remains running and Splash shows `Active World: {world}` only while active. Exit requires stopping the host and connected players; canceling exit preserves them.
+
 ## UI registry static gates
 1. IDs unique across all catalog partitions, all nonempty tooltip/accessibility descriptions, action or passive role, owning router/workspace, enabled/hidden predicate, test ID; every ActionId resolves exactly once in action table.
 2. Within active implementation, **each** registered entry has at least one visible state test and one off-nominal state test (disabled/permission/pending/error). Passive labels bind real data source, not misleading fake status.
