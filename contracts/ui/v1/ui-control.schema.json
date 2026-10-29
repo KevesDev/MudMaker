@@ -50,7 +50,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^(home|editor|client|host)\\.[a-z]+\\.[0-9]{2}$"
+            "pattern": "^(home|editor|client|host)\\.[a-zA-Z]+\\.[0-9]{2}$"
           },
           "workspace": {
             "enum": [

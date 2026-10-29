@@ -35,9 +35,19 @@ function presetsSection(): Record<string, unknown> {
   return recordAt(recordAt(document, "root")["presets"], "presets");
 }
 
-/** Application defaults of a scope before any preset is applied. */
+/** The scope a root scope inherits from in the pinned file, or null when it stands alone. */
+export function fixtureParent(scope: RootScope): RootScope | null {
+  const parent = recordAt(scopesSection()[scope], scope)["inherits"];
+  if (parent === undefined) return null;
+  if (parent === "editor" || parent === "client") return parent;
+  throw new Error(`Fixture scope ${scope} inherits from an unsupported scope`);
+}
+
+/** Application defaults of a scope before any preset is applied, with inherited defaults underneath. */
 export function fixtureBaseTokens(scope: RootScope): TokenRecord {
-  return tokenRecord(recordAt(scopesSection()[scope], scope)["tokens"], `${scope}.tokens`);
+  const parent = fixtureParent(scope);
+  const own = tokenRecord(recordAt(scopesSection()[scope], scope)["tokens"], `${scope}.tokens`);
+  return parent === null ? own : { ...fixtureBaseTokens(parent), ...own };
 }
 
 export function fixturePresetIds(): string[] {
@@ -56,10 +66,12 @@ export function fixturePresetLabel(presetId: string): string {
   return label;
 }
 
-/** Tokens a preset supplies for a scope, without the application defaults. */
+/** Tokens a preset supplies for a scope, with the inherited scope's preset tokens underneath, without application defaults. */
 export function fixturePresetTokens(presetId: string, scope: RootScope): TokenRecord {
+  const parent = fixtureParent(scope);
   const scopes = recordAt(recordAt(presetsSection()[presetId], presetId)["scopes"], `${presetId}.scopes`);
-  return tokenRecord(recordAt(scopes[scope], `${presetId}.${scope}`)["tokens"], `${presetId}.${scope}.tokens`);
+  const own = tokenRecord(recordAt(scopes[scope], `${presetId}.${scope}`)["tokens"], `${presetId}.${scope}.tokens`);
+  return parent === null ? own : { ...fixturePresetTokens(presetId, parent), ...own };
 }
 
 /** Tokens a scope resolves to with the given preset and no user layers. */

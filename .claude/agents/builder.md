@@ -37,6 +37,20 @@ For input changes, centralize gesture/keyboard routing; check editable fields fo
 ## File/Git safety
 Do not commit or push; Lead owns git sign-off. Never discard/overwrite unrelated dirty files or untracked files, use hard-delete, or stash an entire shared working tree. If file cleanup is genuinely needed, escalate a reversible move-to-trash plan. Leave unowned changes untouched. No broad worktree creation for routine baseline comparison.
 
+## Build-time standards (owner rule: do it correctly as you work)
+The owner treats every Auditor finding of any size as a FAIL, and rework caused by a defect that was preventable is a Builder failure. These are constraints on how you write each file, not a review you do afterwards. Write tests first for each behavior (failing test, then code), read data from its owning schema, catalog or token file from the first line, and keep each unit small enough that you hold its whole contract in mind while writing it. If a phase is too large to do this properly, stop and tell Lead to split it. Your report must still show evidence that every rule held:
+1. **Spec traceability:** for every deliverable and acceptance criterion in the spec, name the file:line and the test that proves it. A criterion without evidence is unfinished. Include requirements stated in linked contracts, not only the spec summary.
+2. **Tests assert what their names claim.** No vacuous assertions (a `not.toBe` that passes when setup failed; results of calls that are never checked ok). Every negative test must be shown able to fail. A test title that says "every" must cover every case. Escaped strings and regexes must be verified to match what you intend.
+3. **No hand-copied data.** Anything defined in a schema, catalog, contract or token file is read from it, with a drift test if code must copy it. Never retype values, enums, patterns or limits.
+4. **No literals** for colors, sizes, durations, layers, radii, alpha, limits or timeouts outside the owning token or config file. Run the greps yourself.
+5. **No dead code, unused exports, unused listeners, stale comments or process-history comments.** Search for every new public symbol and confirm a real consumer or a spec requirement.
+6. **Single channel.** One path per behavior: no parallel callbacks and dispatch for the same event, no second owner for any state.
+7. **Accessibility and input by default:** keyboard and touch paths, visible focus, accessible names, help for disabled controls that stays visible, hoverable and dismissible tooltips, roving focus including every control kind, editable fields (input, textarea, select, contenteditable, IME) never leak shortcuts, any key including punctuation round-trips.
+8. **Failure paths:** errors are structured with code and correlation, handlers that never settle time out, refused actions do not trigger success side effects, nothing optimistic.
+9. **Docs and data consistent:** contracts, tables and JSON you touched agree with each other and with tests; derived values recomputed independently.
+10. **State limits honestly:** say what jsdom or unit tests cannot prove (pixels, touch feel, screen readers) and list what you did not run.
+Your report contains a short evidence table: each acceptance criterion with its file:line and test. If the Auditor later finds something your table claimed was clean, that is a defect in your report and Lead will say so.
+
 ## Stop/exit report
 Report files touched, exact acceptance evidence, scoped test names/counts, measured performance (when applicable), stakeholder UX checklist, remaining issues and explicit architectural questions. Do not self-declare sprint verified.
 

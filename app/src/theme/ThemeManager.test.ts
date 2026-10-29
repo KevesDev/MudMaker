@@ -21,7 +21,7 @@ function userTheme(id: string, tokens: Record<string, string | number | boolean>
 }
 
 describe("defaults (AC-01)", () => {
-  it("resolves every scope from the pinned file, with home and host inheriting editor", () => {
+  it("resolves every scope from the pinned file, with home and host inheriting editor and client inheriting what it does not define", () => {
     const manager = newManager();
     const editor = fixtureTokens("editor");
     expect(manager.getSnapshot("editor").tokens).toEqual(editor);
@@ -216,6 +216,38 @@ describe("scope isolation (AC-04)", () => {
     expect(manager.getSnapshot("editor").tokens["color.surface.app"]).toBe(
       fixtureTokens("editor")["color.surface.app"],
     );
+  });
+
+  it("gives the client the selected preset's shared editor tokens but never editor user choices", () => {
+    const manager = newManager();
+    const focus = "color.interaction.focus";
+    expect(manager.getSnapshot("client").tokens[focus]).toBe(fixtureTokens("editor", fixtureDefaultPresetId("client"))[focus]);
+    expect(manager.setUserTheme("editor", userTheme("mine", { [focus]: "#0A0B0C" })).ok).toBe(true);
+    expect(manager.setOverrides("editor", { "color.border.normal": "#0B0C0D" }).ok).toBe(true);
+    expect(manager.getSnapshot("editor").tokens[focus]).toBe("#0A0B0C");
+    expect(manager.getSnapshot("editor").tokens["color.border.normal"]).toBe("#0B0C0D");
+    expect(manager.getSnapshot("client").tokens[focus]).not.toBe("#0A0B0C");
+    expect(manager.getSnapshot("client").tokens["color.border.normal"]).toBe(fixtureTokens("client")["color.border.normal"]);
+    const other = manager.listPresets().find((preset) => preset.id !== fixtureDefaultPresetId("client"));
+    if (!other) throw new Error("The defaults must ship at least two presets.");
+    expect(manager.selectPreset("client", other.id).ok).toBe(true);
+    expect(manager.getSnapshot("client").tokens[focus]).toBe(fixtureTokens("editor", other.id)[focus]);
+    expect(manager.getSnapshot("client").tokens[focus]).not.toBe(fixtureTokens("editor", fixtureDefaultPresetId("client"))[focus]);
+  });
+
+  it("never lets the editor's accessibility settings reach the client scope", () => {
+    const manager = newManager();
+    const before = manager.getSnapshot("client");
+    const result = manager.setAccessibility("editor", { textScale: 1.5, contrast: "high", reducedMotion: true });
+    expect(result.ok).toBe(true);
+    expect(manager.getSnapshot("editor").tokens["font.size.body"]).toBe(Number(fixtureTokens("editor")["font.size.body"]) * 1.5);
+    expect(manager.getSnapshot("editor").tokens["motion.duration.normalMs"]).toBe(fixtureTokens("editor")["motion.reducedDurationMs"]);
+    const client = manager.getSnapshot("client");
+    expect(client).toBe(before);
+    expect(client.accessibility).toEqual({ textScale: 1, contrast: "normal", reducedMotion: false });
+    expect(client.tokens["font.size.body"]).toBe(fixtureTokens("client")["font.size.body"]);
+    expect(client.tokens["motion.duration.normalMs"]).toBe(fixtureTokens("client")["motion.duration.normalMs"]);
+    expect(client.tokens["color.text.primary"]).toBe(fixtureTokens("client")["color.text.primary"]);
   });
 
   it("does not let editor user choices reach home or host", () => {

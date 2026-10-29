@@ -20,7 +20,7 @@ const ansi = Array.from({ length: 16 }, (_, index) => `ansi${index}`).join(",");
 
 /** Namespaces copied from editor-theme-manager.md, "Required semantic token namespaces". */
 const EDITOR_NAMESPACES = [
-  "color.surface.{app,panel,toolbar,inspector,canvas,overlay}",
+  "color.surface.{app,panel,toolbar,inspector,canvas,overlay,scrim}",
   "color.text.{primary,secondary,muted,disabled}",
   "color.border.{normal,subtle,focused,invalid}",
   "color.graph.grid.{minor,major}",
@@ -34,6 +34,8 @@ const EDITOR_NAMESPACES = [
   "shape.*",
   "motion.*",
   "layout.*",
+  "layer.{popup,tooltip,dialog}",
+  "opacity.scrim",
   "font.lineHeight.*",
   "interaction.{pointerHitSize,touchHitSize}",
   "grid.{baseStep,majorEvery,snapStep,minorVisibilityMinScreenStep,lineWidth}",

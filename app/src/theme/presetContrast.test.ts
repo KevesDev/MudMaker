@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fixturePresetIds, fixtureTokens, stringToken, wcagRatio, type RootScope } from "./fixtures";
+import { fixtureBaseTokens, fixturePresetIds, fixtureTokens, numberToken, stringToken, wcagRatio, type RootScope } from "./fixtures";
 
 /** WCAG 2.2 minimums: 4.5:1 for text, 3:1 for component boundaries, focus rings and graphics. */
 const TEXT = 4.5;
@@ -104,6 +104,9 @@ const CLIENT_REQUIREMENTS: readonly Requirement[] = [
   },
 ];
 
+/** Requirement groups that apply to every token the client shares with the editor, on all of the client's surfaces. */
+const SHARED_GROUPS = ["text", "status", "borders", "focus", "subtle border", "interaction fills", "text on fills"];
+
 function violations(tokens: Readonly<Record<string, string | number | boolean>>, requirements: readonly Requirement[]): string[] {
   const failures: string[] = [];
   for (const { group, foregrounds, backgrounds, minimum } of requirements) {
@@ -128,6 +131,12 @@ describe.each(fixturePresetIds())("preset %s contrast", (presetId) => {
     expect(violations(fixtureTokens("client", presetId), CLIENT_REQUIREMENTS)).toEqual([]);
   });
 
+  it("meets the editor floors on every surface the client inherits, for every shared text, status, border, focus and interaction token", () => {
+    const shared = EDITOR_REQUIREMENTS.filter((requirement) => SHARED_GROUPS.includes(requirement.group));
+    expect(shared).toHaveLength(SHARED_GROUPS.length);
+    expect(violations(fixtureTokens("client", presetId), shared)).toEqual([]);
+  });
+
   it("keeps graph grid lines quiet: minor and major stay below their ceilings on the canvas", () => {
     const tokens = fixtureTokens("editor", presetId);
     const canvas = stringToken(tokens, "color.surface.canvas");
@@ -139,6 +148,37 @@ describe.each(fixturePresetIds())("preset %s contrast", (presetId) => {
   });
 });
 
+describe("scrim and layers", () => {
+  /** Darkens both colors by the scrim percentage, as a black layer at that opacity does. */
+  function underScrim(color: string, percent: number): string {
+    const channels = [1, 3, 5].map((start) => Math.round(parseInt(color.slice(start, start + 2), 16) * (1 - percent / 100)));
+    return `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+  }
+  const STEP = 5;
+  const COVERED_CONTRAST = 3;
+
+  it("is black in every preset and the smallest step of 5 at which covered text drops below 3:1 in both", () => {
+    const percent = numberToken(fixtureBaseTokens("editor"), "opacity.scrim");
+    const smallest = fixturePresetIds().map((presetId) => {
+      const tokens = fixtureTokens("editor", presetId);
+      expect(stringToken(tokens, "color.surface.scrim")).toBe("#000000");
+      for (let step = STEP; step <= 100; step += STEP) {
+        const ratio = wcagRatio(underScrim(stringToken(tokens, "color.text.primary"), step), underScrim(stringToken(tokens, "color.surface.app"), step));
+        if (ratio < COVERED_CONTRAST) return step;
+      }
+      throw new Error(`No scrim step hides text in ${presetId}`);
+    });
+    expect(percent).toBe(Math.max(...smallest));
+    expect(Number.isInteger(percent)).toBe(true);
+  });
+
+  it("orders popup below tooltip below dialog in the application defaults", () => {
+    const base = fixtureBaseTokens("editor");
+    expect(numberToken(base, "layer.popup")).toBeLessThan(numberToken(base, "layer.tooltip"));
+    expect(numberToken(base, "layer.tooltip")).toBeLessThan(numberToken(base, "layer.dialog"));
+  });
+});
+
 describe("preset palette rules", () => {
   it("uses Neon Lime for exactly one token in neon-dark-mode", () => {
     const lime = "#AAFF00";
@@ -146,9 +186,9 @@ describe("preset palette rules", () => {
     const used = scopes.flatMap((scope) =>
       Object.entries(fixtureTokens(scope, "neon-dark-mode"))
         .filter(([, value]) => typeof value === "string" && value.toUpperCase() === lime)
-        .map(([name]) => `${scope}:${name}`),
+        .map(([name]) => name),
     );
-    expect(used).toEqual(["editor:color.status.success"]);
+    expect([...new Set(used)]).toEqual(["color.status.success"]);
   });
 
   it("maps neon-lights surfaces to the palette: app and canvas Vulcan, panel and inspector Persian Blue", () => {

@@ -12,10 +12,14 @@ The functional fallback set below is exempt. Standard ANSI meaning, status meani
 
 - `color.border.subtle` is a decorative divider only and never marks an interactive boundary. Interactive boundaries use `color.border.normal`.
 - Graph grid lines are quiet, continuous lines. They are never dots.
+- `color.surface.scrim` is the color laid over the interface behind a modal dialog, and `opacity.scrim` is how much of that color covers it, in whole percent. The application default is 65: the smallest step of 5 at which primary text on the covered `color.surface.app` falls below 3:1 in both presets, so covered content reads as inactive. `presetContrast.test.ts` recomputes it. A dialog and its text sit above the scrim and use the overlay surface.
+- `layer.popup`, `layer.tooltip` and `layer.dialog` order floating interface from lowest to highest; a tooltip sits above a menu and a dialog above both.
 
 ## Contrast floors
 
 The same floors are named constants in `presetContrast.test.ts` and are checked against both presets.
+
+The client scope inherits the editor tokens of its preset, so the text, status, border, focus and subtle-border floors below, and the interaction-fill floors, are also checked for the client scope against all six surfaces, and in high-contrast mode. Both presets pass with the inherited values, so the client scope needs no derived override of an inherited color.
 
 | Token group | Floor |
 |---|---|
@@ -60,7 +64,7 @@ Intense Hot Pink is below 4.5:1 on these surfaces, so it appears only as lighten
 | `color.graph.grid.major` | Electric Navy #2A28AD | white | 2% | `#2E2CAF` | smallest lightening reaching 1.5:1 on the canvas |
 | `color.graph.edge.default` | Digital Mint #5DEA90 | black | 32% | `#3F9F62` | largest darkening that keeps 4.5:1 on the canvas |
 | `color.graph.edge.disabled` | Digital Mint #5DEA90 | black | 46% | `#327E4E` | largest darkening that keeps 3:1 on the canvas |
-| `color.graph.node.shadow` | Vulcan #1C291E | black | 100% | `#000000` | shadow is the black end of the blend |
+| `color.graph.node.shadow`, `color.surface.scrim` | Vulcan #1C291E | black | 100% | `#000000` | shadow and scrim are the black end of the blend |
 | `color.client.matchHighlight`, `color.interaction.selection` | Intense Hot Pink #E23D8B | black | 29% | `#A02B63` | smallest darkening that gives Digital Mint text 4.5:1 |
 | `color.client.historyHighlight`, `color.interaction.hover` | Electric Navy #2A28AD | white | 8% | `#3B39B4` | smallest lightening reaching 1.2:1 from every surface |
 | `color.interaction.pressed` | Electric Navy #2A28AD | white | 16% | `#4C4ABA` | largest lightening that keeps Digital Mint text at 4.5:1 and 1.2:1 from every surface |
@@ -97,7 +101,7 @@ Status error and status warning are not named by the mapping and use the fallbac
 | `color.graph.grid.major` | Void #080808 | white | 16% | `#303030` | smallest lightening reaching 1.5:1 on the canvas |
 | `color.graph.node.selected` | Dark Graphite #141414 | white | 14% | `#353535` | selected node step |
 | `color.graph.node.header` | Dark Graphite #141414 | white | 7% | `#242424` | header step |
-| `color.graph.node.shadow` | Void #080808 | black | 100% | `#000000` | shadow is the black end of the blend |
+| `color.graph.node.shadow`, `color.surface.scrim` | Void #080808 | black | 100% | `#000000` | shadow and scrim are the black end of the blend |
 
 ## Functional fallback set
 

@@ -11,7 +11,7 @@ import { isRecord, parseTokenLayer, themeError } from "./validate";
 export interface PresetDefinition {
   readonly id: string;
   readonly label: string;
-  /** Tokens per scope, with home and host already flattened from the scope they inherit. */
+  /** Tokens per scope, with the tokens of any scope they inherit (home, host, client) already merged underneath. */
   readonly tokens: Readonly<Record<ScopeId, TokenMap>>;
 }
 

@@ -1,7 +1,7 @@
 {
   "schema": "mudmaker.theme-defaults.v1",
   "status": "SELECTED_DEFAULT_TOKENS_NOT_RENDER_TESTED",
-  "revision": 2,
+  "revision": 4,
   "manager": "ThemeManager",
   "scopes": {
     "home": {
@@ -58,16 +58,18 @@
         "spacing.page": 64,
         "spacing.stack": 16,
         "font.lineHeight.heading": 1.2,
-        "font.lineHeight.body": 1.5
+        "font.lineHeight.body": 1.5,
+        "layer.popup": 10,
+        "layer.tooltip": 20,
+        "layer.dialog": 30,
+        "opacity.scrim": 65
       }
     },
     "client": {
+      "inherits": "editor",
       "preset": "neon-lights",
       "tokens": {
         "color.terminal.warning": "#FFCC93",
-        "font.family.interface": "system-ui, sans-serif",
-        "font.family.code": "ui-monospace, monospace",
-        "font.family.numeric": "ui-monospace, monospace",
         "font.terminal.family": "ui-monospace, monospace",
         "font.terminal.size": 15,
         "font.terminal.lineHeight": 1.5,
@@ -75,7 +77,6 @@
         "color.map.current": "#9FE1B9",
         "color.map.unknown": "#8A97A8",
         "color.map.uncertain": "#F2C887",
-        "interaction.touchHitSize": 44,
         "text.wrapWidth": 0,
         "text.timestamps": false,
         "color.terminal.ansi0": "#6D7075",
@@ -109,22 +110,7 @@
         "text.ansiColorPolicy": "adapted",
         "interaction.client.autofollow": true,
         "interaction.client.focusMode": "composer",
-        "font.size.body": 14,
-        "font.size.caption": 12,
-        "font.size.heading": 18,
-        "spacing.panel": 12,
-        "spacing.row": 8,
-        "motion.duration.normalMs": 150,
-        "motion.reducedDurationMs": 0,
-        "interaction.pointerHitSize": 32,
-        "color.status.error": "#FFA1A6",
-        "color.status.warning": "#F6CC8B",
-        "interaction.client.scrollbackPause": true,
-        "layout.contentMaxWidth": 448,
-        "spacing.page": 64,
-        "spacing.stack": 16,
-        "font.lineHeight.heading": 1.2,
-        "font.lineHeight.body": 1.5
+        "interaction.client.scrollbackPause": true
       }
     }
   },
@@ -140,6 +126,7 @@
             "color.surface.inspector": "#222174",
             "color.surface.canvas": "#1C291E",
             "color.surface.overlay": "#2A28AD",
+            "color.surface.scrim": "#000000",
             "color.text.primary": "#5DEA90",
             "color.text.secondary": "#57DC87",
             "color.text.muted": "#52CE7F",
@@ -179,10 +166,6 @@
         },
         "client": {
           "tokens": {
-            "color.surface.app": "#1C291E",
-            "color.surface.panel": "#222174",
-            "color.text.primary": "#5DEA90",
-            "color.text.secondary": "#57DC87",
             "color.terminal.background": "#1C291E",
             "color.terminal.foreground": "#5DEA90",
             "color.terminal.prompt": "#A6A5DD",
@@ -191,10 +174,6 @@
             "color.terminal.tell": "#B5A6B8",
             "color.terminal.system": "#52CE7F",
             "color.terminal.warning": "#B5A6B8",
-            "color.border.focused": "#E55499",
-            "color.border.normal": "#3E9D60",
-            "color.status.error": "#EE8BB9",
-            "color.status.warning": "#B5A6B8",
             "color.status.connected": "#5DEA90",
             "color.status.reconnecting": "#B5A6B8",
             "color.status.offline": "#52CE7F",
@@ -217,6 +196,7 @@
             "color.surface.inspector": "#242424",
             "color.surface.canvas": "#080808",
             "color.surface.overlay": "#303030",
+            "color.surface.scrim": "#000000",
             "color.text.primary": "#EBEBEB",
             "color.text.secondary": "#D0D0D0",
             "color.text.muted": "#B2B2B2",
@@ -248,10 +228,6 @@
         },
         "client": {
           "tokens": {
-            "color.surface.app": "#080808",
-            "color.surface.panel": "#141414",
-            "color.text.primary": "#EBEBEB",
-            "color.text.secondary": "#D0D0D0",
             "color.terminal.background": "#080808",
             "color.terminal.foreground": "#EBEBEB",
             "color.terminal.prompt": "#00F5FF",
@@ -259,8 +235,6 @@
             "color.terminal.chat": "#D0D0D0",
             "color.terminal.tell": "#9B5CFF",
             "color.terminal.system": "#B2B2B2",
-            "color.border.focused": "#9B5CFF",
-            "color.border.normal": "#7A7A7A",
             "color.client.inputBackground": "#141414",
             "color.client.historyHighlight": "#3E3E3E",
             "color.client.matchHighlight": "#7F4BD1",

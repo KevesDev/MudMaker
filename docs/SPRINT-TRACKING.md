@@ -2,6 +2,8 @@
 
 **Canonical sprint order and phase status.** Each sprint owns a cohesive milestone; phases are small Builder/Auditor handoffs. Sprint and phase IDs follow this table's execution order; matching specs and references must use these canonical IDs.
 
+**Phase sizing rule (owner, 2026-10-29):** each phase is one small coherent unit a Builder can finish correctly in one pass. Lead splits a sprint into sub-phases (letters under the original phase number, so existing references stay valid) before dispatching it. Only S02 is split so far; later sprints are split before they start. **USER TEST** marks a point where the owner gets a precise test list.
+
 **Current:** S00 and S01 complete. Decisions: [ADR records](07-decisions/ADR-RECORDS-S01.md). Next: S02 launchable application shell (launch with `npm run dev`).
 
 ## Real application and testing milestones
@@ -22,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **1/10** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **7/34** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -86,15 +88,39 @@
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S02.1 ThemeManager** | Resolve independent Editor/Client themes from one shared token schema; no hard-coded colors or fonts in app styles | DONE | Auditor PASS after 4 rounds (112 theme tests). Presets: default "Neon Lights" and alternative "Neon Dark Mode" (owner palettes, 2026-10-28), values and derivations in [theme-presets](03-contracts/ui-ux/theme-presets.md). On-screen look is unverified until the S02.3 preset switch; token file still marked not render tested. |
-| **S02.2 UI primitives** | Implement shared accessible, themed UI primitives and typed action descriptors | TODO | — |
-| **S02.3 Loading and splash** | Boot the real app window, verify installed build/UI health, display name/version and Create/Play/Host; show unavailable engine services honestly | TODO | — |
-| **S02.4 Workspace navigation** | Switch real Create/Play/Host shells and retain unsaved UI drafts; host/session retention integrates when those services exist | TODO | — |
-| **S02.5 Editor shell** | Implement Creator tabs, inspectors, focus handling and draft undo ownership | TODO | — |
-| **S02.6 Graph paper** | Render reusable continuous dark minor/major grid with pan/zoom/snap | TODO | — |
-| **S02.7 Responsive inputs** | Support tablet/pen/touch and keyboard workspace navigation | TODO | — |
-| **S02.8 Control registration** | Bind implemented Editor widgets to UI catalog, action ownership and accessible states | TODO | — |
-| **S02.9 Theme preferences** | Provide user themes, preview, import/export, persistence and safe fallback | TODO | — |
-| **S02.10 Model setup wizard shell** | Real hardware-check UI and fixed three-model catalog from S02 specification, with model details, off state and error/status views | TODO | — |
+| **S02.2a Action registry** | Load the four UI catalogs and the action table; validate every rule in the control schema; typed lookup | DONE | Auditor PASS (re-audit 2026-10-29) |
+| **S02.2b Action bus** | Single dispatcher with the contract state machine, idempotent pending, timeout, correlation and structured diagnostics | DONE | Auditor PASS (re-audit 2026-10-29) |
+| **S02.2c Input Manager** | One owner of keyboard, focus, pointer activation and surface streams; focus scopes, shortcut collisions, text-entry suppression | DONE | Auditor PASS (re-audit 2026-10-29) |
+| **S02.2d Buttons, toolbar and help** | Button, IconButton, Toolbar with roving focus and Tooltip/help contract (hoverable, keyboard and touch reachable) | DONE | Auditor PASS (re-audit 2026-10-29) |
+| **S02.2e Menus and selection** | Dropdown, Menu and Switch bound to the action bus with a single value channel | DONE | Auditor PASS (re-audit 2026-10-29) |
+| **S02.2f Dialogs and feedback** | Dialog with focus trap and destructive rules, Toast, Progress, StatusIndicator, TextField | DONE | Auditor PASS (final 2026-10-29). macOS WebKit focus behavior still needs a real Mac, tracked in S18.1 |
+| **S02.3a Loading and splash screen** | Real splash: MudMaker name, version, build id and honest engine status from the shell (USER TEST) | TODO | — |
+| **S02.3b Create/Play/Host entries** | Create, Play and Host controls from the catalog, honest unavailable states and recent-items empty states (USER TEST) | TODO | — |
+| **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | TODO | — |
+| **S02.4a Workspace navigator** | One navigator owning Create/Play/Host/Splash routing and per-workspace session retention | TODO | — |
+| **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | TODO | — |
+| **S02.4c Draft retention and transition guard** | Switch without losing editor drafts; Keep Draft, Save, Cancel dialog; guards for Play and Host plug in later (USER TEST) | TODO | — |
+| **S02.5a Docking and split layout** | DockPanel and SplitView with keyboard resize and tablet drawer behavior | TODO | — |
+| **S02.5b Tabs** | TabStrip with overflow, reorder, close and dirty markers | TODO | — |
+| **S02.5c Inspector container** | Inspector panel and InspectorField shell with grouped tabs and collapsible categories; no fake data | TODO | — |
+| **S02.5d Editor focus and undo ownership** | Focus handling across panels and one draft undo stack owner (USER TEST) | TODO | — |
+| **S02.6a Viewport transform** | Pure pan/zoom world-to-screen math, stable anchors, HiDPI and bounded cost | TODO | — |
+| **S02.6b Graph paper renderer** | Continuous dark minor/major grid lines (no dots), zoom-adaptive minor visibility, themed | TODO | — |
+| **S02.6c Snap and grid toggles** | Independent snap and grid display toggles in world coordinates | TODO | — |
+| **S02.6d Canvas surface** | GraphViewport wired to the Input Manager for wheel, drag and keyboard pan/zoom (USER TEST) | TODO | — |
+| **S02.7a Touch gestures** | Pinch, two-finger pan, tap and long press through the Input Manager | TODO | — |
+| **S02.7b Pen input** | Pen pressure-free drawing and hover semantics, palm rejection rules | TODO | — |
+| **S02.7c Keyboard workspace navigation** | Complete keyboard path across shells, panels and canvas | TODO | — |
+| **S02.7d Tablet layout** | Drawers and stacked panels at tablet sizes, target sizes from tokens (USER TEST) | TODO | — |
+| **S02.8a Editor control binding** | Bind implemented editor widgets to the editor catalog and action owners | TODO | — |
+| **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | TODO | — |
+| **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | TODO | — |
+| **S02.9b Theme editor and preview** | Create, edit and preview a custom theme with cancel, no gameplay effect | TODO | — |
+| **S02.9c Theme import and export** | Data-only import with exact token diagnostics and export (USER TEST) | TODO | — |
+| **S02.9d Shortcut preferences** | Customize, import, export and reset keyboard shortcuts per scope with conflict display (interaction contract obligation; needs S02.9a persistence) | TODO | — |
+| **S02.10a Hardware detection** | Real CPU, RAM, disk and instruction-support detection through the shell | TODO | — |
+| **S02.10b Model catalog and recommendation** | Fixed three-model manifest and per-model recommended, not recommended or incompatible reasons | TODO | — |
+| **S02.10c Wizard screens and info panel** | Hardware check, model list, info panel, license and off/error/status states; installation arrives in S04.16 (USER TEST) | TODO | — |
 
 ## S03 — ECS foundation
 
@@ -482,7 +508,7 @@
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S18.1 Platform** | Target OS client/host checks | TODO | — |
+| **S18.1 Platform** | Target OS client/host checks, including a real macOS (WebKit) pass: clicked buttons do not take focus there, so dialog focus return and pointer-opened menus must be verified on a Mac (S02.2f) | TODO | — |
 | **S18.2 Accessibility** | Keyboard/touch/contrast/readers | TODO | — |
 | **S18.3 Parser fuzz** | Malformed and Unicode payloads | TODO | — |
 | **S18.4 Flood fairness** | Connection+RP overload | TODO | — |

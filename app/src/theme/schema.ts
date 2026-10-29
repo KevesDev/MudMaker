@@ -31,6 +31,7 @@ const DURATION: TokenType = { kind: "duration" };
 const POSITIVE_NUMBER: TokenType = { kind: "number", min: 0, minExclusive: true };
 const POSITIVE_INTEGER: TokenType = { kind: "integer", min: 1, max: Number.MAX_SAFE_INTEGER };
 const NON_NEGATIVE_INTEGER: TokenType = { kind: "integer", min: 0, max: Number.MAX_SAFE_INTEGER };
+const PERCENT: TokenType = { kind: "integer", min: 1, max: 100 };
 const FONT_WEIGHT: TokenType = { kind: "integer", min: 1, max: 1000 };
 const BOOLEAN: TokenType = { kind: "boolean" };
 const IDENTIFIER: TokenType = { kind: "identifier" };
@@ -42,7 +43,7 @@ const ANSI_COLOR_POLICY: TokenType = {
 const ANSI_PALETTE = Array.from({ length: 16 }, (_, index) => `ansi${index}`);
 
 const FAMILIES: readonly TokenFamily[] = [
-  { prefix: "color.surface", members: ["app", "panel", "toolbar", "inspector", "canvas", "overlay"], type: COLOR },
+  { prefix: "color.surface", members: ["app", "panel", "toolbar", "inspector", "canvas", "overlay", "scrim"], type: COLOR },
   { prefix: "color.text", members: ["primary", "secondary", "muted", "disabled"], type: COLOR },
   { prefix: "color.border", members: ["normal", "subtle", "focused", "invalid"], type: COLOR },
   { prefix: "color.graph.grid", members: ["minor", "major"], type: COLOR },
@@ -98,6 +99,10 @@ const FAMILIES: readonly TokenFamily[] = [
   { prefix: "spacing", members: "open", type: LENGTH },
   { prefix: "shape", members: "open", type: LENGTH },
   { prefix: "layout", members: ["contentMaxWidth"], type: LENGTH },
+  /** Stacking order of floating layers; a higher number sits above a lower one. */
+  { prefix: "layer", members: ["popup", "tooltip", "dialog"], type: NON_NEGATIVE_INTEGER },
+  /** How much of the covered interface the scrim hides, in percent. */
+  { prefix: "opacity", members: ["scrim"], type: PERCENT },
   { prefix: "motion.duration", members: "open", type: DURATION, role: "motionDuration" },
   { prefix: "motion", members: ["reducedDurationMs"], type: DURATION },
   { prefix: "interaction", members: ["pointerHitSize", "touchHitSize", "focusOutlineWidth"], type: LENGTH },

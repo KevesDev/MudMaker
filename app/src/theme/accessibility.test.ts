@@ -225,4 +225,18 @@ describe.each(fixturePresetIds())("high contrast in preset %s", (presetId) => {
     ).toBeGreaterThanOrEqual(TEXT_TARGET);
     expect(lowest(tokens, ["color.border.normal", "color.border.focused"], clientSurfaces)).toBeGreaterThanOrEqual(GRAPHIC_TARGET);
   });
+
+  it("gives the inherited shared tokens the same 7:1 and 3:1 on every client surface", () => {
+    const tokens = highContrastManager().getSnapshot("client").tokens;
+    expect(
+      lowest(
+        tokens,
+        ["color.text.primary", "color.text.secondary", "color.text.muted", "color.status.success", "color.status.warning", "color.status.error", "color.status.information"],
+        SURFACES,
+      ),
+    ).toBeGreaterThanOrEqual(TEXT_TARGET);
+    expect(
+      lowest(tokens, ["color.border.normal", "color.border.focused", "color.border.invalid", "color.interaction.focus"], SURFACES),
+    ).toBeGreaterThanOrEqual(GRAPHIC_TARGET);
+  });
 });
