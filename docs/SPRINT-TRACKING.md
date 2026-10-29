@@ -76,6 +76,8 @@
 | **S01.7 Platform launch smoke test** | Build and launch a minimal real native MudMaker app window on the selected platform; verify packaged startup and shutdown, with no fake engine state | DONE | Auditor PASS; owner confirmed window shows 0.1.0, build 041d33a, windows x86_64 (2026-10-28). Spec [S01-7](05-sprints/specs/S01-7-SPEC.md) |
 | **S01.8 Optional inference ADR** | Approve embedded inference runtime and hardware safety/acceptance limits; initial selectable models are fixed in S02 specification and are installed only through the wizard | DONE | [ADR-RECORDS-S01](07-decisions/ADR-RECORDS-S01.md) |
 
+**Visual-design references for UI phases:** [shared minimalist retro shell](03-contracts/ui-ux/10-visual-language-and-shared-shell.md), [Splash](03-contracts/ui-ux/11-splash-screen-visual-spec.md), [Creator](03-contracts/ui-ux/12-creator-editor-visual-spec.md), [Play](03-contracts/ui-ux/13-play-client-visual-spec.md), and [Host](03-contracts/ui-ux/14-host-operations-visual-spec.md). Consistent compact toolbars, Settings → Appearance and Go To, no card-grid dashboards or permanent redundant tab piles; functional catalogs remain authoritative.
+
 ## S02 — Editor and shared UI foundation
 
 **Spec:** [S02](05-sprints/specs/S02.md) · **Requires:** S01 UI/platform decision; application shell starts before ECS implementation
