@@ -11,19 +11,21 @@ export interface ToastProps {
   /** Stable error code shown so the user can quote it to support. */
   readonly code?: string;
   readonly onDismiss: () => void;
+  /** Set to false when the owner has already announced the same words, so they are not read twice. */
+  readonly live?: boolean;
 }
 
 /**
  * A notice that stays until dismissed, so nothing disappears before it is read. Problems use an
  * alert role and everything else a polite status; the tone is also spelled out in words.
  */
-export function Toast({ described, tone, code, onDismiss }: ToastProps) {
+export function Toast({ described, tone, code, onDismiss, live = true }: ToastProps) {
   const title = requireName(described, "Toast");
   const dismissCommand = `toast.dismiss.${described.id}`;
   const dismiss = useLatest(onDismiss);
   useCommand(dismissCommand, () => dismiss.current());
   return (
-    <div role={tone === "error" ? "alert" : "status"} className="ui-toast" data-tone={tone}>
+    <div role={live ? (tone === "error" ? "alert" : "status") : undefined} className="ui-toast" data-tone={tone}>
       <strong className="ui-toast-title">
         {copy.toneLabel[tone]}: {title}
       </strong>

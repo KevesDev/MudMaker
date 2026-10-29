@@ -74,7 +74,8 @@ describe("ActionBus dispatch", () => {
     const result = await ui.runtime.bus.dispatch({ actionId: "ui.test.save", controlId: SAVE });
     expect(result).toMatchObject({ status: "recoverable-error", code: "handler-failed" });
     expect(ui.runtime.bus.getRuntime(SAVE).message).toBe("Save Project did not finish. Please try again.");
-    expect(ui.diagnostics[0]?.message).toContain("disk full");
+    expect(ui.diagnostics[0]?.detail).toContain("disk full");
+    expect(ui.diagnostics[0]?.message).not.toContain("disk full");
     expect(ui.runtime.bus.getRuntime(SAVE).message).not.toContain("disk full");
   });
 
@@ -284,5 +285,67 @@ describe("a handler that stalls", () => {
     expect(() => make(0)).toThrowError(expect.objectContaining({ code: "max-pending-invalid" }));
     expect(() => make(Number.NaN)).toThrowError(expect.objectContaining({ code: "max-pending-invalid" }));
     expect(make(1)).toBeInstanceOf(ActionBus);
+  });
+});
+
+describe("diagnostic severity", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("is info for the expected unavailability of an action nobody handles yet, and error for a request the action table does not know", async () => {
+    const ui = createTestUi();
+    await ui.runtime.bus.dispatch({ actionId: "ui.test.orphan", controlId: ORPHAN });
+    await ui.runtime.bus.dispatch({ actionId: "ui.test.ghost", controlId: null });
+    expect(ui.diagnostics.map((d) => [d.code, d.severity])).toEqual([
+      ["no-action-owner", "info"],
+      ["action-unknown", "error"],
+    ]);
+  });
+
+  it("is error for a handler that fails or stalls, and warning when a stalled handler answers late", async () => {
+    vi.useFakeTimers();
+    const ui = createTestUi({ maxPendingMs: 100 });
+    const outcome = deferred<ActionOutcome>();
+    ui.runtime.bus.registerHandler(EDITOR, "ui.test.save", () => outcome.promise);
+    ui.runtime.bus.registerHandler(EDITOR, "ui.test.undo", () => Promise.reject(new Error("broken")));
+    const stalled = ui.runtime.bus.dispatch({ actionId: "ui.test.save", controlId: SAVE });
+    await vi.advanceTimersByTimeAsync(100);
+    await stalled;
+    outcome.resolve({ status: "success" });
+    await vi.advanceTimersByTimeAsync(0);
+    await ui.runtime.bus.dispatch({ actionId: "ui.test.undo", controlId: "editor.toolbar.02" });
+    expect(ui.diagnostics.map((d) => [d.code, d.severity])).toEqual([
+      ["handler-timeout", "error"],
+      ["handler-settled-late", "warning"],
+      ["handler-failed", "error"],
+    ]);
+  });
+
+  it("carries the launch identifier of a request into its diagnostics", async () => {
+    const ui = createTestUi();
+    await ui.runtime.bus.dispatch({ actionId: "ui.test.orphan", controlId: ORPHAN, correlation: { launchId: "launch-1" } });
+    expect(ui.diagnostics[0]?.correlation).toEqual({ launchId: "launch-1" });
+  });
+});
+
+describe("diagnostic wording", () => {
+  it("keeps the message a safe sentence and puts the owner's raw failure text only in the detail", async () => {
+    const ui = createTestUi();
+    ui.runtime.bus.registerHandler(EDITOR, "ui.test.save", () => Promise.reject(new Error("disk full at C:\private\path")));
+    await ui.runtime.bus.dispatch({ actionId: "ui.test.save", controlId: SAVE });
+    expect(ui.diagnostics).toEqual([
+      expect.objectContaining({
+        code: "handler-failed",
+        message: "The handler for ui.test.save failed.",
+        detail: "disk full at C:\private\path",
+      }),
+    ]);
+  });
+
+  it("carries no detail for diagnostics that have no raw text", async () => {
+    const ui = createTestUi();
+    await ui.runtime.bus.dispatch({ actionId: "ui.test.orphan", controlId: ORPHAN });
+    expect(ui.diagnostics[0]).not.toHaveProperty("detail");
   });
 });

@@ -22,6 +22,8 @@ export type ActionValue = string | number | boolean;
 
 /** Identifiers the dispatching owner supplies so one request can be followed across logs. */
 export interface Correlation {
+  /** Names one run of the application, so every line a launch writes can be found together. */
+  readonly launchId?: string;
   readonly worldId?: string;
   readonly sessionId?: string;
   readonly requestId?: string;
@@ -78,11 +80,19 @@ export interface ControlRuntime {
   readonly reason: string | null;
 }
 
+/** `info` marks expected outcomes such as an action nobody handles yet; `error` marks a defect the operator should look at. */
+export const DIAGNOSTIC_SEVERITIES = ["error", "warning", "info"] as const;
+export type DiagnosticSeverity = (typeof DIAGNOSTIC_SEVERITIES)[number];
+
 export interface UiDiagnostic {
+  readonly severity: DiagnosticSeverity;
   readonly code: string;
   readonly actionId: ActionId | null;
   readonly controlId: ControlId | null;
+  /** A safe sentence. Raw failure text belongs in `detail`. */
   readonly message: string;
+  /** Raw technical text for the operator log; never shown to the user. */
+  readonly detail?: string;
   /** The correlation the dispatching owner supplied, echoed unchanged; empty when none was given. */
   readonly correlation: Correlation;
 }
@@ -90,6 +100,8 @@ export interface UiDiagnostic {
 export type DiagnosticSink = (diagnostic: UiDiagnostic) => void;
 
 const NO_CORRELATION: Correlation = Object.freeze({});
+/** Nobody has registered a handler yet: expected while a feature is not built, so it is not an error. */
+const NO_OWNER_CODE = "no-action-owner";
 const TIMED_OUT: unique symbol = Symbol("handler-timed-out");
 
 type Refusal =
@@ -203,7 +215,7 @@ export class ActionBus {
     }
     if (refusal?.kind === "refused") return this.refuse(request, refusal.status, refusal.code, refusal.message);
     const handler = this.handlers.get(actionId);
-    if (!handler) return this.refuse(request, "unavailable", "no-action-owner", copy.notInThisBuild(label));
+    if (!handler) return this.refuse(request, "unavailable", NO_OWNER_CODE, copy.notInThisBuild(label));
 
     this.inFlight.add(actionId);
     const bound = this.registry.controlsForAction(actionId);
@@ -234,11 +246,11 @@ export class ActionBus {
       code: "handler-timeout",
       message: copy.takingLong(label),
     };
-    this.report(request, stalled.code, `The handler for ${actionId} did not answer within ${this.maxPendingMs} milliseconds.`);
+    this.report(request, "error", stalled.code, `The handler for ${actionId} did not answer within ${this.maxPendingMs} milliseconds.`);
     this.show(bound, stalled, label, "pending");
     void settled.then((late) => {
       this.inFlight.delete(actionId);
-      this.report(request, "handler-settled-late", `The handler for ${actionId} answered after the wait ended with ${late.status}.`);
+      this.report(request, "warning", "handler-settled-late", `The handler for ${actionId} answered after the wait ended with ${late.status}.`);
       this.show(bound, late, label, "recoverable-error", stalled.code);
     });
     return { ...stalled, actionId };
@@ -249,10 +261,10 @@ export class ActionBus {
     try {
       const returned: unknown = await handler(request);
       if (isOutcome(returned)) return returned;
-      this.report(request, "handler-invalid-outcome", `The handler for ${request.actionId} returned an unrecognised result.`);
+      this.report(request, "error", "handler-invalid-outcome", `The handler for ${request.actionId} returned an unrecognised result.`);
       return { status: "recoverable-error", code: "handler-invalid-outcome", message: copy.didNotFinish(label) };
     } catch (failure) {
-      this.report(request, "handler-failed", `The handler for ${request.actionId} failed: ${describeFailure(failure)}`);
+      this.report(request, "error", "handler-failed", `The handler for ${request.actionId} failed.`, describeFailure(failure));
       return { status: "recoverable-error", code: "handler-failed", message: copy.didNotFinish(label) };
     }
   }
@@ -275,7 +287,7 @@ export class ActionBus {
     const reason = this.disabledReasonFor(request);
     if (reason !== null) return { kind: "ignored", code: "control-disabled", message: copy.disabledBecause(label, reason) };
     if (!this.handlers.has(actionId)) {
-      return { kind: "refused", status: "unavailable", code: "no-action-owner", message: copy.notInThisBuild(label) };
+      return { kind: "refused", status: "unavailable", code: NO_OWNER_CODE, message: copy.notInThisBuild(label) };
     }
     return null;
   }
@@ -298,7 +310,7 @@ export class ActionBus {
   }
 
   private refuse(request: ActionRequest, status: FailureStatus, code: string, message: string): DispatchResult {
-    this.report(request, code, message);
+    this.report(request, code === NO_OWNER_CODE ? "info" : "error", code, message);
     this.writeMany(this.registry.controlsForAction(request.actionId), (runtime) => runtime.state !== "disabled", {
       state: status,
       message,
@@ -321,12 +333,14 @@ export class ActionBus {
     return outcome.message;
   }
 
-  private report(request: ActionRequest, code: string, message: string): void {
+  private report(request: ActionRequest, severity: DiagnosticSeverity, code: string, message: string, detail?: string): void {
     this.diagnostics({
+      severity,
       code,
       actionId: request.actionId,
       controlId: request.controlId,
       message,
+      ...(detail === undefined ? {} : { detail }),
       correlation: request.correlation ?? NO_CORRELATION,
     });
   }

@@ -32,6 +32,28 @@ describe("action table constants", () => {
   });
 });
 
+describe("catalog index counts", () => {
+  const perWorkspace = Object.fromEntries(catalogs.map((catalog) => [catalog.workspace, catalog.controls.length]));
+  const total = Object.values(perWorkspace).reduce((sum, count) => sum + count, 0);
+
+  it("states the visible element total and action total the files hold", () => {
+    expect(catalogIndex).toContain(`**${total} visible elements**`);
+    expect(catalogIndex).toContain(`**${actionsJson.actions.length} distinct semantic actions**`);
+  });
+
+  it("repeats the total in the guidance sentence that tells implementers how many controls not to render at once", () => {
+    const stated = /not all (\d+)/.exec(catalogIndex)?.[1];
+    expect(stated).toBe(String(total));
+  });
+
+  it("states the item count of every workspace catalog", () => {
+    expect(Object.keys(perWorkspace)).toHaveLength(catalogs.length);
+    for (const [workspace, count] of Object.entries(perWorkspace)) {
+      expect(catalogIndex, workspace).toMatch(new RegExp(`\\|\\s*${workspace}\\s*\\|\\s*${count}\\s*\\|`));
+    }
+  });
+});
+
 describe("state vocabulary", () => {
   const section = /## Catalog state vocabulary\r?\n([^#]*)/.exec(interactionDocument)?.[1] ?? "";
   const documented = (word: string): boolean => new RegExp(`(^|[^A-Za-z-])${word}([^A-Za-z-]|$)`).test(interactionDocument);

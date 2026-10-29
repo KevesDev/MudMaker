@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { startTheme, themeManager } from "./theme";
 import "./styles.css";
+import "./home/home.css";
 
 startTheme(themeManager, "home", window);
 

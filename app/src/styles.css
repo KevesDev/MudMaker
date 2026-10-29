@@ -6,24 +6,8 @@ body {
   background: var(--color-surface-app);
   color: var(--color-text-primary);
 }
-.launch {
-  max-width: var(--layout-contentMaxWidth);
-  margin: var(--spacing-page) auto;
-  padding: 0 var(--spacing-stack);
-}
 h1 {
   font-size: var(--font-size-heading);
   line-height: var(--font-lineHeight-heading);
   min-height: calc(1em * var(--font-lineHeight-heading));
-}
-dl {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: var(--spacing-row) var(--spacing-stack);
-}
-dt {
-  color: var(--color-text-muted);
-}
-dd {
-  margin: 0;
 }

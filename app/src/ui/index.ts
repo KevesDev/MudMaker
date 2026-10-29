@@ -11,11 +11,13 @@ export type {
   ActionValue,
   ControlRuntime,
   ControlState,
+  DiagnosticSeverity,
   DiagnosticSink,
   DispatchResult,
   FailureStatus,
   UiDiagnostic,
 } from "./actions/ActionBus";
+export { DIAGNOSTIC_SEVERITIES } from "./actions/ActionBus";
 export { UI_LIMITS } from "./actions/config";
 export { ActionRegistry, CatalogLoadError, type CatalogSources, type RegistryResult } from "./actions/ActionRegistry";
 export { Announcer, type Announcement, type Politeness } from "./actions/Announcer";
@@ -54,7 +56,8 @@ export {
   type ShortcutRegistration,
   type ShortcutRequest,
 } from "./input/ShortcutRegistry";
-export { Button } from "./primitives/Button";
+export { copy as uiCopy } from "./copy";
+export { Button, type ButtonProps } from "./primitives/Button";
 export { Dialog, type DialogProps } from "./primitives/Dialog";
 export { Dropdown, type DropdownOption, type DropdownProps } from "./primitives/Dropdown";
 export { IconButton, type IconButtonProps } from "./primitives/IconButton";

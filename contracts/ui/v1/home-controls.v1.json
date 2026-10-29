@@ -842,6 +842,69 @@
       ],
       "keyboard": "semanticRead",
       "testId": "UI-home-splash-10"
+    },
+    {
+      "id": "home.splash.11",
+      "workspace": "home",
+      "surface": "home.splash",
+      "kind": "button",
+      "label": "Quit",
+      "tooltip": "Close MudMaker and end the application",
+      "actionId": "ui.app.quit",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-splash-11"
+    },
+    {
+      "id": "home.splash.12",
+      "workspace": "home",
+      "surface": "home.splash",
+      "kind": "dropdown",
+      "label": "Appearance",
+      "tooltip": "Choose the color preset for every MudMaker screen",
+      "actionId": "ui.settings.appearance.preset",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-splash-12"
+    },
+    {
+      "id": "home.splash.13",
+      "workspace": "home",
+      "surface": "home.splash",
+      "kind": "button",
+      "label": "Retry",
+      "tooltip": "Run the startup checks again",
+      "actionId": "ui.app.retryStartup",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "startupCheckFailed",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-splash-13"
     }
   ]
 }

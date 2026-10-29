@@ -219,7 +219,7 @@ describe("activation and states", () => {
     const orphan = ui.control("editor.toolbar.03");
     renderWithUi(ui, <Button control={orphan} />);
     fireEvent.click(screen.getByRole("button", { name: "Unowned Tool" }));
-    expect(await screen.findByText("Unowned Tool is not available in this build.", { selector: ".ui-state-text" })).toBeTruthy();
+    expect(await screen.findByText("Unowned Tool is not available in this build yet.", { selector: ".ui-state-text" })).toBeTruthy();
     expect(ui.runtime.bus.getRuntime("editor.toolbar.03").state).toBe("unavailable");
     expect(screen.getByRole("button", { name: "Unowned Tool" }).getAttribute("data-state")).toBe("recoverable-error");
   });

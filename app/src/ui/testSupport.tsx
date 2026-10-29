@@ -187,3 +187,20 @@ export function elementBy<T extends HTMLElement>(selector: string): T {
   if (!found) throw new Error(`Missing ${selector}`);
   return found;
 }
+
+/** Each pattern comes with text it must catch, so a pattern that stopped matching cannot pass silently. */
+export const FORBIDDEN_STYLE_PATTERNS: readonly (readonly [string, RegExp, string])[] = [
+  ["hex colors", /#[0-9a-fA-F]{3,8}\b/, "color: #1a2b3c;"],
+  ["color functions", /\b(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch)\(/, "background: rgba(0, 0, 0, 0.5);"],
+  ["pixel literals", /\b\d+(?:\.\d+)?px\b/, "width: 12px;"],
+  ["millisecond or second literals", /\b\d+(?:\.\d+)?m?s\b/, "transition: color 150ms;"],
+  ["timers with literal delays", /\b(?:setTimeout|setInterval)\([^;]*,\s*\d/, "setTimeout(() => done(), 500);"],
+  ["frame timers", /\brequestAnimationFrame\b/, "requestAnimationFrame(draw);"],
+  ["z-index numbers", /z-index\s*:\s*-?\d/, "z-index: 10;"],
+  ["radius that is not a token or a calculation from one", /border-radius\s*:\s*(?!var\(|calc\(|inherit)\S/, "border-radius: 50%;"],
+  ["implicit alpha", /\btransparent\b|color-mix\(/, "background: color-mix(in srgb, red, transparent);"],
+  ["font stacks", /\b(?:sans-serif|monospace|system-ui|serif|Helvetica|Arial|Segoe)\b/, "font: 1em system-ui;"],
+  ["font-family without a token", /font-family\s*:\s*(?!var\()\S/, "font-family: Arial;"],
+  ["em dashes", /\u2014/, "a \u2014 b"],
+  ["emoji", /\p{Extended_Pictographic}/u, "ok \u{1F600}"],
+];

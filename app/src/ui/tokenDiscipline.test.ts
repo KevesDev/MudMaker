@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import stylesheet from "./ui.css?raw";
 import themeDefaults from "../../../contracts/ui/v1/theme-defaults.v1.json";
 import { ThemeManager, ThemeSchema, SCOPE_IDS } from "../theme";
+import { FORBIDDEN_STYLE_PATTERNS } from "./testSupport";
 
 const sources = import.meta.glob("./**/*.{ts,tsx}", { query: "?raw", import: "default", eager: true }) as Readonly<Record<string, string>>;
 /** Shipped sources only; tests describe forbidden patterns and would match themselves. */
@@ -29,24 +30,7 @@ describe("shared UI source has no literal styling or timing", () => {
     expect(stylesheet.length).toBeGreaterThan(0);
   });
 
-  /** Each pattern comes with text it must catch, so a pattern that stopped matching cannot pass silently. */
-  const FORBIDDEN: readonly (readonly [string, RegExp, string])[] = [
-    ["hex colors", /#[0-9a-fA-F]{3,8}\b/, "color: #1a2b3c;"],
-    ["color functions", /\b(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch)\(/, "background: rgba(0, 0, 0, 0.5);"],
-    ["pixel literals", /\b\d+(?:\.\d+)?px\b/, "width: 12px;"],
-    ["millisecond or second literals", /\b\d+(?:\.\d+)?m?s\b/, "transition: color 150ms;"],
-    ["timers with literal delays", /\b(?:setTimeout|setInterval)\([^;]*,\s*\d/, "setTimeout(() => done(), 500);"],
-    ["frame timers", /\brequestAnimationFrame\b/, "requestAnimationFrame(draw);"],
-    ["z-index numbers", /z-index\s*:\s*-?\d/, "z-index: 10;"],
-    ["radius that is not a token or a calculation from one", /border-radius\s*:\s*(?!var\(|calc\(|inherit)\S/, "border-radius: 50%;"],
-    ["implicit alpha", /\btransparent\b|color-mix\(/, "background: color-mix(in srgb, red, transparent);"],
-    ["font stacks", /\b(?:sans-serif|monospace|system-ui|serif|Helvetica|Arial|Segoe)\b/, "font: 1em system-ui;"],
-    ["font-family without a token", /font-family\s*:\s*(?!var\()\S/, "font-family: Arial;"],
-    ["em dashes", /\u2014/, "a \u2014 b"],
-    ["emoji", /\p{Extended_Pictographic}/u, "ok \u{1F600}"],
-  ];
-
-  it.each(FORBIDDEN)("catches %s in a sample, and finds none in the shipped files", (_name, pattern, sample) => {
+  it.each(FORBIDDEN_STYLE_PATTERNS)("catches %s in a sample, and finds none in the shipped files", (_name, pattern, sample) => {
     expect(pattern.test(sample)).toBe(true);
     expect(offenders(shipped, pattern)).toEqual([]);
   });
@@ -54,7 +38,7 @@ describe("shared UI source has no literal styling or timing", () => {
   it("lets token references through the same patterns", () => {
     const allowed =
       "border-radius: var(--shape-panelRadius); font-family: var(--font-family-interface); width: var(--interaction-touchHitSize); border-radius: calc(var(--spacing-row) / 2);";
-    for (const [, pattern] of FORBIDDEN) expect(pattern.test(allowed)).toBe(false);
+    for (const [, pattern] of FORBIDDEN_STYLE_PATTERNS) expect(pattern.test(allowed)).toBe(false);
   });
 
   it("gives components no activation or key handlers of their own", () => {

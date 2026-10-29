@@ -209,8 +209,8 @@ describe("shipped catalogs", () => {
     const counts = Object.fromEntries(
       Object.entries(workspaces).map(([workspace, json]) => [workspace, parseCatalog(json, workspace as keyof typeof workspaces, schemaJson).controls.length]),
     );
-    expect(counts).toEqual({ home: 40, editor: 146, client: 116, host: 63 });
-    expect(parseActions(actionsJson, actionIdPattern.pattern).actions).toHaveLength(283);
+    expect(counts).toEqual({ home: 43, editor: 146, client: 116, host: 63 });
+    expect(parseActions(actionsJson, actionIdPattern.pattern).actions).toHaveLength(286);
   });
 
   it("all validate against the published schema rules and the action table", () => {

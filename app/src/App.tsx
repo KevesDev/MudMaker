@@ -1,36 +1,24 @@
-import { useEffect, useState } from "react";
-import { getAppInfo, quitApp, type AppInfo } from "./appInfo";
+import type { ReactElement } from "react";
+import { HomeWorkspace } from "./home/HomeWorkspace";
+import { productionDependencies, type HomeDependencies } from "./home/homeDependencies";
+import { InstallDamaged } from "./home/StartupFailure";
+import { LoadingAnnouncement, StartupLoading } from "./home/StartupLoading";
+import { useStartup } from "./home/useStartup";
 
-export function App() {
-  const [info, setInfo] = useState<AppInfo | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    getAppInfo().then(setInfo, (e: unknown) =>
-      setError(e instanceof Error ? e.message : String(e)),
-    );
-  }, []);
-
+export function App({ dependencies = productionDependencies }: { readonly dependencies?: HomeDependencies }) {
+  const { state, attempt, retry } = useStartup(dependencies);
+  let screen: ReactElement;
+  if (state.phase === "checking") {
+    screen = <StartupLoading />;
+  } else if (state.report.registry === null) {
+    screen = <InstallDamaged report={state.report} />;
+  } else {
+    screen = <HomeWorkspace report={state.report} dependencies={dependencies} retry={retry} focusHeading={attempt > 1} />;
+  }
   return (
-    <main className="launch">
-      <h1>{info?.name ?? ""}</h1>
-      {info && (
-        <dl>
-          <dt>Version</dt>
-          <dd>{info.version}</dd>
-          <dt>Build</dt>
-          <dd>{info.buildId}</dd>
-          <dt>Platform</dt>
-          <dd>{info.platform}</dd>
-          <dt>Architecture</dt>
-          <dd>{info.arch}</dd>
-        </dl>
-      )}
-      {error && <p role="alert">Could not read build details: {error}</p>}
-      <p>Game engine: not installed in this build</p>
-      <button type="button" onClick={() => void quitApp()}>
-        Quit
-      </button>
-    </main>
+    <>
+      {screen}
+      <LoadingAnnouncement checking={state.phase === "checking"} />
+    </>
   );
 }

@@ -1,40 +1,98 @@
-import { afterEach, expect, test, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+/** The shell is replaced by a fake that answers like the real commands; everything else is the production wiring. */
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
-const { quitApp } = vi.hoisted(() => ({
+const shell = vi.hoisted(() => ({
   quitApp: vi.fn(() => Promise.resolve()),
+  writeDiagnostic: vi.fn((_record: unknown) => Promise.resolve()),
+  getAppInfo: vi.fn(),
 }));
 
 vi.mock("./appInfo", () => ({
-  getAppInfo: () =>
-    Promise.resolve({
-      name: "MudMaker",
-      version: "9.8.7",
-      buildId: "abc1234",
-      platform: "windows",
-      arch: "x86_64",
-      profile: "debug",
-    }),
-  quitApp: quitApp,
+  getAppInfo: shell.getAppInfo,
+  getEngineStatus: () => Promise.resolve({ installed: false, reason: "The game engine is not installed in this build." }),
+  quitApp: shell.quitApp,
+  writeDiagnostic: shell.writeDiagnostic,
 }));
 
 import { App } from "./App";
 
-afterEach(cleanup);
+const INFO = {
+  name: "MudMaker",
+  version: "9.8.7",
+  buildId: "abc1234",
+  platform: "windows",
+  arch: "x86_64",
+  profile: "debug",
+  launchId: "launch-app-test",
+};
 
-test("renders build facts from app_info and the engine status line", async () => {
+beforeEach(() => {
+  shell.getAppInfo.mockResolvedValue(INFO);
+  vi.spyOn(console, "info").mockImplementation(() => undefined);
+  vi.spyOn(console, "error").mockImplementation(() => undefined);
+});
+
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+  vi.clearAllMocks();
+});
+
+test("starts with the production wiring and shows the version, build and the engine notice", async () => {
   render(<App />);
-  expect(await screen.findByText("9.8.7")).toBeTruthy();
-  expect(screen.getByText("abc1234")).toBeTruthy();
-  expect(screen.getByText("windows")).toBeTruthy();
-  expect(screen.getByText("x86_64")).toBeTruthy();
-  expect(screen.getByText("Game engine: not installed in this build")).toBeTruthy();
+  expect(await screen.findByText("Version 9.8.7, build abc1234")).toBeTruthy();
+  expect(screen.getByRole("status", { name: "Game engine" }).textContent).toContain("The game engine is not installed in this build.");
   expect(screen.getByRole("button", { name: "Quit" })).toBeTruthy();
 });
 
 test("clicking Quit requests application exit once", async () => {
   render(<App />);
-  await screen.findByText("9.8.7");
+  await screen.findByText("Version 9.8.7, build abc1234");
+  // Input listeners attach in an effect that React may still be holding when the text first appears.
+  await act(async () => undefined);
   fireEvent.click(screen.getByRole("button", { name: "Quit" }));
-  expect(quitApp).toHaveBeenCalledTimes(1);
+  await waitFor(() => expect(shell.quitApp).toHaveBeenCalledTimes(1));
+});
+
+test("sends a refused action to the shell log as information, tagged with the launch id from the shell", async () => {
+  render(<App />);
+  await screen.findByText("Version 9.8.7, build abc1234");
+  // Input listeners attach in an effect that React may still be holding when the text first appears.
+  await act(async () => undefined);
+  fireEvent.click(screen.getByRole("button", { name: "Create" }));
+  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(1));
+  expect(shell.writeDiagnostic.mock.calls[0]?.[0]).toMatchObject({
+    severity: "info",
+    code: "no-action-owner",
+    actionId: "ui.nav.create",
+    controlId: "home.splash.04",
+    correlation: { launchId: INFO.launchId },
+  });
+});
+
+test("sends a failed startup check to the shell log with the raw text only in the detail field, and tells the user in plain words", async () => {
+  shell.getAppInfo.mockRejectedValue(new Error("pipe closed"));
+  render(<App />);
+  const alert = await waitFor(() => {
+    const found = screen.getAllByRole("alert").find((region) => region.closest(".ui-visually-hidden") === null);
+    if (!found) throw new Error("No visible alert yet.");
+    return found;
+  });
+  expect(alert.textContent).not.toContain("pipe closed");
+  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(1));
+  const record = shell.writeDiagnostic.mock.calls[0]?.[0] as Record<string, unknown>;
+  expect(record).toMatchObject({ severity: "error", code: "startup-shell-failed", detail: "pipe closed" });
+  expect(String(record["message"])).not.toContain("pipe closed");
+});
+
+test("keeps working and reports to the console when the shell log cannot be written", async () => {
+  shell.writeDiagnostic.mockRejectedValue(new Error("disk full"));
+  render(<App />);
+  await screen.findByText("Version 9.8.7, build abc1234");
+  // Input listeners attach in an effect that React may still be holding when the text first appears.
+  await act(async () => undefined);
+  fireEvent.click(screen.getByRole("button", { name: "Play" }));
+  await waitFor(() => expect(console.error).toHaveBeenCalledWith("MudMaker could not write its diagnostic log", expect.any(Error)));
+  expect(screen.getByRole("button", { name: "Play" })).toBeTruthy();
 });

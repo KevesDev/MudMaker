@@ -277,6 +277,7 @@ export class InputManager {
         this.notifyActivated(element);
       } else {
         this.deps.diagnostics({
+          severity: "error",
           code: "command-unknown",
           actionId: null,
           controlId: null,
@@ -291,6 +292,7 @@ export class InputManager {
     const control = this.deps.registry.control(controlId);
     if (!control) {
       this.deps.diagnostics({
+        severity: "error",
         code: "control-unknown",
         actionId: null,
         controlId,

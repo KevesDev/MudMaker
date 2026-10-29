@@ -10,6 +10,6 @@ export default defineConfig({
     watch: { ignored: ["**/src-tauri/**"] },
     fs: { allow: [".", "../contracts/ui/v1", "../docs/03-contracts/ui-ux"] },
   },
-  // Shared UI tests read the stylesheet as text; other styles stay unprocessed.
-  test: { environment: "jsdom", css: { include: [/src\/ui\/ui\.css/] } },
+  // Style tests read these stylesheets as text; other styles stay unprocessed.
+  test: { environment: "jsdom", css: { include: [/src\/ui\/ui\.css/, /src\/home\/home\.css/] } },
 });

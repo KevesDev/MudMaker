@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **7/34** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **11/35** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -94,9 +94,10 @@
 | **S02.2d Buttons, toolbar and help** | Button, IconButton, Toolbar with roving focus and Tooltip/help contract (hoverable, keyboard and touch reachable) | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.2e Menus and selection** | Dropdown, Menu and Switch bound to the action bus with a single value channel | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.2f Dialogs and feedback** | Dialog with focus trap and destructive rules, Toast, Progress, StatusIndicator, TextField | DONE | Auditor PASS (final 2026-10-29). macOS WebKit focus behavior still needs a real Mac, tracked in S18.1 |
-| **S02.3a Loading and splash screen** | Real splash: MudMaker name, version, build id and honest engine status from the shell (USER TEST) | TODO | — |
-| **S02.3b Create/Play/Host entries** | Create, Play and Host controls from the catalog, honest unavailable states and recent-items empty states (USER TEST) | TODO | — |
-| **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | TODO | — |
+| **S02.3a Loading and splash screen** | Real splash: MudMaker name, version, build id and honest engine status from the shell (USER TEST) | DONE | Auditor PASS (final 2026-10-29) |
+| **S02.3b Create/Play/Host entries** | Create, Play and Host controls from the catalog, honest unavailable states and recent-items empty states (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29) |
+| **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29); look of both presets still to be judged by the owner |
+| **S02.3d Diagnostic log** | Launch correlation id from the shell and a bounded local structured diagnostic log written by the shell, fed by the UI diagnostic sink with severity levels | DONE | Auditor PASS (final 2026-10-29). Unix permission test compiles for Linux but has not run: run `diagnostic_log_is_private_to_the_owner` on Linux and macOS in S18.1 |
 | **S02.4a Workspace navigator** | One navigator owning Create/Play/Host/Splash routing and per-workspace session retention | TODO | — |
 | **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | TODO | — |
 | **S02.4c Draft retention and transition guard** | Switch without losing editor drafts; Keep Draft, Save, Cancel dialog; guards for Play and Host plug in later (USER TEST) | TODO | — |
@@ -476,7 +477,7 @@
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S17.1 Hosting and database lease** | Enforce one active host/project database writer, local-only store handles and runtime ownership | TODO | — |
+| **S17.1 Hosting and database lease** | Enforce one active host/project database writer, local-only store handles and runtime ownership; single app instance per data folder (the diagnostic log lock is per process, S02.3d) | TODO | — |
 | **S17.2 Storage and host preflight** | Automatically open/check local database and validate scripts, schema, permissions and limits before player port opens | TODO | — |
 | **S17.3 GUI hosting** | Start a validated immutable release from Host workspace | TODO | — |
 | **S17.4 Background host navigation** | Keep host A running when switching to Create, Play or Splash; guarded stop | TODO | — |
@@ -508,7 +509,7 @@
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S18.1 Platform** | Target OS client/host checks, including a real macOS (WebKit) pass: clicked buttons do not take focus there, so dialog focus return and pointer-opened menus must be verified on a Mac (S02.2f) | TODO | — |
+| **S18.1 Platform** | Target OS client/host checks, including a real macOS (WebKit) pass: clicked buttons do not take focus there, so dialog focus return and pointer-opened menus must be verified on a Mac (S02.2f); also run the Unix-only diagnostic log permission test (S02.3d) | TODO | — |
 | **S18.2 Accessibility** | Keyboard/touch/contrast/readers | TODO | — |
 | **S18.3 Parser fuzz** | Malformed and Unicode payloads | TODO | — |
 | **S18.4 Flood fairness** | Connection+RP overload | TODO | — |
