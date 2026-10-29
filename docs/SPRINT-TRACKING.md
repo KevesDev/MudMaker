@@ -96,7 +96,7 @@
 | **S02.2f Dialogs and feedback** | Dialog with focus trap and destructive rules, Toast, Progress, StatusIndicator, TextField | DONE | Auditor PASS (final 2026-10-29). macOS WebKit focus behavior still needs a real Mac, tracked in S18.1 |
 | **S02.3a Loading and splash screen** | Real splash: MudMaker name, version, build id and honest engine status from the shell (USER TEST) | DONE | Auditor PASS (final 2026-10-29) |
 | **S02.3b Create/Play/Host entries** | Create, Play and Host controls from the catalog, honest unavailable states and recent-items empty states (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29) |
-| **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29); look of both presets still to be judged by the owner |
+| **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29); original implementation checkpoint completed. Owner decision since then: appearance selection belongs under Settings > Appearance, not on Splash; placement to be reconciled in S02.9 |
 | **S02.3d Diagnostic log** | Launch correlation id from the shell and a bounded local structured diagnostic log written by the shell, fed by the UI diagnostic sink with severity levels | DONE | Auditor PASS (final 2026-10-29). Unix permission test compiles for Linux but has not run: run `diagnostic_log_is_private_to_the_owner` on Linux and macOS in S18.1 |
 | **S02.4a Workspace navigator** | One navigator for Create/Play/Host/Splash: preserve editor drafts and active hosting across workspace changes, never a Play network connection | TODO | — |
 | **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | TODO | — |
@@ -116,7 +116,7 @@
 | **S02.8a Editor control binding** | Bind implemented editor widgets to the editor catalog and action owners | TODO | — |
 | **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | TODO | — |
 | **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | TODO | — |
-| **S02.9b Theme editor and preview** | Create, edit and preview a custom theme with cancel, no gameplay effect | TODO | — |
+| **S02.9b Theme editor and preview** | Settings > Appearance holds theme preset selection plus custom-theme edit/preview with cancel; remove Appearance selector from Splash, no gameplay effect | TODO | — |
 | **S02.9c Theme import and export** | Data-only import with exact token diagnostics and export (USER TEST) | TODO | — |
 | **S02.9d Shortcut preferences** | Customize, import, export and reset keyboard shortcuts per scope with conflict display (interaction contract obligation; needs S02.9a persistence) | TODO | — |
 | **S02.10a Hardware detection** | Real CPU, RAM, disk and instruction-support detection through the shell | TODO | — |
