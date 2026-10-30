@@ -24,6 +24,9 @@ export interface InputSurface {
   readonly handlers: SurfaceHandlers;
 }
 
+/** Takes the keys pressed on a keyed element; returns true when it used the key, so the browser's own action is cancelled. */
+export type KeyHandler = (event: KeyboardEvent) => boolean;
+
 /** Supplies the world, session and request identifiers for an intent that starts in the interface. */
 export type CorrelationSource = (intent: { readonly actionId: string | null; readonly controlId: string | null }) => Correlation;
 
@@ -81,6 +84,7 @@ export class InputManager {
   private readonly surfaces = new Map<HTMLElement, InputSurface>();
   private readonly surfaceIds = new Set<string>();
   private readonly commands = new Map<string, () => void>();
+  private readonly keyHandlers = new Map<string, KeyHandler>();
   private teardown: (() => void) | null = null;
   private wheelListener: ((event: WheelEvent) => void) | null = null;
 
@@ -163,6 +167,17 @@ export class InputManager {
     };
   }
 
+  /** An element marked with `data-ui-keys` hands the keys pressed on it to the handler of that id, such as a splitter or a tab list. */
+  registerKeys(id: string, handler: KeyHandler): () => void {
+    if (this.keyHandlers.has(id)) {
+      throw new UiContractError("keys-duplicate", id, `Key handler "${id}" is already registered.`);
+    }
+    this.keyHandlers.set(id, handler);
+    return () => {
+      if (this.keyHandlers.get(id) === handler) this.keyHandlers.delete(id);
+    };
+  }
+
   private onClick(event: MouseEvent): void {
     const hit = this.controlAt(event.target);
     if (hit === null || isTextEntry(hit)) return;
@@ -197,6 +212,7 @@ export class InputManager {
         return;
       }
     }
+    if (target !== null && this.routeKeyed(event, target)) return;
     if (target !== null && this.navigateWithinGroup(event, target)) return;
     if (target !== null && (event.key === "Enter" || event.key === " ") && this.activateFromKeyboard(event, target)) return;
     if (event.repeat) return;
@@ -223,6 +239,27 @@ export class InputManager {
   private leavePopupOnTab(): void {
     const top = this.deps.focus.top();
     if (top.kind === "popup") top.onEscape?.();
+  }
+
+  private routeKeyed(event: KeyboardEvent, target: Element): boolean {
+    if (isTextEntry(target)) return false;
+    const keyedId = target.closest("[data-ui-keys]")?.getAttribute("data-ui-keys");
+    if (keyedId === null || keyedId === undefined) return false;
+    const handler = this.keyHandlers.get(keyedId);
+    if (handler === undefined) {
+      this.deps.diagnostics({
+        severity: "error",
+        code: "keys-unknown",
+        actionId: null,
+        controlId: null,
+        message: `No key handler "${keyedId}" is registered.`,
+        correlation: this.correlate(null, null),
+      });
+      return false;
+    }
+    if (!handler(event)) return false;
+    event.preventDefault();
+    return true;
   }
 
   /** Arrow, Home and End move focus between the controls of a roving group such as a toolbar or menu. */

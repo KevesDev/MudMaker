@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **22/42** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **26/42** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -87,6 +87,8 @@
 
 **User checkpoints:** S02.3 splash/window visible; S02.4 switch between Create, Play and Host without losing drafts; S02.6 pan/zoom graph-paper canvas and S02.7 keyboard/touch navigation. Back-end world editing begins in S09.
 
+**S02.5 seams (built and tested, invisible until mounted):** `EditorShell` slots `surface` (S02.6d canvas), `documents` for `TabStrip` (S02.6d and S09.16 document owners), `assets` for `DockPanel` (S09 Asset Explorer) and `inspector` descriptors for `Inspector` (S09.1 data inspector). `DraftUndoStack` and `describeDraftLeaveImpact` are consumed by the Create session service that implements `EditorSessionController` (S09.16 with persistence, S04.6 project save); the Undo, Redo and Save toolbar controls arrive with that service. Touch reordering of tabs has no gesture yet and arrives with S02.7a.
+
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S02.1 ThemeManager** | Resolve independent Editor/Client themes from one shared token schema; no hard-coded colors or fonts in app styles | DONE | Auditor PASS after 4 rounds (112 theme tests). Presets: default "Neon Lights" and alternative "Neon Dark Mode" (owner palettes, 2026-10-28), values and derivations in [theme-presets](03-contracts/ui-ux/theme-presets.md). On-screen look is unverified until the S02.3 preset switch; token file still marked not render tested. |
@@ -111,10 +113,10 @@
 | **S02.4a Workspace navigator** | One navigator for Create/Play/Host/Splash: preserve editor drafts and active hosting across workspace changes, never a Play network connection; ownership of the window frame actions (minimize, maximize, close) moves from the home router to the shared application shell router | TODO | — |
 | **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | DONE | Auditor PASS (2026-10-30). Guard dialogs appear once the editor, Play and Host services exist (S09, S08, S17) |
 | **S02.4c Draft retention and transition guard** | Retain editor drafts; Save/Keep Draft/Cancel. Define Play Disconnect & Switch/Cancel (no background Play sockets) and Host Keep Hosting/Stop Hosting/Cancel; S08/S17 wire real services (USER TEST) | DONE | Auditor PASS (2026-10-30). Guard dialogs appear once the editor, Play and Host services exist (S09, S08, S17) |
-| **S02.5a Docking and split layout** | DockPanel and SplitView with keyboard resize and tablet drawer behavior | TODO | — |
-| **S02.5b Tabs** | TabStrip with overflow, reorder, close and dirty markers | TODO | — |
-| **S02.5c Inspector container** | Inspector panel and InspectorField shell with grouped tabs and collapsible categories; no fake data | TODO | — |
-| **S02.5d Editor focus and undo ownership** | Focus handling across panels and one draft undo stack owner (USER TEST) | TODO | — |
+| **S02.5a Docking and split layout** | DockPanel and SplitView with keyboard resize and tablet drawer behavior | DONE | Auditor PASS round 1 (2026-10-30). Nothing visible until features mount (seams in the S02.5 seams paragraph) |
+| **S02.5b Tabs** | TabStrip with overflow, reorder, close and dirty markers | DONE | Auditor PASS round 1 (2026-10-30). Nothing visible until features mount (seams in the S02.5 seams paragraph) |
+| **S02.5c Inspector container** | Inspector panel and InspectorField shell with grouped tabs and collapsible categories; no fake data | DONE | Auditor PASS round 1 (2026-10-30). Nothing visible until features mount (seams in the S02.5 seams paragraph) |
+| **S02.5d Editor focus and undo ownership** | Focus handling across panels and one draft undo stack owner (USER TEST) | DONE | Auditor PASS round 1 (2026-10-30). Nothing visible until features mount (seams in the S02.5 seams paragraph) |
 | **S02.6a Viewport transform** | Pure pan/zoom world-to-screen math, stable anchors, HiDPI and bounded cost | TODO | — |
 | **S02.6b Graph paper renderer** | Continuous dark minor/major grid lines (no dots), zoom-adaptive minor visibility, themed | TODO | — |
 | **S02.6c Snap and grid toggles** | Independent snap and grid display toggles in world coordinates | TODO | — |
@@ -547,3 +549,4 @@ Record implementation commit, focused test and Auditor PASS in the phase Evidenc
 - Plate layout coverage over the scene is proven by CSS text only; pixel confirmation is part of the owner review.
 - Rename the window frame action owner to the shared shell router across `actions.v1.json`, `frameActions.ts` and tests, or keep the current name deliberately (S02.4 audit).
 - `WorkspaceNotice` dismiss returns focus through a test id lookup; use a ref.
+- Tab drag and split drag read the DOM per pointer move; cache tab midpoints and coalesce resize writes if a heavy surface is mounted (`TabStrip.tsx`, `SplitView.tsx`).

@@ -104,7 +104,11 @@ const FAMILIES: readonly TokenFamily[] = [
   { prefix: "font.terminal", members: ["weight"], type: FONT_WEIGHT },
   { prefix: "spacing", members: "open", type: LENGTH },
   { prefix: "shape", members: "open", type: LENGTH },
-  { prefix: "layout", members: ["contentMaxWidth", "frameRowHeight", "splashMaxWidth"], type: LENGTH },
+  {
+    prefix: "layout",
+    members: ["contentMaxWidth", "frameRowHeight", "splashMaxWidth", "panelMinSize", "panelDefaultSize", "splitStep", "tabletWidth", "tabMaxWidth"],
+    type: LENGTH,
+  },
   /** How wide each divider of the launch screen is, as a fraction of the action row. */
   { prefix: "layout.dividerRatio", members: ["wide", "narrow"], type: POSITIVE_NUMBER },
   /** How the free height of the launch screen divides between the space above the banner and the space below the first block. */

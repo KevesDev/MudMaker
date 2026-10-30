@@ -35,7 +35,7 @@ const EDITOR_NAMESPACES = [
   "spacing.*",
   "shape.*",
   "motion.*",
-  "layout.{contentMaxWidth,frameRowHeight,splashMaxWidth}",
+  "layout.{contentMaxWidth,frameRowHeight,splashMaxWidth,panelMinSize,panelDefaultSize,splitStep,tabletWidth,tabMaxWidth}",
   "layout.dividerRatio.{wide,narrow}",
   "layout.share.{above,below}",
   "wordmark.{defaultStep,seam}",

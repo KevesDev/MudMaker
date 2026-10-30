@@ -7,6 +7,7 @@ import "./home/home.css";
 import "./frame/frame.css";
 import "./nav/nav.css";
 import "./workspaces/workspaces.css";
+import "./editor/editor.css";
 
 startTheme(themeManager, "home", window);
 

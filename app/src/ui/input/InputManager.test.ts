@@ -84,6 +84,24 @@ describe("activation", () => {
     expect(() => ui.runtime.input.registerCommand("demo.run", command)).toThrowError(expect.objectContaining({ code: "command-duplicate" }));
   });
 
+  it("hands keys pressed inside a keyed element to its handler, cancels only the keys it used, and leaves text entry alone", () => {
+    mount(`<div data-ui-keys="demo.keys"><button id="inside">Inside</button><input id="typing" /></div><button id="outside">Outside</button>`);
+    const handler = vi.fn((event: KeyboardEvent) => event.key === "ArrowLeft");
+    ui.runtime.input.registerKeys("demo.keys", handler);
+    expect(fireEvent.keyDown(element("#inside"), { key: "ArrowLeft" })).toBe(false);
+    expect(fireEvent.keyDown(element("#inside"), { key: "ArrowRight" })).toBe(true);
+    fireEvent.keyDown(element("#typing"), { key: "ArrowLeft" });
+    fireEvent.keyDown(element("#outside"), { key: "ArrowLeft" });
+    expect(handler.mock.calls.map(([event]) => event.key)).toEqual(["ArrowLeft", "ArrowRight"]);
+    expect(() => ui.runtime.input.registerKeys("demo.keys", handler)).toThrowError(expect.objectContaining({ code: "keys-duplicate" }));
+  });
+
+  it("reports a keyed element whose handler is not registered", () => {
+    mount(`<button id="orphan" data-ui-keys="demo.missing">Orphan</button>`);
+    fireEvent.keyDown(element("#orphan"), { key: "ArrowLeft" });
+    expect(ui.diagnostics.map((record) => record.code)).toEqual(["keys-unknown"]);
+  });
+
   it("explains a disabled control when it is pressed, without running its action", async () => {
     mount(`<button id="save" data-control-id="${SAVE}" aria-disabled="true">Save</button>`);
     ui.registerHelp(SAVE);

@@ -1,7 +1,7 @@
 {
   "schema": "mudmaker.theme-defaults.v1",
   "status": "SELECTED_DEFAULT_TOKENS_NOT_RENDER_TESTED",
-  "revision": 9,
+  "revision": 10,
   "manager": "ThemeManager",
   "scopes": {
     "home": {
@@ -59,6 +59,11 @@
         "layout.contentMaxWidth": 448,
         "layout.frameRowHeight": 40,
         "layout.splashMaxWidth": 640,
+        "layout.panelMinSize": 160,
+        "layout.panelDefaultSize": 320,
+        "layout.splitStep": 16,
+        "layout.tabletWidth": 1024,
+        "layout.tabMaxWidth": 240,
         "layout.dividerRatio.wide": 0.76,
         "layout.dividerRatio.narrow": 0.59,
         "layout.share.above": 135,

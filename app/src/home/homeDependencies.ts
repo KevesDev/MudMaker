@@ -1,3 +1,4 @@
+import { CreateShell } from "../editor/EditorShell";
 import { getAppInfo, getEngineStatus, quitApp, writeDiagnostic, type DiagnosticRecord } from "../appInfo";
 import { loadFrameRegistry } from "../frame/frameRegistry";
 import { tauriWindowShell, type WindowShell } from "../frame/windowShell";
@@ -41,7 +42,7 @@ export const productionDependencies: HomeDependencies = {
   windowShell: tauriWindowShell,
   loadFrameRegistry,
   leaveServices: {},
-  surfaces: {},
+  surfaces: { create: CreateShell },
   report: createDiagnosticSink({
     write: writeDiagnostic,
     logFailed: reportLogFailure,

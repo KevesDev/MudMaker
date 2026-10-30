@@ -1,0 +1,193 @@
+.editor-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  font-family: var(--font-family-interface);
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+}
+
+.editor-body {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.editor-split {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.editor-split-primary {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: var(--layout-panelMinSize);
+}
+
+.editor-surface {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: var(--color-surface-canvas);
+}
+
+.editor-split-secondary {
+  flex: 0 0 auto;
+  min-width: var(--layout-panelMinSize);
+  overflow: auto;
+  background: var(--color-surface-inspector);
+}
+
+.editor-separator {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--shape-borderWidth);
+  background: var(--color-border-normal);
+  cursor: col-resize;
+  touch-action: none;
+}
+
+/* The line is thin; the part that takes a press is as wide as a touch target. */
+.editor-separator::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline: calc(var(--interaction-touchHitSize) / -2);
+}
+
+.editor-separator:hover {
+  background: var(--color-interaction-hover);
+}
+
+.editor-separator:focus-visible {
+  outline: var(--interaction-focusOutlineWidth) solid var(--color-interaction-focus);
+  outline-offset: var(--shape-borderWidth);
+}
+
+.editor-drawer {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  inline-size: var(--layout-panelDefaultSize);
+  max-inline-size: 100%;
+  overflow: auto;
+  background: var(--color-surface-panel);
+  border-inline-end: var(--shape-borderWidth) solid var(--color-border-normal);
+}
+
+.editor-drawer-overlay {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: var(--layer-popup);
+}
+
+.editor-drawer:focus-visible {
+  outline: var(--interaction-focusOutlineWidth) solid var(--color-interaction-focus);
+  outline-offset: calc(var(--interaction-focusOutlineWidth) * -1);
+}
+
+.editor-tabs {
+  display: flex;
+  flex: 0 0 auto;
+  overflow-x: auto;
+  background: var(--color-surface-toolbar);
+  border-block-end: var(--shape-borderWidth) solid var(--color-border-normal);
+}
+
+.editor-tab-item {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: stretch;
+  max-inline-size: var(--layout-tabMaxWidth);
+  border-inline-end: var(--shape-borderWidth) solid var(--color-border-subtle);
+}
+
+.editor-tab,
+.editor-tab-close {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-row);
+  padding: var(--spacing-row);
+  font: inherit;
+  color: var(--color-text-secondary);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.editor-tab {
+  min-width: 0;
+  border-block-end: calc(var(--shape-borderWidth) * 2) solid var(--color-surface-toolbar);
+}
+
+.editor-tab-item[data-active="true"] .editor-tab {
+  color: var(--color-text-primary);
+  border-block-end-color: var(--color-accent-primary);
+}
+
+.editor-tab:hover,
+.editor-tab-close:hover {
+  background: var(--color-interaction-hover);
+}
+
+.editor-tab:focus-visible,
+.editor-tab-close:focus-visible {
+  outline: var(--interaction-focusOutlineWidth) solid var(--color-interaction-focus);
+  outline-offset: calc(var(--interaction-focusOutlineWidth) * -1);
+}
+
+.editor-tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-inspector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-row);
+  padding: var(--spacing-panel);
+}
+
+.editor-section-heading {
+  margin: 0;
+  font-size: var(--font-size-body);
+}
+
+.editor-section-toggle {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.editor-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-row);
+  padding-block-start: var(--spacing-row);
+}
+
+.editor-section-body[hidden] {
+  display: none;
+}
+
+.editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-row);
+}
+
+.editor-field[data-invalid="true"] {
+  padding-inline-start: var(--spacing-row);
+  border-inline-start: calc(var(--shape-borderWidth) * 2) solid var(--color-border-invalid);
+}
+
+.editor-field-error {
+  font-size: var(--font-size-caption);
+  line-height: var(--font-lineHeight-body);
+  color: var(--color-status-error);
+}

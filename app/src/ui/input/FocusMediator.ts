@@ -1,7 +1,8 @@
 import { UiContractError } from "../actions/types";
 import { focusableWithin, isTextEntry } from "./dom";
 
-export type ScopeKind = "app" | "workspace" | "dialog" | "popup";
+/** A panel is a non-modal region such as a drawer: Escape leaves it, Tab moves through it and out of it. */
+export type ScopeKind = "app" | "workspace" | "dialog" | "popup" | "panel";
 
 export interface ScopeEntry {
   readonly key: string;
@@ -19,7 +20,7 @@ export interface ScopeEntry {
 export const APP_SCOPE = "app";
 
 /**
- * Owns the stack of keyboard scopes (application, workspace, dialog, popup) and whether the
+ * Owns the stack of keyboard scopes (application, workspace, dialog, popup, panel) and whether the
  * user is typing. Only the top scope receives shortcuts and Escape; dialogs also trap Tab.
  */
 export class FocusMediator {
@@ -42,7 +43,7 @@ export class FocusMediator {
     if (entry.kind === "workspace" && this.stack.some((existing) => existing.kind === "workspace")) {
       throw new UiContractError("scope-workspace-duplicate", entry.key, "Only one workspace can be active at a time.");
     }
-    if ((entry.kind === "dialog" || entry.kind === "popup") && !entry.container) {
+    if ((entry.kind === "dialog" || entry.kind === "popup" || entry.kind === "panel") && !entry.container) {
       throw new UiContractError("scope-container-missing", entry.key, `Focus scope "${entry.key}" needs a container element.`);
     }
     this.stack.push(entry);
