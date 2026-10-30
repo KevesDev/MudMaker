@@ -23,7 +23,7 @@ export const homeCopy = {
   /** The one line under the banner, where there is no room beside it. */
   versionCompact: (label: string, version: string, buildId: string): string => `${label} ${version}, build ${buildId}`,
   /** The one brand line under the wordmark. Deleting this string and its element removes it. */
-  tagline: "BUILD WORLDS. YOUR WAY.",
+  tagline: "The Ultimate MUD Suite",
   appearanceChanged: (presetLabel: string): string => `Appearance is now ${presetLabel}.`,
   appearanceUnknown: "That appearance could not be found.",
   appearanceNotApplied: (presetLabel: string): string => `Appearance could not be changed to ${presetLabel}. Your current look is unchanged.`,

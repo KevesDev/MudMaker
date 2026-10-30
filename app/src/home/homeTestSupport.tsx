@@ -79,7 +79,7 @@ export function renderApp(home: TestHome, options: { readonly strict?: boolean }
 export const FRAME_TEXT: readonly string[] = ["MudMaker", GLYPHS.minimize, GLYPHS.maximize, GLYPHS.close];
 
 /** The brand composition the loaded and the failed screens share: the banner, the star of its divider and the brand line. */
-export const BRAND_TEXT: readonly string[] = [WORDMARK_TEXT.trim(), SPLASH_GLYPHS.ornament, "BUILD WORLDS. YOUR WAY."];
+export const BRAND_TEXT: readonly string[] = [WORDMARK_TEXT.trim(), SPLASH_GLYPHS.ornament, "The Ultimate MUD Suite"];
 
 /** Elements matching the selector that are not part of the window frame row. */
 export function outsideFrame(selector: string): Element[] {

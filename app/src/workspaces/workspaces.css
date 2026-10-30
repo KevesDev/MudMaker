@@ -292,12 +292,13 @@
 .play-profile-row {
   inline-size: 100%;
   justify-content: flex-start;
-  background: transparent;
+  background: var(--color-surface-app);
   border: 0;
+  border-inline-start: var(--spacing-row) solid var(--color-surface-app);
   color: var(--color-text-secondary);
 }
 
 .play-profile-row[aria-selected="true"] {
   color: var(--color-text-primary);
-  box-shadow: inset var(--spacing-row) 0 0 var(--color-accent-primary);
+  border-inline-start-color: var(--color-accent-primary);
 }

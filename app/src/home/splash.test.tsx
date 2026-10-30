@@ -139,7 +139,7 @@ describe("the loaded screen", () => {
       WORDMARK_TEXT.trim(),
       "Version 9.8.7, build abc1234",
       ornament,
-      "BUILD WORLDS. YOUR WAY.",
+      "The Ultimate MUD Suite",
       ...["Create", "Play", "Host"].flatMap((label) => [label, chevron]),
       ornament,
       "Settings",
@@ -423,7 +423,7 @@ describe("the splash composition", () => {
       expect(divider.textContent).toBe(SPLASH_GLYPHS.ornament);
     }
     const tagline = document.querySelector(".home-tagline") as HTMLElement;
-    expect(tagline.textContent).toBe("BUILD WORLDS. YOUR WAY.");
+    expect(tagline.textContent).toBe("The Ultimate MUD Suite");
     expect(dividers[0]?.nextElementSibling).toBe(tagline);
     expect(dividers[1]?.closest("footer")).not.toBeNull();
     expect(dividers[1]?.nextElementSibling?.classList.contains("home-footer-actions")).toBe(true);
