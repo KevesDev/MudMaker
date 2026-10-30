@@ -1,4 +1,5 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useTabletLayout } from "../frame/useTabletLayout";
 import { useLatest, useUi } from "../ui";
 import { clampEndSize } from "./splitMath";
 import { useEditorLayout } from "./useEditorLayout";
@@ -20,12 +21,15 @@ interface Drag {
 
 /**
  * Two regions side by side with a separator between them. The end region keeps its width when the window
- * resizes; neither region can be made narrower than the theme's least panel size. Keys and pointer
- * both go through one clamped resize, and both reach the separator only through the input manager.
+ * resizes; neither region can be made narrower than the theme's least panel size. Keys and pointer both go
+ * through one clamped resize, and both reach the separator only through the input manager. At the tablet
+ * layout the end region lies over the primary one as a drawer, so the primary region is never squeezed and
+ * there is nothing to resize.
  */
 export function SplitView({ separatorLabel, primary, secondary }: SplitViewProps) {
   const { input } = useUi();
   const layout = useEditorLayout();
+  const overlay = useTabletLayout();
   const id = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const separatorRef = useRef<HTMLDivElement>(null);
@@ -33,6 +37,7 @@ export function SplitView({ separatorLabel, primary, secondary }: SplitViewProps
   const [requested, setRequested] = useState(layout.panelDefaultSize);
   const [total, setTotal] = useState(0);
   const present = secondary !== undefined && secondary !== null;
+  const resizable = present && !overlay;
   const size = clampEndSize(total, requested, layout.panelMinSize, layout.separatorSize);
   const sizeRef = useLatest(size);
 
@@ -49,7 +54,7 @@ export function SplitView({ separatorLabel, primary, secondary }: SplitViewProps
 
   useEffect(() => {
     const separator = separatorRef.current;
-    if (!present || separator === null) return;
+    if (!resizable || separator === null) return;
     const resize = (next: number): void => {
       const width = rootRef.current?.getBoundingClientRect().width ?? 0;
       if (width <= 0) return;
@@ -83,13 +88,14 @@ export function SplitView({ separatorLabel, primary, secondary }: SplitViewProps
       removeKeys();
       dragRef.current = null;
     };
-  }, [present, input, id, layout, sizeRef]);
+  }, [resizable, input, id, layout, sizeRef]);
 
   const measured = total > 0;
   return (
     <div ref={rootRef} className="editor-split">
       <div className="editor-split-primary">{primary}</div>
-      {present ? (
+      {present && overlay ? <div className="editor-split-secondary editor-split-secondary-overlay">{secondary}</div> : null}
+      {resizable ? (
         <>
           <div
             ref={separatorRef}

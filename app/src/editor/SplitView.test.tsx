@@ -4,7 +4,7 @@ import { UiProvider } from "../ui";
 import { createTestUi, renderWithUi } from "../ui/testSupport";
 import { clampEndSize } from "./splitMath";
 import { SplitView } from "./SplitView";
-import { editorToken, stubBox } from "./editorTestSupport";
+import { editorToken, stubBox, stubMatchMedia } from "./editorTestSupport";
 
 const MIN = editorToken("layout.panelMinSize");
 const DEFAULT = editorToken("layout.panelDefaultSize");
@@ -123,5 +123,19 @@ describe("the separator", () => {
     expect(screen.queryByRole("separator")).toBeNull();
     act(() => rerender(provided(true)));
     expect(screen.getByRole("separator").getAttribute("aria-valuenow")).toBe(String(TOTAL - LINE - MIN));
+  });
+});
+
+describe("at the tablet layout", () => {
+  it("lays the end region over the primary one as a drawer with no separator, and goes back to a split when the window widens", () => {
+    const media = stubMatchMedia(true);
+    mountSplit();
+    const right = screen.getByText("Right");
+    expect(screen.queryByRole("separator")).toBeNull();
+    expect(right.parentElement?.className).toContain("editor-split-secondary-overlay");
+    expect(screen.getByText("Left").parentElement?.className).toBe("editor-split-primary");
+    act(() => media.set(false));
+    expect(screen.getByRole("separator", { name: "Resize panels" })).toBeTruthy();
+    expect(screen.getByText("Right").parentElement?.className).not.toContain("overlay");
   });
 });

@@ -5,6 +5,8 @@ import { chordFromEvent } from "./chords";
 import { activatesNatively, isTextEntry } from "./dom";
 import type { FocusMediator } from "./FocusMediator";
 import { HelpTracker } from "./HelpTracker";
+import { GESTURE_LIMITS } from "./inputConfig";
+import type { RegionNavigator } from "./RegionNavigator";
 import type { ShortcutRegistry } from "./ShortcutRegistry";
 
 export type PointerKind = "mouse" | "touch" | "pen";
@@ -16,6 +18,8 @@ export interface SurfaceHandlers {
   readonly touch?: (event: PointerEvent) => void;
   readonly pen?: (event: PointerEvent) => void;
   readonly drag?: (event: DragEvent) => void;
+  /** Called when the window loses focus, so a gesture in progress ends instead of waiting for a release that will not arrive. */
+  readonly cancel?: () => void;
 }
 
 export interface InputSurface {
@@ -36,8 +40,11 @@ export interface InputManagerDependencies {
   readonly bus: ActionBus;
   readonly focus: FocusMediator;
   readonly shortcuts: ShortcutRegistry;
+  readonly regions: RegionNavigator;
   readonly diagnostics: DiagnosticSink;
   readonly correlation?: CorrelationSource;
+  /** The clock palm rejection measures its grace interval on, in milliseconds. */
+  readonly now?: () => number;
 }
 
 type Modality = PointerKind | "keyboard";
@@ -85,6 +92,9 @@ export class InputManager {
   private readonly surfaceIds = new Set<string>();
   private readonly commands = new Map<string, () => void>();
   private readonly keyHandlers = new Map<string, KeyHandler>();
+  private readonly penDown = new Set<number>();
+  private readonly rejectedTouches = new Set<number>();
+  private lastPenAt: number | null = null;
   private teardown: (() => void) | null = null;
   private wheelListener: ((event: WheelEvent) => void) | null = null;
 
@@ -124,6 +134,7 @@ export class InputManager {
       const onBlur = (): void => {
         this.deps.focus.setComposing(false);
         this.help.clear();
+        this.endGestures();
       };
       win.addEventListener("blur", onBlur);
       removers.push(() => win.removeEventListener("blur", onBlur));
@@ -378,6 +389,7 @@ export class InputManager {
   }
 
   private onFocusIn(event: FocusEvent): void {
+    this.deps.regions.noteFocus(event.target);
     this.help.setFocused(helpKeyOf(this.helpAt(event.target)));
   }
 
@@ -422,9 +434,42 @@ export class InputManager {
   }
 
   private routePointer(event: PointerEvent): void {
+    const kind = pointerKindOf(event);
+    if (kind === "pen") this.notePen(event);
+    if (kind === "touch" && this.isPalm(event)) return;
     const surface = this.surfaceAt(event.target);
     if (surface === null) return;
-    surface.handlers[pointerKindOf(event)]?.(event);
+    surface.handlers[kind]?.(event);
+  }
+
+  /** A pen in range or down, including its hover, marks the time touch contacts are taken for a resting palm. */
+  private notePen(event: PointerEvent): void {
+    this.lastPenAt = this.now();
+    if (event.type === "pointerdown") this.penDown.add(event.pointerId);
+    else if (event.type === "pointerup" || event.type === "pointercancel") this.penDown.delete(event.pointerId);
+  }
+
+  /** A touch that begins while the pen is down or recently active is a palm, and so is every later event of that contact. */
+  private isPalm(event: PointerEvent): boolean {
+    const { pointerId, type } = event;
+    if (type === "pointerdown") {
+      const recent = this.lastPenAt !== null && this.now() - this.lastPenAt < GESTURE_LIMITS.palmGraceMs;
+      if (this.penDown.size > 0 || recent) this.rejectedTouches.add(pointerId);
+      return this.rejectedTouches.has(pointerId);
+    }
+    const rejected = this.rejectedTouches.has(pointerId);
+    if (type === "pointerup" || type === "pointercancel") this.rejectedTouches.delete(pointerId);
+    return rejected;
+  }
+
+  private now(): number {
+    return this.deps.now?.() ?? performance.now();
+  }
+
+  private endGestures(): void {
+    this.penDown.clear();
+    this.rejectedTouches.clear();
+    for (const surface of this.surfaces.values()) surface.handlers.cancel?.();
   }
 
   private routeDrag(event: DragEvent): void {

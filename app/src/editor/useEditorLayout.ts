@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useSyncExternalStore } from "react";
+import { useMemo } from "react";
 import { numberToken, useTheme } from "../theme";
 
 /** The editor's layout measures, in pixels, from the theme. */
@@ -22,24 +22,5 @@ export function useEditorLayout(): EditorLayout {
       separatorSize: numberToken(tokens, "shape.borderWidth"),
     }),
     [tokens],
-  );
-}
-
-/** Whether the window is at or below the tablet width. Where the window cannot say, it is not. */
-export function useTabletWidth(): boolean {
-  const { tabletWidth } = useEditorLayout();
-  const query = `(max-width: ${tabletWidth}px)`;
-  const subscribe = useCallback(
-    (listener: () => void) => {
-      if (typeof window.matchMedia !== "function") return () => undefined;
-      const list = window.matchMedia(query);
-      list.addEventListener("change", listener);
-      return () => list.removeEventListener("change", listener);
-    },
-    [query],
-  );
-  return useSyncExternalStore(
-    subscribe,
-    () => typeof window.matchMedia === "function" && window.matchMedia(query).matches,
   );
 }

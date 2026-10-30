@@ -163,11 +163,80 @@ describe("the same view from wheel, drag and keys", () => {
     expect(view(state).originX).toBe(20);
   });
 
-  it("leaves touch to the touch gestures: a touch drag does not move the view", () => {
+  it("ignores a pen that only hovers, and the barrel and eraser buttons of a pen", () => {
     const { state, paper } = mount();
-    fireEvent.pointerDown(paper, { pointerId: 1, pointerType: "touch", clientX: 100, clientY: 50 });
-    fireEvent.pointerMove(paper, { pointerId: 1, pointerType: "touch", clientX: 40, clientY: 50 });
+    fireEvent.pointerMove(paper, { pointerId: 1, pointerType: "pen", clientX: 200, clientY: 50 });
+    fireEvent.pointerMove(paper, { pointerId: 1, pointerType: "pen", clientX: 100, clientY: 50 });
+    for (const button of [2, 5]) {
+      fireEvent.pointerDown(paper, { pointerId: 1, pointerType: "pen", clientX: 200, clientY: 50, button });
+      fireEvent.pointerMove(paper, { pointerId: 1, pointerType: "pen", clientX: 100, clientY: 50 });
+      fireEvent.pointerUp(paper, { pointerId: 1, pointerType: "pen", clientX: 100, clientY: 50 });
+    }
     expect(view(state)).toEqual({ originX: 0, originY: 0, zoom: 1 });
+  });
+
+  it("gives touch, pen and mouse drags of the same distance the identical view", () => {
+    const views = (["mouse", "pen", "touch"] as const).map((pointerType) => {
+      const { state, paper } = mount();
+      fireEvent.pointerDown(paper, { pointerId: 1, pointerType, clientX: 300, clientY: 80 });
+      fireEvent.pointerMove(paper, { pointerId: 1, pointerType, clientX: 245, clientY: 95 });
+      fireEvent.pointerMove(paper, { pointerId: 1, pointerType, clientX: 230, clientY: 60 });
+      fireEvent.pointerUp(paper, { pointerId: 1, pointerType, clientX: 230, clientY: 60 });
+      const result = view(state);
+      cleanup();
+      return result;
+    });
+    expect(views[0]).toEqual({ originX: 70, originY: 20, zoom: 1 });
+    expect(views[1]).toEqual(views[0]);
+    expect(views[2]).toEqual(views[0]);
+  });
+
+  it("zooms with a two finger pinch about its midpoint exactly as the wheel does, and pans with the midpoint at the same time", () => {
+    const pinched = mount();
+    const touch = (type: "pointerDown" | "pointerMove", pointerId: number, x: number, y: number): void => {
+      fireEvent[type](pinched.paper, { pointerId, pointerType: "touch", clientX: PAPER_LEFT + x, clientY: PAPER_TOP + y });
+    };
+    touch("pointerDown", 1, 100, 100);
+    touch("pointerDown", 2, 200, 100);
+    touch("pointerMove", 2, 300, 100);
+    const factor = 2;
+    const center = { x: 200, y: 100 };
+    const afterFirst = view(pinched.state);
+    cleanup();
+    const wheeled = mount();
+    wheeled.state.panBy(50, 0);
+    wheeled.state.zoomAbout(factor, center);
+    expect(afterFirst.zoom).toBe(factor);
+    expect(afterFirst).toEqual(view(wheeled.state));
+  });
+
+  it("stops a gesture on cancel, on the window losing focus and on a third finger, leaving the view where it was", () => {
+    const { state, paper } = mount();
+    const touch = (type: "pointerDown" | "pointerMove" | "pointerCancel", pointerId: number, x: number): void => {
+      fireEvent[type](paper, { pointerId, pointerType: "touch", clientX: x, clientY: 50 });
+    };
+    touch("pointerDown", 1, 100);
+    touch("pointerMove", 1, 160);
+    touch("pointerCancel", 1, 160);
+    touch("pointerMove", 1, 300);
+    expect(view(state).originX).toBe(-60);
+    touch("pointerDown", 2, 100);
+    touch("pointerMove", 2, 130);
+    fireEvent.blur(window);
+    touch("pointerMove", 2, 200);
+    expect(view(state).originX).toBe(-90);
+    touch("pointerDown", 3, 0);
+    touch("pointerDown", 4, 40);
+    touch("pointerDown", 5, 400);
+    touch("pointerMove", 5, 0);
+    expect(view(state)).toMatchObject({ originX: -90, zoom: 1 });
+  });
+
+  it("takes focus on a tap, so the keys work after a touch", () => {
+    const { paper } = mount();
+    fireEvent.pointerDown(paper, { pointerId: 1, pointerType: "touch", clientX: 50, clientY: 50 });
+    fireEvent.pointerUp(paper, { pointerId: 1, pointerType: "touch", clientX: 50, clientY: 50 });
+    expect(document.activeElement).toBe(paper);
   });
 
   it("pans by one key step per arrow, in the direction the view moves, and a drag of that distance gives the identical view", () => {

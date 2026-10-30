@@ -1,5 +1,5 @@
-import { useEffect, useId, useLayoutEffect, useRef } from "react";
-import { UiContractError, requireName, useCommand, useLatest, useUi, type Described } from "../ui";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { GestureRecognizer, REGION, UiContractError, requireName, useCommand, useLatest, useUi, type Described } from "../ui";
 import { EDITOR_LIMITS } from "./editorConfig";
 import { editorCopy } from "./editorCopy";
 
@@ -43,18 +43,20 @@ interface TabProps {
   readonly tab: DocumentTab;
   readonly panelId: string;
   readonly active: boolean;
+  /** True while a long press has picked this tab up for a touch drag. */
+  readonly lifted: boolean;
   readonly onSelect: (id: string) => void;
   readonly onClose: (id: string) => void;
 }
 
-function Tab({ tab, panelId, active, onSelect, onClose }: TabProps) {
+function Tab({ tab, panelId, active, lifted, onSelect, onClose }: TabProps) {
   const uid = useId();
   const selectCommand = `tab.select.${uid}`;
   const closeCommand = `tab.close.${uid}`;
   useCommand(selectCommand, () => onSelect(tab.id));
   useCommand(closeCommand, () => onClose(tab.id));
   return (
-    <div role="presentation" className="editor-tab-item" data-tab-id={tab.id} data-active={active ? "true" : undefined}>
+    <div role="presentation" className="editor-tab-item" data-tab-id={tab.id} data-active={active ? "true" : undefined} data-lifted={lifted ? "true" : undefined}>
       <button
         type="button"
         role="tab"
@@ -89,7 +91,8 @@ function itemOf(list: HTMLElement | null, documentId: string): HTMLElement | nul
 /**
  * Tabs for documents that are open at the same time. Arrow keys, Home and End move between tabs and open the
  * one reached, Delete closes the focused tab and Control+Shift with an arrow moves it. A mouse or pen can drag a
- * tab to a new place; a touch scrolls the strip instead. All of it reaches the strip through the input manager.
+ * tab to a new place; a touch scrolls the strip, and a long press picks a tab up to drag it. All of it reaches the
+ * strip through the input manager.
  * The strip only asks; the owner of the documents decides, and what the owner then passes in is what shows.
  */
 export function TabStrip({ described, tabs, activeId, panelId, onSelect, onClose, onMove }: TabStripProps) {
@@ -99,6 +102,7 @@ export function TabStrip({ described, tabs, activeId, panelId, onSelect, onClose
   const listRef = useRef<HTMLDivElement>(null);
   const pendingRef = useRef<Pending | null>(null);
   const dragRef = useRef<PointerDrag | null>(null);
+  const [lifted, setLifted] = useState<string | null>(null);
   const latest = useLatest({ tabs, onSelect, onClose, onMove });
   const shown = tabs.length > 1;
   if (shown && !tabs.some((tab) => tab.id === activeId)) {
@@ -155,6 +159,16 @@ export function TabStrip({ described, tabs, activeId, panelId, onSelect, onClose
       itemOf(list, reached.id)?.querySelector<HTMLElement>(TAB_SELECTOR)?.focus();
       return true;
     });
+    // The tab under the dragged one's new place is whatever lies left of the pointer's x position.
+    const dragTo = (dragId: string, clientX: number): void => {
+      const others = [...list.querySelectorAll<HTMLElement>(ITEM_SELECTOR)].filter((item) => item.dataset["tabId"] !== dragId);
+      const target = others.filter((item) => {
+        const box = item.getBoundingClientRect();
+        return box.left + box.width / 2 < clientX;
+      }).length;
+      const { tabs: open, onMove: move } = latest.current;
+      if (open.findIndex((tab) => tab.id === dragId) !== target) move(dragId, target);
+    };
     const trackPointer = (event: PointerEvent): void => {
       const drag = dragRef.current;
       if (event.type === "pointerdown") {
@@ -174,27 +188,43 @@ export function TabStrip({ described, tabs, activeId, panelId, onSelect, onClose
         drag.engaged = true;
         list.setPointerCapture(event.pointerId);
       }
-      const others = [...list.querySelectorAll<HTMLElement>(ITEM_SELECTOR)].filter((item) => item.dataset["tabId"] !== drag.id);
-      const target = others.filter((item) => {
-        const box = item.getBoundingClientRect();
-        return box.left + box.width / 2 < event.clientX;
-      }).length;
-      const { tabs: open, onMove: move } = latest.current;
-      if (open.findIndex((tab) => tab.id === drag.id) !== target) move(drag.id, target);
+      dragTo(drag.id, event.clientX);
     };
-    const removeSurface = ui.input.registerSurface({ id: `tabs:${id}`, element: list, handlers: { mouse: trackPointer, pen: trackPointer } });
+    // The strip is scrolled by the pan, since a touch on it belongs to the recognizer and not to the browser.
+    let held: string | null = null;
+    const touch = new GestureRecognizer(list, {
+      pan: (delta) => {
+        list.scrollLeft -= delta.x;
+      },
+      hold: (_at, target) => {
+        const item = target instanceof Element && target.closest(".editor-tab-close") === null ? target.closest<HTMLElement>(ITEM_SELECTOR) : null;
+        if (item === null) return false;
+        held = item.dataset["tabId"] ?? "";
+        setLifted(held);
+        return true;
+      },
+      holdMove: (at) => {
+        if (held !== null) dragTo(held, at.x);
+      },
+      holdEnd: () => {
+        held = null;
+        setLifted(null);
+      },
+    });
+    const removeSurface = ui.input.registerSurface({ id: `tabs:${id}`, element: list, handlers: { mouse: trackPointer, pen: trackPointer, touch: touch.handle, cancel: touch.cancel } });
     return () => {
       removeKeys();
       removeSurface();
+      touch.cancel();
       dragRef.current = null;
     };
   }, [shown, ui, id, latest]);
 
   if (!shown) return null;
   return (
-    <div ref={listRef} role="tablist" aria-label={name} aria-orientation="horizontal" data-ui-keys={`tabs:${id}`} className="editor-tabs">
+    <div ref={listRef} role="tablist" aria-label={name} aria-orientation="horizontal" data-ui-keys={`tabs:${id}`} data-region={REGION.tabs} className="editor-tabs">
       {tabs.map((tab) => (
-        <Tab key={tab.id} tab={tab} panelId={panelId} active={tab.id === activeId} onSelect={onSelect} onClose={onClose} />
+        <Tab key={tab.id} tab={tab} panelId={panelId} active={tab.id === activeId} lifted={tab.id === lifted} onSelect={onSelect} onClose={onClose} />
       ))}
     </div>
   );

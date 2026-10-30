@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { REGION } from "../ui";
+import { frameCopy } from "./frameCopy";
 
 interface AppFrameProps {
   /** The application mark, ahead of the title. */
@@ -20,7 +22,7 @@ interface AppFrameProps {
  */
 export function AppFrame({ leading, title, titleTestId, middle, end, windowControls }: AppFrameProps) {
   return (
-    <div className="app-frame" data-tauri-drag-region="deep">
+    <div className="app-frame" role="region" aria-label={frameCopy.regionName} data-region={REGION.toolbar} data-tauri-drag-region="deep">
       {leading === undefined ? null : <div className="app-frame-leading">{leading}</div>}
       <span className="app-frame-title" {...(titleTestId === undefined ? {} : { "data-testid": titleTestId })}>
         {title}

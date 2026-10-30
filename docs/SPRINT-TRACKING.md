@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **30/42** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **34/42** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -121,10 +121,10 @@
 | **S02.6b Graph paper renderer** | Continuous dark minor/major grid lines (no dots), zoom-adaptive minor visibility, themed | DONE | Auditor PASS round 1 (2026-10-30). Snap and world-to-screen helpers are consumed by node placement in S09.16 and the graph editor in S13.10 |
 | **S02.6c Snap and grid toggles** | Independent snap and grid display toggles in world coordinates | DONE | Auditor PASS round 1 (2026-10-30). Snap and world-to-screen helpers are consumed by node placement in S09.16 and the graph editor in S13.10 |
 | **S02.6d Canvas surface** | GraphViewport wired to the Input Manager for wheel, drag and keyboard pan/zoom (USER TEST) | DONE | Auditor PASS round 1 (2026-10-30). Snap and world-to-screen helpers are consumed by node placement in S09.16 and the graph editor in S13.10 |
-| **S02.7a Touch gestures** | Pinch, two-finger pan, tap and long press through the Input Manager | TODO | — |
-| **S02.7b Pen input** | Pen pressure-free drawing and hover semantics, palm rejection rules | TODO | — |
-| **S02.7c Keyboard workspace navigation** | Complete keyboard path across shells, panels and canvas | TODO | — |
-| **S02.7d Tablet layout** | Drawers and stacked panels at tablet sizes, target sizes from tokens (USER TEST) | TODO | — |
+| **S02.7a Touch gestures** | Pinch, two-finger pan, tap and long press through the Input Manager | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
+| **S02.7b Pen input** | Pen pressure-free drawing and hover semantics, palm rejection rules | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
+| **S02.7c Keyboard workspace navigation** | Complete keyboard path across shells, panels and canvas | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
+| **S02.7d Tablet layout** | Drawers and stacked panels at tablet sizes, target sizes from tokens (USER TEST) | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
 | **S02.8a Editor control binding** | Bind implemented editor widgets to the editor catalog and action owners | TODO | — |
 | **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | TODO | — |
 | **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | TODO | — |
@@ -551,3 +551,5 @@ Record implementation commit, focused test and Auditor PASS in the phase Evidenc
 - `WorkspaceNotice` dismiss returns focus through a test id lookup; use a ref.
 - Tab drag and split drag read the DOM per pointer move; cache tab midpoints and coalesce resize writes if a heavy surface is mounted (`TabStrip.tsx`, `SplitView.tsx`).
 - Canvas: log or show a visible failure when no 2D context exists; draw once on mount, not twice; cap the canvas backing-store size for extreme pixel ratios; ignore a second pointer while a drag is active (`GraphViewport.tsx`).
+- Overlay inspector has no dismiss path (Escape, tap outside); add the DockPanel pattern when the selection feature lands (`editor/SplitView.tsx`).
+- Gesture recognizer: treat a repeated pointer id as a cancel and handle lost pointer capture (`GestureRecognizer.ts`).

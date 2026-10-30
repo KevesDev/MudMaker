@@ -1,6 +1,7 @@
-import { cleanup, fireEvent, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, screen, within } from "@testing-library/react";
 import { useState } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { GESTURE_LIMITS } from "../ui";
 import { createTestUi, renderWithUi, type TestUi } from "../ui/testSupport";
 import { EDITOR_LIMITS } from "./editorConfig";
 import { editorCopy } from "./editorCopy";
@@ -25,6 +26,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.useRealTimers();
   cleanup();
   vi.restoreAllMocks();
   scrolled.mockReset();
@@ -225,7 +227,7 @@ describe("reordering by pointer", () => {
     expect(calls.moved).toHaveLength(1);
   });
 
-  it("does not reorder for a slip shorter than the drag distance, for a press on a close control, or for a touch", () => {
+  it("does not reorder for a slip shorter than the drag distance or for a press on a close control", () => {
     const { calls, tab } = mountTabs(["a", "b", "c"], "a");
     press(tab("a"), "mouse", 50);
     move(tab("a"), "mouse", 50 + EDITOR_LIMITS.tabDragDistance - 1);
@@ -233,8 +235,78 @@ describe("reordering by pointer", () => {
     press(screen.getByRole("button", { name: editorCopy.closeDocument("Doc a") }), "mouse", 50);
     move(tab("a"), "mouse", 250);
     fireEvent.pointerUp(tab("a"), { pointerId: 3, pointerType: "mouse", clientX: 250 });
-    press(tab("a"), "touch", 50);
-    move(tab("a"), "touch", 250);
     expect(calls.moved).toEqual([]);
+  });
+});
+
+describe("touch on the strip", () => {
+  const touch = (type: "pointerDown" | "pointerMove" | "pointerUp" | "pointerCancel", target: Element, x: number) =>
+    fireEvent[type](target, { pointerId: 5, pointerType: "touch", clientX: x });
+  const item = (id: string): HTMLElement => document.querySelector<HTMLElement>(`[data-tab-id="${id}"]`) as HTMLElement;
+  const hold = (): void => {
+    act(() => {
+      vi.advanceTimersByTime(GESTURE_LIMITS.longPressMs);
+    });
+  };
+
+  it("scrolls the strip with a drag instead of reordering, even a long one", () => {
+    vi.useFakeTimers();
+    const { calls, tab } = mountTabs(["a", "b", "c"], "a");
+    const list = screen.getByRole("tablist");
+    list.scrollLeft = 300;
+    touch("pointerDown", tab("a"), 200);
+    touch("pointerMove", tab("a"), 120);
+    touch("pointerUp", tab("a"), 120);
+    expect(list.scrollLeft).toBe(380);
+    expect(calls.moved).toEqual([]);
+    expect(item("a").dataset["lifted"]).toBeUndefined();
+  });
+
+  it("picks a tab up on a long press, reorders it as the finger moves, and puts it down on release", () => {
+    vi.useFakeTimers();
+    const { calls, tab, order } = mountTabs(["a", "b", "c"], "a");
+    touch("pointerDown", tab("a"), 50);
+    hold();
+    expect(item("a").dataset["lifted"]).toBe("true");
+    touch("pointerMove", tab("a"), 260);
+    expect(calls.moved).toEqual([["a", 2]]);
+    expect(order()).toBe("b,c,a");
+    touch("pointerUp", tab("a"), 260);
+    expect(item("a").dataset["lifted"]).toBeUndefined();
+    touch("pointerMove", tab("a"), 0);
+    expect(calls.moved).toHaveLength(1);
+    expect(calls.selected).toEqual([]);
+  });
+
+  it("puts a lifted tab down where it is when the touch is cancelled or the window loses focus", () => {
+    vi.useFakeTimers();
+    const { calls, tab } = mountTabs(["a", "b", "c"], "a");
+    touch("pointerDown", tab("a"), 50);
+    hold();
+    touch("pointerCancel", tab("a"), 50);
+    expect(item("a").dataset["lifted"]).toBeUndefined();
+    touch("pointerMove", tab("a"), 260);
+    touch("pointerDown", tab("b"), 150);
+    hold();
+    expect(item("b").dataset["lifted"]).toBe("true");
+    act(() => {
+      fireEvent.blur(window);
+    });
+    expect(item("b").dataset["lifted"]).toBeUndefined();
+    expect(calls.moved).toEqual([]);
+  });
+
+  it("does not pick up a tab by its close control, and a plain tap on a tab still selects it", () => {
+    vi.useFakeTimers();
+    const { tab } = mountTabs(["a", "b"], "a");
+    const close = screen.getByRole("button", { name: editorCopy.closeDocument("Doc b") });
+    touch("pointerDown", close, 150);
+    hold();
+    expect(item("b").dataset["lifted"]).toBeUndefined();
+    touch("pointerUp", close, 150);
+    touch("pointerDown", tab("b"), 150);
+    touch("pointerUp", tab("b"), 150);
+    fireEvent.click(tab("b"));
+    expect(document.querySelector('[role="tab"][aria-selected="true"]')).toBe(tab("b"));
   });
 });

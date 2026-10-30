@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useSyncExternalStore } from "react";
 import { useTheme } from "../theme";
-import { Switch, Toolbar, useUi, type PassiveDescriptor } from "../ui";
+import { GestureRecognizer, REGION, Switch, Toolbar, useUi, type PassiveDescriptor } from "../ui";
 import { CANVAS_CONTROLS, registerCanvasActions } from "./canvasActions";
 import { canvasCopy } from "./canvasCopy";
 import type { CanvasState } from "./CanvasState";
@@ -19,8 +19,8 @@ interface Drag {
 
 /**
  * The graph paper: continuous grid lines on a pannable, zoomable view, with the grid and snap toggles in a
- * strip above it. All input reaches it through the input manager; touch pan and pinch attach to the same
- * surface registration when the touch gestures are built.
+ * strip above it. All input reaches it through the input manager. A mouse or pen drags, a touch pans and pinches
+ * through the shared gesture recognizer, and every route changes the view through the same state.
  */
 export function GraphViewport({ state }: { readonly state: CanvasState }) {
   const { bus, input, registry } = useUi();
@@ -99,11 +99,21 @@ export function GraphViewport({ state }: { readonly state: CanvasState }) {
       const rect = paper.getBoundingClientRect();
       state.zoomAbout(wheelZoomFactor(event.deltaY, event.deltaMode, rect.height), { x: event.clientX - rect.left, y: event.clientY - rect.top });
     };
-    const removeSurface = input.registerSurface({ id: surfaceId, element: paper, handlers: { wheel, mouse: track, pen: track } });
+    const touch = new GestureRecognizer(paper, {
+      pan: (delta) => state.panBy(delta.x, delta.y),
+      pinch: ({ factor, center, delta }) => {
+        const rect = paper.getBoundingClientRect();
+        state.panBy(delta.x, delta.y);
+        state.zoomAbout(factor, { x: center.x - rect.left, y: center.y - rect.top });
+      },
+      tap: () => paper.focus(),
+    });
+    const removeSurface = input.registerSurface({ id: surfaceId, element: paper, handlers: { wheel, mouse: track, pen: track, touch: touch.handle, cancel: touch.cancel } });
     const removeKeys = input.registerKeys(surfaceId, (event) => applyCanvasKey(state, event, sizeRef.current));
     return () => {
       removeSurface();
       removeKeys();
+      touch.cancel();
       dragRef.current = null;
     };
   }, [input, state, surfaceId]);
@@ -116,7 +126,7 @@ export function GraphViewport({ state }: { readonly state: CanvasState }) {
           <Switch control={registry.requireControl(CANVAS_CONTROLS.snap)} checked={snapEnabled} />
         </Toolbar>
       </div>
-      <div ref={paperRef} className="graph-paper" role="application" tabIndex={0} aria-label={registry.requireControl(CANVAS_CONTROLS.paper).label} data-ui-keys={surfaceId}>
+      <div ref={paperRef} className="graph-paper" role="application" tabIndex={0} aria-label={registry.requireControl(CANVAS_CONTROLS.paper).label} data-ui-keys={surfaceId} data-region={REGION.canvas}>
         <canvas ref={canvasRef} className="graph-paper-lines" aria-hidden="true" />
       </div>
     </div>

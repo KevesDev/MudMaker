@@ -39,7 +39,10 @@ export {
 export type { IssueCode, RegistryIssue } from "./actions/validate";
 export { chordFromEvent, normalizeChord, type ChordResult } from "./input/chords";
 export { APP_SCOPE, FocusMediator, type ScopeEntry, type ScopeKind } from "./input/FocusMediator";
+export { GestureRecognizer, type GestureHandlers, type GesturePoint, type PinchChange } from "./input/GestureRecognizer";
 export { HelpTracker } from "./input/HelpTracker";
+export { GESTURE_LIMITS } from "./input/inputConfig";
+export { REGION, RegionNavigator } from "./input/RegionNavigator";
 export {
   InputManager,
   type InputManagerDependencies,

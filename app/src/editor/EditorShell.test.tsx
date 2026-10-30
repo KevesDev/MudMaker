@@ -1,10 +1,11 @@
 import { act, cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { frameCopy } from "../frame/frameCopy";
 import { GLYPHS } from "../frame/frameLayout";
 import { SPLASH } from "../home/homeLayout";
 import { healthyHome, renderApp, visibleText } from "../home/homeTestSupport";
 import { MENU_CARET, NAVIGATION } from "../nav/destinations";
-import { focusableWithin, loadShippedRegistry } from "../ui";
+import { REGION, focusableWithin, loadShippedRegistry } from "../ui";
 import { createTestUi, renderWithUi } from "../ui/testSupport";
 import { DockPanel } from "./DockPanel";
 import { CreateShell, EditorShell } from "./EditorShell";
@@ -54,6 +55,31 @@ describe("the Create workspace as the application mounts it", () => {
   });
 });
 
+describe("keyboard regions of the Create workspace", () => {
+  it("cycles with F6 between the window bar and the graph paper, backwards with Shift+F6, and names the window bar", async () => {
+    unbind = renderApp(healthyHome({ surfaces: { create: CreateShell } })).unbind;
+    await screen.findByRole("heading", { level: 1 });
+    await act(async () => undefined);
+    fireEvent.click(screen.getByRole("button", { name: label(SPLASH.create) }));
+    const surface = await screen.findByRole("main", { name: label(NAVIGATION.create.entries.create) });
+    await waitFor(() => expect(document.activeElement).toBe(surface));
+    const paper = screen.getByRole("application", { name: label("editor.graph.01") });
+    const bar = screen.getByRole("region", { name: frameCopy.regionName });
+    const press = async (shiftKey: boolean): Promise<void> => {
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: "F6", shiftKey });
+      await act(async () => undefined);
+    };
+    await press(false);
+    expect(bar.contains(document.activeElement)).toBe(true);
+    await press(false);
+    expect(document.activeElement).toBe(paper);
+    await press(false);
+    expect(bar.contains(document.activeElement)).toBe(true);
+    await press(true);
+    expect(document.activeElement).toBe(paper);
+  });
+});
+
 describe("the shell with features mounted into it", () => {
   const sections = [{ id: "id", label: "Identity", fields: [{ id: "name", label: "Name", control: ({ id }: { id: string }) => <input id={id} /> }] }];
 
@@ -84,6 +110,33 @@ describe("the shell with features mounted into it", () => {
     expect(panel.getAttribute("aria-labelledby")).toBe(screen.getByRole("tab", { name: /Docs B/ }).id);
     expect(panel.contains(screen.getByText("Surface control"))).toBe(true);
     expect(screen.getByRole("separator")).toBeTruthy();
+  });
+
+  it("marks the open documents, the Assets drawer and the Inspector as named regions that F6 visits in the documented order", () => {
+    const ui = createTestUi();
+    stubBox(".editor-split", { width: 1000 });
+    renderWithUi(
+      ui,
+      <EditorShell
+        documents={{ described: described("editor.shell.13"), tabs: [{ id: "a", title: "Docs A", dirty: false }, { id: "b", title: "Docs B", dirty: true }], activeId: "b", onSelect: () => undefined, onClose: () => undefined, onMove: () => undefined }}
+        assets={
+          <DockPanel described={described("editor.assets.01")} open onClose={() => undefined}>
+            <button type="button">Assets control</button>
+          </DockPanel>
+        }
+        surface={<button type="button">Surface control</button>}
+        inspector={{ described: described("editor.inspector.01"), sections }}
+      />,
+    );
+    const named = ["tablist", "complementary", "region"].map((role) => screen.getByRole(role, { name: role === "tablist" ? described("editor.shell.13").label : role === "complementary" ? described("editor.assets.01").label : described("editor.inspector.01").label }));
+    expect(named.map((element) => element.getAttribute("data-region"))).toEqual([REGION.tabs, REGION.assets, REGION.inspector]);
+    (document.activeElement as HTMLElement).blur();
+    const visited: string[] = [];
+    for (let count = 0; count < 3; count += 1) {
+      ui.runtime.regions.cycle(1);
+      visited.push((document.activeElement?.closest("[data-region]") as HTMLElement).dataset["region"] ?? "");
+    }
+    expect(visited).toEqual([REGION.assets, REGION.inspector, REGION.tabs]);
   });
 
   it("has no separator and no Inspector region while nothing is selected", () => {

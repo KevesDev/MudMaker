@@ -42,6 +42,17 @@
   background: var(--color-surface-inspector);
 }
 
+.editor-split-secondary-overlay {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: var(--layer-popup);
+  box-sizing: border-box;
+  inline-size: var(--layout-panelDefaultSize);
+  max-inline-size: 100%;
+  border-inline-start: var(--shape-borderWidth) solid var(--color-border-normal);
+}
+
 .editor-separator {
   position: relative;
   flex: 0 0 auto;
@@ -91,6 +102,7 @@
 }
 
 .editor-tabs {
+  touch-action: none;
   display: flex;
   flex: 0 0 auto;
   overflow-x: auto;
@@ -129,6 +141,11 @@
 .editor-tab-item[data-active="true"] .editor-tab {
   color: var(--color-text-primary);
   border-block-end-color: var(--color-accent-primary);
+}
+
+.editor-tab-item[data-lifted="true"] {
+  background: var(--color-interaction-pressed);
+  border-block-end: calc(var(--shape-borderWidth) * 2) solid var(--color-accent-primary);
 }
 
 .editor-tab:hover,

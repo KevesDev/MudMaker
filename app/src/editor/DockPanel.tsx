@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { focusableWithin, requireName, useLatest, useUi, type Described } from "../ui";
-import { useTabletWidth } from "./useEditorLayout";
+import { REGION, focusableWithin, requireName, useLatest, useUi, type Described } from "../ui";
+import { useTabletLayout } from "../frame/useTabletLayout";
 
 export interface DockPanelProps {
   readonly described: Described;
@@ -19,7 +19,7 @@ export interface DockPanelProps {
 export function DockPanel({ described, open, onClose, children }: DockPanelProps) {
   const ui = useUi();
   const name = requireName(described, "DockPanel");
-  const overlay = useTabletWidth();
+  const overlay = useTabletLayout();
   const uid = useId();
   const ref = useRef<HTMLElement>(null);
   const requestClose = useLatest(onClose);
@@ -57,7 +57,7 @@ export function DockPanel({ described, open, onClose, children }: DockPanelProps
 
   if (!open) return null;
   return (
-    <aside ref={ref} aria-label={name} tabIndex={-1} className={overlay ? "editor-drawer editor-drawer-overlay" : "editor-drawer"}>
+    <aside ref={ref} aria-label={name} tabIndex={-1} data-region={REGION.assets} className={overlay ? "editor-drawer editor-drawer-overlay" : "editor-drawer"}>
       {children}
     </aside>
   );

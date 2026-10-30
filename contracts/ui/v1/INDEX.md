@@ -1,6 +1,6 @@
 # UI Catalog v1 — Every Planned Visible Element
 
-**Status: SPECIFICATION ONLY — NOT IMPLEMENTED.** Four scoped machine-readable files: [Splash/Home](home-controls.v1.json), [Creator Editor](editor-controls.v1.json), [Player Client](client-controls.v1.json), [Host Operations](host-controls.v1.json). **369 registered elements** across the four catalogs and **287 distinct semantic actions**, each with stable ID, label, tooltip/help, active view, state owner, action (or explicit passive status), permission, visible/enabled condition and test ID. This is a *planning inventory*, extended by each implementation phase; not proof these widgets exist.
+**Status: SPECIFICATION ONLY — NOT IMPLEMENTED.** Four scoped machine-readable files: [Splash/Home](home-controls.v1.json), [Creator Editor](editor-controls.v1.json), [Player Client](client-controls.v1.json), [Host Operations](host-controls.v1.json). **369 registered elements** across the four catalogs and **289 distinct semantic actions**, each with stable ID, label, tooltip/help, active view, state owner, action (or explicit passive status), permission, visible/enabled condition and test ID. This is a *planning inventory*, extended by each implementation phase; not proof these widgets exist.
 
 | Workspace | Items | Primary owner |
 |---|---:|---|

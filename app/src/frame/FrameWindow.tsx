@@ -6,6 +6,7 @@ import { AppFrame, AppWindow } from "./AppFrame";
 import { registerFrameActions } from "./frameActions";
 import { FRAME } from "./frameLayout";
 import type { WindowController } from "./WindowController";
+import { useTabletLayoutMark } from "./useTabletLayout";
 import { WindowControls } from "./WindowControls";
 
 export interface FrameWindowProps {
@@ -44,6 +45,7 @@ export function FrameWindow({ registry, controller, quit, report, correlation, r
       removeFrame();
     };
   }, [runtime, registry, quit, controller, registerScreen]);
+  useTabletLayoutMark();
   const title = registry.requireControl(FRAME.title);
   return (
     <UiProvider runtime={runtime}>

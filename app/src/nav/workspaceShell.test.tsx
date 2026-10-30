@@ -2,6 +2,7 @@
 import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { frameCopy } from "../frame/frameCopy";
 import { GLYPHS } from "../frame/frameLayout";
 import { APPEARANCE, SPLASH } from "../home/homeLayout";
 import { healthyHome, renderApp, visibleText, type TestHome } from "../home/homeTestSupport";
@@ -48,6 +49,43 @@ async function chooseGoTo(from: WorkspaceDestination, destination: string): Prom
   const menu = await goTo(from);
   fireEvent.click(within(menu).getByRole("menuitem", { name: destination }));
 }
+
+describe("touch and keyboard regions on the shared toolbar", () => {
+  const tap = (element: Element): void => {
+    fireEvent.pointerDown(element, { pointerId: 1, pointerType: "touch" });
+    fireEvent.pointerUp(element, { pointerId: 1, pointerType: "touch" });
+    fireEvent.click(element);
+  };
+
+  it.each([goToLabel("create"), settingsLabel])("opens %s with one tap and closes it with one tap outside, with no hover needed", async (name) => {
+    await openSplash();
+    fireEvent.click(screen.getByRole("button", { name: label(SPLASH.create) }));
+    await screen.findByRole("main", { name: identityOf("create") });
+    tap(screen.getByRole("button", { name }));
+    expect(await screen.findByRole("menu", { name })).toBeTruthy();
+    expect(document.documentElement.dataset["inputModality"]).toBe("touch");
+    fireEvent.pointerDown(visibleRegion("create"), { pointerId: 2, pointerType: "touch" });
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+  });
+
+  it.each(["play", "host"] as const)("cycles with F6 between the window bar and the %s surface and back", async (workspace) => {
+    await openSplash();
+    fireEvent.click(screen.getByRole("button", { name: label(SPLASH[workspace]) }));
+    const surface = await screen.findByRole("main", { name: identityOf(workspace) });
+    await waitFor(() => expect(document.activeElement).toBe(surface));
+    const bar = screen.getByRole("region", { name: frameCopy.regionName });
+    const press = async (target: Element, shiftKey = false): Promise<void> => {
+      fireEvent.keyDown(target, { key: "F6", shiftKey });
+      await act(async () => undefined);
+    };
+    await press(surface);
+    expect(bar.contains(document.activeElement)).toBe(true);
+    await press(document.activeElement ?? bar);
+    expect(document.activeElement).toBe(surface);
+    await press(surface, true);
+    expect(bar.contains(document.activeElement)).toBe(true);
+  });
+});
 
 describe("opening the workspaces", () => {
   it.each(WORKSPACE_DESTINATIONS)("opens %s from the splash with only the shared toolbar around a plain empty surface, and moves focus into it", async (workspace) => {

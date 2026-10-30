@@ -30,6 +30,12 @@
   user-select: none;
 }
 
+/* In the tablet layout every control keeps the touch-sized hit area, whatever pointer last touched the screen. */
+:root[data-layout="tablet"] .ui-hit {
+  min-width: var(--interaction-touchHitSize);
+  min-height: var(--interaction-touchHitSize);
+}
+
 .app-frame-leading {
   display: flex;
   align-items: center;

@@ -1,5 +1,6 @@
 /** Sentences the window frame announces or logs; the names and help of its controls come from the catalog. */
 export const frameCopy = {
+  regionName: "Window bar",
   closing: "Closing MudMaker.",
   windowMaximized: "The window now fills the screen.",
   windowRestored: "The window is back to its earlier size.",

@@ -3,6 +3,7 @@ import { FrameWindow } from "../frame/FrameWindow";
 import type { WindowController } from "../frame/WindowController";
 import { isWorkspace } from "../nav/destinations";
 import { GuardDialog } from "../nav/GuardDialog";
+import { registerRegionCycling } from "../nav/regionActions";
 import { registerShellRouter } from "../nav/ShellRouter";
 import { WorkspaceIdentity, WorkspaceMenus } from "../nav/WorkspaceToolbar";
 import type { WorkspaceNavigator } from "../nav/WorkspaceNavigator";
@@ -31,12 +32,12 @@ export function HomeWorkspace({ report, dependencies, controller, navigator, ret
   const snapshot = useSyncExternalStore(navigator.subscribe, navigator.getSnapshot);
   const registerScreen = useCallback(
     (runtime: UiRuntime) => {
-      const removers = [registerHomeRouter(runtime.bus, registry, { retryStartup: retry }), registerShellRouter(runtime.bus, registry, { theme, navigator })];
+      const removers = [registerHomeRouter(runtime.bus, registry, { retryStartup: retry }), registerShellRouter(runtime.bus, registry, { theme, navigator }), registerRegionCycling(runtime, dependencies.report)];
       return () => {
         for (const remove of removers) remove();
       };
     },
-    [registry, theme, retry, navigator],
+    [registry, theme, retry, navigator, dependencies.report],
   );
   const { destination } = snapshot;
   const workspace = isWorkspace(destination) ? destination : null;

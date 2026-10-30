@@ -1,6 +1,7 @@
 import { act, cleanup, fireEvent, screen } from "@testing-library/react";
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { tabletQuery } from "../frame/useTabletLayout";
 import { createTestUi, renderWithUi } from "../ui/testSupport";
 import { DockPanel } from "./DockPanel";
 import { described, editorToken, stubMatchMedia } from "./editorTestSupport";
@@ -82,7 +83,7 @@ describe("the drawer", () => {
     const media = stubMatchMedia(true);
     const closed = vi.fn();
     renderWithUi(createTestUi(), <Owner onClose={closed} />);
-    expect(media.queries).toContain(`(max-width: ${editorToken("layout.tabletWidth")}px)`);
+    expect(media.queries).toContain(tabletQuery(editorToken("layout.tabletWidth")));
     fireEvent.click(screen.getByText("Open drawer"));
     expect(screen.getByRole("complementary").className).toContain("overlay");
     fireEvent.pointerDown(screen.getByText("Second control"), { pointerId: 1, pointerType: "touch" });

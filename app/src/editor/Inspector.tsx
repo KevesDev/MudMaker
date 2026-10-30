@@ -1,5 +1,5 @@
 import { useId, useState, type ReactNode } from "react";
-import { UiContractError, requireName, useCommand, type Described } from "../ui";
+import { REGION, UiContractError, requireName, useCommand, type Described } from "../ui";
 
 /** What a field's value control needs to connect to its label and its message. */
 export interface InspectorControlSlot {
@@ -93,7 +93,7 @@ export function Inspector({ described, sections }: InspectorProps) {
   for (const section of sections) requireUnique("fields", section.fields.map((field) => field.id));
   if (!inspectorHasContent(sections)) return null;
   return (
-    <section aria-label={name} className="editor-inspector">
+    <section aria-label={name} data-region={REGION.inspector} className="editor-inspector">
       {sections
         .filter((section) => section.fields.length > 0)
         .map((section) => (
