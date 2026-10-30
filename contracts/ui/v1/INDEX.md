@@ -1,6 +1,6 @@
 # UI Catalog v1 — Every Planned Visible Element
 
-**Status: SPECIFICATION ONLY — NOT IMPLEMENTED.** Four scoped machine-readable files: [Splash/Home](home-controls.v1.json), [Creator Editor](editor-controls.v1.json), [Player Client](client-controls.v1.json), [Host Operations](host-controls.v1.json). **368 visible elements** across the four catalogs and **286 distinct semantic actions**, each with stable ID, label, tooltip/help, active view, state owner, action (or explicit passive status), permission, visible/enabled condition and test ID. This is a *planning inventory*, extended by each implementation phase; not proof these widgets exist.
+**Status: SPECIFICATION ONLY — NOT IMPLEMENTED.** Four scoped machine-readable files: [Splash/Home](home-controls.v1.json), [Creator Editor](editor-controls.v1.json), [Player Client](client-controls.v1.json), [Host Operations](host-controls.v1.json). **366 registered elements** across the four catalogs and **285 distinct semantic actions**, each with stable ID, label, tooltip/help, active view, state owner, action (or explicit passive status), permission, visible/enabled condition and test ID. This is a *planning inventory*, extended by each implementation phase; not proof these widgets exist.
 
 | Workspace | Items | Primary owner |
 |---|---:|---|
@@ -9,7 +9,7 @@
 | client | 116 | ClientIntentRouter |
 | host | 63 | HostAdminIntentRouter |
 
-**Navigation is cross-workspace**: `ui.nav.*` actions belong **only to [WorkspaceNavigator](../../../docs/03-contracts/ui-ux/00-launch-and-workspace-navigation.md)**, not duplicated in each workspace. App startup → loading → Splash → Create/Play/Host. Every workspace's Go To menu uses the same navigation actions and guards; active host remains running if user chooses Keep Hosting; second hosted project is rejected by HostSupervisor.
+**Navigation is cross-workspace**: `ui.nav.*` actions belong **only to [WorkspaceNavigator](../../../docs/03-contracts/ui-ux/00-launch-and-workspace-navigation.md)**, not duplicated in each workspace. App startup → loading → Splash → Create/Play/Host. Every workspace's Go To menu uses the same navigation actions and guards. Leaving Play disconnects all player-client sessions before navigating (or Cancel); only an active host can persist across workspace switches, and app exit stops hosting. Splash shows `Active World: {world}` only when hosting; appearance preset is located in Settings > Appearance. A second hosted project is rejected by HostSupervisor.
 
 ## Agent lookup (do not load all)
 1. Pick exactly one catalog file for the relevant workspace and `rg -n '"surface": "host.navigation"' contracts/ui/v1/host-controls.v1.json` for a particular surface.
