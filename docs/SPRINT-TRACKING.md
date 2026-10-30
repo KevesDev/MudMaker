@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **11/35** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **11/37** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -93,11 +93,13 @@
 | **S02.2c Input Manager** | One owner of keyboard, focus, pointer activation and surface streams; focus scopes, shortcut collisions, text-entry suppression | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.2d Buttons, toolbar and help** | Button, IconButton, Toolbar with roving focus and Tooltip/help contract (hoverable, keyboard and touch reachable) | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.2e Menus and selection** | Dropdown, Menu and Switch bound to the action bus with a single value channel | DONE | Auditor PASS (re-audit 2026-10-29) |
-| **S02.2f Dialogs and feedback** | Dialog with focus trap and destructive rules, Toast, Progress, StatusIndicator, TextField | DONE | Auditor PASS (final 2026-10-29). macOS WebKit focus behavior still needs a real Mac, tracked in S18.1 |
+| **S02.2f Dialogs and feedback** | Dialog with focus trap and destructive rules, Toast, Progress, StatusIndicator, TextField | DONE | Auditor PASS (final 2026-10-29). macOS WebKit focus behavior deferred until macOS is a target |
 | **S02.3a Loading and splash screen** | Real splash: MudMaker name, version, build id and honest engine status from the shell (USER TEST) | DONE | Auditor PASS (final 2026-10-29) |
 | **S02.3b Create/Play/Host entries** | Create, Play and Host controls from the catalog, honest unavailable states and recent-items empty states (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29); look of both presets still to be judged by the owner |
-| **S02.3d Diagnostic log** | Launch correlation id from the shell and a bounded local structured diagnostic log written by the shell, fed by the UI diagnostic sink with severity levels | DONE | Auditor PASS (final 2026-10-29). Unix permission test compiles for Linux but has not run: run `diagnostic_log_is_private_to_the_owner` on Linux and macOS in S18.1 |
+| **S02.3d Diagnostic log** | Launch correlation id from the shell and a bounded local structured diagnostic log written by the shell, fed by the UI diagnostic sink with severity levels | DONE | Auditor PASS (final 2026-10-29). Unix permission test compiles for Linux but has not run; deferred until Linux or macOS is a target |
+| **S02.3e Production-only launch screen** | Remove on-screen diagnostics and not-yet-real content: startup check results go to the diagnostic log; success shows none; Recent Projects/Worlds, Background Hosting and Connected Worlds appear only when real data exists (S04/S09, S17.4, S08); engine check becomes blocking at S03 (USER TEST) | TODO | — |
+| **S02.3f Launch screen layout** | Layout of the documented splash content only (wordmark, version/build, Create/Play/Host, loading or recovery notice when needed) using the full window and existing tokens; no invented content; further visual design needs an owner design document (USER TEST) | TODO | — |
 | **S02.4a Workspace navigator** | One navigator owning Create/Play/Host/Splash routing and per-workspace session retention | TODO | — |
 | **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | TODO | — |
 | **S02.4c Draft retention and transition guard** | Switch without losing editor drafts; Keep Draft, Save, Cancel dialog; guards for Play and Host plug in later (USER TEST) | TODO | — |
@@ -115,7 +117,7 @@
 | **S02.7d Tablet layout** | Drawers and stacked panels at tablet sizes, target sizes from tokens (USER TEST) | TODO | — |
 | **S02.8a Editor control binding** | Bind implemented editor widgets to the editor catalog and action owners | TODO | — |
 | **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | TODO | — |
-| **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | TODO | — |
+| **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid; the temporary appearance switch on the launch screen moves into Settings | TODO | — |
 | **S02.9b Theme editor and preview** | Create, edit and preview a custom theme with cancel, no gameplay effect | TODO | — |
 | **S02.9c Theme import and export** | Data-only import with exact token diagnostics and export (USER TEST) | TODO | — |
 | **S02.9d Shortcut preferences** | Customize, import, export and reset keyboard shortcuts per scope with conflict display (interaction contract obligation; needs S02.9a persistence) | TODO | — |
@@ -135,7 +137,7 @@
 | **S03.1 Identity allocator** | World scoped entity generations | TODO | — |
 | **S03.2 Component schema** | Typed component registry | TODO | — |
 | **S03.3 Mutation API** | Writer-only field mutation | TODO | — |
-| **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API | TODO | — |
+| **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API; the launch screen engine startup check becomes blocking once the engine ships (it is only logged until then) | TODO | — |
 | **S03.5 Query API** | Bounded entity query | TODO | — |
 | **S03.6 Revision guard** | ExpectedVersion write checks | TODO | — |
 | **S03.7 Event commit** | Atomic state plus domain event | TODO | — |
@@ -157,7 +159,7 @@
 | **S04.3 Layered overrides** | Default/instance/runtime property values | TODO | — |
 | **S04.4 Scoped slots** | Persistent world/player state schema | TODO | — |
 | **S04.5 Automatic local DB bootstrap and durable world snapshot** | Create/configure local project database automatically; ECS and slot save/restore | TODO | — |
-| **S04.6 Storage explorer** | Shell project-data view to create/open a world, inspect persisted entities, restart and verify saved state | TODO | — |
+| **S04.6 Storage explorer** | Shell project-data view to create/open a world, inspect persisted entities, restart and verify saved state; Recent Projects list appears on the launch screen (hidden until real data) | TODO | — |
 | **S04.7 Outbox ledger** | Durable onceKeys and committed events | TODO | — |
 | **S04.8 Schema migration and integrity gate** | App-run versioned schema migration, safety checkpoint and corruption/incompatible-store detection | TODO | — |
 | **S04.9 Release and storage manifest** | Immutable asset hashes, database version compatibility and rollback | TODO | — |
@@ -268,12 +270,12 @@
 | Phase | Small deliverable | Status | Evidence |
 |---|---|---|---|
 | **S08.1 Player shell** | Separate Play workspace, transcript, composer and tabs | TODO | — |
-| **S08.2 World profiles** | Save native/third-party connection profiles | TODO | — |
+| **S08.2 World profiles** | Save native/third-party connection profiles; Recent Worlds list appears on the launch screen (hidden until real data) | TODO | — |
 | **S08.3 Native adapter** | Connect to real S07 loopback game host | TODO | — |
 | **S08.4 Basic composer** | Send explicit action/command and display response | TODO | — |
 | **S08.5 Account lobby** | Login, registration, auto-enter or character roster with valid session attachment and text fallback | TODO | — |
 | **S08.6 FIRST PLAYABLE** | Two real players can look, move and receive scoped output | TODO | — |
-| **S08.7 Navigation retention** | Keep session and drafts on safe workspace switch | TODO | — |
+| **S08.7 Navigation retention** | Keep session and drafts on safe workspace switch; launch screen shows Connected Worlds only when sessions exist | TODO | — |
 | **S08.8 Text rendering** | Bounded ANSI/UTF-8 spans and safe output | TODO | — |
 | **S08.9 Transcript tools** | Scrollback, search, copy, timestamps and wrapping | TODO | — |
 | **S08.10 Appearance** | Independent Client theme and font settings | TODO | — |
@@ -480,7 +482,7 @@
 | **S17.1 Hosting and database lease** | Enforce one active host/project database writer, local-only store handles and runtime ownership; single app instance per data folder (the diagnostic log lock is per process, S02.3d) | TODO | — |
 | **S17.2 Storage and host preflight** | Automatically open/check local database and validate scripts, schema, permissions and limits before player port opens | TODO | — |
 | **S17.3 GUI hosting** | Start a validated immutable release from Host workspace | TODO | — |
-| **S17.4 Background host navigation** | Keep host A running when switching to Create, Play or Splash; guarded stop | TODO | — |
+| **S17.4 Background host navigation** | Keep host A running when switching to Create, Play or Splash; guarded stop; launch screen shows Background Hosting only while a host runs | TODO | — |
 | **S17.5 Headless hosting** | Start same release using CLI under identical single-host rule | TODO | — |
 | **S17.6 Host operations dashboard** | In-app startup, health, sessions, backup/restore and safe server-stop controls | TODO | — |
 | **S17.7 Database and world recovery** | Restore ECS, quests, posts, timers and outbox; detect corrupt storage without silent rollback | TODO | — |
@@ -509,7 +511,7 @@
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S18.1 Platform** | Target OS client/host checks, including a real macOS (WebKit) pass: clicked buttons do not take focus there, so dialog focus return and pointer-opened menus must be verified on a Mac (S02.2f); also run the Unix-only diagnostic log permission test (S02.3d) | TODO | — |
+| **S18.1 Platform** | Target OS client/host checks, (Windows is the only current target; macOS and Linux are deferred until they become a target, at which point a WebKit focus pass and the Unix-only diagnostic log permission test are required) | TODO | — |
 | **S18.2 Accessibility** | Keyboard/touch/contrast/readers | TODO | — |
 | **S18.3 Parser fuzz** | Malformed and Unicode payloads | TODO | — |
 | **S18.4 Flood fairness** | Connection+RP overload | TODO | — |
