@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **16/42** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **17/42** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -105,7 +105,7 @@
 | **S02.3f Settings and Appearance** | Settings menu on the launch screen with Appearance (preset choice for every scope) per [11](03-contracts/ui-ux/11-splash-screen-visual-spec.md) and [17](03-contracts/ui-ux/17-splash-art-and-window-frame.md); selector removed from the splash; catalog reconciled (USER TEST) | DONE | Auditor PASS (2026-10-29) |
 | **S02.3g Window frame** | Custom top row per [17](03-contracts/ui-ux/17-splash-art-and-window-frame.md): OS title bar removed, drag region, minimize, maximize and close as registered controls, close behaves as Quit; reusable as the shared toolbar row (USER TEST) | DONE | Auditor PASS after 4 rounds (2026-10-29); real drag, resize and focus checks come with the owner hands-on |
 | **S02.3h Splash layout and wordmark** | Block-letter wordmark, divider, equal-weight Create/Play/Host row with accent tokens, footer, Active World line, loading and failure states, narrow reflow, all per [15](03-contracts/ui-ux/15-screen-wireframes-and-interaction-states.md) and [17](03-contracts/ui-ux/17-splash-art-and-window-frame.md) (USER TEST) | DONE | Auditor PASS after 6 rounds (2026-10-29); owner judges the look against the mockup in the full splash |
-| **S02.3i Text-art renderer** | Palette-index art data format, parser and half-block renderer coloring every cell from theme art tokens (`color.art.*`), run-length spans, aria-hidden, deterministic, tested with real sample pieces; no scene yet | TODO | — |
+| **S02.3i Text-art renderer** | Palette-index art data format, parser and half-block renderer coloring every cell from theme art tokens (`color.art.*`), run-length spans, aria-hidden, deterministic, tested with real sample pieces; no scene yet | DONE | Auditor round 2; final fixes verified by tests, Lead accepted (2026-10-30). Real WebView2 glyph/box check comes with the owner hands-on |
 | **S02.3j Pixel icons and app mark** | The documented 8 by 8 pixel icons (document, play, server stack, folder, globe, gear, door) on Create, Play, Host, Settings, Quit and the application mark in the window frame, through the renderer (USER TEST) | TODO | — |
 | **S02.3k Landscape scene** | Fantasy landscape from the owner mockup as layered text-mode art anchored to the window edges (castle, mountains, moon, lake, stars), clear zone behind the text and contrast proof (USER TEST: the full splash) | TODO | — |
 | **S02.4a Workspace navigator** | One navigator for Create/Play/Host/Splash: preserve editor drafts and active hosting across workspace changes, never a Play network connection; ownership of the window frame actions (minimize, maximize, close) moves from the home router to the shared application shell router | TODO | — |

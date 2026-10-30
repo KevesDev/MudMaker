@@ -23,4 +23,4 @@ export {
   type TokenValue,
   type UserThemeDocument,
 } from "./types";
-export { ThemeSchema, type ThemeSchemaFamily, type TokenType } from "./schema";
+export { ART_ROLES, ThemeSchema, type ThemeSchemaFamily, type TokenType } from "./schema";

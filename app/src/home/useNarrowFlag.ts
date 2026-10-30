@@ -25,10 +25,6 @@ export function useNarrowFlag(theme: ThemeManager): { readonly ref: RefObject<HT
     const row = ref.current;
     if (row === null || typeof ResizeObserver === "undefined") return;
     let pending: ReturnType<typeof setTimeout> | undefined;
-    const apply = (overflows: boolean): void => {
-      row.dataset.narrow = String(overflows);
-      setNarrow(overflows);
-    };
     /** Reads whether the entries overflow one line, leaving the page as it found it. */
     const overflows = (): boolean | null => {
       if (row.getBoundingClientRect().width === 0) return null;
@@ -45,11 +41,11 @@ export function useNarrowFlag(theme: ThemeManager): { readonly ref: RefObject<HT
       const result = overflows();
       if (result === null) return;
       clearTimeout(pending);
-      pending = setTimeout(() => apply(result));
+      pending = setTimeout(() => setNarrow(result));
     });
     for (const element of [row, ...row.children]) observer.observe(element);
     const first = overflows();
-    if (first !== null) apply(first);
+    if (first !== null) setNarrow(first);
     return () => {
       clearTimeout(pending);
       observer.disconnect();

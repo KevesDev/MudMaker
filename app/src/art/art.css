@@ -1,0 +1,149 @@
+/*
+ * Text-mode art: two pixels share one cell, so the font size is the cell size and the line height must equal it.
+ * Only token colors are used; a role class names an art token and the theme decides what it looks like.
+ */
+.text-art {
+  display: block;
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-code);
+  line-height: var(--font-lineHeight-art);
+  letter-spacing: normal;
+  font-kerning: none;
+  font-variant-ligatures: none;
+  white-space: pre;
+  user-select: none;
+  pointer-events: none;
+}
+
+/*
+ * A row is a flex line of runs. Each run is as wide as the hidden characters it holds, one font cell per character,
+ * and as tall as the line. A half block is a box that covers half of the run in the run's foreground color over its
+ * background color, so no glyph metrics decide where a half ends, and the browser aligns every box edge to whole
+ * device pixels, so neighbouring cells meet without a seam.
+ */
+.text-art-row {
+  display: flex;
+}
+
+.art-glyphs {
+  visibility: hidden;
+}
+
+.art-full {
+  background-color: currentColor;
+}
+
+.art-upper,
+.art-lower {
+  position: relative;
+}
+
+.art-upper::before,
+.art-lower::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  block-size: 50%;
+  background-color: currentColor;
+}
+
+.art-upper::before {
+  inset-block-start: 0;
+}
+
+.art-lower::before {
+  inset-block-end: 0;
+}
+
+/* Art is decoration made of author colors: when the platform replaces those colors, or the page is printed, it is dropped so the text stays readable. */
+@media (forced-colors: active) {
+  .text-art {
+    display: none;
+  }
+}
+
+@media print {
+  .text-art {
+    display: none;
+  }
+}
+
+.art-fg-deep {
+  color: var(--color-art-deep);
+}
+
+.art-bg-deep {
+  background-color: var(--color-art-deep);
+}
+
+.art-fg-sky {
+  color: var(--color-art-sky);
+}
+
+.art-bg-sky {
+  background-color: var(--color-art-sky);
+}
+
+.art-fg-haze {
+  color: var(--color-art-haze);
+}
+
+.art-bg-haze {
+  background-color: var(--color-art-haze);
+}
+
+.art-fg-far {
+  color: var(--color-art-far);
+}
+
+.art-bg-far {
+  background-color: var(--color-art-far);
+}
+
+.art-fg-mid {
+  color: var(--color-art-mid);
+}
+
+.art-bg-mid {
+  background-color: var(--color-art-mid);
+}
+
+.art-fg-near {
+  color: var(--color-art-near);
+}
+
+.art-bg-near {
+  background-color: var(--color-art-near);
+}
+
+.art-fg-accent {
+  color: var(--color-art-accent);
+}
+
+.art-bg-accent {
+  background-color: var(--color-art-accent);
+}
+
+.art-fg-glow {
+  color: var(--color-art-glow);
+}
+
+.art-bg-glow {
+  background-color: var(--color-art-glow);
+}
+
+.art-fg-star {
+  color: var(--color-art-star);
+}
+
+.art-bg-star {
+  background-color: var(--color-art-star);
+}
+
+.art-fg-light {
+  color: var(--color-art-light);
+}
+
+.art-bg-light {
+  background-color: var(--color-art-light);
+}

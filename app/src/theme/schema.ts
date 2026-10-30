@@ -40,6 +40,9 @@ const ANSI_COLOR_POLICY: TokenType = {
   values: ["honored", "adapted", "ignored"],
 };
 
+/** The roles of the decorative text-mode art, from the back of the scene to the front, then its light sources. Art data and renderer read this list. */
+export const ART_ROLES = ["deep", "sky", "haze", "far", "mid", "near", "accent", "glow", "star", "light"] as const;
+
 const ANSI_PALETTE = Array.from({ length: 16 }, (_, index) => `ansi${index}`);
 
 const FAMILIES: readonly TokenFamily[] = [
@@ -57,6 +60,7 @@ const FAMILIES: readonly TokenFamily[] = [
   },
   { prefix: "color.interaction", members: ["focus", "selection", "hover", "pressed"], type: COLOR },
   { prefix: "color.accent", members: ["primary", "secondary", "tertiary", "onSecondary"], type: COLOR },
+  { prefix: "color.art", members: ART_ROLES, type: COLOR },
   {
     prefix: "color.terminal",
     members: [

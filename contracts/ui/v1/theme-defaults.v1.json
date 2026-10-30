@@ -1,7 +1,7 @@
 {
   "schema": "mudmaker.theme-defaults.v1",
   "status": "SELECTED_DEFAULT_TOKENS_NOT_RENDER_TESTED",
-  "revision": 8,
+  "revision": 9,
   "manager": "ThemeManager",
   "scopes": {
     "home": {
@@ -68,6 +68,7 @@
         "font.lineHeight.heading": 1.2,
         "font.lineHeight.body": 1.5,
         "font.lineHeight.wordmark": 1,
+        "font.lineHeight.art": 1,
         "font.letterSpacing.tagline": 4,
         "layer.popup": 10,
         "layer.tooltip": 20,
@@ -176,7 +177,17 @@
             "color.accent.secondary": "#2A28AD",
             "color.accent.tertiary": "#E23D8A",
             "color.accent.onSecondary": "#5EEA91",
-            "color.border.frame": "#E23D8A"
+            "color.border.frame": "#E23D8A",
+            "color.art.deep": "#111320",
+            "color.art.sky": "#232175",
+            "color.art.haze": "#41204D",
+            "color.art.far": "#13124E",
+            "color.art.mid": "#4442B7",
+            "color.art.near": "#0D0D2C",
+            "color.art.accent": "#E23D8A",
+            "color.art.glow": "#5EEA91",
+            "color.art.star": "#BFF7D3",
+            "color.art.light": "#8EF0B2"
           }
         },
         "client": {
@@ -243,7 +254,17 @@
             "color.accent.secondary": "#06EFFF",
             "color.accent.tertiary": "#B4FF00",
             "color.accent.onSecondary": "#080808",
-            "color.border.frame": "#9759FF"
+            "color.border.frame": "#9759FF",
+            "color.art.deep": "#080808",
+            "color.art.sky": "#272727",
+            "color.art.haze": "#211438",
+            "color.art.far": "#3C2466",
+            "color.art.mid": "#5B3599",
+            "color.art.near": "#120B1F",
+            "color.art.accent": "#9759FF",
+            "color.art.glow": "#06EFFF",
+            "color.art.star": "#C1FBFF",
+            "color.art.light": "#83F7FF"
           }
         },
         "client": {

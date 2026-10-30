@@ -28,6 +28,7 @@ const EDITOR_NAMESPACES = [
   "color.status.{success,warning,error,information}",
   "color.interaction.{focus,selection,hover,pressed}",
   "color.accent.{primary,secondary,tertiary,onSecondary}",
+  "color.art.{deep,sky,haze,far,mid,near,accent,glow,star,light}",
   "font.family.{interface,code,numeric}",
   "font.size.{body,caption,nodeTitle,heading,code,wordmarkStep}",
   "font.weight.*",

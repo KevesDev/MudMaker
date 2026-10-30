@@ -29,8 +29,10 @@ The functional fallback set below is exempt. Standard ANSI meaning, status meani
 | `layout.dividerRatio.wide`, `layout.dividerRatio.narrow` | 0.76, 0.59 | The mockup measures the action row at 805px and its two dividers at 610px and 471px: 610 / 805 = 0.76 and 471 / 805 = 0.585, rounded to 0.59. Each divider is that fraction of the action row at every width, so it is narrower than the row down to the minimum window. |
 | `layout.share.above`, `layout.share.below` | 135, 610 | The mockup measures 135px of free space between the frame row and the top of the banner, and 610px from the bottom of the banner to the window edge. The free height of the launch screen divides in that proportion, 135 : 610, between the space above the banner and the block below it. The banner therefore keeps the same place on the loading, loaded and failed screens, and the whole composition keeps the mockup's proportions as the window grows: at 680px high the banner top sits about 16% of the way down, at 1000px about 17%, against 15% in the mockup. |
 | `font.lineHeight.wordmark` | 1 | Block rows touch only when the line height equals the font size. |
+| `font.lineHeight.art` | 1 | A text-art cell shows two pixels with one half block, so rows join without a gap only when the line height equals the font size. |
 | `font.letterSpacing.tagline` | 4 | The mockup spaces the brand line by about a third of its size; 4px is 0.29 of the 14px body size the line uses. |
 
+- The `color.art.*` tokens (`deep`, `sky`, `haze`, `far`, `mid`, `near`, `accent`, `glow`, `star`, `light`) are the roles of the text-mode art. They are decorative: they carry no text contrast floor, they never show information, and every role of a preset is separated from every other role of that preset by a CIE76 delta E of at least 10 (the smallest difference the eye notices is about 2.3, so ten reads as a different color at a glance even in dim art), measured in CIE L*a*b* from sRGB with the D65 white point; hue-separated pairs pass by delta E, not by lightness. The lowest pair is 13.0 (`deep` and `near`) in neon-lights and 13.1 (`glow` and `light`) in neon-dark-mode. High contrast mode leaves them as they are. Art data names a role, never a color. Neon Lime is not used in art. The art is not drawn when the platform forces its own colors (`forced-colors: active`) or when the page is printed: its block is hidden and takes no space, so text stays readable.
 - `color.border.frame` is the window border. It is the exact Intense Hot Pink in neon-lights and the exact Electric Purple in neon-dark-mode, and it reaches 3:1 against the page and the frame row.
 - `layout.frameRowHeight` is the least height of the window frame row; controls inside it keep their pointer or touch hit size, so the row grows rather than clips them.
 - `color.border.subtle` is a decorative divider only and never marks an interactive boundary. Interactive boundaries use `color.border.normal`.
@@ -71,14 +73,14 @@ Palette colors and the tokens that use them directly:
 
 | Palette color | Hex | Tokens |
 |---|---|---|
-| Vulcan | #111320 | `color.surface.app`, `color.surface.canvas`, `color.terminal.background` |
-| Persian Blue | #232175 | `color.client.inputBackground`, `color.graph.node.surface`, `color.surface.inspector`, `color.surface.panel` |
-| American Purple | #41204D | `color.graph.node.header`, `color.surface.toolbar` |
+| Vulcan | #111320 | `color.art.deep`, `color.surface.app`, `color.surface.canvas`, `color.terminal.background` |
+| Persian Blue | #232175 | `color.art.sky`, `color.client.inputBackground`, `color.graph.node.surface`, `color.surface.inspector`, `color.surface.panel` |
+| American Purple | #41204D | `color.art.haze`, `color.graph.node.header`, `color.surface.toolbar` |
 | Electric Navy | #2A28AD | `color.accent.secondary`, `color.graph.node.selected`, `color.surface.overlay` |
-| Digital Mint | #5EEA91 | `color.accent.onSecondary`, `color.accent.primary`, `color.graph.edge.active`, `color.graph.node.action`, `color.graph.port.value`, `color.status.connected`, `color.status.success`, `color.terminal.foreground`, `color.text.primary` |
-| Intense Hot Pink | #E23D8A | `color.accent.tertiary`, `color.border.frame` |
+| Digital Mint | #5EEA91 | `color.accent.onSecondary`, `color.accent.primary`, `color.art.glow`, `color.graph.edge.active`, `color.graph.node.action`, `color.graph.port.value`, `color.status.connected`, `color.status.success`, `color.terminal.foreground`, `color.text.primary` |
+| Intense Hot Pink | #E23D8A | `color.accent.tertiary`, `color.art.accent`, `color.border.frame` |
 
-Intense Hot Pink is below 4.5:1 on these surfaces, so it appears exact only as the tertiary accent and the window border (3.41:1 or more on every surface but the overlay, 3.42:1 for the border against the page and the frame row), and otherwise only as lightened border, focus ring and edge colors, a darkened selection fill and an error tone, never as body text. Electric Navy is exact as the secondary accent, a fill under Digital Mint text (6.81:1); it is 1.0:1 to 1.76:1 against the surfaces, so it never draws a boundary or text. Status warning has no amber in the palette, so it is a lightened American Purple.
+Intense Hot Pink is below 4.5:1 on these surfaces, so it appears exact only as the tertiary accent, the window border and the decorative art accent (3.41:1 or more on every surface but the overlay, 3.42:1 for the border against the page and the frame row), and otherwise only as lightened border, focus ring and edge colors, a darkened selection fill and an error tone, never as body text. Electric Navy is exact as the secondary accent, a fill under Digital Mint text (6.81:1); it is 1.0:1 to 1.76:1 against the surfaces, so it never draws a boundary or text. Status warning has no amber in the palette, so it is a lightened American Purple.
 
 | Token | Source color | Blend toward | Amount | Result | Rule |
 |---|---|---|---|---|---|
@@ -99,6 +101,11 @@ Intense Hot Pink is below 4.5:1 on these surfaces, so it appears exact only as t
 | `color.client.matchHighlight`, `color.interaction.selection` | Intense Hot Pink #E23D8A | black | 29% | `#A02B62` | smallest darkening that gives Digital Mint text 4.5:1 |
 | `color.client.historyHighlight`, `color.interaction.hover` | Electric Navy #2A28AD | white | 8% | `#3B39B4` | smallest lightening reaching 1.2:1 from every surface |
 | `color.interaction.pressed` | Electric Navy #2A28AD | white | 16% | `#4C4ABA` | largest lightening that keeps Digital Mint text at 4.5:1 and 1.2:1 from every surface |
+| `color.art.far` | Electric Navy #2A28AD | black | 55% | `#13124E` | depth step: the farthest land, darker than the sky behind it |
+| `color.art.mid` | Electric Navy #2A28AD | white | 12% | `#4442B7` | depth step: the brightest land layer, between the far hills and the dark foreground |
+| `color.art.near` | Persian Blue #232175 | black | 62% | `#0D0D2C` | depth step: the darkest land, silhouettes in front of every other layer |
+| `color.art.light` | Digital Mint #5EEA91 | white | 30% | `#8EF0B2` | fixed step: a soft tint of the moon color for lit windows and reflections |
+| `color.art.star` | Digital Mint #5EEA91 | white | 60% | `#BFF7D3` | fixed step: a pale tint of the moon color for sparse star points |
 
 ## neon-dark-mode
 
@@ -106,10 +113,10 @@ Palette colors and the tokens that use them directly:
 
 | Palette color | Hex | Tokens |
 |---|---|---|
-| Void | #080808 | `color.accent.onSecondary`, `color.surface.app`, `color.surface.canvas`, `color.terminal.background` |
+| Void | #080808 | `color.accent.onSecondary`, `color.art.deep`, `color.surface.app`, `color.surface.canvas`, `color.terminal.background` |
 | Dark Graphite | #191919 | `color.client.inputBackground`, `color.graph.node.surface`, `color.surface.panel` |
-| Electric Purple | #9759FF | `color.accent.primary`, `color.border.focused`, `color.border.frame`, `color.graph.edge.selected`, `color.graph.node.data`, `color.graph.port.event`, `color.interaction.focus`, `color.terminal.tell` |
-| Neon Cyan | #06EFFF | `color.accent.secondary`, `color.client.channelAccent`, `color.graph.edge.active`, `color.graph.node.event`, `color.graph.port.execution`, `color.status.information`, `color.terminal.link`, `color.terminal.prompt` |
+| Electric Purple | #9759FF | `color.accent.primary`, `color.art.accent`, `color.border.focused`, `color.border.frame`, `color.graph.edge.selected`, `color.graph.node.data`, `color.graph.port.event`, `color.interaction.focus`, `color.terminal.tell` |
+| Neon Cyan | #06EFFF | `color.accent.secondary`, `color.art.glow`, `color.client.channelAccent`, `color.graph.edge.active`, `color.graph.node.event`, `color.graph.port.execution`, `color.status.information`, `color.terminal.link`, `color.terminal.prompt` |
 | Neon Lime | #B4FF00 | `color.accent.tertiary` |
 
 Status error and status warning are not named by the mapping and use the fallback set.
@@ -134,6 +141,13 @@ Status error and status warning are not named by the mapping and use the fallbac
 | `color.graph.node.selected` | Dark Graphite #191919 | white | 14% | `#393939` | selected node step |
 | `color.graph.node.header` | Dark Graphite #191919 | white | 7% | `#292929` | header step |
 | `color.graph.node.shadow`, `color.surface.scrim` | Void #080808 | black | 100% | `#000000` | shadow and scrim are the black end of the blend |
+| `color.art.sky` | Dark Graphite #191919 | white | 6% | `#272727` | fixed step: exact Dark Graphite is only 6.6 from `color.art.deep` (exact Void), so the sky is lightened until it is 13.4 from it |
+| `color.art.haze` | Electric Purple #9759FF | black | 78% | `#211438` | depth step: the dim purple of the horizon over the graphite sky |
+| `color.art.far` | Electric Purple #9759FF | black | 60% | `#3C2466` | depth step: the farthest land, darker than the middle layer |
+| `color.art.mid` | Electric Purple #9759FF | black | 40% | `#5B3599` | depth step: the brightest land layer |
+| `color.art.near` | Electric Purple #9759FF | black | 88% | `#120B1F` | depth step: the darkest land, a Void-dark purple that sits 10 or more from exact Void |
+| `color.art.light` | Neon Cyan #06EFFF | white | 50% | `#83F7FF` | fixed step: a soft tint of the moon color for lit windows and reflections, at least 10 from exact Neon Cyan |
+| `color.art.star` | Neon Cyan #06EFFF | white | 75% | `#C1FBFF` | fixed step: a pale tint of the moon color for sparse star points |
 
 ## Functional fallback set
 
