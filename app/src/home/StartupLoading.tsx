@@ -1,15 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { ThemeManager } from "../theme";
 import { Progress, type PassiveDescriptor } from "../ui";
 import { homeCopy } from "./homeCopy";
+import { WordmarkBlock } from "./WordmarkBlock";
 
 const LOADING: PassiveDescriptor = { passive: true, id: "startup.loading", label: homeCopy.loadingLabel, help: "" };
 
-/** The product name and a progress bar; the bar's name is for assistive technology and no words about the checks are drawn. */
-export function StartupLoading() {
+/** The wordmark and a progress bar; the bar's name is for assistive technology and no words about the checks are drawn. */
+export function StartupLoading({ theme }: { readonly theme: ThemeManager }) {
+  const stageRef = useRef<HTMLElement>(null);
   return (
-    <main className="home" aria-busy="true" aria-label={homeCopy.productName}>
-      <p className="home-wordmark">{homeCopy.productName}</p>
-      <Progress described={LOADING} fraction={null} showText={false} />
+    <main className="home" aria-busy="true" aria-label={homeCopy.productName} ref={stageRef}>
+      <div className="home-above" aria-hidden="true" />
+      <div className="home-header">
+        <WordmarkBlock name={homeCopy.productName} theme={theme} stageRef={stageRef} />
+      </div>
+      <div className="home-below">
+        <Progress described={LOADING} fraction={null} showText={false} />
+      </div>
     </main>
   );
 }

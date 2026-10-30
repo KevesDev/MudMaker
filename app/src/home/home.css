@@ -1,34 +1,264 @@
+/*
+ * The stage fills the area under the frame row. The free height divides between the space above the banner and
+ * the block below it by fixed shares, so the banner sits at the same place whatever the block holds.
+ */
 .home {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-stack);
-  max-width: var(--layout-contentMaxWidth);
-  margin: var(--spacing-page) auto;
-  padding: 0 var(--spacing-stack);
+  align-items: center;
+  height: 100%;
+  padding: var(--spacing-stack);
+  background: var(--color-surface-canvas);
+}
+
+.home-above {
+  flex: var(--layout-share-above) 1 0%;
+}
+
+.home-header,
+.home-below {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  max-width: var(--layout-splashMaxWidth);
 }
 
 .home-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-row);
+  flex: none;
 }
 
-.home-header h1 {
+.home-below {
+  flex: var(--layout-share-below) 1 0%;
+  gap: var(--spacing-stack);
+  min-height: 0;
+}
+
+/* The loading indicator is a short bar under the banner, as wide as the narrow divider. */
+.home-below > .ui-progress {
+  width: calc(100% * var(--layout-dividerRatio-narrow));
+}
+
+.home :is(.home-header, .home-below) * {
+  font-family: var(--font-family-code);
+}
+
+.home-main,
+.home-footer {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-row);
+  width: 100%;
+}
+
+/*
+ * The banner is centered on the screen's axis. Under it sits a reserved row of one caption line and a gap, on every
+ * screen, and it is the whole distance to the divider or the loading bar. The version is drawn out of the flow: with
+ * room beside the banner it hangs outside the lower right corner as two lines and uses none of the row; without
+ * room it is one compact line in the row, right-aligned. The banner and what follows never move.
+ */
+.home-wordmark {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.home-wordmark-box {
+  --version-reserve: calc(var(--font-size-caption) * var(--font-lineHeight-body) + var(--spacing-row));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 100%;
+  padding-block-end: var(--version-reserve);
+}
+
+.home-wordmark-title {
   margin: 0;
 }
 
-.home-version {
+/*
+ * The font size is a whole number of wordmark units so the block characters stay crisp, and the rows touch at a
+ * line height of one. Copies one seam width to the right and below close the hairlines that fractional
+ * character widths leave between blocks.
+ */
+.home-wordmark-art {
+  display: block;
+  white-space: pre;
+  font-size: calc(var(--font-size-wordmarkStep) * var(--wordmark-step));
+  line-height: var(--font-lineHeight-wordmark);
+  color: var(--color-accent-primary);
+  text-shadow:
+    var(--wordmark-seam) 0 0 currentcolor,
+    0 var(--wordmark-seam) 0 currentcolor;
+}
+
+.home-version,
+.home-version-probe {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
   margin: 0;
   font-size: var(--font-size-caption);
   line-height: var(--font-lineHeight-body);
+  white-space: nowrap;
   color: var(--color-text-secondary);
 }
 
+.home-version[data-placement="beside"],
+.home-version-probe {
+  margin-inline-start: var(--spacing-row);
+}
+
+.home-version[data-placement="beside"] {
+  bottom: var(--version-reserve);
+  left: 100%;
+}
+
+.home-version[data-placement="below"] {
+  right: 0;
+  bottom: 0;
+  text-align: right;
+}
+
+/* The unseen copy that measures the two-line version; it takes no room and is never drawn. */
+.home-version-probe {
+  pointer-events: none;
+}
+
+.home-tagline {
+  margin: 0;
+  font-size: var(--font-size-body);
+  line-height: var(--font-lineHeight-body);
+  letter-spacing: var(--font-letterSpacing-tagline);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.home-ornament {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-row);
+  line-height: var(--font-lineHeight-body);
+  color: var(--color-accent-tertiary);
+}
+
+/* Each divider is a fraction of the action row, so it is narrower than the row at every width. */
+.home-ornament[data-width="wide"] {
+  width: calc(100% * var(--layout-dividerRatio-wide));
+}
+
+.home-ornament[data-width="narrow"] {
+  width: calc(100% * var(--layout-dividerRatio-narrow));
+}
+
+.home-rule {
+  flex: 1 1 auto;
+  border-top: var(--shape-borderWidth) solid var(--color-accent-tertiary);
+}
+
+/* One line of equal entries, each at least as wide as its own content; the stacking flag, set by measuring the row, stacks them at the full width. */
 .home-actions {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--spacing-row);
+  width: 100%;
+}
+
+.home-actions[data-narrow="true"] {
+  flex-direction: column;
+}
+
+.home-action {
+  display: flex;
+  flex: 1 1 0;
+}
+
+.home-actions[data-narrow="true"] .home-action {
+  flex: none;
+}
+
+.home-action .ui-anchor {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.home-action[data-accent="primary"] {
+  --action-fill: var(--color-surface-canvas);
+  --action-text: var(--color-accent-primary);
+  --action-edge: var(--color-accent-primary);
+}
+
+.home-action[data-accent="secondary"] {
+  --action-fill: var(--color-accent-secondary);
+  --action-text: var(--color-accent-onSecondary);
+  --action-edge: var(--color-accent-secondary);
+}
+
+.home-action[data-accent="tertiary"] {
+  --action-fill: var(--color-surface-canvas);
+  --action-text: var(--color-accent-tertiary);
+  --action-edge: var(--color-accent-tertiary);
+}
+
+.home-action .ui-button,
+.home-action .ui-button:hover,
+.home-action .ui-button:active {
+  flex: 1 1 auto;
+  justify-content: space-between;
+  font-weight: var(--font-weight-strong);
+  text-transform: uppercase;
+  background: var(--action-fill);
+}
+
+.home-action .ui-button:not([aria-disabled="true"]) {
+  color: var(--action-text);
+  border-color: var(--action-edge);
+}
+
+/* Hover underlines the label; pressing also sits the control one border width lower, which touch shows as well. The fill never changes. */
+.home-action .ui-button:hover,
+.home-action .ui-button:active,
+.home-footer-actions > .ui-anchor > .ui-button:hover,
+.home-footer-actions > .ui-anchor > .ui-button:active {
+  text-decoration: underline;
+}
+
+.home-action .ui-button:active,
+.home-footer-actions > .ui-anchor > .ui-button:active {
+  transform: translateY(var(--shape-borderWidth));
+}
+
+/* The footer actions are plain text: no fill and no border of their own. */
+.home-footer-actions {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--spacing-row);
+}
+
+.home-footer-actions > .ui-anchor > .ui-button,
+.home-footer-actions > .ui-anchor > .ui-button:hover,
+.home-footer-actions > .ui-anchor > .ui-button:active {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-canvas);
+  border: 0;
+}
+
+.home-footer-rule {
+  border-inline-start: var(--shape-borderWidth) solid var(--color-border-subtle);
+}
+
+/* The menu sits at the bottom of the screen, so it opens upward. */
+.home-footer-actions .ui-menu-popup {
+  top: auto;
+  bottom: 100%;
 }
 
 .home-failure {
@@ -36,6 +266,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-row);
+  max-width: 100%;
   padding: var(--spacing-panel);
   border: var(--shape-borderWidth) solid var(--color-border-invalid);
   border-radius: var(--shape-panelRadius);
@@ -49,11 +280,4 @@
 .home-failure:focus-visible {
   outline: var(--interaction-focusOutlineWidth) solid var(--color-interaction-focus);
   outline-offset: var(--shape-borderWidth);
-}
-
-.home-wordmark {
-  margin: 0;
-  font-size: var(--font-size-heading);
-  font-weight: var(--font-weight-strong);
-  color: var(--color-text-primary);
 }

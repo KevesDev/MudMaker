@@ -31,7 +31,7 @@ export function HomeWorkspace({ report, dependencies, controller, retry, focusHe
       correlation={info === null ? {} : { launchId: info.launchId }}
       registerScreen={registerScreen}
     >
-      {report.ok ? <SplashScreen info={report.info} theme={theme} focusHeading={focusHeading} /> : <StartupFailure report={report} />}
+      {report.ok ? <SplashScreen info={report.info} theme={theme} focusHeading={focusHeading} /> : <StartupFailure report={report} theme={theme} />}
     </FrameWindow>
   );
 }

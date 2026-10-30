@@ -27,7 +27,7 @@ describe("text scale (AC-06)", () => {
     manager.setAccessibility("editor", { ...NORMAL, textScale: 1.5 });
     const base = fixtureTokens("editor");
     const tokens = manager.getSnapshot("editor").tokens;
-    for (const name of ["font.size.body", "font.size.caption", "font.size.heading", "font.size.nodeTitle", "font.size.code"]) {
+    for (const name of ["font.size.body", "font.size.caption", "font.size.heading", "font.size.nodeTitle", "font.size.code", "font.size.wordmarkStep"]) {
       expect(tokens[name]).toBe(numberToken(base, name) * 1.5);
     }
     expect(tokens["spacing.panel"]).toBe(base["spacing.panel"]);
@@ -178,10 +178,75 @@ describe.each(fixturePresetIds())("high contrast secondary accent in preset %s",
     expect(use.asBoundary || use.asFill).toBe(true);
   });
 
+  it("keeps the text on the secondary fill at the enhanced ratio, moving it only when the palette value falls short", () => {
+    const tokens = highContrastTokens();
+    const base = fixtureTokens("editor", presetId);
+    expect(wcagRatio(stringToken(tokens, "color.accent.onSecondary"), stringToken(tokens, "color.accent.secondary"))).toBeGreaterThanOrEqual(7);
+    const paletteRatio = wcagRatio(stringToken(base, "color.accent.onSecondary"), stringToken(base, "color.accent.secondary"));
+    expect(tokens["color.accent.onSecondary"] === base["color.accent.onSecondary"]).toBe(paletteRatio >= 7);
+  });
+
+  it("lifts a user text color on the secondary fill that falls short of the enhanced ratio", () => {
+    const poor = "#808080";
+    const base = fixtureTokens("editor", presetId);
+    expect(wcagRatio(poor, stringToken(base, "color.accent.secondary"))).toBeLessThan(7);
+    const tokens = highContrastTokens({ "color.accent.onSecondary": poor });
+    expect(tokens["color.accent.onSecondary"]).not.toBe(poor);
+    expect(wcagRatio(stringToken(tokens, "color.accent.onSecondary"), stringToken(tokens, "color.accent.secondary"))).toBeGreaterThanOrEqual(7);
+  });
+
   it("leaves a user secondary accent alone when it already bounds every surface", () => {
     const bright = "#FFFFFF";
     expect(secondaryAccentUse({ ...fixtureTokens("editor", presetId), "color.accent.secondary": bright }).asBoundary).toBe(true);
     expect(highContrastTokens({ "color.accent.secondary": bright })["color.accent.secondary"]).toBe(bright);
+  });
+});
+
+describe.each(fixturePresetIds())("high contrast accent text in preset %s", (presetId) => {
+  const TEXT_TARGET = 7;
+  const BOUNDARY_TARGET = 3;
+  const TEXT_ACCENTS = ["color.accent.primary", "color.accent.tertiary"];
+
+  function highContrastTokens(overrides: Readonly<Record<string, string>> = {}): Readonly<Record<string, string | number | boolean>> {
+    const manager = newManager();
+    manager.selectPreset("editor", presetId);
+    if (Object.keys(overrides).length > 0) expect(manager.setOverrides("editor", overrides).ok).toBe(true);
+    manager.setAccessibility("editor", { ...NORMAL, contrast: "high" });
+    return manager.getSnapshot("editor").tokens;
+  }
+
+  it("raises the primary and tertiary accents to the text ratio on the canvas, where the launch screen draws them as text", () => {
+    const tokens = highContrastTokens();
+    for (const name of TEXT_ACCENTS) {
+      expect(wcagRatio(stringToken(tokens, name), stringToken(tokens, "color.surface.canvas")), name).toBeGreaterThanOrEqual(TEXT_TARGET);
+    }
+  });
+
+  it("keeps them above the boundary ratio on every surface, which they still draw rules and borders on", () => {
+    const tokens = highContrastTokens();
+    for (const name of TEXT_ACCENTS) {
+      for (const surface of SURFACES) {
+        expect(wcagRatio(stringToken(tokens, name), stringToken(tokens, surface)), `${name} on ${surface}`).toBeGreaterThanOrEqual(BOUNDARY_TARGET);
+      }
+    }
+  });
+
+  it("leaves the exact palette values alone in normal contrast", () => {
+    const manager = newManager();
+    manager.selectPreset("editor", presetId);
+    const base = fixtureTokens("editor", presetId);
+    for (const name of TEXT_ACCENTS) expect(manager.getSnapshot("editor").tokens[name]).toBe(base[name]);
+  });
+
+  it("lifts a user accent that falls short of the text ratio on the canvas", () => {
+    const poor = "#303060";
+    const base = fixtureTokens("editor", presetId);
+    expect(wcagRatio(poor, stringToken(base, "color.surface.canvas"))).toBeLessThan(TEXT_TARGET);
+    const tokens = highContrastTokens({ "color.accent.primary": poor, "color.accent.tertiary": poor });
+    for (const name of TEXT_ACCENTS) {
+      expect(tokens[name]).not.toBe(poor);
+      expect(wcagRatio(stringToken(tokens, name), stringToken(tokens, "color.surface.canvas"))).toBeGreaterThanOrEqual(TEXT_TARGET);
+    }
   });
 });
 

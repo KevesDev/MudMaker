@@ -283,6 +283,27 @@ describe("Button state text", () => {
   });
 });
 
+describe("Button trailing glyph", () => {
+  const CHEVRON = "›";
+
+  it("draws the glyph after the label, hidden from assistive technology, so the accessible name stays the label", () => {
+    const ui = createTestUi();
+    renderWithUi(ui, <Button control={ui.control(ORPHAN)} trailingGlyph={CHEVRON} />);
+    const button = screen.getByRole("button", { name: "Unowned Tool" });
+    const glyph = button.querySelector(".ui-button-glyph");
+    expect(glyph?.textContent).toBe(CHEVRON);
+    expect(glyph?.getAttribute("aria-hidden")).toBe("true");
+    expect(button.lastElementChild).toBe(glyph);
+    expect(button.firstChild?.textContent).toBe("Unowned Tool");
+  });
+
+  it("draws no glyph element when none is given", () => {
+    const ui = createTestUi();
+    renderWithUi(ui, <Button control={ui.control(ORPHAN)} />);
+    expect(document.querySelector(".ui-button-glyph")).toBeNull();
+  });
+});
+
 describe("shared unavailable wording", () => {
   it("is one plain sentence naming the control", () => {
     expect(copy.notInThisBuild("Create")).toBe("Create is not available yet.");

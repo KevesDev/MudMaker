@@ -15,7 +15,9 @@ import { loadFrameRegistry } from "../frame/frameRegistry";
 import { ThemeManager, bindThemeToElement } from "../theme";
 import { loadShippedRegistry } from "../ui";
 import type { HomeDependencies } from "./homeDependencies";
+import { SPLASH_GLYPHS } from "./homeLayout";
 import type { HomeDiagnostic, StartupDiagnostic } from "./startupChecks";
+import { WORDMARK_TEXT } from "./wordmark";
 
 export const SHELL_INFO: AppInfo = {
   name: "MudMaker",
@@ -74,6 +76,9 @@ export function renderApp(home: TestHome, options: { readonly strict?: boolean }
 /** The text of the frame row while the window is restored: its title, then the glyph of each control. */
 export const FRAME_TEXT: readonly string[] = ["MudMaker", GLYPHS.minimize, GLYPHS.maximize, GLYPHS.close];
 
+/** The brand composition the loaded and the failed screens share: the banner, the star of its divider and the brand line. */
+export const BRAND_TEXT: readonly string[] = [WORDMARK_TEXT.trim(), SPLASH_GLYPHS.ornament, "BUILD WORLDS. YOUR WAY."];
+
 /** Elements matching the selector that are not part of the window frame row. */
 export function outsideFrame(selector: string): Element[] {
   return [...document.querySelectorAll(selector)].filter((element) => element.closest(".app-frame") === null);
@@ -104,7 +109,7 @@ export function copyOnScreen(): string {
 export function visibleText(): string[] {
   const found: string[] = [];
   const walk = (node: Node): void => {
-    if (node instanceof HTMLElement && (node.hidden || node.classList.contains("ui-visually-hidden"))) return;
+    if (node instanceof HTMLElement && (node.hidden || node.style.visibility === "hidden" || node.classList.contains("ui-visually-hidden"))) return;
     if (node.nodeType === Node.TEXT_NODE) {
       const text = (node.textContent ?? "").trim();
       if (text.length > 0) found.push(text);

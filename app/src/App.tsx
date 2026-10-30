@@ -70,13 +70,13 @@ export function App({ dependencies = productionDependencies }: { readonly depend
   if (state.phase === "checking") {
     screen = (
       <StartupWindow frameRegistry={frameRegistry} dependencies={dependencies} controller={controller} correlation={correlation}>
-        <StartupLoading />
+        <StartupLoading theme={dependencies.theme} />
       </StartupWindow>
     );
   } else if (state.report.registry === null) {
     screen = (
       <StartupWindow frameRegistry={frameRegistry} dependencies={dependencies} controller={controller} correlation={correlation}>
-        <InstallDamaged />
+        <InstallDamaged theme={dependencies.theme} />
       </StartupWindow>
     );
   } else {

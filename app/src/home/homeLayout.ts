@@ -16,8 +16,24 @@ export const SPLASH = {
 /** The appearance choice lives in the catalog's settings surface and is offered from the Settings menu. */
 export const APPEARANCE = "home.settings.07" as const satisfies ControlId;
 
-/** The workspace entries: each is handled by the navigator, which a later phase adds. */
-export const WORKSPACE_ENTRIES: readonly ControlId[] = [SPLASH.create, SPLASH.play, SPLASH.host];
+/** The accent colors an action can take; the stylesheet has one rule for each. */
+export const ACTION_ACCENTS = ["primary", "secondary", "tertiary"] as const;
+export type ActionAccent = (typeof ACTION_ACCENTS)[number];
+
+/** The workspace entries in the order they sit in the row, each with the accent that draws it. Each is handled by the navigator, which a later phase adds. */
+export const WORKSPACE_ACTIONS: readonly { readonly id: ControlId; readonly accent: ActionAccent }[] = [
+  { id: SPLASH.create, accent: "primary" },
+  { id: SPLASH.play, accent: "secondary" },
+  { id: SPLASH.host, accent: "tertiary" },
+];
+
+export const WORKSPACE_ENTRIES: readonly ControlId[] = WORKSPACE_ACTIONS.map((action) => action.id);
+
+/** Plain text characters drawn in the code font of the theme, like the window frame's; there is no icon set and no image. */
+export const SPLASH_GLYPHS = {
+  ornament: "✦",
+  chevron: "›",
+} as const;
 
 export type StartupPhase = "ready" | "failed";
 

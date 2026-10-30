@@ -56,7 +56,7 @@ const FAMILIES: readonly TokenFamily[] = [
     type: COLOR,
   },
   { prefix: "color.interaction", members: ["focus", "selection", "hover", "pressed"], type: COLOR },
-  { prefix: "color.accent", members: ["primary", "secondary", "tertiary"], type: COLOR },
+  { prefix: "color.accent", members: ["primary", "secondary", "tertiary", "onSecondary"], type: COLOR },
   {
     prefix: "color.terminal",
     members: [
@@ -87,19 +87,26 @@ const FAMILIES: readonly TokenFamily[] = [
   { prefix: "font.family", members: ["interface", "code", "numeric"], type: FONT_STACK },
   {
     prefix: "font.size",
-    members: ["body", "caption", "nodeTitle", "heading", "code"],
+    members: ["body", "caption", "nodeTitle", "heading", "code", "wordmarkStep"],
     type: LENGTH,
     role: "fontSize",
   },
   { prefix: "font.weight", members: "open", type: FONT_WEIGHT },
   { prefix: "font.lineHeight", members: "open", type: POSITIVE_NUMBER },
+  { prefix: "font.letterSpacing", members: "open", type: LENGTH },
   { prefix: "font.terminal", members: ["family"], type: FONT_STACK },
   { prefix: "font.terminal", members: ["size"], type: LENGTH, role: "fontSize" },
   { prefix: "font.terminal", members: ["lineHeight"], type: POSITIVE_NUMBER },
   { prefix: "font.terminal", members: ["weight"], type: FONT_WEIGHT },
   { prefix: "spacing", members: "open", type: LENGTH },
   { prefix: "shape", members: "open", type: LENGTH },
-  { prefix: "layout", members: ["contentMaxWidth", "frameRowHeight"], type: LENGTH },
+  { prefix: "layout", members: ["contentMaxWidth", "frameRowHeight", "splashMaxWidth"], type: LENGTH },
+  /** How wide each divider of the launch screen is, as a fraction of the action row. */
+  { prefix: "layout.dividerRatio", members: ["wide", "narrow"], type: POSITIVE_NUMBER },
+  /** How the free height of the launch screen divides between the space above the banner and the space below the first block. */
+  { prefix: "layout.share", members: ["above", "below"], type: POSITIVE_NUMBER },
+  { prefix: "wordmark", members: ["defaultStep"], type: POSITIVE_INTEGER },
+  { prefix: "wordmark", members: ["seam"], type: LENGTH },
   /** Stacking order of floating layers; a higher number sits above a lower one. */
   { prefix: "layer", members: ["popup", "tooltip", "dialog"], type: NON_NEGATIVE_INTEGER },
   /** How much of the covered interface the scrim hides, in percent. */

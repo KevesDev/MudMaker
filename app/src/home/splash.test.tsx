@@ -4,7 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import homeCatalog from "../../../contracts/ui/v1/home-controls.v1.json";
 import { FRAME } from "../frame/frameLayout";
 import { ActionBus, loadShippedRegistry, type ControlDescriptor } from "../ui";
-import { DEFERRED_CONDITIONS, IMPLEMENTED_CONDITIONS, SPLASH, WORKSPACE_ENTRIES, isVisible } from "./homeLayout";
+import { DEFERRED_CONDITIONS, IMPLEMENTED_CONDITIONS, SPLASH, SPLASH_GLYPHS, WORKSPACE_ENTRIES, isVisible } from "./homeLayout";
+import { WORDMARK_ROWS, WORDMARK_TEXT } from "./wordmark";
 import { FRAME_TEXT, SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, liveAnnouncements, outsideFrame, renderApp, startupRecords, visibleText, type TestHome } from "./homeTestSupport";
 
 interface CatalogControl {
@@ -116,10 +117,10 @@ describe("every control of the splash surface", () => {
   it("shows the name, version and build from the shell as plain text with no hidden help", async () => {
     await openSplash();
     expect(elementOf(SPLASH.name).tagName).toBe("H1");
-    expect(elementOf(SPLASH.name).textContent).toBe("MudMaker");
+    expect(screen.getByRole("heading", { level: 1, name: "MudMaker" })).toBe(elementOf(SPLASH.name));
     expect(elementOf(SPLASH.version).textContent).toBe("Version 9.8.7, build abc1234");
     for (const id of [SPLASH.name, SPLASH.version]) expect(elementOf(id).hasAttribute("aria-describedby"), id).toBe(false);
-    expect(document.querySelectorAll("header .ui-visually-hidden")).toHaveLength(0);
+    expect([...document.querySelectorAll("header .ui-visually-hidden")].map((hidden) => hidden.textContent)).toEqual(["MudMaker"]);
   });
 
   it("does not move focus on the first start", async () => {
@@ -131,7 +132,18 @@ describe("every control of the splash surface", () => {
 describe("the loaded screen", () => {
   it("shows exactly the name, version, Create, Play, Host, Settings and Quit and nothing else", async () => {
     await openSplash();
-    expect(visibleText()).toEqual([...FRAME_TEXT, "MudMaker", "Version 9.8.7, build abc1234", "Create", "Play", "Host", "Settings", "Quit"]);
+    const { ornament, chevron } = SPLASH_GLYPHS;
+    expect(visibleText()).toEqual([
+      ...FRAME_TEXT,
+      WORDMARK_TEXT.trim(),
+      "Version 9.8.7, build abc1234",
+      ornament,
+      "BUILD WORLDS. YOUR WAY.",
+      ...["Create", "Play", "Host"].flatMap((label) => [label, chevron]),
+      ornament,
+      "Settings",
+      "Quit",
+    ]);
   });
 
   it("can tell a screen that shows more than its inventory from one that does not", async () => {
@@ -309,11 +321,9 @@ describe("page structure and wording", () => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getAllByRole("banner")).toHaveLength(1);
     expect(screen.getAllByRole("main")).toHaveLength(1);
-    expect(within(screen.getByRole("navigation", { name: "Start" })).getAllByRole("button").map((button) => button.textContent)).toEqual([
-      "Create",
-      "Play",
-      "Host",
-    ]);
+    const entries = within(screen.getByRole("navigation", { name: "Start" })).getAllByRole("button");
+    expect(entries.map((button) => button.textContent)).toEqual(["Create", "Play", "Host"].map((label) => `${label}${SPLASH_GLYPHS.chevron}`));
+    for (const label of ["Create", "Play", "Host"]) expect(within(screen.getByRole("navigation", { name: "Start" })).getByRole("button", { name: label })).toBeTruthy();
   });
 
   it("uses no sprint ids, engineering terms, control ids, emojis or em dashes on the loaded screen, in a message and in the open menu", async () => {
@@ -343,5 +353,93 @@ describe("page structure and wording", () => {
       expect(breaksCopyRules(bad), bad).toBe(true);
     }
     expect(breaksCopyRules("Create is not available yet.")).toBe(false);
+  });
+});
+
+describe("the splash composition", () => {
+  const bannerIn = (root: ParentNode): HTMLElement => {
+    const banners = [...root.querySelectorAll<HTMLElement>(".home-wordmark-art")];
+    expect(banners).toHaveLength(1);
+    return banners[0] as HTMLElement;
+  };
+
+  it("draws the banner as data, hidden from assistive technology, inside the one heading whose readable text is the product name", async () => {
+    await openSplash();
+    const heading = elementOf(SPLASH.name);
+    const banner = bannerIn(document.body);
+    expect(banner.closest("h1")).toBe(heading);
+    expect(banner.getAttribute("aria-hidden")).toBe("true");
+    expect(banner.textContent).toBe(WORDMARK_ROWS.join("\n"));
+    expect(banner.textContent).toBe(WORDMARK_TEXT);
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect([...heading.children].map((part) => [part.className, part.textContent])).toEqual([
+      ["ui-visually-hidden", "MudMaker"],
+      ["home-wordmark-art", WORDMARK_TEXT],
+    ]);
+  });
+
+  it("draws the same banner every time", async () => {
+    await openSplash();
+    const first = bannerIn(document.body).outerHTML;
+    cleanup();
+    unbind?.();
+    await openSplash();
+    expect(bannerIn(document.body).outerHTML).toBe(first);
+  });
+
+  it("shows the version and build as one compact string where there is no room beside the banner, in the banner's own box, after it, and never inside the heading", async () => {
+    await openSplash();
+    const version = elementOf(SPLASH.version);
+    const heading = elementOf(SPLASH.name);
+    expect(version.parentElement).toBe(heading.parentElement);
+    expect(heading.nextElementSibling).toBe(version);
+    expect(version.parentElement?.classList.contains("home-wordmark-box")).toBe(true);
+    expect(heading.contains(version)).toBe(false);
+    expect(version.children).toHaveLength(0);
+    expect(version.textContent).toBe("Version 9.8.7, build abc1234");
+    expect(version.getAttribute("data-placement")).toBe("below");
+  });
+
+  it("draws the wide star divider above the brand line and the narrow one above the footer, hidden from assistive technology", async () => {
+    await openSplash();
+    const dividers = [...document.querySelectorAll<HTMLElement>(".home-ornament")];
+    expect(dividers).toHaveLength(2);
+    expect(dividers.map((divider) => divider.getAttribute("data-width"))).toEqual(["wide", "narrow"]);
+    for (const divider of dividers) expect(divider.querySelectorAll(".home-rule")).toHaveLength(2);
+    for (const divider of dividers) {
+      expect(divider.getAttribute("aria-hidden")).toBe("true");
+      expect(divider.textContent).toBe(SPLASH_GLYPHS.ornament);
+    }
+    const tagline = document.querySelector(".home-tagline") as HTMLElement;
+    expect(tagline.textContent).toBe("BUILD WORLDS. YOUR WAY.");
+    expect(dividers[0]?.nextElementSibling).toBe(tagline);
+    expect(dividers[1]?.closest("footer")).not.toBeNull();
+    expect(dividers[1]?.nextElementSibling?.classList.contains("home-footer-actions")).toBe(true);
+  });
+
+  it("gives Create the primary accent, Play the secondary and Host the tertiary, one entry each", async () => {
+    await openSplash();
+    const accentOf = (id: string): string | null | undefined => elementOf(id).closest(".home-action")?.getAttribute("data-accent");
+    expect([SPLASH.create, SPLASH.play, SPLASH.host].map(accentOf)).toEqual(["primary", "secondary", "tertiary"]);
+    expect(document.querySelectorAll(".home-action")).toHaveLength(3);
+    expect(document.querySelector(".home-actions")?.getAttribute("data-narrow")).toBe("false");
+  });
+
+  it("puts Settings and Quit as text actions in one footer row, apart by a rule that is not a stop", async () => {
+    await openSplash();
+    const row = document.querySelector(".home-footer-actions") as HTMLElement;
+    const parts = [...row.children];
+    expect(parts).toHaveLength(3);
+    expect(parts[0]?.contains(elementOf(SPLASH.settings))).toBe(true);
+    expect(parts[1]?.getAttribute("aria-hidden")).toBe("true");
+    expect(parts[1]?.textContent).toBe("");
+    expect(parts[2]?.contains(elementOf(SPLASH.quit))).toBe(true);
+  });
+
+  it("shows no icon, picture, Active World line or recent list until those have something real to show", async () => {
+    await openSplash();
+    expect(document.querySelectorAll("img, svg, canvas")).toHaveLength(0);
+    const text = copyOnScreen();
+    for (const word of ["Active World", "Recent Projects", "Recent Worlds"]) expect(text, word).not.toContain(word);
   });
 });

@@ -1,7 +1,7 @@
 {
   "schema": "mudmaker.theme-defaults.v1",
   "status": "SELECTED_DEFAULT_TOKENS_NOT_RENDER_TESTED",
-  "revision": 5,
+  "revision": 8,
   "manager": "ThemeManager",
   "scopes": {
     "home": {
@@ -24,6 +24,7 @@
         "font.size.heading": 18,
         "font.size.nodeTitle": 14,
         "font.size.code": 13,
+        "font.size.wordmarkStep": 2,
         "grid.baseStep": 24,
         "grid.majorEvery": 5,
         "grid.snapStep": 12,
@@ -56,10 +57,18 @@
         "interaction.focusOutlineWidth": 2,
         "layout.contentMaxWidth": 448,
         "layout.frameRowHeight": 40,
-        "spacing.page": 64,
+        "layout.splashMaxWidth": 640,
+        "layout.dividerRatio.wide": 0.76,
+        "layout.dividerRatio.narrow": 0.59,
+        "layout.share.above": 135,
+        "layout.share.below": 610,
+        "wordmark.defaultStep": 5,
+        "wordmark.seam": 1,
         "spacing.stack": 16,
         "font.lineHeight.heading": 1.2,
         "font.lineHeight.body": 1.5,
+        "font.lineHeight.wordmark": 1,
+        "font.letterSpacing.tagline": 4,
         "layer.popup": 10,
         "layer.tooltip": 20,
         "layer.dialog": 30,
@@ -166,6 +175,7 @@
             "color.accent.primary": "#5EEA91",
             "color.accent.secondary": "#2A28AD",
             "color.accent.tertiary": "#E23D8A",
+            "color.accent.onSecondary": "#5EEA91",
             "color.border.frame": "#E23D8A"
           }
         },
@@ -232,6 +242,7 @@
             "color.accent.primary": "#9759FF",
             "color.accent.secondary": "#06EFFF",
             "color.accent.tertiary": "#B4FF00",
+            "color.accent.onSecondary": "#080808",
             "color.border.frame": "#9759FF"
           }
         },

@@ -1,5 +1,8 @@
 import defaultsDocument from "../../../contracts/ui/v1/theme-defaults.v1.json";
+import { numberToken } from "./tokenValues";
 import type { TokenValue } from "./types";
+
+export { numberToken };
 
 /** Test-only helpers: expected values are read straight from the pinned JSON, not from the library. */
 
@@ -103,8 +106,3 @@ export function stringToken(tokens: Readonly<Record<string, TokenValue>>, name: 
   return value;
 }
 
-export function numberToken(tokens: Readonly<Record<string, TokenValue>>, name: string): number {
-  const value = tokens[name];
-  if (typeof value !== "number") throw new Error(`Token ${name} is not a number`);
-  return value;
-}

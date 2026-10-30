@@ -6,8 +6,9 @@ import type { AppInfo } from "../appInfo";
 import { ActionRegistry, CatalogLoadError } from "../ui";
 import { deferred, fixtureSources } from "../ui/testSupport";
 import { SPLASH } from "./homeLayout";
+import { WORDMARK_TEXT } from "./wordmark";
 import type { HomeDiagnostic } from "./startupChecks";
-import { FRAME_TEXT, SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, outsideFrame, renderApp, startupRecords, visibleAlert, visibleText, type TestHome } from "./homeTestSupport";
+import { BRAND_TEXT, FRAME_TEXT, SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, outsideFrame, renderApp, startupRecords, visibleAlert, visibleText, type TestHome } from "./homeTestSupport";
 
 let unbind: (() => void) | null = null;
 
@@ -36,11 +37,14 @@ async function open(home: TestHome, options: { readonly strict?: boolean } = {})
 }
 
 describe("while the checks run", () => {
-  it("shows only the product name and a progress bar that has an accessible name, no screen controls and no words about the checks, then the splash", async () => {
+  it("shows only the banner and a progress bar that has an accessible name, no screen controls and no words about the checks, then the splash", async () => {
     const info = deferred<AppInfo>();
     const home = healthyHome({ getAppInfo: () => info.promise });
     unbind = renderApp(home).unbind;
-    expect(visibleText()).toEqual([...FRAME_TEXT, "MudMaker"]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, WORDMARK_TEXT.trim()]);
+    expect(document.querySelector(".home-wordmark-art")?.getAttribute("aria-hidden")).toBe("true");
+    expect(document.querySelector(".home-wordmark-box")).not.toBeNull();
+    expect(document.querySelector(".home-version")).toBeNull();
     expect(screen.getByRole("progressbar", { name: "Getting MudMaker ready" })).toBeTruthy();
     expect(screen.queryByRole("heading", { level: 1 })).toBeNull();
     expect(outsideFrame("button")).toEqual([]);
@@ -84,7 +88,13 @@ describe("when a check that trying again can fix fails", () => {
     expect(alert.textContent).toBe(`MudMaker could not start: ${label}.`);
     expect(document.activeElement).toBe(alert);
     expect(screen.queryAllByRole("heading")).toEqual([]);
-    expect(visibleText()).toEqual([...FRAME_TEXT, `MudMaker could not start: ${label}.`, "Retry"]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, ...BRAND_TEXT, `MudMaker could not start: ${label}.`, "Retry"]);
+    expect(document.querySelector(".home-wordmark-art")?.getAttribute("aria-hidden")).toBe("true");
+    expect(document.querySelectorAll(".home-ornament")).toHaveLength(1);
+    expect(document.querySelector(".home-wordmark-box")).not.toBeNull();
+    expect(document.querySelector(".home-version")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Create" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Settings" })).toBeNull();
     const text = copyOnScreen();
     expect(text).not.toContain(raw);
     expect(breaksCopyRules(text)).toBe(false);
@@ -94,7 +104,16 @@ describe("when a check that trying again can fix fails", () => {
   it("names the appearance check when the active appearance is not a built-in preset", async () => {
     const home = healthyHome();
     const original = home.manager.getSnapshot.bind(home.manager);
-    vi.spyOn(home.manager, "getSnapshot").mockImplementation((scope) => ({ ...original(scope), themeId: "no-such-preset" }));
+    // A snapshot must be the same object until the theme changes, as the store contract requires.
+    const patched = new WeakMap<object, ReturnType<typeof original>>();
+    vi.spyOn(home.manager, "getSnapshot").mockImplementation((scope) => {
+      const snapshot = original(scope);
+      const known = patched.get(snapshot);
+      if (known !== undefined) return known;
+      const changed = { ...snapshot, themeId: "no-such-preset" };
+      patched.set(snapshot, changed);
+      return changed;
+    });
     const alert = await openFailed(home);
     expect(alert.textContent).toContain("Appearance");
     expect(copyOnScreen()).not.toContain("no-such-preset");
@@ -179,7 +198,7 @@ describe("when the game engine is not installed", () => {
     await open(home);
     const alert = await waitFor(visibleAlert);
     expect(alert.textContent).toBe("MudMaker could not start: Game engine.");
-    expect(visibleText()).toEqual([...FRAME_TEXT, "MudMaker could not start: Game engine.", "Retry"]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, ...BRAND_TEXT, "MudMaker could not start: Game engine.", "Retry"]);
     expect(screen.getByRole("button", { name: "Retry" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "MudMaker", level: 1 })).toBeNull();
     expect(breaksCopyRules(copyOnScreen())).toBe(false);
@@ -200,7 +219,7 @@ describe("when the screen definitions are invalid", () => {
     expect(document.activeElement).toBe(alert);
     expect(outsideFrame("button")).toEqual([]);
     expect(outsideFrame("[data-control-id]")).toEqual([]);
-    expect(visibleText()).toEqual([...FRAME_TEXT, "This copy of MudMaker is damaged. Please reinstall MudMaker, then open it again."]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, ...BRAND_TEXT, "This copy of MudMaker is damaged. Please reinstall MudMaker, then open it again."]);
     expect(breaksCopyRules(copyOnScreen())).toBe(false);
     expect(home.records.filter((record) => record.severity === "error")).toEqual([expect.objectContaining({ code: "startup-catalogs-invalid" })]);
   });

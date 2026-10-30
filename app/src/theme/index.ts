@@ -2,6 +2,7 @@ export { ThemeManager } from "./ThemeManager";
 export { themeManager } from "./instance";
 export { useTheme } from "./useTheme";
 export { startTheme } from "./startTheme";
+export { numberToken } from "./tokenValues";
 export { applyThemeToRoot, bindThemeToElement, cssVariableName, cssVariableValue } from "./cssVariables";
 export { readSystemAccessibility, watchSystemAccessibility } from "./systemAccessibility";
 export {

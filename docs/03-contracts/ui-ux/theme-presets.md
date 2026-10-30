@@ -15,6 +15,22 @@ The functional fallback set below is exempt. Standard ANSI meaning, status meani
 ## Usage rules
 
 - The accent colors are the exact palette colors, never tints. `color.accent.primary` and `tertiary` draw rules, wordmark and action borders and reach 3:1 on the surfaces they sit on (tertiary on every surface but the overlay, where it is not drawn). `color.accent.secondary` is a boundary and text color in neon-dark-mode (Neon Cyan) and a fill under `color.text.primary` in neon-lights (Electric Navy), where it is too dark to draw a boundary. In neon-dark-mode `primary` is 3.03:1 on the overlay, so it is used only for borders, rules and display-size text.
+- `color.accent.onSecondary` is the text drawn on a `color.accent.secondary` fill: Digital Mint on Electric Navy in neon-lights (6.81:1), Void on Neon Cyan in neon-dark-mode (14.11:1). It exists because no single text color reads on both fills. In high contrast it is moved by the smallest blend that reaches 7:1 on the secondary accent.
+- The launch screen draws `color.accent.primary` and `color.accent.tertiary` as text only on `color.surface.canvas`, where both reach 4.5:1 in both presets (neon-lights tertiary 4.63:1, neon-dark-mode primary 4.95:1); on the other surfaces they remain borders, rules and display text.
+- The launch screen measures are derived, not chosen by eye (table below). The stacking width scales with the text scale, because the buttons grow with it.
+| Token | Value | Derivation |
+|---|---|---|
+| `font.size.wordmarkStep` | 2 | The banner font size is a whole number of these units. The banner is 76 columns wide and one column is about 0.55 of the font size, so one unit adds about 84px to the banner: coarse enough that every step is a visible change, fine enough that the banner fills the space it has. |
+| `wordmark.defaultStep` | 5 | The step used when the window cannot be measured: the largest step that fits the content width at the minimum window (480 wide, less the 1px window border twice and 16px of stage padding twice, 446px; five steps are about 418px). |
+| `wordmark.seam` | 1 | Fractional character widths leave a hairline, narrower than one device pixel, between neighbouring block characters. A copy of the banner one seam to the right and one below overlaps it. 1px is the smallest whole unit the stylesheet states; at a scaled display it spans more device pixels, which overlaps more and stays invisible. |
+| `layout.splashMaxWidth` | 640 | Half the default window width (1280). The mockup's action row is 805 of its 1672px width, 48%. |
+| _Version placement and the row under the banner_ | derived | Under the banner sits one reserved row on every screen: one caption line at the body line height plus one row gap, 12 x 1.5 + 8 = 26px. It is the whole distance from the banner's foot to the divider, or to the loading bar, because the block below adds no spacing of its own. The divider row has the body line height (14 x 1.5 = 21px) and no token of the banner, so its line sits 10.5px lower: 36.5px from the banner's foot, against 29px in the mockup. With room beside the banner the version hangs there as the two lines of the copy (version, then build) at its lower right and uses none of the row. Without room it is the one compact string of the copy, `Version x, build y`, right-aligned in the row. Either way nothing in the flow changes, so the banner and everything after it keep their places. |
+| _Action row stacking_ | measured | There is no width token. The row stacks when the three buttons do not fit one line, measured on the page: the screen lays the row out in one line, checks whether the last button runs past the row, and stacks it when it does. Any code font and any text scale therefore give the right answer, and a button's least width is its label plus its padding, never less than the pointer or touch hit size. |
+| `layout.dividerRatio.wide`, `layout.dividerRatio.narrow` | 0.76, 0.59 | The mockup measures the action row at 805px and its two dividers at 610px and 471px: 610 / 805 = 0.76 and 471 / 805 = 0.585, rounded to 0.59. Each divider is that fraction of the action row at every width, so it is narrower than the row down to the minimum window. |
+| `layout.share.above`, `layout.share.below` | 135, 610 | The mockup measures 135px of free space between the frame row and the top of the banner, and 610px from the bottom of the banner to the window edge. The free height of the launch screen divides in that proportion, 135 : 610, between the space above the banner and the block below it. The banner therefore keeps the same place on the loading, loaded and failed screens, and the whole composition keeps the mockup's proportions as the window grows: at 680px high the banner top sits about 16% of the way down, at 1000px about 17%, against 15% in the mockup. |
+| `font.lineHeight.wordmark` | 1 | Block rows touch only when the line height equals the font size. |
+| `font.letterSpacing.tagline` | 4 | The mockup spaces the brand line by about a third of its size; 4px is 0.29 of the 14px body size the line uses. |
+
 - `color.border.frame` is the window border. It is the exact Intense Hot Pink in neon-lights and the exact Electric Purple in neon-dark-mode, and it reaches 3:1 against the page and the frame row.
 - `layout.frameRowHeight` is the least height of the window frame row; controls inside it keep their pointer or touch hit size, so the row grows rather than clips them.
 - `color.border.subtle` is a decorative divider only and never marks an interactive boundary. Interactive boundaries use `color.border.normal`.
@@ -34,6 +50,7 @@ The client scope inherits the editor tokens of its preset, so the text, status, 
 | Borders, focus ring, graph accents, map symbols, accent colors against the surfaces they sit on | 3:1 |
 | `color.accent.primary` against every editor surface; `color.accent.tertiary` against every editor surface but the overlay; `color.border.frame` against the page and toolbar surfaces | 3:1 |
 | `color.accent.secondary` as a fill under `color.text.primary` (neon-lights), or against every editor surface (neon-dark-mode) | 4.5:1 as a fill, 3:1 as a boundary |
+| `color.accent.onSecondary` against `color.accent.secondary`; `color.accent.primary` and `color.accent.tertiary` as text against `color.surface.canvas` | 4.5:1 |
 | `color.border.subtle` against every editor surface | 1.1:1 |
 | `color.graph.grid.minor` against `color.surface.canvas` | at least 1.2:1 and below 2:1 |
 | `color.graph.grid.major` against `color.surface.canvas` | at least 1.5:1 and below 2.5:1 |
@@ -42,9 +59,11 @@ The client scope inherits the editor tokens of its preset, so the text, status, 
 | Primary text on selection, hover, pressed and node fills | 4.5:1 |
 | High contrast mode: text and status colors | 7:1 |
 | High contrast mode: normal, focused and invalid borders, the focus ring, `color.border.frame`, `color.accent.primary` and `color.accent.tertiary`, each against every editor surface | 3:1 |
+| High contrast mode: `color.accent.primary` and `color.accent.tertiary` as text against `color.surface.canvas` | 7:1 |
+| High contrast mode: `color.accent.onSecondary` against `color.accent.secondary` | 7:1 |
 | High contrast mode: `color.accent.secondary`, unless it already reaches 3:1 against every editor surface, against `color.text.primary` | 7:1 |
 
-High contrast mode only moves a color that does not already comply, toward white or black by the smallest blend that reaches the floor, and never moves a surface. The normal-mode palette values are never edited. In high contrast the exact secondary accents of both presets are left as they are, and `color.accent.primary` already complies; in neon-lights `color.border.frame` and `color.accent.tertiary` are the same exact Intense Hot Pink, which is 2.63:1 on the overlay surface, so high contrast lightens both of them there. The secondary accent is a boundary or a fill under primary text, never pushed toward a surface color: if it bounds every surface at 3:1 it is left alone, otherwise it moves away from the text color until the text reaches 7:1 on it. That second rule only changes a user theme whose secondary accent can do neither.
+High contrast mode only moves a color that does not already comply, toward white or black by the smallest blend that reaches the floor, and never moves a surface. The normal-mode palette values are never edited. In high contrast the exact secondary accents of both presets are left as they are; in neon-lights `color.border.frame` and `color.accent.tertiary` are the same exact Intense Hot Pink, which is 2.63:1 on the overlay surface, so high contrast lightens both of them there. The primary and tertiary accents are drawn as text on the canvas by the launch screen (Create, Host, the wordmark), so in high contrast they are raised by the same smallest blend to the 7:1 text floor on the canvas; that moves them toward white, so their 3:1 against every other surface still holds. In normal mode they keep the exact palette values. The secondary accent is a boundary or a fill under primary text, never pushed toward a surface color: if it bounds every surface at 3:1 it is left alone, otherwise it moves away from the text color until the text reaches 7:1 on it. That second rule only changes a user theme whose secondary accent can do neither.
 
 ## neon-lights
 
@@ -56,7 +75,7 @@ Palette colors and the tokens that use them directly:
 | Persian Blue | #232175 | `color.client.inputBackground`, `color.graph.node.surface`, `color.surface.inspector`, `color.surface.panel` |
 | American Purple | #41204D | `color.graph.node.header`, `color.surface.toolbar` |
 | Electric Navy | #2A28AD | `color.accent.secondary`, `color.graph.node.selected`, `color.surface.overlay` |
-| Digital Mint | #5EEA91 | `color.accent.primary`, `color.graph.edge.active`, `color.graph.node.action`, `color.graph.port.value`, `color.status.connected`, `color.status.success`, `color.terminal.foreground`, `color.text.primary` |
+| Digital Mint | #5EEA91 | `color.accent.onSecondary`, `color.accent.primary`, `color.graph.edge.active`, `color.graph.node.action`, `color.graph.port.value`, `color.status.connected`, `color.status.success`, `color.terminal.foreground`, `color.text.primary` |
 | Intense Hot Pink | #E23D8A | `color.accent.tertiary`, `color.border.frame` |
 
 Intense Hot Pink is below 4.5:1 on these surfaces, so it appears exact only as the tertiary accent and the window border (3.41:1 or more on every surface but the overlay, 3.42:1 for the border against the page and the frame row), and otherwise only as lightened border, focus ring and edge colors, a darkened selection fill and an error tone, never as body text. Electric Navy is exact as the secondary accent, a fill under Digital Mint text (6.81:1); it is 1.0:1 to 1.76:1 against the surfaces, so it never draws a boundary or text. Status warning has no amber in the palette, so it is a lightened American Purple.
@@ -87,7 +106,7 @@ Palette colors and the tokens that use them directly:
 
 | Palette color | Hex | Tokens |
 |---|---|---|
-| Void | #080808 | `color.surface.app`, `color.surface.canvas`, `color.terminal.background` |
+| Void | #080808 | `color.accent.onSecondary`, `color.surface.app`, `color.surface.canvas`, `color.terminal.background` |
 | Dark Graphite | #191919 | `color.client.inputBackground`, `color.graph.node.surface`, `color.surface.panel` |
 | Electric Purple | #9759FF | `color.accent.primary`, `color.border.focused`, `color.border.frame`, `color.graph.edge.selected`, `color.graph.node.data`, `color.graph.port.event`, `color.interaction.focus`, `color.terminal.tell` |
 | Neon Cyan | #06EFFF | `color.accent.secondary`, `color.client.channelAccent`, `color.graph.edge.active`, `color.graph.node.event`, `color.graph.port.execution`, `color.status.information`, `color.terminal.link`, `color.terminal.prompt` |
@@ -179,6 +198,8 @@ Lowest ratio over every pair in each group, computed with the WCAG 2.2 relative 
 | Tertiary accent against every editor surface but the overlay | 3.41:1 | 11.95:1 |
 | Window border against the page and toolbar surfaces | 3.42:1 | 3.93:1 |
 | Secondary accent (fill under primary text in neon-lights, boundary in neon-dark-mode) | 6.81:1 | 8.64:1 |
+| Text on the secondary accent fill | 6.81:1 | 14.11:1 |
+| Primary and tertiary accent text on the canvas | 4.63:1 | 4.95:1 |
 | Primary text on selection, hover, pressed and node fills | 4.53:1 | 4.54:1 |
 | Graph edges, ports and node types | 3.01:1 | 4.34:1 |
 | Subtle border against every surface | 1.10:1 | 1.11:1 |

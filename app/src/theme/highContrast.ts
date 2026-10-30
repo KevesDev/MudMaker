@@ -115,6 +115,25 @@ function secondaryAccentFor(tokens: Readonly<Record<string, TokenValue>>): strin
   return raised ? formatHexColor(raised) : null;
 }
 
+/**
+ * The accents are drawn as text on the canvas, not only as rules and borders, so on that surface they reach the
+ * text ratio. They keep the boundary ratio on every other surface because raising moves them toward the extreme
+ * that already contrasts more.
+ */
+const ACCENT_TEXT = {
+  foregrounds: ["color.accent.primary", "color.accent.tertiary"],
+  background: "color.surface.canvas",
+} as const;
+
+/** The text drawn on the secondary accent fill must reach the enhanced text ratio on that fill. */
+function textOnSecondaryFor(tokens: Readonly<Record<string, TokenValue>>): string | null {
+  const text = colorOf(tokens, "color.accent.onSecondary");
+  const fill = colorOf(tokens, "color.accent.secondary");
+  if (!text || !fill) return null;
+  const raised = raiseContrast(text, [fill], HIGH_CONTRAST_TEXT_RATIO);
+  return raised ? formatHexColor(raised) : null;
+}
+
 /** Derives high-contrast colors from the resolved tokens; colors that already comply are untouched. */
 export function applyHighContrast(
   tokens: Readonly<Record<string, TokenValue>>,
@@ -133,7 +152,15 @@ export function applyHighContrast(
       if (raised) result[name] = formatHexColor(raised);
     }
   }
+  const canvas = colorOf(tokens, ACCENT_TEXT.background);
+  for (const name of ACCENT_TEXT.foregrounds) {
+    const color = colorOf(result, name);
+    const raised = color && canvas ? raiseContrast(color, [canvas], HIGH_CONTRAST_TEXT_RATIO) : null;
+    if (raised) result[name] = formatHexColor(raised);
+  }
   const secondary = secondaryAccentFor(result);
   if (secondary !== null) result["color.accent.secondary"] = secondary;
+  const onSecondary = textOnSecondaryFor(result);
+  if (onSecondary !== null) result["color.accent.onSecondary"] = onSecondary;
   return result;
 }

@@ -35,6 +35,9 @@ const EDITOR_REQUIREMENTS: readonly Requirement[] = [
   { group: "focus", foregrounds: ["color.interaction.focus"], backgrounds: EDITOR_SURFACES, minimum: GRAPHIC },
   { group: "accent primary", foregrounds: ["color.accent.primary"], backgrounds: EDITOR_SURFACES, minimum: GRAPHIC },
   { group: "accent tertiary", foregrounds: ["color.accent.tertiary"], backgrounds: SURFACES_UNDER_ACCENT, minimum: GRAPHIC },
+  /** The launch screen draws the primary and tertiary accents as text, on the canvas only. */
+  { group: "accent text on canvas", foregrounds: names("color.accent", ["primary", "tertiary"]), backgrounds: ["color.surface.canvas"], minimum: TEXT },
+  { group: "text on secondary fill", foregrounds: ["color.accent.onSecondary"], backgrounds: ["color.accent.secondary"], minimum: TEXT },
   { group: "frame border", foregrounds: ["color.border.frame"], backgrounds: FRAME_NEIGHBOURS, minimum: GRAPHIC },
   { group: "subtle border", foregrounds: ["color.border.subtle"], backgrounds: EDITOR_SURFACES, minimum: SUBTLE_BORDER_FLOOR },
   { group: "grid minor", foregrounds: ["color.graph.grid.minor"], backgrounds: ["color.surface.canvas"], minimum: GRID_MINOR.floor },
@@ -202,11 +205,11 @@ describe("scrim and layers", () => {
 
 describe("preset palette rules", () => {
   it.each([
-    ["neon-lights", ["#5EEA91", "#2A28AD", "#E23D8A", "#E23D8A"]],
-    ["neon-dark-mode", ["#9759FF", "#06EFFF", "#B4FF00", "#9759FF"]],
-  ])("sets the accents and the window border of %s to the exact palette colors the owner chose, never tints", (presetId, expected) => {
+    ["neon-lights", ["#5EEA91", "#2A28AD", "#E23D8A", "#5EEA91", "#E23D8A"]],
+    ["neon-dark-mode", ["#9759FF", "#06EFFF", "#B4FF00", "#080808", "#9759FF"]],
+  ])("sets the accents, the text on the secondary fill and the window border of %s to the exact palette colors the owner chose, never tints", (presetId, expected) => {
     const tokens = fixtureTokens("editor", presetId);
-    expect(["color.accent.primary", "color.accent.secondary", "color.accent.tertiary", "color.border.frame"].map((name) => stringToken(tokens, name).toUpperCase())).toEqual(expected);
+    expect(["color.accent.primary", "color.accent.secondary", "color.accent.tertiary", "color.accent.onSecondary", "color.border.frame"].map((name) => stringToken(tokens, name).toUpperCase())).toEqual(expected);
   });
 
   it("uses the exact Neon Lime for exactly one token in neon-dark-mode, the tertiary accent, and keeps success a darker tint", () => {

@@ -16,7 +16,14 @@ export const homeCopy = {
   },
   /** The accessible name of the group of workspace entries; it is not drawn. */
   startNavigation: "Start",
-  versionLine: (label: string, version: string, buildId: string): string => `${label} ${version}, build ${buildId}`,
+  /** The first line beside the banner: the catalog's own word for it, then the installed version. */
+  versionLine: (label: string, version: string): string => `${label} ${version}`,
+  /** The second line beside the banner. */
+  buildLine: (buildId: string): string => `Build ${buildId}`,
+  /** The one line under the banner, where there is no room beside it. */
+  versionCompact: (label: string, version: string, buildId: string): string => `${label} ${version}, build ${buildId}`,
+  /** The one brand line under the wordmark. Deleting this string and its element removes it. */
+  tagline: "BUILD WORLDS. YOUR WAY.",
   appearanceChanged: (presetLabel: string): string => `Appearance is now ${presetLabel}.`,
   appearanceUnknown: "That appearance is not available.",
   appearanceNotApplied: (presetLabel: string): string => `Appearance could not be changed to ${presetLabel}. Your current look is unchanged.`,

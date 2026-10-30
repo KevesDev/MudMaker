@@ -4,8 +4,12 @@ import { useTheme, type ThemeManager } from "../theme";
 import { Button, Menu, Toast, useUi, type ControlDescriptor, type ControlId } from "../ui";
 import { ControlNotice } from "./ControlNotice";
 import { homeCopy } from "./homeCopy";
-import { APPEARANCE, NOTICE_CONTROLS, SPLASH, WORKSPACE_ENTRIES } from "./homeLayout";
+import { APPEARANCE, NOTICE_CONTROLS, SPLASH, SPLASH_GLYPHS, WORKSPACE_ACTIONS } from "./homeLayout";
+import { Brand } from "./Brand";
+import { Ornament } from "./Ornament";
 import { Shown } from "./Shown";
+import { useNarrowFlag } from "./useNarrowFlag";
+import { WordmarkBlock } from "./WordmarkBlock";
 
 interface SplashScreenProps {
   readonly info: AppInfo;
@@ -14,7 +18,7 @@ interface SplashScreenProps {
   readonly focusHeading: boolean;
 }
 
-/** The launch screen: the three workspace entries, Settings and Quit. */
+/** The launch screen: the wordmark, the three workspace entries, Settings and Quit. */
 export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
   const { registry, bus } = useUi();
   const control = (id: ControlId): ControlDescriptor => registry.requireControl(id);
@@ -26,6 +30,7 @@ export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
   const name = control(SPLASH.name);
   const version = control(SPLASH.version);
   const settings = control(SPLASH.settings);
+  const actionRow = useNarrowFlag(theme);
 
   useEffect(() => {
     if (focusHeading) headingRef.current?.focus();
@@ -42,47 +47,62 @@ export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
 
   return (
     <div className="home" ref={rootRef}>
+      <div className="home-above" aria-hidden="true" />
       <header className="home-header">
-        <h1 data-testid={name.testId} tabIndex={-1} ref={headingRef}>
-          {info.name}
-        </h1>
-        <p className="home-version" data-testid={version.testId}>
-          {homeCopy.versionLine(version.label, info.version, info.buildId)}
-        </p>
+        <WordmarkBlock
+          name={info.name}
+          theme={theme}
+          stageRef={rootRef}
+          heading={{ testId: name.testId, ref: headingRef }}
+          version={{
+            testId: version.testId,
+            lines: [homeCopy.versionLine(version.label, info.version), homeCopy.buildLine(info.buildId)],
+            compact: homeCopy.versionCompact(version.label, info.version, info.buildId),
+          }}
+        />
       </header>
-      <main className="home-main">
-        <nav className="home-actions" aria-label={homeCopy.startNavigation}>
-          {WORKSPACE_ENTRIES.map((id) => (
-            <Shown key={id} control={control(id)} phase="ready">
-              <Button control={control(id)} showState={false} />
+      <div className="home-below">
+        <Brand />
+        <main className="home-main">
+          <nav className="home-actions" aria-label={homeCopy.startNavigation} ref={actionRow.ref} data-narrow={actionRow.narrow}>
+            {WORKSPACE_ACTIONS.map(({ id, accent }) => (
+              <Shown key={id} control={control(id)} phase="ready">
+                <div className="home-action" data-accent={accent}>
+                  <Button control={control(id)} showState={false} trailingGlyph={SPLASH_GLYPHS.chevron} />
+                </div>
+              </Shown>
+            ))}
+          </nav>
+          {notice === null ? null : (
+            <Toast
+              id="home.notice"
+              title={control(notice.controlId).label}
+              message={notice.message}
+              tone="information"
+              {...(notice.code === null ? {} : { code: notice.code })}
+              live={false}
+              showTitle={false}
+              onDismiss={dismissNotice}
+            />
+          )}
+        </main>
+        <footer className="home-footer">
+          <Ornament width="narrow" />
+          <div className="home-footer-actions">
+            <Shown control={settings} phase="ready">
+              <Menu
+                opener={settings}
+                items={[]}
+                choices={{ control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId }}
+              />
             </Shown>
-          ))}
-        </nav>
-        {notice === null ? null : (
-          <Toast
-            id="home.notice"
-            title={control(notice.controlId).label}
-            message={notice.message}
-            tone="information"
-            {...(notice.code === null ? {} : { code: notice.code })}
-            live={false}
-            showTitle={false}
-            onDismiss={dismissNotice}
-          />
-        )}
-      </main>
-      <footer className="home-actions">
-        <Shown control={settings} phase="ready">
-          <Menu
-            opener={settings}
-            items={[]}
-            choices={{ control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId }}
-          />
-        </Shown>
-        <Shown control={control(SPLASH.quit)} phase="ready">
-          <Button control={control(SPLASH.quit)} />
-        </Shown>
-      </footer>
+            <span className="home-footer-rule" aria-hidden="true" />
+            <Shown control={control(SPLASH.quit)} phase="ready">
+              <Button control={control(SPLASH.quit)} />
+            </Shown>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }
