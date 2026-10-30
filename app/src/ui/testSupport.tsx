@@ -143,7 +143,7 @@ export interface TestUi {
   control(id: string): ControlDescriptor;
 }
 
-export function createTestUi(options: Pick<UiRuntimeOptions, "maxPendingMs" | "correlation"> = {}): TestUi {
+export function createTestUi(options: Pick<UiRuntimeOptions, "maxPendingMs" | "correlation" | "developmentShortcuts"> = {}): TestUi {
   const registry = fixtureRegistry();
   const diagnostics: UiDiagnostic[] = [];
   const runtime = createUiRuntime({ registry, document, diagnostics: (record) => diagnostics.push(record), ...options });

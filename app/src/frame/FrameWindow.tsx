@@ -36,7 +36,7 @@ export function FrameWindow({ registry, controller, quit, report, correlation, r
   useLayoutEffect(() => {
     latest.current = correlation;
   }, [correlation]);
-  const [runtime] = useState(() => createUiRuntime({ registry, document, diagnostics: report, correlation: () => latest.current }));
+  const [runtime] = useState(() => createUiRuntime({ registry, document, diagnostics: report, correlation: () => latest.current, developmentShortcuts: import.meta.env.DEV }));
   useLayoutEffect(() => {
     const removeFrame = registerFrameActions(runtime.bus, registry, { quit, window: controller });
     const removeScreen = registerScreen?.(runtime);

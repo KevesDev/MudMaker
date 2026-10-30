@@ -1,11 +1,18 @@
 import type { ActionBus, ActionRequest, Correlation, DiagnosticSink } from "../actions/ActionBus";
 import type { ActionRegistry } from "../actions/ActionRegistry";
 import { UiContractError } from "../actions/types";
-import { chordFromEvent } from "./chords";
+import { chordFromEvent, normalizeChord } from "./chords";
 import { activatesNatively, isTextEntry } from "./dom";
 import type { FocusMediator } from "./FocusMediator";
 import { HelpTracker } from "./HelpTracker";
-import { GESTURE_LIMITS } from "./inputConfig";
+import {
+  BLOCKED_OUTSIDE_TEXT_ENTRY,
+  BROWSER_SHORTCUTS,
+  DEVELOPMENT_SHORTCUT_GROUPS,
+  GESTURE_LIMITS,
+  SELECTABLE_ATTRIBUTE,
+  type BrowserShortcutGroup,
+} from "./inputConfig";
 import type { RegionNavigator } from "./RegionNavigator";
 import type { ShortcutRegistry } from "./ShortcutRegistry";
 
@@ -45,6 +52,8 @@ export interface InputManagerDependencies {
   readonly correlation?: CorrelationSource;
   /** The clock palm rejection measures its grace interval on, in milliseconds. */
   readonly now?: () => number;
+  /** True in development builds, where reload and developer tool shortcuts keep working. */
+  readonly developmentShortcuts?: boolean;
 }
 
 type Modality = PointerKind | "keyboard";
@@ -57,6 +66,15 @@ const HELP_SELECTOR = `${CONTROL_SELECTOR}, [data-help-for]`;
 const ROVING_ITEM_SELECTOR = CONTROL_SELECTOR;
 const POINTER_STREAMS = ["pointerdown", "pointermove", "pointerup", "pointercancel"] as const;
 const DRAG_STREAMS = ["dragstart", "dragover", "drop", "dragend"] as const;
+
+const MIDDLE_BUTTON = 1;
+const MIDDLE_BUTTON_STREAMS = ["mousedown", "auxclick"] as const;
+
+function canonicalChord(text: string): string {
+  const result = normalizeChord(text);
+  if (!result.ok) throw new UiContractError("browser-shortcut-invalid", "InputManager", result.message);
+  return result.chord;
+}
 
 function pointerKindOf(event: PointerEvent): PointerKind {
   return event.pointerType === "touch" || event.pointerType === "pen" ? event.pointerType : "mouse";
@@ -98,7 +116,15 @@ export class InputManager {
   private teardown: (() => void) | null = null;
   private wheelListener: ((event: WheelEvent) => void) | null = null;
 
-  constructor(private readonly deps: InputManagerDependencies) {}
+  private readonly blockedChords: ReadonlySet<string>;
+  private readonly blockedOutsideTextEntry: ReadonlySet<string>;
+
+  constructor(private readonly deps: InputManagerDependencies) {
+    const kept: readonly BrowserShortcutGroup[] = deps.developmentShortcuts === true ? DEVELOPMENT_SHORTCUT_GROUPS : [];
+    const groups = (Object.keys(BROWSER_SHORTCUTS) as BrowserShortcutGroup[]).filter((group) => !kept.includes(group));
+    this.blockedChords = new Set(groups.flatMap((group) => BROWSER_SHORTCUTS[group]).map(canonicalChord));
+    this.blockedOutsideTextEntry = new Set(BLOCKED_OUTSIDE_TEXT_ENTRY.map(canonicalChord));
+  }
 
   /** Installs the root listeners; the returned function removes them. */
   attach(): () => void {
@@ -123,6 +149,13 @@ export class InputManager {
     listen("pointerover", (event) => this.onPointerOver(event));
     listen("pointerout", (event) => this.onPointerOut(event));
     listen("contextmenu", (event) => this.onContextMenu(event));
+    for (const type of MIDDLE_BUTTON_STREAMS) listen(type, (event) => this.suppressMiddleButton(event));
+    // Non-passive so a page zoom by Ctrl and the wheel can be cancelled; the surface's own wheel stream is separate.
+    const onPageZoomWheel = (event: WheelEvent): void => {
+      if (event.ctrlKey) event.preventDefault();
+    };
+    doc.addEventListener("wheel", onPageZoomWheel, { passive: false });
+    removers.push(() => doc.removeEventListener("wheel", onPageZoomWheel));
     for (const type of POINTER_STREAMS) {
       listen(type, (event) => {
         if (type === "pointerdown") this.onPointerDown(event);
@@ -204,6 +237,7 @@ export class InputManager {
     this.setModality("keyboard");
     const { focus } = this.deps;
     if (event.isComposing || event.keyCode === COMPOSITION_KEY_CODE || focus.isComposing()) return;
+    this.blockBrowserKey(event);
     if (chordFromEvent(event) !== null) focus.endActivation();
     if (event.key === "Escape") {
       this.onEscape(event);
@@ -426,11 +460,31 @@ export class InputManager {
    * native menu for copy and paste.
    */
   private onContextMenu(event: MouseEvent): void {
-    const holder = this.helpAt(event.target);
-    const helpId = helpKeyOf(holder);
-    if (helpId === null || isTextEntry(holder)) return;
+    const target = event.target instanceof Element ? event.target : null;
+    const holder = this.helpAt(target);
+    if (isTextEntry(target) || isTextEntry(holder)) return;
     event.preventDefault();
-    this.help.pin(helpId);
+    const helpId = helpKeyOf(holder);
+    if (helpId !== null) this.help.pin(helpId);
+  }
+
+  /** Middle-button press starts the browser's autoscroll and its auxiliary click opens links elsewhere. */
+  private suppressMiddleButton(event: MouseEvent): void {
+    if (event.button === MIDDLE_BUTTON) event.preventDefault();
+  }
+
+  /** Cancels the browser's own action for its chrome shortcuts; a shortcut the application registered still runs afterward. */
+  private blockBrowserKey(event: KeyboardEvent): void {
+    const chord = chordFromEvent(event);
+    if (chord === null) return;
+    if (this.blockedChords.has(chord)) {
+      event.preventDefault();
+      return;
+    }
+    const target = event.target instanceof Element ? event.target : null;
+    if (this.blockedOutsideTextEntry.has(chord) && !isTextEntry(target) && target?.closest(`[${SELECTABLE_ATTRIBUTE}]`) == null) {
+      event.preventDefault();
+    }
   }
 
   private routePointer(event: PointerEvent): void {
@@ -472,8 +526,15 @@ export class InputManager {
     for (const surface of this.surfaces.values()) surface.handlers.cancel?.();
   }
 
+  /** A drag nobody registered for would let the browser open the dropped file or save the dragged image. */
   private routeDrag(event: DragEvent): void {
-    this.surfaceAt(event.target)?.handlers.drag?.(event);
+    const handler = this.surfaceAt(event.target)?.handlers.drag;
+    if (handler) {
+      handler(event);
+      return;
+    }
+    const target = event.target instanceof Element ? event.target : null;
+    if (event.type !== "dragstart" || !isTextEntry(target)) event.preventDefault();
   }
 
   private routeWheel(event: WheelEvent): void {

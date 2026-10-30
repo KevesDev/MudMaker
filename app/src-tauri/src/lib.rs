@@ -1,5 +1,6 @@
 pub mod diagnostic_log;
 pub mod preferences;
+pub mod webview_policy;
 #[cfg(test)]
 mod test_scratch;
 
@@ -144,9 +145,27 @@ fn quit_app(app: tauri::AppHandle) {
     app.exit(0);
 }
 
+/// Label Tauri gives the one window declared in tauri.conf.json.
+const MAIN_WINDOW_LABEL: &str = "main";
+
 pub fn run() {
     tauri::Builder::default()
         .manage(LaunchId(new_launch_id()))
+        .setup(|app| {
+            let launch_id = app.state::<LaunchId>().0.clone();
+            match app.get_webview_window(MAIN_WINDOW_LABEL) {
+                #[cfg(windows)]
+                Some(window) => webview_policy::apply_to_window(&window, app.path().app_data_dir().ok(), launch_id),
+                #[cfg(not(windows))]
+                Some(_) => {}
+                None => {
+                    if let Ok(directory) = app.path().app_data_dir() {
+                        let _ = diagnostic_log::record_diagnostic(&directory, &launch_id, webview_policy::window_missing(MAIN_WINDOW_LABEL), now_ms());
+                    }
+                }
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![app_info, engine_status, write_diagnostic, read_preferences, write_preferences, quit_app])
         .run(tauri::generate_context!())
         .expect("MudMaker could not start the application window");

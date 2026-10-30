@@ -64,3 +64,6 @@ Hold professional industry standards, not maximal ones. Write the tests that gua
 
 ## Seams versus placeholders (owner rule, 2026-10-30)
 A seam specifically planned for a named later phase to wire into is acceptable: typed, exercised by a test with a real component, a short timeless comment naming the capability, the owning phase named in docs/SPRINT-TRACKING.md, and nothing visible until the feature exists. Loose placeholder junk is not acceptable: stub text, fake data, scaffolding with no planned consumer, empty components nothing mounts.
+
+## Accessibility depth (owner rule, 2026-10-30)
+Early in development build baseline correctness only: accessible names, keyboard operability and visible focus on what you build. Do not add accessibility extras (text-size controls, screen-reader tuning, extra modes, forced-colors work) ahead of the release audit unless the spec asks for it.

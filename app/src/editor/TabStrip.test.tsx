@@ -202,7 +202,7 @@ describe("keyboard", () => {
   it("leaves other chords to the page", () => {
     const { calls, tab } = mountTabs(["a", "b"], "a");
     tab("a").focus();
-    expect(fireEvent.keyDown(tab("a"), { key: "ArrowRight", altKey: true })).toBe(true);
+    expect(fireEvent.keyDown(tab("a"), { key: "ArrowRight", altKey: true, shiftKey: true })).toBe(true);
     expect(fireEvent.keyDown(tab("a"), { key: "Delete", ctrlKey: true })).toBe(true);
     expect(calls.selected).toEqual([]);
     expect(calls.closed).toEqual([]);

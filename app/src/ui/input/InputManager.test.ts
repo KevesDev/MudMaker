@@ -543,7 +543,7 @@ describe("help", () => {
       expect(ui.runtime.input.help.current()).toBeNull();
     });
 
-    it("stays native in a text field for every pointer kind and the keyboard, and over elements that are not controls", () => {
+    it("stays native in a text field for every pointer kind and the keyboard, while elements that are not controls lose it", () => {
       mount(`<input id="field" type="text" data-control-id="${NAME}"><p id="plain">text</p>`);
       ui.registerHelp(NAME);
       const field = element<HTMLInputElement>("#field");
@@ -552,7 +552,8 @@ describe("help", () => {
         expect(fireEvent.contextMenu(field), pointerType).toBe(true);
         expect(ui.runtime.input.help.current(), pointerType).toBeNull();
       }
-      expect(fireEvent.contextMenu(element("#plain"))).toBe(true);
+      expect(fireEvent.contextMenu(element("#plain"))).toBe(false);
+      expect(ui.runtime.input.help.current()).toBeNull();
       field.focus();
       expect(fireEvent.contextMenu(field)).toBe(true);
     });

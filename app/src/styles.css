@@ -5,6 +5,21 @@ body {
   line-height: var(--font-lineHeight-body);
   background: var(--color-surface-app);
   color: var(--color-text-primary);
+  user-select: none;
+}
+/* The application is chrome, not a document: text is selectable only where it is typed or a feature opts in with data-selectable. */
+input,
+textarea,
+[contenteditable]:not([contenteditable="false"]),
+[data-selectable] {
+  user-select: text;
+}
+img,
+canvas,
+svg,
+a {
+  -webkit-user-drag: none;
+  user-select: none;
 }
 h1 {
   font-size: var(--font-size-heading);

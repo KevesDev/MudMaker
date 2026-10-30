@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **37/42** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **38/43** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -125,6 +125,7 @@
 | **S02.7b Pen input** | Pen pressure-free drawing and hover semantics, palm rejection rules | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
 | **S02.7c Keyboard workspace navigation** | Complete keyboard path across shells, panels and canvas | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
 | **S02.7d Tablet layout** | Drawers and stacked panels at tablet sizes, target sizes from tokens (USER TEST) | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
+| **S02.7e Browser behavior suppression** | The application, not the browser, owns every context menu and browser shortcut: Input Manager suppresses the native context menu everywhere except text entry, blocks browser-chrome shortcuts (reload, devtools, view source, print, save, find, zoom, history navigation, file drop navigation) with a named development allowance for reload and devtools, no native image save or drag, and the WebView2 engine settings disable default menus and accelerator keys at the source (USER TEST) | DONE | Built and tested; one audit Major (no text-size control) waived by owner 2026-10-30; right-click and shortcuts are the owner hands-on |
 | **S02.8a Editor control binding** | Bind implemented editor widgets to the editor catalog and action owners | DONE | Auditor PASS round 1 (2026-10-30) |
 | **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | DONE | Auditor PASS round 1 (2026-10-30) |
 | **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | DONE | Auditor PASS round 1 (2026-10-30) |
@@ -554,3 +555,4 @@ Record implementation commit, focused test and Auditor PASS in the phase Evidenc
 - Overlay inspector has no dismiss path (Escape, tap outside); add the DockPanel pattern when the selection feature lands (`editor/SplitView.tsx`).
 - Gesture recognizer: treat a repeated pointer id as a cancel and handle lost pointer capture (`GestureRecognizer.ts`).
 - Flush pending preferences before `quit_app` so a theme change within 400 ms of Quit is not lost; keep the file untouched after a failed read once a second owner exists; give the window a dark background while the saved settings load (`PreferencesStore.ts`, `launch.ts`, `index.html`).
+- Browser zoom is blocked and the app has no text-size control: owner deferred this; add an app-owned text size control and shortcuts in the accessibility pass (S18.2) or earlier if asked.

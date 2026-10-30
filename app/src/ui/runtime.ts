@@ -15,6 +15,8 @@ export interface UiRuntimeOptions {
   readonly correlation?: CorrelationSource;
   /** Longest a handler may stay pending; defaults to the shared interface limit. */
   readonly maxPendingMs?: number;
+  /** Keeps reload and developer tool shortcuts working; set only for development builds. */
+  readonly developmentShortcuts?: boolean;
 }
 
 /** The one set of shared UI services for a window: registry, bus, input and focus. */
@@ -43,6 +45,7 @@ export function createUiRuntime(options: UiRuntimeOptions): UiRuntime {
     shortcuts,
     regions,
     diagnostics,
+    developmentShortcuts: options.developmentShortcuts === true,
     ...(options.correlation === undefined ? {} : { correlation: options.correlation }),
   });
   return { registry, announcer, bus, focus, shortcuts, regions, input };
