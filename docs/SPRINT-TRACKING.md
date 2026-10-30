@@ -532,3 +532,5 @@
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
+
+**Design audit note (all future UI phases):** [screen wireframes / interaction states](03-contracts/ui-ux/15-screen-wireframes-and-interaction-states.md) and [microcopy/density acceptance](03-contracts/ui-ux/16-microcopy-and-density-acceptance.md) are binding visual references. Avoid redundant subtitles, explanatory cards, text-field instructions and permanent stacked tabs; retain accessible help, validation and safety notices. Approved splash image location is specified in [Splash visual spec](03-contracts/ui-ux/11-splash-screen-visual-spec.md); PNG upload is pending.

@@ -31,3 +31,9 @@
 - **Player Client not bound to the MudMaker ECS**: third-party servers are opaque peers. External rooms cannot be read as internal `EntityRef`; mapper evidence has confidence levels.
 - Every server/host-provided title/text/ANSI/GMCP/MXP is **untrusted data**. No remote server package/autoinstall scripts, arbitrary HTML, file operations, client theme override or host-editor actions.
 - Default Editor graph canvas remains **subtle dark continuous graph-paper lines** (never dots). Player mini mapper is a distinct player-local navigation visualization, not an Editor cell grid.
+
+### Detailed visual acceptance references
+
+- [15 — Screen-level wireframes and interaction states](15-screen-wireframes-and-interaction-states.md): default, active, empty, failure, contextual panels and navigation dialogs for all four surfaces.
+- [16 — Minimalist microcopy and density acceptance](16-microcopy-and-density-acceptance.md): no redundant explanatory paragraphs, subtitles, cards or textbox instructions; tooltip and accessibility rules.
+- [Splash approved asset location](11-splash-screen-visual-spec.md#approved-visual-reference-asset-upload-pending): image is owner-approved but upload into repository is pending.

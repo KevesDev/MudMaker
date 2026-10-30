@@ -33,3 +33,7 @@ Creator, Play and Host use a **common single-row toolbar design**: compact works
 - A basic task is performed with minimal repeated navigation; nothing falsely claims connected/saved/hosted state.
 - Increasing font scale or narrowing window does not hide actions, overlap the primary work area, or make targets inaccessible.
 - Builder must map every newly displayed actionable element to [control/action registry](../../../contracts/ui/v1/INDEX.md). These documents do not supersede functional behavior contracts.
+
+## Screen-specific implementation detail
+
+For default/empty/pending/error/transition layouts consult [screen-level wireframes](15-screen-wireframes-and-interaction-states.md). For visible text and tooltip decisions consult [anti-redundancy and microcopy contract](16-microcopy-and-density-acceptance.md). These are mandatory checks alongside the workspace feature-placement tables.
