@@ -1,3 +1,4 @@
+import type { IconName } from "../art/library";
 import { UiContractError, type ControlDescriptor, type ControlId } from "../ui";
 
 /** Catalog controls of the `home.splash` surface that the screen renders, named by the role they play. */
@@ -21,11 +22,14 @@ export const ACTION_ACCENTS = ["primary", "secondary", "tertiary"] as const;
 export type ActionAccent = (typeof ACTION_ACCENTS)[number];
 
 /** The workspace entries in the order they sit in the row, each with the accent that draws it. Each is handled by the navigator, which a later phase adds. */
-export const WORKSPACE_ACTIONS: readonly { readonly id: ControlId; readonly accent: ActionAccent }[] = [
-  { id: SPLASH.create, accent: "primary" },
-  { id: SPLASH.play, accent: "secondary" },
-  { id: SPLASH.host, accent: "tertiary" },
+export const WORKSPACE_ACTIONS: readonly { readonly id: ControlId; readonly accent: ActionAccent; readonly icon: IconName }[] = [
+  { id: SPLASH.create, accent: "primary", icon: "document" },
+  { id: SPLASH.play, accent: "secondary", icon: "play" },
+  { id: SPLASH.host, accent: "tertiary", icon: "server" },
 ];
+
+/** The icons of the footer actions, which sit in their own art roles. */
+export const FOOTER_ICONS = { settings: "gear", quit: "door" } as const satisfies Readonly<Record<string, IconName>>;
 
 export const WORKSPACE_ENTRIES: readonly ControlId[] = WORKSPACE_ACTIONS.map((action) => action.id);
 

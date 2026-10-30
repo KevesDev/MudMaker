@@ -1,0 +1,11 @@
+name: icon-server
+legend: .=. i=light
+
+........
+iiiiiiii
+i.i....i
+iiiiiiii
+i.i....i
+iiiiiiii
+i.i....i
+iiiiiiii

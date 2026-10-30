@@ -3,6 +3,7 @@
  * the block below it by fixed shares, so the banner sits at the same place whatever the block holds.
  */
 .home {
+  position: relative;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -14,6 +15,67 @@
 
 .home-above {
   flex: var(--layout-share-above) 1 0%;
+}
+
+/*
+ * The landscape is the first child and everything after it is positioned, so the content paints over it in source
+ * order and no stacking number is needed. It fills the stage, crops at its edges and never takes a pointer.
+ */
+.home > :not(.home-scene) {
+  position: relative;
+}
+
+.home-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.home-scene-layer {
+  position: absolute;
+}
+
+.home-scene-layer[data-anchor="top-left"] {
+  top: 0;
+  left: 0;
+}
+
+.home-scene-layer[data-anchor="bottom-left"] {
+  bottom: 0;
+  left: 0;
+}
+
+.home-scene-layer[data-anchor="bottom-right"] {
+  right: 0;
+  bottom: 0;
+}
+
+/* One unseen art cell, measured to learn how many cells the stage holds. */
+.home-scene-probe {
+  position: absolute;
+  visibility: hidden;
+}
+
+/*
+ * Every line of text sits on a plate of the canvas color, with a soft edge that spreads out one stack gap. The
+ * scene therefore never lies under text, so text keeps the contrast the canvas gives it whatever the scene holds.
+ */
+.home-header,
+.home-zone,
+.home-version[data-placement="beside"] {
+  background: var(--color-surface-canvas);
+  box-shadow: 0 0 var(--spacing-stack) var(--spacing-stack) var(--color-surface-canvas);
+}
+
+.home-zone {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-stack);
+  width: 100%;
+  min-width: 0;
 }
 
 .home-header,
@@ -210,10 +272,19 @@
 .home-action .ui-button:hover,
 .home-action .ui-button:active {
   flex: 1 1 auto;
-  justify-content: space-between;
+  justify-content: flex-start;
   font-weight: var(--font-weight-strong);
   text-transform: uppercase;
   background: var(--action-fill);
+}
+
+.home-action .ui-button-glyph {
+  margin-inline-start: auto;
+}
+
+/* The icon takes the color of its label, so the pair stays one color in every preset. */
+.home-action .ui-button-leading .art-fg-light {
+  color: var(--action-text);
 }
 
 .home-action .ui-button:not([aria-disabled="true"]) {

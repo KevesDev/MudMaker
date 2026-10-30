@@ -27,7 +27,7 @@ describe("text scale (AC-06)", () => {
     manager.setAccessibility("editor", { ...NORMAL, textScale: 1.5 });
     const base = fixtureTokens("editor");
     const tokens = manager.getSnapshot("editor").tokens;
-    for (const name of ["font.size.body", "font.size.caption", "font.size.heading", "font.size.nodeTitle", "font.size.code", "font.size.wordmarkStep"]) {
+    for (const name of ["font.size.body", "font.size.caption", "font.size.heading", "font.size.nodeTitle", "font.size.code", "font.size.wordmarkStep", "font.size.icon"]) {
       expect(tokens[name]).toBe(numberToken(base, name) * 1.5);
     }
     expect(tokens["spacing.panel"]).toBe(base["spacing.panel"]);

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 interface AppFrameProps {
-  /** The application mark, ahead of the title; empty until the mark exists. */
+  /** The application mark, ahead of the title. */
   readonly leading?: ReactNode;
   readonly title: string;
   /** The catalog test id of the title, when the screen has the catalog to name it. */

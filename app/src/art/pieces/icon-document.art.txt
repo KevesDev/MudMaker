@@ -1,0 +1,11 @@
+name: icon-document
+legend: .=. i=light
+
+.iiiii..
+.i...ii.
+.i....i.
+.i.ii.i.
+.i....i.
+.i.ii.i.
+.i....i.
+.iiiiii.

@@ -15,6 +15,10 @@
   pointer-events: none;
 }
 
+.text-art-icon {
+  font-size: var(--font-size-icon);
+}
+
 /*
  * A row is a flex line of runs. Each run is as wide as the hidden characters it holds, one font cell per character,
  * and as tall as the line. A half block is a box that covers half of the run in the run's foreground color over its

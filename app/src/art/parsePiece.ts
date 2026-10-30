@@ -22,6 +22,11 @@ export interface ArtPiece {
 export const MAX_PIECE_WIDTH = 2048;
 export const MAX_PIECE_HEIGHT = 2048;
 
+/** The pixel byte that names a role. */
+export function rolePixel(role: ArtRole): number {
+  return ART_ROLES.indexOf(role) + 1;
+}
+
 /** The role a pixel byte names, or null for a pixel left clear. */
 export function pixelRole(pixel: number): ArtRole | null {
   return ART_ROLES[pixel - 1] ?? null;
@@ -161,7 +166,7 @@ function parseLegend(header: Header | undefined, headerLines: readonly string[],
     }
     if (legend.has(character)) throw refuse("duplicate-legend-char", header.line, null, column, `"${character}" is defined twice`);
     if (role === TRANSPARENT) legend.set(character, CLEAR_PIXEL);
-    else if (isRole(role)) legend.set(character, ART_ROLES.indexOf(role) + 1);
+    else if (isRole(role)) legend.set(character, rolePixel(role));
     else throw refuse("unknown-role", header.line, null, column + 2, `"${role}" is not an art role`);
   }
   return legend;

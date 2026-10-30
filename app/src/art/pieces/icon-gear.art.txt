@@ -1,0 +1,11 @@
+name: icon-gear
+legend: .=. i=mid
+
+...ii...
+.i.ii.i.
+..iiii..
+iii..iii
+iii..iii
+..iiii..
+.i.ii.i.
+...ii...

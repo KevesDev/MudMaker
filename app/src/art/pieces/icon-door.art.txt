@@ -1,0 +1,11 @@
+name: icon-door
+legend: .=. i=accent
+
+.iiiii..
+.i...i..
+.i...ii.
+.i.iiiii
+.i...ii.
+.i...i..
+.i...i..
+.iiiii..

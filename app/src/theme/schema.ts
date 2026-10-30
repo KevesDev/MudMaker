@@ -91,7 +91,7 @@ const FAMILIES: readonly TokenFamily[] = [
   { prefix: "font.family", members: ["interface", "code", "numeric"], type: FONT_STACK },
   {
     prefix: "font.size",
-    members: ["body", "caption", "nodeTitle", "heading", "code", "wordmarkStep"],
+    members: ["body", "caption", "nodeTitle", "heading", "code", "wordmarkStep", "icon"],
     type: LENGTH,
     role: "fontSize",
   },

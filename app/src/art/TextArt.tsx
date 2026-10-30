@@ -9,6 +9,9 @@ const SHAPE_CLASS: Readonly<Record<string, string>> = {
   [GLYPHS.lower]: "art-lower",
 };
 
+/** The cell a piece is drawn in: the size of the code font for a scene, or the smaller size of an icon or mark. */
+type ArtSize = "scene" | "icon";
+
 /** The classes of a run: the shape its cell is painted in, then the token colors it names. A run of spaces has none. */
 function classesOf(run: ArtRun): string | undefined {
   const shape = SHAPE_CLASS[run.text.charAt(0)];
@@ -23,9 +26,9 @@ function classesOf(run: ArtRun): string | undefined {
  * focusable and never the target of a pointer. Colors come from role classes only, so the same output is recolored
  * by the theme.
  */
-export const TextArt = memo(function TextArt({ piece }: { readonly piece: ArtPiece }) {
+export const TextArt = memo(function TextArt({ piece, size = "scene" }: { readonly piece: ArtPiece; readonly size?: ArtSize }) {
   return (
-    <div className="text-art" aria-hidden="true">
+    <div className={size === "icon" ? "text-art text-art-icon" : "text-art"} aria-hidden="true">
       {cellRuns(piece).map((runs, row) => (
         <span key={row} className="text-art-row">
           {runs.map((run, index) => (

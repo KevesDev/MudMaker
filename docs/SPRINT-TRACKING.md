@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **17/42** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **19/42** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -106,8 +106,8 @@
 | **S02.3g Window frame** | Custom top row per [17](03-contracts/ui-ux/17-splash-art-and-window-frame.md): OS title bar removed, drag region, minimize, maximize and close as registered controls, close behaves as Quit; reusable as the shared toolbar row (USER TEST) | DONE | Auditor PASS after 4 rounds (2026-10-29); real drag, resize and focus checks come with the owner hands-on |
 | **S02.3h Splash layout and wordmark** | Block-letter wordmark, divider, equal-weight Create/Play/Host row with accent tokens, footer, Active World line, loading and failure states, narrow reflow, all per [15](03-contracts/ui-ux/15-screen-wireframes-and-interaction-states.md) and [17](03-contracts/ui-ux/17-splash-art-and-window-frame.md) (USER TEST) | DONE | Auditor PASS after 6 rounds (2026-10-29); owner judges the look against the mockup in the full splash |
 | **S02.3i Text-art renderer** | Palette-index art data format, parser and half-block renderer coloring every cell from theme art tokens (`color.art.*`), run-length spans, aria-hidden, deterministic, tested with real sample pieces; no scene yet | DONE | Auditor round 2; final fixes verified by tests, Lead accepted (2026-10-30). Real WebView2 glyph/box check comes with the owner hands-on |
-| **S02.3j Pixel icons and app mark** | The documented 8 by 8 pixel icons (document, play, server stack, folder, globe, gear, door) on Create, Play, Host, Settings, Quit and the application mark in the window frame, through the renderer (USER TEST) | TODO | — |
-| **S02.3k Landscape scene** | Fantasy landscape from the owner mockup as layered text-mode art anchored to the window edges (castle, mountains, moon, lake, stars), clear zone behind the text and contrast proof (USER TEST: the full splash) | TODO | — |
+| **S02.3j Pixel icons and app mark** | The documented 8 by 8 pixel icons (document, play, server stack, folder, globe, gear, door) on Create, Play, Host, Settings, Quit and the application mark in the window frame, through the renderer (USER TEST) | DONE | Auditor PASS (2026-10-30). Owner reviews the full splash against the mockup |
+| **S02.3k Landscape scene** | Fantasy landscape from the owner mockup as layered text-mode art anchored to the window edges (castle, mountains, moon, lake, stars), clear zone behind the text and contrast proof (USER TEST: the full splash) | DONE | Auditor PASS (2026-10-30). Owner reviews the full splash against the mockup |
 | **S02.4a Workspace navigator** | One navigator for Create/Play/Host/Splash: preserve editor drafts and active hosting across workspace changes, never a Play network connection; ownership of the window frame actions (minimize, maximize, close) moves from the home router to the shared application shell router | TODO | — |
 | **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | TODO | — |
 | **S02.4c Draft retention and transition guard** | Retain editor drafts; Save/Keep Draft/Cancel. Define Play Disconnect & Switch/Cancel (no background Play sockets) and Host Keep Hosting/Stop Hosting/Cancel; S08/S17 wire real services (USER TEST) | TODO | — |
@@ -540,3 +540,8 @@
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).
 
 **Design audit note (all future UI phases):** [screen wireframes / interaction states](03-contracts/ui-ux/15-screen-wireframes-and-interaction-states.md) and [microcopy/density acceptance](03-contracts/ui-ux/16-microcopy-and-density-acceptance.md) are binding visual references. Avoid redundant subtitles, explanatory cards, text-field instructions and permanent stacked tabs; retain accessible help, validation and safety notices. Approved splash image location is specified in [Splash visual spec](03-contracts/ui-ux/11-splash-screen-visual-spec.md); PNG upload is pending.
+
+## Debt list (Minor audit items, fixed in batches when the file is next touched)
+- Star scatter thinning depends on piece height so stars shift on a step resize; fix the thinning to a fixed row scale or correct the comment (`art/generated.ts`).
+- Footer icons (gear, door) do not follow their label color through the role mapping in `home.css`; add mappings if the owner wants one-color pairs.
+- Plate layout coverage over the scene is proven by CSS text only; pixel confirmation is part of the owner review.

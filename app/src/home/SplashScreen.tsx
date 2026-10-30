@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { AppInfo } from "../appInfo";
+import { ICONS } from "../art/library";
+import { TextArt } from "../art/TextArt";
 import { useTheme, type ThemeManager } from "../theme";
 import { Button, Menu, Toast, useUi, type ControlDescriptor, type ControlId } from "../ui";
 import { ControlNotice } from "./ControlNotice";
 import { homeCopy } from "./homeCopy";
-import { APPEARANCE, NOTICE_CONTROLS, SPLASH, SPLASH_GLYPHS, WORKSPACE_ACTIONS } from "./homeLayout";
+import { APPEARANCE, FOOTER_ICONS, NOTICE_CONTROLS, SPLASH, SPLASH_GLYPHS, WORKSPACE_ACTIONS } from "./homeLayout";
 import { Brand } from "./Brand";
 import { Ornament } from "./Ornament";
 import { Shown } from "./Shown";
+import { SplashScene } from "./SplashScene";
 import { useNarrowFlag } from "./useNarrowFlag";
 import { WordmarkBlock } from "./WordmarkBlock";
 
@@ -47,6 +50,7 @@ export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
 
   return (
     <div className="home" ref={rootRef}>
+      <SplashScene />
       <div className="home-above" aria-hidden="true" />
       <header className="home-header">
         <WordmarkBlock
@@ -62,46 +66,49 @@ export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
         />
       </header>
       <div className="home-below">
-        <Brand />
-        <main className="home-main">
-          <nav className="home-actions" aria-label={homeCopy.startNavigation} ref={actionRow.ref} data-narrow={actionRow.narrow}>
-            {WORKSPACE_ACTIONS.map(({ id, accent }) => (
-              <Shown key={id} control={control(id)} phase="ready">
-                <div className="home-action" data-accent={accent}>
-                  <Button control={control(id)} showState={false} trailingGlyph={SPLASH_GLYPHS.chevron} />
-                </div>
-              </Shown>
-            ))}
-          </nav>
-          {notice === null ? null : (
-            <Toast
-              id="home.notice"
-              title={control(notice.controlId).label}
-              message={notice.message}
-              tone="information"
-              {...(notice.code === null ? {} : { code: notice.code })}
-              live={false}
-              showTitle={false}
-              onDismiss={dismissNotice}
-            />
-          )}
-        </main>
-        <footer className="home-footer">
-          <Ornament width="narrow" />
-          <div className="home-footer-actions">
-            <Shown control={settings} phase="ready">
-              <Menu
-                opener={settings}
-                items={[]}
-                choices={{ control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId }}
+        <div className="home-zone">
+          <Brand />
+          <main className="home-main">
+            <nav className="home-actions" aria-label={homeCopy.startNavigation} ref={actionRow.ref} data-narrow={actionRow.narrow}>
+              {WORKSPACE_ACTIONS.map(({ id, accent, icon }) => (
+                <Shown key={id} control={control(id)} phase="ready">
+                  <div className="home-action" data-accent={accent}>
+                    <Button control={control(id)} showState={false} trailingGlyph={SPLASH_GLYPHS.chevron} leading={<TextArt piece={ICONS[icon]} size="icon" />} />
+                  </div>
+                </Shown>
+              ))}
+            </nav>
+            {notice === null ? null : (
+              <Toast
+                id="home.notice"
+                title={control(notice.controlId).label}
+                message={notice.message}
+                tone="information"
+                {...(notice.code === null ? {} : { code: notice.code })}
+                live={false}
+                showTitle={false}
+                onDismiss={dismissNotice}
               />
-            </Shown>
-            <span className="home-footer-rule" aria-hidden="true" />
-            <Shown control={control(SPLASH.quit)} phase="ready">
-              <Button control={control(SPLASH.quit)} />
-            </Shown>
-          </div>
-        </footer>
+            )}
+          </main>
+          <footer className="home-footer">
+            <Ornament width="narrow" />
+            <div className="home-footer-actions">
+              <Shown control={settings} phase="ready">
+                <Menu
+                  opener={settings}
+                  leading={<TextArt piece={ICONS[FOOTER_ICONS.settings]} size="icon" />}
+                  items={[]}
+                  choices={{ control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId }}
+                />
+              </Shown>
+              <span className="home-footer-rule" aria-hidden="true" />
+              <Shown control={control(SPLASH.quit)} phase="ready">
+                <Button control={control(SPLASH.quit)} leading={<TextArt piece={ICONS[FOOTER_ICONS.quit]} size="icon" />} />
+              </Shown>
+            </div>
+          </footer>
+        </div>
       </div>
     </div>
   );

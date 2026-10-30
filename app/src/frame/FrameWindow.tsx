@@ -1,4 +1,6 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { APP_MARK } from "../art/library";
+import { TextArt } from "../art/TextArt";
 import { createUiRuntime, UiProvider, type ActionRegistry, type Correlation, type DiagnosticSink, type UiRuntime } from "../ui";
 import { AppFrame, AppWindow } from "./AppFrame";
 import { registerFrameActions } from "./frameActions";
@@ -42,7 +44,7 @@ export function FrameWindow({ registry, controller, quit, report, correlation, r
   const title = registry.requireControl(FRAME.title);
   return (
     <UiProvider runtime={runtime}>
-      <AppWindow frame={<AppFrame title={title.label} titleTestId={title.testId} windowControls={<WindowControls controller={controller} />} />}>
+      <AppWindow frame={<AppFrame leading={<TextArt piece={APP_MARK} size="icon" />} title={title.label} titleTestId={title.testId} windowControls={<WindowControls controller={controller} />} />}>
         {children}
       </AppWindow>
     </UiProvider>

@@ -1,0 +1,11 @@
+name: app-mark
+legend: .=. i=glow
+
+.iiiiii.
+i......i
+i.iiii.i
+i.i..i.i
+i.i..i.i
+i.iiii.i
+i......i
+.iiiiii.

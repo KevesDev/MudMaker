@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import type { ActionHandler } from "../actions/ActionBus";
 import type { ControlDescriptor } from "../actions/types";
 import { copy } from "../copy";
@@ -13,6 +13,8 @@ export interface MenuProps {
   readonly items: readonly ControlDescriptor[];
   /** A list of values for one control, such as a preset. Choosing one sends it to that control's action. */
   readonly choices?: MenuChoices;
+  /** Decorative art drawn before the opener's label; it is hidden from assistive technology. */
+  readonly leading?: ReactNode;
 }
 
 export interface MenuChoices {
@@ -77,7 +79,7 @@ function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
  * and outside presses arrive through the input manager, and choosing an item closes the list and
  * returns focus to the opener.
  */
-export function Menu({ opener, items, choices }: MenuProps) {
+export function Menu({ opener, items, choices, leading }: MenuProps) {
   const ui = useUi();
   const { attributes, runtime, shown, tipId, tip } = useControlBinding(opener, ["dropdown", "button"], "Menu");
   const [open, setOpen] = useState(false);
@@ -127,6 +129,11 @@ export function Menu({ opener, items, choices }: MenuProps) {
   return (
     <span className="ui-anchor">
       <button ref={triggerRef} type="button" className="ui-control ui-hit ui-button" aria-haspopup="menu" aria-expanded={open} {...attributes}>
+        {leading === undefined ? null : (
+          <span className="ui-button-leading" aria-hidden="true">
+            {leading}
+          </span>
+        )}
         {opener.label}
       </button>
       {runtime.state === "success" ? null : <StateText runtime={runtime} shown={shown} />}

@@ -43,7 +43,7 @@ describe("the frame row on the loaded screen", () => {
   it("shows exactly the title and three controls, in the order Minimize, Maximize, Close", async () => {
     await openApp();
     const text = [...frame().querySelectorAll("*")]
-      .filter((element) => element.children.length === 0 && !element.closest("[role='tooltip']") && element.textContent !== "")
+      .filter((element) => element.children.length === 0 && !element.closest("[role='tooltip']") && !element.closest(".text-art") && element.textContent !== "")
       .map((element) => element.textContent);
     expect(frame().querySelector(".app-frame-middle")?.childElementCount).toBe(0);
     expect(frame().querySelector(".app-frame-end")).toBeNull();

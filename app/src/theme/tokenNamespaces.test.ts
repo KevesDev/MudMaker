@@ -30,7 +30,7 @@ const EDITOR_NAMESPACES = [
   "color.accent.{primary,secondary,tertiary,onSecondary}",
   "color.art.{deep,sky,haze,far,mid,near,accent,glow,star,light}",
   "font.family.{interface,code,numeric}",
-  "font.size.{body,caption,nodeTitle,heading,code,wordmarkStep}",
+  "font.size.{body,caption,nodeTitle,heading,code,wordmarkStep,icon}",
   "font.weight.*",
   "spacing.*",
   "shape.*",

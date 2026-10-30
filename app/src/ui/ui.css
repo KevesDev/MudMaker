@@ -59,6 +59,11 @@
     border-color var(--motion-duration-fastMs);
 }
 
+.ui-button-leading {
+  display: inline-flex;
+  flex: none;
+}
+
 .ui-hit {
   min-width: var(--interaction-pointerHitSize);
   min-height: var(--interaction-pointerHitSize);

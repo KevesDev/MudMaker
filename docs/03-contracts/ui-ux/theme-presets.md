@@ -21,6 +21,7 @@ The functional fallback set below is exempt. Standard ANSI meaning, status meani
 | Token | Value | Derivation |
 |---|---|---|
 | `font.size.wordmarkStep` | 2 | The banner font size is a whole number of these units. The banner is 76 columns wide and one column is about 0.55 of the font size, so one unit adds about 84px to the banner: coarse enough that every step is a visible change, fine enough that the banner fills the space it has. |
+| `font.size.icon` | 8 | The size of the cell of an 8 by 8 pixel icon or the application mark. One pixel is about 0.55 of this wide and half of it tall, so an icon is about 35px wide and 32px tall: a little shorter than two lines of caption text, and inside the 40px frame row. It scales with the text scale like every font size. |
 | `wordmark.defaultStep` | 5 | The step used when the window cannot be measured: the largest step that fits the content width at the minimum window (480 wide, less the 1px window border twice and 16px of stage padding twice, 446px; five steps are about 418px). |
 | `wordmark.seam` | 1 | Fractional character widths leave a hairline, narrower than one device pixel, between neighbouring block characters. A copy of the banner one seam to the right and one below overlaps it. 1px is the smallest whole unit the stylesheet states; at a scaled display it spans more device pixels, which overlaps more and stays invisible. |
 | `layout.splashMaxWidth` | 640 | Half the default window width (1280). The mockup's action row is 805 of its 1672px width, 48%. |

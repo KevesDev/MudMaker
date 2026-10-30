@@ -6,7 +6,7 @@ import { FRAME } from "../frame/frameLayout";
 import { ActionBus, loadShippedRegistry, type ControlDescriptor } from "../ui";
 import { DEFERRED_CONDITIONS, IMPLEMENTED_CONDITIONS, SPLASH, SPLASH_GLYPHS, WORKSPACE_ENTRIES, isVisible } from "./homeLayout";
 import { WORDMARK_ROWS, WORDMARK_TEXT } from "./wordmark";
-import { FRAME_TEXT, SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, liveAnnouncements, outsideFrame, renderApp, startupRecords, visibleText, type TestHome } from "./homeTestSupport";
+import { FRAME_TEXT, SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, liveAnnouncements, outsideFrame, renderApp, startupRecords, textWithoutArt, visibleText, type TestHome } from "./homeTestSupport";
 
 interface CatalogControl {
   readonly id: string;
@@ -322,7 +322,7 @@ describe("page structure and wording", () => {
     expect(screen.getAllByRole("banner")).toHaveLength(1);
     expect(screen.getAllByRole("main")).toHaveLength(1);
     const entries = within(screen.getByRole("navigation", { name: "Start" })).getAllByRole("button");
-    expect(entries.map((button) => button.textContent)).toEqual(["Create", "Play", "Host"].map((label) => `${label}${SPLASH_GLYPHS.chevron}`));
+    expect(entries.map(textWithoutArt)).toEqual(["Create", "Play", "Host"].map((label) => `${label}${SPLASH_GLYPHS.chevron}`));
     for (const label of ["Create", "Play", "Host"]) expect(within(screen.getByRole("navigation", { name: "Start" })).getByRole("button", { name: label })).toBeTruthy();
   });
 
@@ -436,7 +436,7 @@ describe("the splash composition", () => {
     expect(parts[2]?.contains(elementOf(SPLASH.quit))).toBe(true);
   });
 
-  it("shows no icon, picture, Active World line or recent list until those have something real to show", async () => {
+  it("shows no picture, Active World line or recent list until those have something real to show", async () => {
     await openSplash();
     expect(document.querySelectorAll("img, svg, canvas")).toHaveLength(0);
     const text = copyOnScreen();

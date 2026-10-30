@@ -105,11 +105,16 @@ export function copyOnScreen(): string {
   return [document.body.textContent ?? "", ...labels].join("\n");
 }
 
+/** The text of an element without the cells of any text-mode art in it, whose characters are only there to size the art. */
+export function textWithoutArt(element: Element): string {
+  return [...element.childNodes].map((node) => (node instanceof Element && node.classList.contains("text-art") ? "" : node instanceof Element ? textWithoutArt(node) : (node.textContent ?? ""))).join("");
+}
+
 /** Every piece of text a sighted person can read: not in a hidden help tooltip and not in a visually hidden region. */
 export function visibleText(): string[] {
   const found: string[] = [];
   const walk = (node: Node): void => {
-    if (node instanceof HTMLElement && (node.hidden || node.style.visibility === "hidden" || node.classList.contains("ui-visually-hidden"))) return;
+    if (node instanceof HTMLElement && (node.hidden || node.style.visibility === "hidden" || node.classList.contains("ui-visually-hidden") || node.classList.contains("text-art"))) return;
     if (node.nodeType === Node.TEXT_NODE) {
       const text = (node.textContent ?? "").trim();
       if (text.length > 0) found.push(text);
