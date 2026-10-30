@@ -26,7 +26,7 @@ export function actionIdOf(registry: ActionRegistry, controlId: ControlId): Acti
 }
 
 /** Settles as soon as the signal fires, so the bus is never left waiting on work it has stopped waiting for. */
-function untilAborted<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
+export function untilAborted<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     const onAbort = (): void => reject(signal.reason);
     if (signal.aborted) {

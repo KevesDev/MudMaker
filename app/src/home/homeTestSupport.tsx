@@ -54,6 +54,8 @@ export function healthyHome(overrides: Partial<HomeDependencies> = {}): TestHome
     quit,
     windowShell,
     loadFrameRegistry,
+    leaveServices: {},
+    surfaces: {},
     report: (record) => records.push(record),
     ...overrides,
   };

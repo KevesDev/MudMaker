@@ -6,6 +6,7 @@ import type { PassiveDescriptor } from "../actions/types";
 import { EDITOR, GO_HELP, GO_TO, LAYOUT, NAVIGATOR, ORPHAN, createTestUi, deferred, renderWithUi } from "../testSupport";
 import { Button } from "./Button";
 import { copy } from "../copy";
+import { Dialog } from "./Dialog";
 import { Menu, openMenuHandler } from "./Menu";
 import { Progress } from "./Progress";
 import { Toast } from "./Toast";
@@ -301,6 +302,38 @@ describe("Button trailing glyph", () => {
     const ui = createTestUi();
     renderWithUi(ui, <Button control={ui.control(ORPHAN)} />);
     expect(document.querySelector(".ui-button-glyph")).toBeNull();
+  });
+});
+
+describe("Menu trailing glyph", () => {
+  it("draws the glyph after the opener's label, hidden from assistive technology, so the accessible name stays the label", () => {
+    const ui = createTestUi();
+    renderWithUi(ui, <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_HELP)]} trailingGlyph="v" />);
+    const opener = screen.getByRole("button", { name: "Go To" });
+    const glyph = opener.querySelector(".ui-button-glyph");
+    expect(glyph?.textContent).toBe("v");
+    expect(glyph?.getAttribute("aria-hidden")).toBe("true");
+    expect(opener.lastElementChild).toBe(glyph);
+  });
+});
+
+describe("Dialog close button", () => {
+  const dialog = (closeButton: boolean, onClose: () => void) => (
+    <Dialog open title="Choose" closeButton={closeButton} onClose={onClose}>
+      <button type="button">Option</button>
+    </Dialog>
+  );
+
+  it("offers Close by default and leaves it out when the options carry their own cancel, while Escape still closes", () => {
+    const ui = createTestUi();
+    const closed: string[] = [];
+    const first = renderWithUi(ui, dialog(true, () => closed.push("with")));
+    expect(screen.getByRole("button", { name: copy.close })).not.toBeNull();
+    first.unmount();
+    renderWithUi(ui, dialog(false, () => closed.push("without")));
+    expect(screen.queryByRole("button", { name: copy.close })).toBeNull();
+    fireEvent.keyDown(document.activeElement ?? document.body, { key: "Escape" });
+    expect(closed).toEqual(["without"]);
   });
 });
 

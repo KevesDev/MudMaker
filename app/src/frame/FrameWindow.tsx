@@ -18,6 +18,9 @@ export interface FrameWindowProps {
   readonly correlation: Correlation;
   /** Registers the actions of the screen inside the window and returns the function that removes them. */
   readonly registerScreen?: (runtime: UiRuntime) => () => void;
+  /** The screen's frequent actions and its Settings and Go To menus, drawn in the frame row inside this window's runtime. */
+  readonly middle?: ReactNode;
+  readonly end?: ReactNode;
   readonly children: ReactNode;
 }
 
@@ -26,7 +29,7 @@ export interface FrameWindowProps {
  * It owns the interface runtime of the window, so the window controls always go through the one input
  * manager and the one action bus, whichever catalogs the screen was able to load.
  */
-export function FrameWindow({ registry, controller, quit, report, correlation, registerScreen, children }: FrameWindowProps) {
+export function FrameWindow({ registry, controller, quit, report, correlation, registerScreen, middle, end, children }: FrameWindowProps) {
   /** The launch id can arrive after the window first appears, so records read the newest correlation. */
   const latest = useRef(correlation);
   useLayoutEffect(() => {
@@ -44,7 +47,7 @@ export function FrameWindow({ registry, controller, quit, report, correlation, r
   const title = registry.requireControl(FRAME.title);
   return (
     <UiProvider runtime={runtime}>
-      <AppWindow frame={<AppFrame leading={<TextArt piece={APP_MARK} size="icon" />} title={title.label} titleTestId={title.testId} windowControls={<WindowControls controller={controller} />} />}>
+      <AppWindow frame={<AppFrame leading={<TextArt piece={APP_MARK} size="icon" />} title={title.label} titleTestId={title.testId} middle={middle} end={end} windowControls={<WindowControls controller={controller} />} />}>
         {children}
       </AppWindow>
     </UiProvider>

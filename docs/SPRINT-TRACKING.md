@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **19/42** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **22/42** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -109,8 +109,8 @@
 | **S02.3j Pixel icons and app mark** | The documented 8 by 8 pixel icons (document, play, server stack, folder, globe, gear, door) on Create, Play, Host, Settings, Quit and the application mark in the window frame, through the renderer (USER TEST) | DONE | Auditor PASS (2026-10-30). Owner reviews the full splash against the mockup |
 | **S02.3k Landscape scene** | Fantasy landscape from the owner mockup as layered text-mode art anchored to the window edges (castle, mountains, moon, lake, stars), clear zone behind the text and contrast proof (USER TEST: the full splash) | DONE | Auditor PASS (2026-10-30). Owner reviews the full splash against the mockup |
 | **S02.4a Workspace navigator** | One navigator for Create/Play/Host/Splash: preserve editor drafts and active hosting across workspace changes, never a Play network connection; ownership of the window frame actions (minimize, maximize, close) moves from the home router to the shared application shell router | TODO | — |
-| **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | TODO | — |
-| **S02.4c Draft retention and transition guard** | Retain editor drafts; Save/Keep Draft/Cancel. Define Play Disconnect & Switch/Cancel (no background Play sockets) and Host Keep Hosting/Stop Hosting/Cancel; S08/S17 wire real services (USER TEST) | TODO | — |
+| **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | DONE | Auditor PASS (2026-10-30). Guard dialogs appear once the editor, Play and Host services exist (S09, S08, S17) |
+| **S02.4c Draft retention and transition guard** | Retain editor drafts; Save/Keep Draft/Cancel. Define Play Disconnect & Switch/Cancel (no background Play sockets) and Host Keep Hosting/Stop Hosting/Cancel; S08/S17 wire real services (USER TEST) | DONE | Auditor PASS (2026-10-30). Guard dialogs appear once the editor, Play and Host services exist (S09, S08, S17) |
 | **S02.5a Docking and split layout** | DockPanel and SplitView with keyboard resize and tablet drawer behavior | TODO | — |
 | **S02.5b Tabs** | TabStrip with overflow, reorder, close and dirty markers | TODO | — |
 | **S02.5c Inspector container** | Inspector panel and InspectorField shell with grouped tabs and collapsible categories; no fake data | TODO | — |
@@ -545,3 +545,6 @@ Record implementation commit, focused test and Auditor PASS in the phase Evidenc
 - Star scatter thinning depends on piece height so stars shift on a step resize; fix the thinning to a fixed row scale or correct the comment (`art/generated.ts`).
 - Footer icons (gear, door) do not follow their label color through the role mapping in `home.css`; add mappings if the owner wants one-color pairs.
 - Plate layout coverage over the scene is proven by CSS text only; pixel confirmation is part of the owner review.
+- Rename the window frame action owner to the shared shell router across `actions.v1.json`, `frameActions.ts` and tests, or keep the current name deliberately (S02.4 audit).
+- The Go To Home entry is labelled "Splash"; doc 15 says Home, so relabel the catalog entry `editor.navigation.05` and its siblings to "Home".
+- `WorkspaceNotice` dismiss returns focus through a test id lookup; use a ref.

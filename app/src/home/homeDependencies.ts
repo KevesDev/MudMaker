@@ -1,8 +1,10 @@
 import { getAppInfo, getEngineStatus, quitApp, writeDiagnostic, type DiagnosticRecord } from "../appInfo";
 import { loadFrameRegistry } from "../frame/frameRegistry";
 import { tauriWindowShell, type WindowShell } from "../frame/windowShell";
+import type { LeaveServices } from "../nav/leaveImpact";
 import { themeManager } from "../theme";
 import { loadShippedRegistry, type ActionRegistry } from "../ui";
+import type { WorkspaceSurfaces } from "../workspaces/WorkspaceStage";
 import { createDiagnosticSink } from "./diagnosticSink";
 import { STARTUP_REQUIRES_ENGINE } from "./startupConfig";
 import type { StartupDependencies } from "./startupChecks";
@@ -12,6 +14,10 @@ export interface HomeDependencies extends StartupDependencies {
   readonly windowShell: WindowShell;
   /** The frame's own registry, so the window controls exist before and without the full catalogs. */
   readonly loadFrameRegistry: () => ActionRegistry;
+  /** The services that say what leaving a workspace affects. A service that does not exist yet is simply absent. */
+  readonly leaveServices: LeaveServices;
+  /** The working surface each workspace feature mounts; a workspace with none shows a plain empty surface. */
+  readonly surfaces: WorkspaceSurfaces;
 }
 
 const CONSOLE_METHOD = { error: "error", warning: "warn", info: "info" } as const;
@@ -34,6 +40,8 @@ export const productionDependencies: HomeDependencies = {
   quit: quitApp,
   windowShell: tauriWindowShell,
   loadFrameRegistry,
+  leaveServices: {},
+  surfaces: {},
   report: createDiagnosticSink({
     write: writeDiagnostic,
     logFailed: reportLogFailure,

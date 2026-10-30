@@ -1,0 +1,27 @@
+.workspace-stage {
+  position: relative;
+  height: 100%;
+}
+
+.workspace-stage[hidden],
+.workspace-surface[hidden] {
+  display: none;
+}
+
+.workspace-surface {
+  box-sizing: border-box;
+  height: 100%;
+  background: var(--color-surface-app);
+}
+
+.workspace-surface:focus-visible {
+  outline: var(--interaction-focusOutlineWidth) solid var(--color-interaction-focus);
+  outline-offset: calc(var(--interaction-focusOutlineWidth) * -1);
+}
+
+.workspace-notice {
+  position: absolute;
+  top: var(--spacing-toolbar);
+  right: var(--spacing-toolbar);
+  z-index: var(--layer-popup);
+}

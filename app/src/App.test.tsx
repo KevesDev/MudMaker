@@ -77,20 +77,16 @@ test("clicking Quit requests application exit once", async () => {
   await waitFor(() => expect(shell.quitApp).toHaveBeenCalledTimes(1));
 });
 
-test("sends a refused action to the shell log as information, tagged with the launch id from the shell", async () => {
+test("opens a workspace from the splash with the production wiring and writes nothing to the shell log beyond the startup records", async () => {
   render(<App />);
   await screen.findByText("Version 9.8.7, build abc1234");
   // Input listeners attach in an effect that React may still be holding when the text first appears.
   await act(async () => undefined);
+  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(STARTUP_RECORDS));
   fireEvent.click(screen.getByRole("button", { name: "Create" }));
-  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(STARTUP_RECORDS + 1));
-  expect(shell.writeDiagnostic.mock.calls[STARTUP_RECORDS]?.[0]).toMatchObject({
-    severity: "info",
-    code: "no-action-owner",
-    actionId: "ui.nav.create",
-    controlId: "home.splash.04",
-    correlation: { launchId: INFO.launchId },
-  });
+  expect(await screen.findByRole("main", { name: "Create" })).toBeTruthy();
+  expect(screen.queryByText("Version 9.8.7, build abc1234")).toBeNull();
+  expect(shell.writeDiagnostic).toHaveBeenCalledTimes(STARTUP_RECORDS);
 });
 
 test("sends a failed startup check to the shell log with the raw text only in the detail field, and tells the user in plain words", async () => {
@@ -114,7 +110,8 @@ test("keeps working and reports to the console when the shell log cannot be writ
   await screen.findByText("Version 9.8.7, build abc1234");
   // Input listeners attach in an effect that React may still be holding when the text first appears.
   await act(async () => undefined);
-  fireEvent.click(screen.getByRole("button", { name: "Play" }));
+  shell.minimizeWindow.mockRejectedValueOnce(new Error("window denied"));
+  fireEvent.click(screen.getByRole("button", { name: "Minimize" }));
   await waitFor(() => expect(console.error).toHaveBeenCalledWith("MudMaker could not write its diagnostic log", expect.any(Error)));
   expect(screen.getByRole("button", { name: "Play" })).toBeTruthy();
 });

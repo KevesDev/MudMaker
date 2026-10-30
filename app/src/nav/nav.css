@@ -1,0 +1,21 @@
+.workspace-identity {
+  padding-inline-start: var(--spacing-toolbar);
+  border-inline-start: var(--shape-borderWidth) solid var(--color-border-subtle);
+}
+
+.nav-guard-section,
+.nav-guard-choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-row);
+}
+
+.nav-guard-choices {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.nav-guard-resources,
+.nav-guard-text {
+  margin: 0;
+}

@@ -97,7 +97,7 @@ describe("frame stylesheet", () => {
   it("anchors the state text and help of the frame's controls to the row's right edge, out of its flow and no wider than the row, so they never grow it or leave the window", () => {
     expect(ruleBody(".app-frame")).toContain("position: relative");
     expect(ruleBody(".app-frame-controls .ui-anchor")).toContain("position: static");
-    const body = ruleBody(".app-frame-controls .ui-state-text");
+    const body = ruleBody([".app-frame-controls .ui-state-text", ".app-frame-end .ui-state-text"].join(", "));
     expect(body).toContain("position: absolute");
     expect(body).toMatch(/right:\s*0/);
     expect(body).toContain("max-width: min(var(--layout-contentMaxWidth), 100%)");
@@ -107,11 +107,17 @@ describe("frame stylesheet", () => {
     expect(body).toContain("var(--color-surface-overlay)");
   });
 
-  it("limits every rule that moves an anchor, state text, tooltip or menu to the window controls, so nothing leaks to the middle and end slots", () => {
+  it("opens the end menus toward the inside of the window, since they sit against its edge", () => {
+    const body = ruleBody(".app-frame-end .ui-menu-popup");
+    expect(body).toMatch(/right:\s*0/);
+    expect(body).toContain("left: auto");
+  });
+
+  it("limits every rule that moves an anchor, state text, tooltip or menu to the window controls and the end menus, so nothing leaks to the middle slot", () => {
     const selectors = [...stylesheet.replace(/\/\*[\s\S]*?\*\//g, "").matchAll(/([^{}]+)\{/g)].map((match) => (match[1] ?? "").trim());
     const touching = selectors.filter((selector) => /ui-anchor|ui-state-text|ui-tooltip|ui-menu/.test(selector));
     expect(touching.length).toBeGreaterThan(2);
-    expect(touching.filter((selector) => !selector.startsWith(".app-frame-controls "))).toEqual([]);
+    expect(touching.filter((selector) => !selector.startsWith(".app-frame-controls ") && !selector.startsWith(".app-frame-end "))).toEqual([]);
   });
 
   it("scrolls the screen below the frame inside the window, so the frame stays in place", () => {

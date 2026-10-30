@@ -3,6 +3,7 @@ import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-libra
 import { afterEach, describe, expect, it, vi } from "vitest";
 import homeCatalog from "../../../contracts/ui/v1/home-controls.v1.json";
 import { FRAME } from "../frame/frameLayout";
+import { navCopy } from "../nav/navCopy";
 import { ActionBus, loadShippedRegistry, type ControlDescriptor } from "../ui";
 import { DEFERRED_CONDITIONS, IMPLEMENTED_CONDITIONS, SPLASH, SPLASH_GLYPHS, WORKSPACE_ENTRIES, isVisible } from "./homeLayout";
 import { WORDMARK_ROWS, WORDMARK_TEXT } from "./wordmark";
@@ -179,8 +180,21 @@ describe("the loaded screen", () => {
   });
 });
 
+/** A home whose editor service cannot say what leaving would affect, so every switch from the splash is refused and the screen has to say so. */
+function refusingHome(): TestHome {
+  return healthyHome({
+    leaveServices: {
+      editor: {
+        describeLeaveImpact: () => Promise.reject(new Error("session store unreadable")),
+        retainDraft: () => Promise.reject(new Error("not asked")),
+        save: () => Promise.reject(new Error("not asked")),
+      },
+    },
+  });
+}
+
 describe("Create, Play and Host", () => {
-  const messageFor = (id: string): string => `${control(id).label} is not available yet.`;
+  const MESSAGE = navCopy.checkFailed;
 
   /** Words a person can see: outside the visually hidden live regions. */
   function visibleCopies(message: string): HTMLElement[] {
@@ -189,23 +203,31 @@ describe("Create, Play and Host", () => {
     );
   }
 
-  it.each(WORKSPACE_ENTRIES)("show one plain sentence and make one announcement for %s, and leave the screen as it was", async (id) => {
+  it.each(WORKSPACE_ENTRIES)("open their workspace from %s and leave no message behind", async (id) => {
     const home = await openSplash();
+    fireEvent.click(elementOf(id));
+    await waitFor(() => expect(screen.queryByRole("heading", { level: 1 })).toBeNull());
+    expect(screen.getByRole("main", { name: control(id).label })).toBeTruthy();
+    expect(document.querySelectorAll(".ui-toast")).toHaveLength(0);
+    expect(home.records.filter((record) => !("check" in record))).toEqual([]);
+  });
+
+  it.each(WORKSPACE_ENTRIES)("show one plain sentence with a reference and make one announcement when %s is refused, and leave the screen as it was", async (id) => {
+    const home = await openSplash(refusingHome());
     const heading = screen.getByRole("heading", { level: 1 });
     const stopsBefore = screen.getAllByRole("button").length;
     fireEvent.click(elementOf(id));
-    const message = messageFor(id);
     await waitFor(() => expect(document.querySelectorAll(".ui-toast")).toHaveLength(1));
-    expect(visibleCopies(message)).toHaveLength(1);
-    expect(visibleCopies(message)[0]?.closest(".ui-toast")).not.toBeNull();
-    expect(document.querySelector(".ui-toast")?.textContent?.startsWith(message)).toBe(true);
+    expect(visibleCopies(MESSAGE)).toHaveLength(1);
+    expect(visibleCopies(MESSAGE)[0]?.closest(".ui-toast")).not.toBeNull();
+    expect(document.querySelector(".ui-toast-code")?.textContent).toBe("Reference: leave-check-failed");
     expect(copyOnScreen()).not.toMatch(/Note/);
     expect(document.querySelectorAll(".ui-state-text")).toHaveLength(0);
-    const announced = liveAnnouncements(message);
+    const announced = liveAnnouncements(MESSAGE);
     expect(announced).toHaveLength(1);
     expect(announced[0]?.closest(".ui-visually-hidden")).not.toBeNull();
     expect(home.records.filter((record) => !("check" in record))).toEqual([
-      expect.objectContaining({ code: "no-action-owner", severity: "info", controlId: id, correlation: { launchId: SHELL_INFO.launchId } }),
+      expect.objectContaining({ code: "leave-check-failed", severity: "error", detail: "session store unreadable", correlation: { launchId: SHELL_INFO.launchId } }),
     ]);
     expect(screen.getByRole("heading", { level: 1 })).toBe(heading);
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
@@ -213,7 +235,7 @@ describe("Create, Play and Host", () => {
   });
 
   it("places the message directly after the three entries and before the next stop in the tab order", async () => {
-    await openSplash();
+    await openSplash(refusingHome());
     fireEvent.click(elementOf(SPLASH.host));
     await waitFor(() => expect(document.querySelectorAll(".ui-toast")).toHaveLength(1));
     const toast = document.querySelector<HTMLElement>(".ui-toast") as HTMLElement;
@@ -225,36 +247,23 @@ describe("Create, Play and Host", () => {
     expect(stops[after + 1]).toBe(elementOf(SPLASH.settings));
   });
 
-  it("does not stack a second message or a second announcement when the same entry is activated twice in a row, and replaces it for another entry", async () => {
-    const home = await openSplash();
+  it("does not stack a second message or a second announcement when the same entry is refused twice in a row, nor for another entry", async () => {
+    const home = await openSplash(refusingHome());
+    const refusals = (): number => home.records.filter((record) => record.code === "leave-check-failed").length;
     fireEvent.click(elementOf(SPLASH.create));
+    await waitFor(() => expect(refusals()).toBe(1));
     fireEvent.click(elementOf(SPLASH.create));
-    await waitFor(() => expect(home.records.filter((record) => record.code === "no-action-owner")).toHaveLength(2));
+    await waitFor(() => expect(refusals()).toBe(2));
     expect(document.querySelectorAll(".ui-toast")).toHaveLength(1);
-    expect(liveAnnouncements(messageFor(SPLASH.create))).toHaveLength(1);
+    expect(liveAnnouncements(MESSAGE)).toHaveLength(1);
     fireEvent.click(elementOf(SPLASH.play));
-    await waitFor(() => expect(document.querySelector(".ui-toast")?.textContent).toContain(messageFor(SPLASH.play)));
+    await waitFor(() => expect(refusals()).toBe(3));
     expect(document.querySelectorAll(".ui-toast")).toHaveLength(1);
-    expect(document.querySelector(".ui-toast")?.textContent).not.toContain("Create is not available");
-    expect(liveAnnouncements("is not available yet")).toHaveLength(1);
-  });
-
-  it("keeps one message and one announcement when activations are spread across awaits", async () => {
-    const home = await openSplash();
-    for (const id of [SPLASH.create, SPLASH.create, SPLASH.host, SPLASH.host]) {
-      fireEvent.click(elementOf(id));
-      await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve));
-      });
-      expect(document.querySelectorAll(".ui-toast")).toHaveLength(1);
-      expect(liveAnnouncements("is not available yet")).toHaveLength(1);
-    }
-    expect(home.records.filter((record) => record.code === "no-action-owner")).toHaveLength(4);
-    expect(document.querySelector(".ui-toast")?.textContent).toContain(messageFor(SPLASH.host));
+    expect(liveAnnouncements(MESSAGE)).toHaveLength(1);
   });
 
   it("clears the message and returns focus to the entry that raised it when it is dismissed", async () => {
-    await openSplash();
+    await openSplash(refusingHome());
     fireEvent.click(elementOf(SPLASH.host));
     await waitFor(() => expect(document.querySelectorAll(".ui-toast")).toHaveLength(1));
     const toast = document.querySelector<HTMLElement>(".ui-toast");
@@ -272,16 +281,19 @@ describe("an owner that answers a failure with no words", () => {
     ["an empty message", ""],
     ["a message of only spaces", "   "],
   ])("keeps the screen, shows the plain sentence once and announces it once for %s", async (_name, message) => {
-    const held: { bus: ActionBus | null } = { bus: null };
+    const held: { bus: ActionBus | null; removers: Map<string, () => void> } = { bus: null, removers: new Map() };
     const register = ActionBus.prototype.registerHandler;
     vi.spyOn(ActionBus.prototype, "registerHandler").mockImplementation(function (this: ActionBus, ...args) {
       held.bus = this;
-      return register.apply(this, args);
+      const remove = register.apply(this, args);
+      held.removers.set(args[1], remove);
+      return remove;
     });
     try {
       const home = await openSplash();
       const create = descriptorOf(SPLASH.create);
       const owner = registry.action(create.actionId ?? "")?.owner ?? "";
+      held.removers.get(create.actionId ?? "")?.();
       held.bus?.registerHandler(owner, create.actionId ?? "", () => Promise.resolve({ status: "recoverable-error", code: "E-BLANK", message }));
       const heading = screen.getByRole("heading", { level: 1 });
       fireEvent.click(elementOf(SPLASH.create));
@@ -327,13 +339,13 @@ describe("page structure and wording", () => {
   });
 
   it("uses no sprint ids, engineering terms, control ids, emojis or em dashes on the loaded screen, in a message and in the open menu", async () => {
-    await openSplash();
+    await openSplash(refusingHome());
     fireEvent.click(elementOf(SPLASH.create));
     await waitFor(() => expect(document.querySelectorAll(".ui-toast")).toHaveLength(1));
     fireEvent.click(elementOf(SPLASH.settings));
     expect(await screen.findByRole("menu")).toBeTruthy();
     const text = copyOnScreen();
-    expect(text).toContain("Create is not available yet.");
+    expect(text).toContain(navCopy.checkFailed);
     expect(breaksCopyRules(text)).toBe(false);
   });
 
@@ -352,7 +364,7 @@ describe("page structure and wording", () => {
     ]) {
       expect(breaksCopyRules(bad), bad).toBe(true);
     }
-    expect(breaksCopyRules("Create is not available yet.")).toBe(false);
+    expect(breaksCopyRules(navCopy.checkFailed)).toBe(false);
   });
 });
 

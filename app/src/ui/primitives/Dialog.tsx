@@ -13,6 +13,8 @@ export interface DialogProps {
    * the explicit options supplied as children, so a stray key cannot cancel or confirm it.
    */
   readonly destructive?: boolean;
+  /** Set to false when the dialog's own options already include a way to cancel, so the dialog does not offer two. Escape still closes it. */
+  readonly closeButton?: boolean;
   readonly onClose: () => void;
   readonly children: ReactNode;
 }
@@ -32,7 +34,7 @@ function focusReturnTargets(opener: Element | null): HTMLElement[] {
  * Modal dialog. While open it owns keyboard focus: Tab stays inside, Escape closes it when it is
  * not destructive, and closing returns focus to whatever opened it, or the nearest element around it.
  */
-export function Dialog({ open, title, description, destructive = false, onClose, children }: DialogProps) {
+export function Dialog({ open, title, description, destructive = false, closeButton = true, onClose, children }: DialogProps) {
   const ui = useUi();
   const uid = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -95,7 +97,7 @@ export function Dialog({ open, title, description, destructive = false, onClose,
         <div ref={bodyRef} className="ui-dialog-body">
           {children}
         </div>
-        {destructive ? null : (
+        {destructive || !closeButton ? null : (
           <button type="button" className="ui-control ui-hit ui-button" data-ui-command={closeCommand}>
             {copy.close}
           </button>

@@ -83,7 +83,7 @@
 }
 
 /* An error or note beside a control opens below the row, against its right edge, so it never grows the row or leaves the window. */
-.app-frame-controls .ui-state-text {
+.app-frame-controls .ui-state-text, .app-frame-end .ui-state-text {
   position: absolute;
   top: 100%;
   right: 0;
@@ -101,4 +101,10 @@
   right: 0;
   left: auto;
   max-width: min(var(--layout-contentMaxWidth), 100%);
+}
+
+/* The end menus sit against the window edge, so their lists open toward the inside. */
+.app-frame-end .ui-menu-popup {
+  right: 0;
+  left: auto;
 }

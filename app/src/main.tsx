@@ -5,6 +5,8 @@ import { startTheme, themeManager } from "./theme";
 import "./styles.css";
 import "./home/home.css";
 import "./frame/frame.css";
+import "./nav/nav.css";
+import "./workspaces/workspaces.css";
 
 startTheme(themeManager, "home", window);
 

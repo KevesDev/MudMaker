@@ -6,6 +6,7 @@ import { WindowController } from "./frame/WindowController";
 import { HomeWorkspace } from "./home/HomeWorkspace";
 import { homeCopy } from "./home/homeCopy";
 import { productionDependencies, type HomeDependencies } from "./home/homeDependencies";
+import { WorkspaceNavigator } from "./nav/WorkspaceNavigator";
 import { InstallDamaged } from "./home/StartupFailure";
 import { LoadingAnnouncement, StartupLoading } from "./home/StartupLoading";
 import { useStartup } from "./home/useStartup";
@@ -66,6 +67,8 @@ export function App({ dependencies = productionDependencies }: { readonly depend
   }, [correlation]);
   /** Owned here, above every screen, so what is known of the window survives the loading and Retry screens. */
   const [controller] = useState(() => new WindowController({ shell: dependencies.windowShell, report: dependencies.report, correlation: () => latest.current }));
+  /** Owned here too, so opened workspaces outlive the loading and Retry screens. */
+  const [navigator] = useState(() => new WorkspaceNavigator(dependencies.leaveServices, dependencies.report, () => latest.current));
   let screen: ReactElement;
   if (state.phase === "checking") {
     screen = (
@@ -80,7 +83,7 @@ export function App({ dependencies = productionDependencies }: { readonly depend
       </StartupWindow>
     );
   } else {
-    screen = <HomeWorkspace report={state.report} dependencies={dependencies} controller={controller} retry={retry} focusHeading={attempt > 1} />;
+    screen = <HomeWorkspace report={state.report} dependencies={dependencies} controller={controller} navigator={navigator} retry={retry} focusHeading={attempt > 1} />;
   }
   return (
     <>

@@ -15,6 +15,8 @@ export interface MenuProps {
   readonly choices?: MenuChoices;
   /** Decorative art drawn before the opener's label; it is hidden from assistive technology. */
   readonly leading?: ReactNode;
+  /** A decorative character drawn after the opener's label, such as a caret; it is hidden from assistive technology. */
+  readonly trailingGlyph?: string;
 }
 
 export interface MenuChoices {
@@ -79,7 +81,7 @@ function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
  * and outside presses arrive through the input manager, and choosing an item closes the list and
  * returns focus to the opener.
  */
-export function Menu({ opener, items, choices, leading }: MenuProps) {
+export function Menu({ opener, items, choices, leading, trailingGlyph }: MenuProps) {
   const ui = useUi();
   const { attributes, runtime, shown, tipId, tip } = useControlBinding(opener, ["dropdown", "button"], "Menu");
   const [open, setOpen] = useState(false);
@@ -135,6 +137,11 @@ export function Menu({ opener, items, choices, leading }: MenuProps) {
           </span>
         )}
         {opener.label}
+        {trailingGlyph === undefined ? null : (
+          <span className="ui-button-glyph" aria-hidden="true">
+            {trailingGlyph}
+          </span>
+        )}
       </button>
       {runtime.state === "success" ? null : <StateText runtime={runtime} shown={shown} />}
       {open ? (

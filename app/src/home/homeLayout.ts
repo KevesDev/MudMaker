@@ -21,7 +21,7 @@ export const APPEARANCE = "home.settings.07" as const satisfies ControlId;
 export const ACTION_ACCENTS = ["primary", "secondary", "tertiary"] as const;
 export type ActionAccent = (typeof ACTION_ACCENTS)[number];
 
-/** The workspace entries in the order they sit in the row, each with the accent that draws it. Each is handled by the navigator, which a later phase adds. */
+/** The workspace entries in the order they sit in the row, each with the accent that draws it. Activating one asks the workspace navigator to go there. */
 export const WORKSPACE_ACTIONS: readonly { readonly id: ControlId; readonly accent: ActionAccent; readonly icon: IconName }[] = [
   { id: SPLASH.create, accent: "primary", icon: "document" },
   { id: SPLASH.play, accent: "secondary", icon: "play" },
