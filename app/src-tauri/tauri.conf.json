@@ -11,7 +11,14 @@
   },
   "app": {
     "windows": [
-      { "title": "MudMaker", "width": 900, "height": 640 }
+      {
+        "title": "MudMaker",
+        "width": 1280,
+        "height": 720,
+        "minWidth": 480,
+        "minHeight": 360,
+        "decorations": false
+      }
     ],
     "security": { "csp": null }
   },

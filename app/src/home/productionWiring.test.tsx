@@ -14,6 +14,15 @@ vi.mock("../appInfo", () => ({
   writeDiagnostic: shell.writeDiagnostic,
 }));
 
+vi.mock("../frame/windowShell", () => ({
+  tauriWindowShell: {
+    minimize: () => Promise.resolve(),
+    toggleMaximize: () => Promise.resolve(),
+    isMaximized: () => Promise.resolve(false),
+    onStateChange: () => Promise.resolve(() => undefined),
+  },
+}));
+
 vi.mock("./startupConfig", () => ({ STARTUP_REQUIRES_ENGINE: true }));
 
 import { App } from "../App";

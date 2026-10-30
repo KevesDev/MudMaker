@@ -50,6 +50,10 @@ const RULES: readonly ContrastRule[] = [
       "color.border.focused",
       "color.border.invalid",
       "color.interaction.focus",
+      "color.border.frame",
+      "color.accent.primary",
+      // The secondary accent has its own rule below: as a fill under text it must not be pushed toward a surface color.
+      "color.accent.tertiary",
     ],
     backgrounds: SURFACES,
     minRatio: HIGH_CONTRAST_GRAPHIC_RATIO,
@@ -94,6 +98,23 @@ function colorOf(tokens: Readonly<Record<string, TokenValue>>, name: string): Rg
   return typeof value === "string" ? parseHexColor(value) : null;
 }
 
+/**
+ * The secondary accent is either a boundary against every surface or a fill under primary text. When it is
+ * neither, it moves away from the text color by the smallest blend that lets the text reach the text ratio.
+ */
+function secondaryAccentFor(tokens: Readonly<Record<string, TokenValue>>): string | null {
+  const accent = colorOf(tokens, "color.accent.secondary");
+  const text = colorOf(tokens, "color.text.primary");
+  const surfaces = SURFACES.flatMap((name) => {
+    const color = colorOf(tokens, name);
+    return color ? [color] : [];
+  });
+  if (!accent || !text || surfaces.length === 0) return null;
+  if (worstRatio(accent, surfaces) >= HIGH_CONTRAST_GRAPHIC_RATIO) return null;
+  const raised = raiseContrast(accent, [text], HIGH_CONTRAST_TEXT_RATIO);
+  return raised ? formatHexColor(raised) : null;
+}
+
 /** Derives high-contrast colors from the resolved tokens; colors that already comply are untouched. */
 export function applyHighContrast(
   tokens: Readonly<Record<string, TokenValue>>,
@@ -112,5 +133,7 @@ export function applyHighContrast(
       if (raised) result[name] = formatHexColor(raised);
     }
   }
+  const secondary = secondaryAccentFor(result);
+  if (secondary !== null) result["color.accent.secondary"] = secondary;
   return result;
 }

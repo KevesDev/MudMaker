@@ -7,7 +7,7 @@ import { ActionRegistry, CatalogLoadError } from "../ui";
 import { deferred, fixtureSources } from "../ui/testSupport";
 import { SPLASH } from "./homeLayout";
 import type { HomeDiagnostic } from "./startupChecks";
-import { SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, renderApp, startupRecords, visibleAlert, visibleText, type TestHome } from "./homeTestSupport";
+import { FRAME_TEXT, SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, outsideFrame, renderApp, startupRecords, visibleAlert, visibleText, type TestHome } from "./homeTestSupport";
 
 let unbind: (() => void) | null = null;
 
@@ -36,14 +36,14 @@ async function open(home: TestHome, options: { readonly strict?: boolean } = {})
 }
 
 describe("while the checks run", () => {
-  it("shows only the product name and a progress bar that has an accessible name, no controls and no words about the checks, then the splash", async () => {
+  it("shows only the product name and a progress bar that has an accessible name, no screen controls and no words about the checks, then the splash", async () => {
     const info = deferred<AppInfo>();
     const home = healthyHome({ getAppInfo: () => info.promise });
     unbind = renderApp(home).unbind;
-    expect(visibleText()).toEqual(["MudMaker"]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, "MudMaker"]);
     expect(screen.getByRole("progressbar", { name: "Getting MudMaker ready" })).toBeTruthy();
     expect(screen.queryByRole("heading", { level: 1 })).toBeNull();
-    expect(screen.queryAllByRole("button")).toEqual([]);
+    expect(outsideFrame("button")).toEqual([]);
     expect(breaksCopyRules(copyOnScreen())).toBe(false);
     info.resolve(SHELL_INFO);
     expect(await screen.findByRole("heading", { level: 1 })).toBeTruthy();
@@ -84,7 +84,7 @@ describe("when a check that trying again can fix fails", () => {
     expect(alert.textContent).toBe(`MudMaker could not start: ${label}.`);
     expect(document.activeElement).toBe(alert);
     expect(screen.queryAllByRole("heading")).toEqual([]);
-    expect(visibleText()).toEqual([`MudMaker could not start: ${label}.`, "Retry"]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, `MudMaker could not start: ${label}.`, "Retry"]);
     const text = copyOnScreen();
     expect(text).not.toContain(raw);
     expect(breaksCopyRules(text)).toBe(false);
@@ -116,7 +116,7 @@ describe("when a check that trying again can fix fails", () => {
     expect(retry.getAttribute("data-testid")).toBe(retryEntry.testId);
     expect(retry.tabIndex).toBe(0);
     expect(retry.hasAttribute("aria-describedby")).toBe(false);
-    expect(document.querySelectorAll('[role="tooltip"]')).toHaveLength(0);
+    expect(outsideFrame('[role="tooltip"]')).toHaveLength(0);
   });
 
   it("runs every check again when Retry is clicked, moves focus to the heading on success and logs nothing more", async () => {
@@ -179,7 +179,7 @@ describe("when the game engine is not installed", () => {
     await open(home);
     const alert = await waitFor(visibleAlert);
     expect(alert.textContent).toBe("MudMaker could not start: Game engine.");
-    expect(visibleText()).toEqual(["MudMaker could not start: Game engine.", "Retry"]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, "MudMaker could not start: Game engine.", "Retry"]);
     expect(screen.getByRole("button", { name: "Retry" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "MudMaker", level: 1 })).toBeNull();
     expect(breaksCopyRules(copyOnScreen())).toBe(false);
@@ -188,7 +188,7 @@ describe("when the game engine is not installed", () => {
 });
 
 describe("when the screen definitions are invalid", () => {
-  it("says the installation is damaged, moves focus to the alert and offers no control, because trying again cannot fix it", async () => {
+  it("says the installation is damaged, moves focus to the alert and offers no screen control, because trying again cannot fix it", async () => {
     const home = healthyHome({
       loadRegistry: () => {
         throw invalidCatalogError();
@@ -198,9 +198,9 @@ describe("when the screen definitions are invalid", () => {
     const alert = await waitFor(visibleAlert);
     expect(alert.textContent).toBe("This copy of MudMaker is damaged. Please reinstall MudMaker, then open it again.");
     expect(document.activeElement).toBe(alert);
-    expect(screen.queryAllByRole("button")).toEqual([]);
-    expect(document.querySelector("[data-control-id]")).toBeNull();
-    expect(visibleText()).toEqual(["This copy of MudMaker is damaged. Please reinstall MudMaker, then open it again."]);
+    expect(outsideFrame("button")).toEqual([]);
+    expect(outsideFrame("[data-control-id]")).toEqual([]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, "This copy of MudMaker is damaged. Please reinstall MudMaker, then open it again."]);
     expect(breaksCopyRules(copyOnScreen())).toBe(false);
     expect(home.records.filter((record) => record.severity === "error")).toEqual([expect.objectContaining({ code: "startup-catalogs-invalid" })]);
   });

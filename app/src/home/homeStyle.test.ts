@@ -2,6 +2,7 @@
 import { describe, expect, it } from "vitest";
 import stylesheet from "./home.css?raw";
 import interfaceStylesheet from "../ui/ui.css?raw";
+import frameStylesheet from "../frame/frame.css?raw";
 import themeDefaults from "../../../contracts/ui/v1/theme-defaults.v1.json";
 import { ThemeManager, ThemeSchema } from "../theme";
 import { stringToken, wcagRatio } from "../theme/fixtures";
@@ -36,7 +37,8 @@ describe("home source has no literal styling or timing", () => {
 const TEXT = 4.5;
 const GRAPHIC = 3;
 const SUBTLE_BORDER = 1.1;
-const screenStyles = `${stylesheet}\n${interfaceStylesheet}`;
+/** The home screen renders inside the window frame, so the frame's colors are judged with it. */
+const screenStyles = `${stylesheet}\n${interfaceStylesheet}\n${frameStylesheet}`;
 
 function colorTokens(): string[] {
   return [...new Set([...screenStyles.matchAll(/var\(--(color-[A-Za-z0-9-]+)\)/g)].map((match) => (match[1] ?? "").replaceAll("-", ".")))];
@@ -62,6 +64,9 @@ function pairsFor(tokens: readonly string[]): Pair[] {
       for (const surface of surfaces) pairs.push({ foreground: token, background: surface, minimum: TEXT });
     } else if (token === "color.border.subtle") {
       for (const surface of surfaces) pairs.push({ foreground: token, background: surface, minimum: SUBTLE_BORDER });
+    } else if (token === "color.border.frame") {
+      // The window border sits between the page and the frame row, never on a panel or an overlay.
+      for (const surface of ["color.surface.app", "color.surface.toolbar"]) pairs.push({ foreground: token, background: surface, minimum: GRAPHIC });
     } else if (/^color\.border\.|^color\.interaction\.focus$/.test(token)) {
       for (const surface of surfaces) pairs.push({ foreground: token, background: surface, minimum: GRAPHIC });
     } else {
@@ -87,6 +92,7 @@ describe("the home screen colors", () => {
     expect(used.some((token) => token.startsWith("color.status."))).toBe(true);
     expect(used.some((token) => token.startsWith("color.border."))).toBe(true);
     expect(used).toContain("color.interaction.focus");
+    expect(used).toContain("color.border.frame");
     expect(used.some((token) => token.startsWith("color.surface."))).toBe(true);
     expect(pairs.length).toBeGreaterThan(used.length);
   });

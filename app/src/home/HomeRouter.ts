@@ -1,35 +1,16 @@
+import { FRAME_ACTION_OWNER, actionIdOf } from "../frame/frameActions";
 import { SCOPE_IDS, type ScopeId, type ThemeManager } from "../theme";
-import { UiContractError, openMenuHandler, type ActionBus, type ActionHandler, type ActionId, type ActionRegistry, type ControlId } from "../ui";
+import { openMenuHandler, type ActionBus, type ActionHandler, type ActionRegistry } from "../ui";
 import { homeCopy } from "./homeCopy";
 import { APPEARANCE, SPLASH } from "./homeLayout";
 
 /** The owner the action table names for the actions the home screen handles itself. */
-export const HOME_ROUTER = "HomeIntentRouter";
+export const HOME_ROUTER = FRAME_ACTION_OWNER;
 
 export interface HomeRouterDependencies {
-  readonly quit: () => Promise<void>;
   /** Starts the startup checks again; the owner of the startup state supplies it. */
   readonly retryStartup: () => void;
   readonly theme: Pick<ThemeManager, "listPresets" | "getSnapshot" | "selectPreset">;
-}
-
-function actionOf(registry: ActionRegistry, controlId: ControlId): ActionId {
-  const { actionId } = registry.requireControl(controlId);
-  if (actionId === null) throw new UiContractError("control-passive", controlId, `Control "${controlId}" has no action for the home router to handle.`);
-  return actionId;
-}
-
-/** Settles as soon as the signal fires, so the bus is never left waiting on work it has stopped waiting for. */
-function untilAborted<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const onAbort = (): void => reject(signal.reason);
-    if (signal.aborted) {
-      onAbort();
-      return;
-    }
-    signal.addEventListener("abort", onAbort, { once: true });
-    work.then(resolve, reject).finally(() => signal.removeEventListener("abort", onAbort));
-  });
 }
 
 /**
@@ -37,12 +18,7 @@ function untilAborted<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
  * navigator that owns them does not exist yet, so the bus answers that they are unavailable.
  */
 export function registerHomeRouter(bus: ActionBus, registry: ActionRegistry, dependencies: HomeRouterDependencies): () => void {
-  const { quit, theme, retryStartup } = dependencies;
-
-  const quitApplication: ActionHandler = async ({ signal }) => {
-    await untilAborted(quit(), signal);
-    return { status: "success", message: homeCopy.closing };
-  };
+  const { theme, retryStartup } = dependencies;
 
   const retry: ActionHandler = () => {
     retryStartup();
@@ -69,10 +45,9 @@ export function registerHomeRouter(bus: ActionBus, registry: ActionRegistry, dep
   };
 
   const removers = [
-    bus.registerHandler(HOME_ROUTER, actionOf(registry, SPLASH.quit), quitApplication),
-    bus.registerHandler(HOME_ROUTER, actionOf(registry, APPEARANCE), changeAppearance),
-    bus.registerHandler(HOME_ROUTER, actionOf(registry, SPLASH.settings), openMenuHandler),
-    bus.registerHandler(HOME_ROUTER, actionOf(registry, SPLASH.retry), retry),
+    bus.registerHandler(HOME_ROUTER, actionIdOf(registry, APPEARANCE), changeAppearance),
+    bus.registerHandler(HOME_ROUTER, actionIdOf(registry, SPLASH.settings), openMenuHandler),
+    bus.registerHandler(HOME_ROUTER, actionIdOf(registry, SPLASH.retry), retry),
   ];
   return () => {
     for (const remove of removers) remove();

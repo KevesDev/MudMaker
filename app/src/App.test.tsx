@@ -6,6 +6,7 @@ const shell = vi.hoisted(() => ({
   quitApp: vi.fn(() => Promise.resolve()),
   writeDiagnostic: vi.fn((_record: unknown) => Promise.resolve()),
   getAppInfo: vi.fn(),
+  minimizeWindow: vi.fn(() => Promise.resolve()),
 }));
 
 vi.mock("./appInfo", () => ({
@@ -13,6 +14,15 @@ vi.mock("./appInfo", () => ({
   getEngineStatus: () => Promise.resolve({ installed: false, reason: "The game engine is not installed in this build." }),
   quitApp: shell.quitApp,
   writeDiagnostic: shell.writeDiagnostic,
+}));
+
+vi.mock("./frame/windowShell", () => ({
+  tauriWindowShell: {
+    minimize: shell.minimizeWindow,
+    toggleMaximize: () => Promise.resolve(),
+    isMaximized: () => Promise.resolve(false),
+    onStateChange: () => Promise.resolve(() => undefined),
+  },
 }));
 
 import { App } from "./App";
@@ -107,4 +117,33 @@ test("keeps working and reports to the console when the shell log cannot be writ
   fireEvent.click(screen.getByRole("button", { name: "Play" }));
   await waitFor(() => expect(console.error).toHaveBeenCalledWith("MudMaker could not write its diagnostic log", expect.any(Error)));
   expect(screen.getByRole("button", { name: "Play" })).toBeTruthy();
+});
+
+test("the Close control of the frame requests the same application exit as Quit, once each", async () => {
+  render(<App />);
+  await screen.findByText("Version 9.8.7, build abc1234");
+  await act(async () => undefined);
+  fireEvent.click(screen.getByRole("button", { name: "Close" }));
+  await waitFor(() => expect(shell.quitApp).toHaveBeenCalledTimes(1));
+  fireEvent.click(screen.getByRole("button", { name: "Quit" }));
+  await waitFor(() => expect(shell.quitApp).toHaveBeenCalledTimes(2));
+});
+
+test("a window command that fails shows its error beside the control and writes one record tagged with the launch id", async () => {
+  shell.minimizeWindow.mockRejectedValueOnce(new Error("window denied"));
+  render(<App />);
+  await screen.findByText("Version 9.8.7, build abc1234");
+  await act(async () => undefined);
+  fireEvent.click(screen.getByRole("button", { name: "Minimize" }));
+  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(STARTUP_RECORDS + 1));
+  expect(shell.writeDiagnostic.mock.calls[STARTUP_RECORDS]?.[0]).toMatchObject({
+    severity: "error",
+    code: "handler-failed",
+    actionId: "ui.window.minimize",
+    controlId: "home.frame.02",
+    detail: "window denied",
+    correlation: { launchId: INFO.launchId },
+  });
+  expect(screen.getByRole("button", { name: "Minimize" }).getAttribute("data-state")).toBe("recoverable-error");
+  expect((await screen.findAllByText("Minimize did not finish. Please try again.")).length).toBeGreaterThan(0);
 });

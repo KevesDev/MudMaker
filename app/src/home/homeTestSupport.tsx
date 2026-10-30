@@ -9,6 +9,9 @@ import { vi, type Mock } from "vitest";
 import themeDefaults from "../../../contracts/ui/v1/theme-defaults.v1.json";
 import type { AppInfo, EngineStatus } from "../appInfo";
 import { App } from "../App";
+import { fakeWindowShell, type FakeWindowShell } from "../frame/frameTestSupport";
+import { GLYPHS } from "../frame/frameLayout";
+import { loadFrameRegistry } from "../frame/frameRegistry";
 import { ThemeManager, bindThemeToElement } from "../theme";
 import { loadShippedRegistry } from "../ui";
 import type { HomeDependencies } from "./homeDependencies";
@@ -30,6 +33,7 @@ export interface TestHome {
   readonly dependencies: HomeDependencies;
   readonly manager: ThemeManager;
   readonly quit: Mock<() => Promise<void>>;
+  readonly windowShell: FakeWindowShell;
   readonly records: HomeDiagnostic[];
 }
 
@@ -38,6 +42,7 @@ export function healthyHome(overrides: Partial<HomeDependencies> = {}): TestHome
   const manager = overrides.theme ?? new ThemeManager(themeDefaults);
   const quit = vi.fn<() => Promise<void>>(() => Promise.resolve());
   const records: HomeDiagnostic[] = [];
+  const windowShell = fakeWindowShell();
   const dependencies: HomeDependencies = {
     getAppInfo: () => Promise.resolve(SHELL_INFO),
     getEngineStatus: () => Promise.resolve(ENGINE_MISSING),
@@ -45,10 +50,12 @@ export function healthyHome(overrides: Partial<HomeDependencies> = {}): TestHome
     theme: manager,
     requireEngine: false,
     quit,
+    windowShell,
+    loadFrameRegistry,
     report: (record) => records.push(record),
     ...overrides,
   };
-  return { dependencies, manager, quit, records };
+  return { dependencies, manager, quit, windowShell, records };
 }
 
 /** The records the startup checks wrote, apart from anything the screen's own controls reported. */
@@ -62,6 +69,14 @@ export function renderApp(home: TestHome, options: { readonly strict?: boolean }
   const app = <App dependencies={home.dependencies} />;
   const rendered = render(options.strict === true ? <StrictMode>{app}</StrictMode> : app);
   return Object.assign(rendered, { unbind });
+}
+
+/** The text of the frame row while the window is restored: its title, then the glyph of each control. */
+export const FRAME_TEXT: readonly string[] = ["MudMaker", GLYPHS.minimize, GLYPHS.maximize, GLYPHS.close];
+
+/** Elements matching the selector that are not part of the window frame row. */
+export function outsideFrame(selector: string): Element[] {
+  return [...document.querySelectorAll(selector)].filter((element) => element.closest(".app-frame") === null);
 }
 
 /** Words that belong to the engineering side of the product, written out here as the plain-language rule needs them. */

@@ -45,7 +45,7 @@ const ANSI_PALETTE = Array.from({ length: 16 }, (_, index) => `ansi${index}`);
 const FAMILIES: readonly TokenFamily[] = [
   { prefix: "color.surface", members: ["app", "panel", "toolbar", "inspector", "canvas", "overlay", "scrim"], type: COLOR },
   { prefix: "color.text", members: ["primary", "secondary", "muted", "disabled"], type: COLOR },
-  { prefix: "color.border", members: ["normal", "subtle", "focused", "invalid"], type: COLOR },
+  { prefix: "color.border", members: ["normal", "subtle", "focused", "invalid", "frame"], type: COLOR },
   { prefix: "color.graph.grid", members: ["minor", "major"], type: COLOR },
   { prefix: "color.graph.edge", members: "open", type: COLOR },
   { prefix: "color.graph.port", members: "open", type: COLOR },
@@ -56,6 +56,7 @@ const FAMILIES: readonly TokenFamily[] = [
     type: COLOR,
   },
   { prefix: "color.interaction", members: ["focus", "selection", "hover", "pressed"], type: COLOR },
+  { prefix: "color.accent", members: ["primary", "secondary", "tertiary"], type: COLOR },
   {
     prefix: "color.terminal",
     members: [
@@ -98,7 +99,7 @@ const FAMILIES: readonly TokenFamily[] = [
   { prefix: "font.terminal", members: ["weight"], type: FONT_WEIGHT },
   { prefix: "spacing", members: "open", type: LENGTH },
   { prefix: "shape", members: "open", type: LENGTH },
-  { prefix: "layout", members: ["contentMaxWidth"], type: LENGTH },
+  { prefix: "layout", members: ["contentMaxWidth", "frameRowHeight"], type: LENGTH },
   /** Stacking order of floating layers; a higher number sits above a lower one. */
   { prefix: "layer", members: ["popup", "tooltip", "dialog"], type: NON_NEGATIVE_INTEGER },
   /** How much of the covered interface the scrim hides, in percent. */

@@ -22,5 +22,4 @@ export const homeCopy = {
   appearanceNotApplied: (presetLabel: string): string => `Appearance could not be changed to ${presetLabel}. Your current look is unchanged.`,
   appearancePartlyApplied: (presetLabel: string): string =>
     `Appearance could only be partly changed to ${presetLabel}. Choose a look again to bring every screen into step.`,
-  closing: "Closing MudMaker.",
 } as const;

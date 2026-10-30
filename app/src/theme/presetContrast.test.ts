@@ -20,6 +20,10 @@ interface Requirement {
 const names = (prefix: string, members: readonly string[]): string[] => members.map((member) => `${prefix}.${member}`);
 
 const EDITOR_SURFACES = names("color.surface", ["app", "panel", "toolbar", "inspector", "canvas", "overlay"]);
+/** The tertiary accent draws action borders on the page, never on the overlay surface of menus and dialogs. */
+const SURFACES_UNDER_ACCENT = EDITOR_SURFACES.filter((surface) => surface !== "color.surface.overlay");
+/** The window border sits between the page and the frame row. */
+const FRAME_NEIGHBOURS = names("color.surface", ["app", "toolbar"]);
 const CLIENT_SURFACES = names("color.surface", ["app", "panel"]);
 const TERMINAL_BACKGROUND = ["color.terminal.background"];
 const ANSI = Array.from({ length: 16 }, (_, index) => `color.terminal.ansi${index}`);
@@ -29,6 +33,9 @@ const EDITOR_REQUIREMENTS: readonly Requirement[] = [
   { group: "status", foregrounds: names("color.status", ["success", "warning", "error", "information"]), backgrounds: EDITOR_SURFACES, minimum: TEXT },
   { group: "borders", foregrounds: names("color.border", ["normal", "focused", "invalid"]), backgrounds: EDITOR_SURFACES, minimum: GRAPHIC },
   { group: "focus", foregrounds: ["color.interaction.focus"], backgrounds: EDITOR_SURFACES, minimum: GRAPHIC },
+  { group: "accent primary", foregrounds: ["color.accent.primary"], backgrounds: EDITOR_SURFACES, minimum: GRAPHIC },
+  { group: "accent tertiary", foregrounds: ["color.accent.tertiary"], backgrounds: SURFACES_UNDER_ACCENT, minimum: GRAPHIC },
+  { group: "frame border", foregrounds: ["color.border.frame"], backgrounds: FRAME_NEIGHBOURS, minimum: GRAPHIC },
   { group: "subtle border", foregrounds: ["color.border.subtle"], backgrounds: EDITOR_SURFACES, minimum: SUBTLE_BORDER_FLOOR },
   { group: "grid minor", foregrounds: ["color.graph.grid.minor"], backgrounds: ["color.surface.canvas"], minimum: GRID_MINOR.floor },
   { group: "grid major", foregrounds: ["color.graph.grid.major"], backgrounds: ["color.surface.canvas"], minimum: GRID_MAJOR.floor },
@@ -105,7 +112,7 @@ const CLIENT_REQUIREMENTS: readonly Requirement[] = [
 ];
 
 /** Requirement groups that apply to every token the client shares with the editor, on all of the client's surfaces. */
-const SHARED_GROUPS = ["text", "status", "borders", "focus", "subtle border", "interaction fills", "text on fills"];
+const SHARED_GROUPS = ["text", "status", "borders", "focus", "accent primary", "accent tertiary", "frame border", "subtle border", "interaction fills", "text on fills"];
 
 function violations(tokens: Readonly<Record<string, string | number | boolean>>, requirements: readonly Requirement[]): string[] {
   const failures: string[] = [];
@@ -122,6 +129,12 @@ function violations(tokens: Readonly<Record<string, string | number | boolean>>,
   return failures;
 }
 
+/** How each preset's exact secondary accent is used: Electric Navy is a fill under Digital Mint text, Neon Cyan a boundary and text color. */
+const SECONDARY_ACCENT_USE: Readonly<Record<string, { asBoundary: boolean; asFill: boolean }>> = {
+  "neon-lights": { asBoundary: false, asFill: true },
+  "neon-dark-mode": { asBoundary: true, asFill: false },
+};
+
 describe.each(fixturePresetIds())("preset %s contrast", (presetId) => {
   it("meets the contract contrast for every editor text, status, border, focus and graph token", () => {
     expect(violations(fixtureTokens("editor", presetId), EDITOR_REQUIREMENTS)).toEqual([]);
@@ -135,6 +148,14 @@ describe.each(fixturePresetIds())("preset %s contrast", (presetId) => {
     const shared = EDITOR_REQUIREMENTS.filter((requirement) => SHARED_GROUPS.includes(requirement.group));
     expect(shared).toHaveLength(SHARED_GROUPS.length);
     expect(violations(fixtureTokens("client", presetId), shared)).toEqual([]);
+  });
+
+  it("gives the secondary accent a use it can meet: a boundary or text on every surface, or a fill that keeps primary text readable", () => {
+    const tokens = fixtureTokens("editor", presetId);
+    const accent = stringToken(tokens, "color.accent.secondary");
+    const asBoundary = Math.min(...EDITOR_SURFACES.map((surface) => wcagRatio(accent, stringToken(tokens, surface)))) >= GRAPHIC;
+    const asFill = wcagRatio(stringToken(tokens, "color.text.primary"), accent) >= TEXT;
+    expect({ asBoundary, asFill }).toEqual(SECONDARY_ACCENT_USE[presetId]);
   });
 
   it("keeps graph grid lines quiet: minor and major stay below their ceilings on the canvas", () => {
@@ -180,33 +201,42 @@ describe("scrim and layers", () => {
 });
 
 describe("preset palette rules", () => {
-  it("uses Neon Lime for exactly one token in neon-dark-mode", () => {
-    const lime = "#AAFF00";
+  it.each([
+    ["neon-lights", ["#5EEA91", "#2A28AD", "#E23D8A", "#E23D8A"]],
+    ["neon-dark-mode", ["#9759FF", "#06EFFF", "#B4FF00", "#9759FF"]],
+  ])("sets the accents and the window border of %s to the exact palette colors the owner chose, never tints", (presetId, expected) => {
+    const tokens = fixtureTokens("editor", presetId);
+    expect(["color.accent.primary", "color.accent.secondary", "color.accent.tertiary", "color.border.frame"].map((name) => stringToken(tokens, name).toUpperCase())).toEqual(expected);
+  });
+
+  it("uses the exact Neon Lime for exactly one token in neon-dark-mode, the tertiary accent, and keeps success a darker tint", () => {
+    const lime = "#B4FF00";
     const scopes: readonly RootScope[] = ["editor", "client"];
     const used = scopes.flatMap((scope) =>
       Object.entries(fixtureTokens(scope, "neon-dark-mode"))
         .filter(([, value]) => typeof value === "string" && value.toUpperCase() === lime)
         .map(([name]) => name),
     );
-    expect([...new Set(used)]).toEqual(["color.status.success"]);
+    expect([...new Set(used)]).toEqual(["color.accent.tertiary"]);
+    expect(fixtureTokens("editor", "neon-dark-mode")["color.status.success"]).not.toBe(lime);
   });
 
   it("maps neon-lights surfaces to the palette: app and canvas Vulcan, panel and inspector Persian Blue", () => {
     const tokens = fixtureTokens("editor", "neon-lights");
-    expect(tokens["color.surface.app"]).toBe("#1C291E");
-    expect(tokens["color.surface.canvas"]).toBe("#1C291E");
-    expect(tokens["color.surface.panel"]).toBe("#222174");
-    expect(tokens["color.surface.inspector"]).toBe("#222174");
-    expect(tokens["color.surface.toolbar"]).toBe("#45214D");
+    expect(tokens["color.surface.app"]).toBe("#111320");
+    expect(tokens["color.surface.canvas"]).toBe("#111320");
+    expect(tokens["color.surface.panel"]).toBe("#232175");
+    expect(tokens["color.surface.inspector"]).toBe("#232175");
+    expect(tokens["color.surface.toolbar"]).toBe("#41204D");
     expect(tokens["color.surface.overlay"]).toBe("#2A28AD");
-    expect(tokens["color.text.primary"]).toBe("#5DEA90");
+    expect(tokens["color.text.primary"]).toBe("#5EEA91");
   });
 
   it("maps neon-dark-mode to the palette: Void app, Dark Graphite panel, Electric Purple focus", () => {
     const tokens = fixtureTokens("editor", "neon-dark-mode");
     expect(tokens["color.surface.app"]).toBe("#080808");
-    expect(tokens["color.surface.panel"]).toBe("#141414");
-    expect(tokens["color.border.focused"]).toBe("#9B5CFF");
-    expect(tokens["color.status.information"]).toBe("#00F5FF");
+    expect(tokens["color.surface.panel"]).toBe("#191919");
+    expect(tokens["color.border.focused"]).toBe("#9759FF");
+    expect(tokens["color.status.information"]).toBe("#06EFFF");
   });
 });

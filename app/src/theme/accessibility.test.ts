@@ -18,6 +18,9 @@ const SURFACES = [
   "color.surface.overlay",
 ];
 
+/** The window border and the accents that draw borders and rules; high contrast holds them to the boundary floor. */
+const ACCENTS = ["color.border.frame", "color.accent.primary", "color.accent.tertiary"];
+
 describe("text scale (AC-06)", () => {
   it("multiplies every font size exactly and leaves other dimensions alone", () => {
     const manager = newManager();
@@ -141,6 +144,47 @@ describe("high contrast (AC-06)", () => {
   });
 });
 
+/** The secondary accent is used as a boundary on every surface, or as a fill under primary text; high contrast needs one of the two. */
+function secondaryAccentUse(tokens: Readonly<Record<string, string | number | boolean>>): { asBoundary: boolean; asFill: boolean } {
+  const accent = stringToken(tokens, "color.accent.secondary");
+  return {
+    asBoundary: Math.min(...SURFACES.map((surface) => wcagRatio(accent, stringToken(tokens, surface)))) >= 3,
+    asFill: wcagRatio(stringToken(tokens, "color.text.primary"), accent) >= 7,
+  };
+}
+
+describe.each(fixturePresetIds())("high contrast secondary accent in preset %s", (presetId) => {
+  function highContrastTokens(overrides: Readonly<Record<string, string>> = {}): Readonly<Record<string, string | number | boolean>> {
+    const manager = newManager();
+    manager.selectPreset("editor", presetId);
+    if (Object.keys(overrides).length > 0) expect(manager.setOverrides("editor", overrides).ok).toBe(true);
+    manager.setAccessibility("editor", { ...NORMAL, contrast: "high" });
+    return manager.getSnapshot("editor").tokens;
+  }
+
+  it("keeps the exact palette secondary accent, which already has a use, and still carries its text", () => {
+    const tokens = highContrastTokens();
+    expect(tokens["color.accent.secondary"]).toBe(fixtureTokens("editor", presetId)["color.accent.secondary"]);
+    const use = secondaryAccentUse(tokens);
+    expect(use.asBoundary || use.asFill).toBe(true);
+  });
+
+  it("derives a secondary accent that can carry primary text from a mid tone theme color that can neither bound a surface nor carry text", () => {
+    const midTone = "#707070";
+    expect(secondaryAccentUse({ ...fixtureTokens("editor", presetId), "color.accent.secondary": midTone })).toEqual({ asBoundary: false, asFill: false });
+    const tokens = highContrastTokens({ "color.accent.secondary": midTone });
+    expect(tokens["color.accent.secondary"]).not.toBe(midTone);
+    const use = secondaryAccentUse(tokens);
+    expect(use.asBoundary || use.asFill).toBe(true);
+  });
+
+  it("leaves a user secondary accent alone when it already bounds every surface", () => {
+    const bright = "#FFFFFF";
+    expect(secondaryAccentUse({ ...fixtureTokens("editor", presetId), "color.accent.secondary": bright }).asBoundary).toBe(true);
+    expect(highContrastTokens({ "color.accent.secondary": bright })["color.accent.secondary"]).toBe(bright);
+  });
+});
+
 describe.each(fixturePresetIds())("high contrast in preset %s", (presetId) => {
   const TEXT_TARGET = 7;
   const GRAPHIC_TARGET = 3;
@@ -184,7 +228,7 @@ describe.each(fixturePresetIds())("high contrast in preset %s", (presetId) => {
       ),
     ).toBeGreaterThanOrEqual(TEXT_TARGET);
     expect(
-      lowest(tokens, ["color.border.normal", "color.border.focused", "color.border.invalid", "color.interaction.focus"], SURFACES),
+      lowest(tokens, ["color.border.normal", "color.border.focused", "color.border.invalid", "color.interaction.focus", ...ACCENTS], SURFACES),
     ).toBeGreaterThanOrEqual(GRAPHIC_TARGET);
   });
 
@@ -236,7 +280,7 @@ describe.each(fixturePresetIds())("high contrast in preset %s", (presetId) => {
       ),
     ).toBeGreaterThanOrEqual(TEXT_TARGET);
     expect(
-      lowest(tokens, ["color.border.normal", "color.border.focused", "color.border.invalid", "color.interaction.focus"], SURFACES),
+      lowest(tokens, ["color.border.normal", "color.border.focused", "color.border.invalid", "color.interaction.focus", ...ACCENTS], SURFACES),
     ).toBeGreaterThanOrEqual(GRAPHIC_TARGET);
   });
 });

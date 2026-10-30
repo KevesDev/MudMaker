@@ -6,7 +6,7 @@ import homeJson from "../../../../contracts/ui/v1/home-controls.v1.json";
 import hostJson from "../../../../contracts/ui/v1/host-controls.v1.json";
 import schemaJson from "../../../../contracts/ui/v1/ui-control.schema.json";
 import { action, catalog, control, fixtureSources, NAVIGATOR, EDITOR } from "../testSupport";
-import { ActionRegistry, CatalogLoadError } from "./ActionRegistry";
+import { ActionRegistry, CatalogLoadError, type CatalogSources } from "./ActionRegistry";
 import { loadShippedRegistry, validateShippedCatalogs } from "./shipped";
 import { CONTROL_KINDS, PASSIVE_KINDS, STATE_OWNERS, WORKSPACES } from "./types";
 import { readActionIdPattern } from "./schemaPatterns";
@@ -31,7 +31,7 @@ function issuesFor(fields: Record<string, unknown>): readonly RegistryIssue[] {
   return result.ok ? [] : result.issues;
 }
 
-function issuesOf(sources: Sources): readonly RegistryIssue[] {
+function issuesOf(sources: CatalogSources): readonly RegistryIssue[] {
   const result = ActionRegistry.create(sources);
   if (result.ok) throw new Error("The catalogs were expected to be rejected.");
   return result.issues;
@@ -95,6 +95,24 @@ describe("ActionRegistry validation", () => {
     const issues = issuesOf({ ...sources, catalogs: { ...sources.catalogs, host: { schema: "wrong", controls: [] } } });
     expect(issues).toEqual([expect.objectContaining({ code: "catalog-malformed", id: "host" })]);
     expect(issuesOf({ ...sources, actions: "not a table" })[0]).toMatchObject({ code: "catalog-malformed", id: "actions" });
+  });
+
+  it("loads only the workspaces it is told to, still validates each of them, and by default demands all four", () => {
+    const sources = fixtureSources();
+    const homeOnly = ActionRegistry.create({ ...sources, catalogs: { home: sources.catalogs.home }, workspaces: ["home"] });
+    expect(homeOnly.ok).toBe(true);
+    if (homeOnly.ok) {
+      expect(homeOnly.registry.control("home.menu.01")).toBeDefined();
+      expect(homeOnly.registry.control("editor.toolbar.01")).toBeUndefined();
+    }
+    expect(issuesOf({ ...sources, catalogs: { home: sources.catalogs.home } })).toEqual([
+      expect.objectContaining({ code: "catalog-malformed", id: "editor" }),
+      expect.objectContaining({ code: "catalog-malformed", id: "client" }),
+      expect.objectContaining({ code: "catalog-malformed", id: "host" }),
+    ]);
+    expect(issuesOf({ ...sources, catalogs: { home: { schema: "wrong", controls: [] } }, workspaces: ["home"] })).toEqual([
+      expect.objectContaining({ code: "catalog-malformed", id: "home" }),
+    ]);
   });
 
   it("requires an action for interactive kinds and allows the passive marker for display kinds", () => {
@@ -252,8 +270,8 @@ describe("shipped catalogs", () => {
     const counts = Object.fromEntries(
       Object.entries(workspaces).map(([workspace, json]) => [workspace, parseCatalog(json, workspace as keyof typeof workspaces, schemaJson).controls.length]),
     );
-    expect(counts).toEqual({ home: 43, editor: 146, client: 115, host: 63 });
-    expect(parseActions(actionsJson, actionIdPattern.pattern).actions).toHaveLength(286);
+    expect(counts).toEqual({ home: 48, editor: 146, client: 115, host: 63 });
+    expect(parseActions(actionsJson, actionIdPattern.pattern).actions).toHaveLength(288);
   });
 
   it("all validate against the published schema rules and the action table", () => {

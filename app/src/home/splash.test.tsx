@@ -2,9 +2,10 @@
 import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import homeCatalog from "../../../contracts/ui/v1/home-controls.v1.json";
+import { FRAME } from "../frame/frameLayout";
 import { ActionBus, loadShippedRegistry, type ControlDescriptor } from "../ui";
 import { DEFERRED_CONDITIONS, IMPLEMENTED_CONDITIONS, SPLASH, WORKSPACE_ENTRIES, isVisible } from "./homeLayout";
-import { SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, liveAnnouncements, renderApp, startupRecords, visibleText, type TestHome } from "./homeTestSupport";
+import { FRAME_TEXT, SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, liveAnnouncements, outsideFrame, renderApp, startupRecords, visibleText, type TestHome } from "./homeTestSupport";
 
 interface CatalogControl {
   readonly id: string;
@@ -90,7 +91,7 @@ describe("every control of the splash surface", () => {
 
   it("is rendered with its catalog test id, name and a keyboard path exactly when the catalog shows it on the loaded screen, with no tooltip", async () => {
     await openSplash();
-    expect(document.querySelectorAll('[role="tooltip"]')).toHaveLength(0);
+    expect(outsideFrame('[role="tooltip"]')).toHaveLength(0);
     for (const entry of shownOnLoadedSplash) expect(document.body.textContent, entry.id).not.toContain(entry.tooltip);
     expect(shownOnLoadedSplash.map((entry) => entry.id)).toEqual([SPLASH.name, SPLASH.version, ...WORKSPACE_ENTRIES, SPLASH.quit, SPLASH.settings]);
     expect(shownOnLoadedSplash.every((entry) => isVisible(descriptorOf(entry.id), "ready"))).toBe(true);
@@ -130,7 +131,7 @@ describe("every control of the splash surface", () => {
 describe("the loaded screen", () => {
   it("shows exactly the name, version, Create, Play, Host, Settings and Quit and nothing else", async () => {
     await openSplash();
-    expect(visibleText()).toEqual(["MudMaker", "Version 9.8.7, build abc1234", "Create", "Play", "Host", "Settings", "Quit"]);
+    expect(visibleText()).toEqual([...FRAME_TEXT, "MudMaker", "Version 9.8.7, build abc1234", "Create", "Play", "Host", "Settings", "Quit"]);
   });
 
   it("can tell a screen that shows more than its inventory from one that does not", async () => {
@@ -292,13 +293,13 @@ describe("Quit", () => {
 });
 
 describe("page structure and wording", () => {
-  it("keeps the tab order Create, Play, Host, Settings, Quit, with no positive tab stops", async () => {
+  it("keeps the tab order Minimize, Maximize, Close, Create, Play, Host, Settings, Quit, with no positive tab stops", async () => {
     await openSplash();
     const stops = [...document.querySelectorAll<HTMLElement>("button, select, input, textarea, a[href], [tabindex]")].filter(
       (element) => element.tabIndex >= 0 && element.closest("[hidden]") === null,
     );
     expect(stops.map((element) => element.getAttribute("data-testid"))).toEqual(
-      [SPLASH.create, SPLASH.play, SPLASH.host, SPLASH.settings, SPLASH.quit].map((id) => control(id).testId),
+      [...[FRAME.minimize, FRAME.maximize, FRAME.close].map((id) => descriptorOf(id).testId), ...[SPLASH.create, SPLASH.play, SPLASH.host, SPLASH.settings, SPLASH.quit].map((id) => control(id).testId)],
     );
     expect([...document.querySelectorAll("[tabindex]")].filter((element) => Number(element.getAttribute("tabindex")) > 0)).toEqual([]);
   });

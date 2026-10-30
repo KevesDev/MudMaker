@@ -14,7 +14,7 @@ function actionOf(controlId: string): string {
   return actionId;
 }
 
-function setup(options: { readonly quit?: () => Promise<void>; readonly maxPendingMs?: number; readonly theme?: ThemeManager } = {}) {
+function setup(options: { readonly maxPendingMs?: number; readonly theme?: ThemeManager } = {}) {
   const diagnostics: UiDiagnostic[] = [];
   const runtime = createUiRuntime({
     registry,
@@ -23,12 +23,11 @@ function setup(options: { readonly quit?: () => Promise<void>; readonly maxPendi
     ...(options.maxPendingMs === undefined ? {} : { maxPendingMs: options.maxPendingMs }),
   });
   const theme = options.theme ?? new ThemeManager(themeDefaults);
-  const quit = vi.fn(options.quit ?? (() => Promise.resolve()));
   const retry = vi.fn();
-  const stop = registerHomeRouter(runtime.bus, registry, { quit, theme, retryStartup: retry });
+  const stop = registerHomeRouter(runtime.bus, registry, { theme, retryStartup: retry });
   const dispatch = (controlId: string, value?: string | number | boolean) =>
     runtime.bus.dispatch({ actionId: actionOf(controlId), controlId, ...(value === undefined ? {} : { value }) });
-  return { runtime, theme, quit, retry, stop, dispatch, diagnostics };
+  return { runtime, theme, retry, stop, dispatch, diagnostics };
 }
 
 function otherPreset(theme: ThemeManager): { id: string; label: string } {
@@ -40,7 +39,7 @@ function otherPreset(theme: ThemeManager): { id: string; label: string } {
 
 describe("the home router", () => {
   it("is the owner the action table names for the actions it handles", () => {
-    for (const controlId of [SPLASH.quit, APPEARANCE, SPLASH.retry]) {
+    for (const controlId of [SPLASH.settings, APPEARANCE, SPLASH.retry]) {
       expect(registry.action(actionOf(controlId))?.owner).toBe(HOME_ROUTER);
     }
   });
@@ -53,32 +52,10 @@ describe("the home router", () => {
   });
 
   it("stops handling its actions when it is torn down", async () => {
-    const { dispatch, stop, quit } = setup();
+    const { dispatch, stop, retry } = setup();
     stop();
-    expect(await dispatch(SPLASH.quit)).toMatchObject({ status: "unavailable", code: "no-action-owner" });
-    expect(quit).not.toHaveBeenCalled();
-  });
-});
-
-describe("quit", () => {
-  it("asks the shell to exit once and reports success", async () => {
-    const { dispatch, quit } = setup();
-    expect(await dispatch(SPLASH.quit)).toMatchObject({ status: "success" });
-    expect(quit).toHaveBeenCalledTimes(1);
-  });
-
-  it("reports a recoverable error and logs it when the shell refuses", async () => {
-    const { dispatch, diagnostics } = setup({ quit: () => Promise.reject(new Error("refused")) });
-    expect(await dispatch(SPLASH.quit)).toMatchObject({ status: "recoverable-error", code: "handler-failed" });
-    expect(diagnostics.map((record) => [record.code, record.severity])).toEqual([["handler-failed", "error"]]);
-  });
-
-  it("settles once the bus stops waiting, so a stalled exit can be tried again", async () => {
-    const { dispatch, quit } = setup({ quit: () => new Promise<void>(() => undefined), maxPendingMs: 20 });
-    expect(await dispatch(SPLASH.quit)).toMatchObject({ code: "handler-timeout" });
-    await new Promise((resolve) => setTimeout(resolve));
-    expect(await dispatch(SPLASH.quit)).toMatchObject({ code: "handler-timeout" });
-    expect(quit).toHaveBeenCalledTimes(2);
+    expect(await dispatch(SPLASH.retry)).toMatchObject({ status: "unavailable", code: "no-action-owner" });
+    expect(retry).not.toHaveBeenCalled();
   });
 });
 

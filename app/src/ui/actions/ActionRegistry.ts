@@ -16,7 +16,9 @@ export interface CatalogSources {
   /** The published control schema; it owns the id patterns. */
   readonly schema: unknown;
   readonly actions: unknown;
-  readonly catalogs: Readonly<Record<WorkspaceId, unknown>>;
+  readonly catalogs: Readonly<Partial<Record<WorkspaceId, unknown>>>;
+  /** The workspaces whose catalogs are loaded: all four unless a window part must load without the rest. */
+  readonly workspaces?: readonly WorkspaceId[];
 }
 
 export type RegistryResult =
@@ -62,7 +64,7 @@ export class ActionRegistry {
     const parsedActions = parseActions(sources.actions, actionIdPattern.pattern);
     const issues: RegistryIssue[] = [...parsedActions.issues];
     const controls: ControlDescriptor[] = [];
-    for (const workspace of WORKSPACES) {
+    for (const workspace of sources.workspaces ?? WORKSPACES) {
       const parsed = parseCatalog(sources.catalogs[workspace], workspace, schema);
       issues.push(...parsed.issues);
       controls.push(...parsed.controls);

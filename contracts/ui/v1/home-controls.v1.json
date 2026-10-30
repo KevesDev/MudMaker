@@ -905,6 +905,107 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-home-splash-14"
+    },
+    {
+      "id": "home.frame.01",
+      "workspace": "home",
+      "surface": "home.frame",
+      "kind": "text",
+      "label": "MudMaker",
+      "tooltip": "The application name shown in the window frame",
+      "actionId": null,
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "notApplicable",
+      "stateVariants": [
+        "visible",
+        "empty",
+        "loading",
+        "error"
+      ],
+      "keyboard": "semanticRead",
+      "testId": "UI-home-frame-01"
+    },
+    {
+      "id": "home.frame.02",
+      "workspace": "home",
+      "surface": "home.frame",
+      "kind": "button",
+      "label": "Minimize",
+      "tooltip": "Hide the window in the taskbar",
+      "actionId": "ui.window.minimize",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-frame-02"
+    },
+    {
+      "id": "home.frame.03",
+      "workspace": "home",
+      "surface": "home.frame",
+      "kind": "button",
+      "label": "Maximize",
+      "tooltip": "Make the window fill the screen",
+      "actionId": "ui.window.toggleMaximize",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "windowRestored",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-frame-03"
+    },
+    {
+      "id": "home.frame.04",
+      "workspace": "home",
+      "surface": "home.frame",
+      "kind": "button",
+      "label": "Restore",
+      "tooltip": "Return the window to its earlier size",
+      "actionId": "ui.window.toggleMaximize",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "windowMaximized",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-frame-04"
+    },
+    {
+      "id": "home.frame.05",
+      "workspace": "home",
+      "surface": "home.frame",
+      "kind": "button",
+      "label": "Close",
+      "tooltip": "Close MudMaker and leave the program",
+      "actionId": "ui.app.quit",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-frame-05"
     }
   ]
 }

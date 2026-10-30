@@ -4,6 +4,7 @@ import { App } from "./App";
 import { startTheme, themeManager } from "./theme";
 import "./styles.css";
 import "./home/home.css";
+import "./frame/frame.css";
 
 startTheme(themeManager, "home", window);
 

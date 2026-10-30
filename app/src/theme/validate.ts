@@ -83,7 +83,7 @@ export function validateTokenValue(name: string, type: TokenType, value: unknown
         : themeError(
             "invalid-color",
             name,
-            `Token "${name}" must be a six digit hex color such as #1A2B3C, but received ${show(value)}.`,
+            `Token "${name}" must be a six digit hex color with a leading hash sign, but received ${show(value)}.`,
           );
     case "fontStack":
       if (typeof value !== "string") return wrongType(name, "a font list", value);

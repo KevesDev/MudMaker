@@ -2861,6 +2861,26 @@
       "input": "typedByControlSchema",
       "outcome": "confirmedOrStructuredError",
       "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.window.minimize",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localNavigation",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.window.toggleMaximize",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localNavigation",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
     }
   ]
 }
