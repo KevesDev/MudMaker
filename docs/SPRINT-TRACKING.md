@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **13/39** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **13/40** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -96,6 +96,7 @@
 | **S02.2d Buttons, toolbar and help** | Button, IconButton, Toolbar with roving focus and Tooltip/help contract (hoverable, keyboard and touch reachable) | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.2e Menus and selection** | Dropdown, Menu and Switch bound to the action bus with a single value channel | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.2f Dialogs and feedback** | Dialog with focus trap and destructive rules, Toast, Progress, StatusIndicator, TextField | DONE | Auditor PASS (final 2026-10-29). macOS WebKit focus behavior deferred until macOS is a target |
+| **S02.2g Tooltip display rule** | Tooltips only for disabled-with-reason, icon-only, assigned shortcut or catalog `showHelp`; none on ordinary labelled controls, no hidden descriptions; catalog and schema gain `showHelp` (owner rule after S02.3 test) | TODO | — |
 | **S02.3a Loading and splash screen** | Real splash: MudMaker name, version, build id and honest engine status from the shell (USER TEST) | DONE | Auditor PASS (final 2026-10-29) |
 | **S02.3b Create/Play/Host entries** | Create, Play and Host controls from the catalog, honest unavailable states and recent-items empty states (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29) |
 | **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29); original implementation checkpoint completed. Owner decision since then: appearance selection belongs under Settings > Appearance, not on Splash; placement to be reconciled in S02.9 |
