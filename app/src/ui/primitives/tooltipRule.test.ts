@@ -19,9 +19,9 @@ describe("tooltip rule", () => {
     }
   });
 
-  it("states the specific reason for a disabled control and for an unavailable one", () => {
+  it("states the specific reason for a disabled control but never repeats a refusal", () => {
     expect(tooltipContent({ ...facts, runtime: disabled })).toEqual({ explanation: null, reason: "Open a project first.", shortcut: null });
-    expect(tooltipContent({ ...facts, runtime: unavailable })).toEqual({ explanation: null, reason: "Save is not available yet.", shortcut: null });
+    expect(tooltipContent({ ...facts, runtime: unavailable })).toBeNull();
   });
 
   it("names an icon-only control without describing it a second time", () => {

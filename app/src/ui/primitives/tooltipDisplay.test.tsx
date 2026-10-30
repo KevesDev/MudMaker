@@ -165,12 +165,19 @@ describe("a disabled or unavailable control", () => {
     expect(tip?.hidden).toBe(false);
   });
 
-  it("states why a control is unavailable when its action has no owner", async () => {
-    renderWithUi(ui, <Button control={ui.control(ORPHAN)} />);
-    expect(tips()).toEqual([]);
+  it("gives a refused activation no tooltip, while a control disabled beforehand still has one", async () => {
+    ui.runtime.bus.setDisabled(AUTOSAVE, "Autosave is locked.");
+    renderWithUi(
+      ui,
+      <>
+        <Button control={ui.control(ORPHAN)} />
+        <Switch control={ui.control(AUTOSAVE)} checked={false} />
+      </>,
+    );
     fireEvent.click(screen.getByRole("button", { name: "Unowned Tool" }));
     await settle();
-    expect(tips().map((tip) => tip.textContent)).toEqual([expect.stringContaining("Unavailable: Unowned Tool is not available yet.")]);
+    expect(ui.runtime.bus.getRuntime(ORPHAN).state).toBe("unavailable");
+    expect(tips().map((tip) => tip.getAttribute("data-help-for"))).toEqual([AUTOSAVE]);
   });
 });
 

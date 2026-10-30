@@ -17,19 +17,13 @@ interface TooltipFacts {
   readonly iconOnly: boolean;
 }
 
-/** The specific reason a control is unavailable, or null when it is usable. */
-function unavailableReason(runtime: ControlRuntime): string | null {
-  if (runtime.state === "disabled") return runtime.reason;
-  if (runtime.state === "unavailable") return runtime.message;
-  return null;
-}
-
 /**
- * The tooltip rule: a tooltip exists only for an unavailable control, an icon-only control, a control
- * with an assigned shortcut, or a catalog entry that sets showHelp. Any other control gets null.
+ * The tooltip rule: a tooltip exists only for a control disabled before the user acts, an icon-only control,
+ * a control with an assigned shortcut, or a catalog entry that sets showHelp. The result of an activation
+ * (refusal, unavailable, error) is reported once by the owner's notice and never repeated here.
  */
 export function tooltipContent({ control, runtime, shortcut, iconOnly }: TooltipFacts): TooltipContent | null {
-  const reason = unavailableReason(runtime);
+  const reason = runtime.state === "disabled" ? runtime.reason : null;
   if (reason === null && shortcut === null && !control.showHelp && !iconOnly) return null;
   return { explanation: control.showHelp ? control.tooltip : null, reason, shortcut };
 }
