@@ -27,17 +27,17 @@ afterEach(() => {
 });
 
 describe("the Create workspace as the application mounts it", () => {
-  it("shows no text, control, landmark or tab stop of its own beyond the frame row until a feature mounts into it", async () => {
+  it("shows empty graph paper and its two toggles and nothing else beyond the frame row", async () => {
     unbind = renderApp(healthyHome({ surfaces: { create: CreateShell } })).unbind;
     await screen.findByRole("heading", { level: 1 });
     await act(async () => undefined);
     fireEvent.click(screen.getByRole("button", { name: label(SPLASH.create) }));
     const surface = await screen.findByRole("main", { name: label(NAVIGATION.create.entries.create) });
     await waitFor(() => expect(document.activeElement).toBe(surface));
-    expect(surface.textContent).toBe("");
     expect(surface.querySelector(".editor-shell")).not.toBeNull();
-    expect(focusableWithin(surface)).toEqual([]);
-    expect(surface.querySelector("button, input, h1, h2, h3, [role], [tabindex]")).toBeNull();
+    expect(focusableWithin(surface).map((stop) => stop.getAttribute("aria-label") ?? stop.textContent)).toEqual([label("editor.graph.10"), label("editor.graph.09"), label("editor.graph.01")]);
+    expect(surface.querySelector("h1, h2, h3, [role=tab], [role=tablist], [role=separator], p")).toBeNull();
+    expect(surface.querySelector("canvas")?.getAttribute("aria-hidden")).toBe("true");
     expect(visibleText()).toEqual([
       "MudMaker",
       label(NAVIGATION.create.entries.create),
@@ -48,6 +48,8 @@ describe("the Create workspace as the application mounts it", () => {
       GLYPHS.minimize,
       GLYPHS.maximize,
       GLYPHS.close,
+      label("editor.graph.10"),
+      label("editor.graph.09"),
     ]);
   });
 });

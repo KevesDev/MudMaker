@@ -1,0 +1,40 @@
+.graph-canvas {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.graph-canvas-strip {
+  flex: 0 0 auto;
+  padding: var(--spacing-toolbar);
+  background: var(--color-surface-toolbar);
+  border-block-end: var(--shape-borderWidth) solid var(--color-border-normal);
+}
+
+.graph-paper {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-surface-canvas);
+  cursor: grab;
+  touch-action: none;
+}
+
+.graph-paper:active {
+  cursor: grabbing;
+}
+
+.graph-paper:focus-visible {
+  outline: var(--interaction-focusOutlineWidth) solid var(--color-interaction-focus);
+  outline-offset: calc(var(--interaction-focusOutlineWidth) * -1);
+}
+
+.graph-paper-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
