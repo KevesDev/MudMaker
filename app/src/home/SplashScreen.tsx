@@ -1,123 +1,85 @@
-import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { AppInfo } from "../appInfo";
 import { useTheme, type ThemeManager } from "../theme";
-import { Button, Dropdown, StatusIndicator, Toast, uiCopy, useUi, type ControlDescriptor, type ControlId } from "../ui";
-import { CheckList } from "./CheckList";
+import { Button, Menu, Toast, useUi, type ControlDescriptor, type ControlId } from "../ui";
+import { ControlNotice } from "./ControlNotice";
 import { homeCopy } from "./homeCopy";
-import { SPLASH, WORKSPACE_ENTRIES } from "./homeLayout";
-import type { CheckResult } from "./startupChecks";
-import { UnavailableNotice } from "./UnavailableNotice";
-
-/** Help for display-only text sits beside it, so it describes the text without becoming part of its name. */
-function Help({ id, control }: { readonly id: string; readonly control: ControlDescriptor }) {
-  return (
-    <span id={id} className="ui-visually-hidden">
-      {control.tooltip}
-    </span>
-  );
-}
-
-function Section({ control, title, children }: { readonly control?: ControlDescriptor; readonly title: string; readonly children: ReactNode }) {
-  const titleId = useId();
-  const helpId = useId();
-  return (
-    <section
-      className="home-section"
-      aria-labelledby={titleId}
-      {...(control ? { "data-testid": control.testId, "aria-describedby": helpId } : {})}
-    >
-      <h2 id={titleId}>{title}</h2>
-      {control ? <Help id={helpId} control={control} /> : null}
-      {children}
-    </section>
-  );
-}
+import { APPEARANCE, NOTICE_CONTROLS, SPLASH, WORKSPACE_ENTRIES } from "./homeLayout";
+import { Shown } from "./Shown";
 
 interface SplashScreenProps {
   readonly info: AppInfo;
-  readonly results: readonly CheckResult[];
   readonly theme: ThemeManager;
   /** True after a retry: focus goes to the heading so the keyboard is not left on a control that is gone. */
   readonly focusHeading: boolean;
 }
 
-/** The first screen: honest startup status, the three workspace entries and the appearance choice. */
-export function SplashScreen({ info, results, theme, focusHeading }: SplashScreenProps) {
+/** The launch screen: the three workspace entries, Settings and Quit. */
+export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
   const { registry, bus } = useUi();
   const control = (id: ControlId): ControlDescriptor => registry.requireControl(id);
   const rootRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const [unavailable] = useState(() => new UnavailableNotice(bus, WORKSPACE_ENTRIES));
-  const notice = useSyncExternalStore(unavailable.subscribe, unavailable.getSnapshot);
+  const [notices] = useState(() => new ControlNotice(bus, NOTICE_CONTROLS));
+  const notice = useSyncExternalStore(notices.subscribe, notices.getSnapshot);
   const presetId = useTheme("home", theme).themeId;
-  const nameHelpId = useId();
-  const versionHelpId = useId();
   const name = control(SPLASH.name);
   const version = control(SPLASH.version);
+  const settings = control(SPLASH.settings);
 
   useEffect(() => {
     if (focusHeading) headingRef.current?.focus();
   }, [focusHeading]);
 
+  /** The control that raised the message may be inside a closed menu, so focus falls back to the Settings opener. */
   const dismissNotice = (): void => {
     if (notice !== null) {
-      rootRef.current?.querySelector<HTMLElement>(`[data-control-id="${notice.controlId}"]`)?.focus();
+      const root = rootRef.current;
+      (root?.querySelector<HTMLElement>(`[data-control-id="${notice.controlId}"]`) ?? root?.querySelector<HTMLElement>(`[data-testid="${settings.testId}"]`))?.focus();
     }
-    unavailable.dismiss();
+    notices.dismiss();
   };
 
   return (
     <div className="home" ref={rootRef}>
       <header className="home-header">
-        <h1 data-testid={name.testId} aria-describedby={nameHelpId} tabIndex={-1} ref={headingRef}>
+        <h1 data-testid={name.testId} tabIndex={-1} ref={headingRef}>
           {info.name}
         </h1>
-        <Help id={nameHelpId} control={name} />
-        <p className="home-version" data-testid={version.testId} aria-describedby={versionHelpId}>
+        <p className="home-version" data-testid={version.testId}>
           {homeCopy.versionLine(version.label, info.version, info.buildId)}
         </p>
-        <Help id={versionHelpId} control={version} />
       </header>
       <main className="home-main">
-        <nav className="home-actions" aria-label={homeCopy.sections.start}>
+        <nav className="home-actions" aria-label={homeCopy.startNavigation}>
           {WORKSPACE_ENTRIES.map((id) => (
-            <Button key={id} control={control(id)} showState={false} />
+            <Shown key={id} control={control(id)} phase="ready">
+              <Button control={control(id)} showState={false} />
+            </Shown>
           ))}
         </nav>
         {notice === null ? null : (
           <Toast
             described={{ passive: true, id: "home.notice", label: control(notice.controlId).label, help: notice.message }}
             tone="information"
+            {...(notice.code === null ? {} : { code: notice.code })}
             live={false}
+            showTitle={false}
             onDismiss={dismissNotice}
           />
         )}
-        <Section title={homeCopy.sections.recent}>
-          <div className="home-actions">
-            <Button control={control(SPLASH.recentProjects)} />
-            <Button control={control(SPLASH.recentWorlds)} />
-          </div>
-        </Section>
-        <Section title={homeCopy.sections.appearance}>
-          <Dropdown
-            control={control(SPLASH.appearance)}
-            options={theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label }))}
-            value={presetId}
-          />
-          <p className="home-note">{homeCopy.appearanceNotSaved}</p>
-        </Section>
-        <Section control={control(SPLASH.loadingStatus)} title={control(SPLASH.loadingStatus).label}>
-          <CheckList results={results}>
-            {[SPLASH.backgroundHosting, SPLASH.connectedWorlds].map((id) => (
-              <li key={id} data-testid={control(id).testId}>
-                <StatusIndicator described={control(id)} tone="information" text={uiCopy.notInThisBuildState} />
-              </li>
-            ))}
-          </CheckList>
-        </Section>
       </main>
       <footer className="home-actions">
-        <Button control={control(SPLASH.quit)} />
+        <Shown control={settings} phase="ready">
+          <Menu
+            opener={settings}
+            items={[]}
+            choices={{ control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId }}
+          />
+        </Shown>
+        <Shown control={control(SPLASH.quit)} phase="ready">
+          <Button control={control(SPLASH.quit)} />
+        </Shown>
       </footer>
     </div>
   );

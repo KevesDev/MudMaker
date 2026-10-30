@@ -12,7 +12,7 @@ import { App } from "../App";
 import { ThemeManager, bindThemeToElement } from "../theme";
 import { loadShippedRegistry } from "../ui";
 import type { HomeDependencies } from "./homeDependencies";
-import type { HomeDiagnostic } from "./startupChecks";
+import type { HomeDiagnostic, StartupDiagnostic } from "./startupChecks";
 
 export const SHELL_INFO: AppInfo = {
   name: "MudMaker",
@@ -43,11 +43,17 @@ export function healthyHome(overrides: Partial<HomeDependencies> = {}): TestHome
     getEngineStatus: () => Promise.resolve(ENGINE_MISSING),
     loadRegistry: loadShippedRegistry,
     theme: manager,
+    requireEngine: false,
     quit,
     report: (record) => records.push(record),
     ...overrides,
   };
   return { dependencies, manager, quit, records };
+}
+
+/** The records the startup checks wrote, apart from anything the screen's own controls reported. */
+export function startupRecords(records: readonly HomeDiagnostic[]): StartupDiagnostic[] {
+  return records.filter((record): record is StartupDiagnostic => "check" in record);
 }
 
 /** Renders the application with the manager's home scope mirrored onto the document root, as the real window does. */
@@ -60,7 +66,9 @@ export function renderApp(home: TestHome, options: { readonly strict?: boolean }
 
 /** Words that belong to the engineering side of the product, written out here as the plain-language rule needs them. */
 export const JARGON =
-  /\b(sidecar|catalog|catalogs|registry|handler|ecs|adr|tdd|dispatch|payload|schema|token|stub|placeholder|api|ipc|invoke|tauri|json|exception|stack|undefined|null|errno|command)\b/i;
+  /\b(sidecar|catalog|catalogs|registry|handler|ecs|adr|tdd|dispatch|payload|schema|token|stub|placeholder|api|ipc|invoke|tauri|json|exception|stack|undefined|null|errno|command|assistive|technology|semantic|identifier|validation|recovery|preset)\b/i;
+/** Symbols that stand for navigation paths or code, which a sentence for a person does not use. */
+const CODE_SYMBOL = /[<>]/;
 export const SPRINT_ID = /\bS\d{2}(\.\d)?[a-z]?\b|sprint/i;
 export const EM_DASH = /—/;
 export const EMOJI = /\p{Extended_Pictographic}/u;
@@ -68,13 +76,29 @@ export const EMOJI = /\p{Extended_Pictographic}/u;
 export const CONTROL_ID = /\b(home|editor|client|host)\.[a-zA-Z]+\.\d{2}\b/;
 
 export function breaksCopyRules(text: string): boolean {
-  return [JARGON, SPRINT_ID, EM_DASH, EMOJI, CONTROL_ID].some((rule) => rule.test(text));
+  return [JARGON, SPRINT_ID, EM_DASH, EMOJI, CONTROL_ID, CODE_SYMBOL].some((rule) => rule.test(text));
 }
 
 /** Everything a person could read or hear: the text of the page plus accessible names. */
 export function copyOnScreen(): string {
   const labels = [...document.querySelectorAll("[aria-label]")].map((element) => element.getAttribute("aria-label") ?? "");
   return [document.body.textContent ?? "", ...labels].join("\n");
+}
+
+/** Every piece of text a sighted person can read: not in a hidden help tooltip and not in a visually hidden region. */
+export function visibleText(): string[] {
+  const found: string[] = [];
+  const walk = (node: Node): void => {
+    if (node instanceof HTMLElement && (node.hidden || node.classList.contains("ui-visually-hidden"))) return;
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = (node.textContent ?? "").trim();
+      if (text.length > 0) found.push(text);
+      return;
+    }
+    node.childNodes.forEach(walk);
+  };
+  walk(document.body);
+  return found;
 }
 
 /** Live regions that currently hold the words, which is what assistive technology reads out. */

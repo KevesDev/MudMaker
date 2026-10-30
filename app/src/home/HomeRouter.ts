@@ -1,7 +1,7 @@
 import { SCOPE_IDS, type ScopeId, type ThemeManager } from "../theme";
-import { UiContractError, type ActionBus, type ActionHandler, type ActionId, type ActionRegistry, type ControlId } from "../ui";
+import { UiContractError, openMenuHandler, type ActionBus, type ActionHandler, type ActionId, type ActionRegistry, type ControlId } from "../ui";
 import { homeCopy } from "./homeCopy";
-import { SPLASH } from "./homeLayout";
+import { APPEARANCE, SPLASH } from "./homeLayout";
 
 /** The owner the action table names for the actions the home screen handles itself. */
 export const HOME_ROUTER = "HomeIntentRouter";
@@ -70,11 +70,10 @@ export function registerHomeRouter(bus: ActionBus, registry: ActionRegistry, dep
 
   const removers = [
     bus.registerHandler(HOME_ROUTER, actionOf(registry, SPLASH.quit), quitApplication),
-    bus.registerHandler(HOME_ROUTER, actionOf(registry, SPLASH.appearance), changeAppearance),
+    bus.registerHandler(HOME_ROUTER, actionOf(registry, APPEARANCE), changeAppearance),
+    bus.registerHandler(HOME_ROUTER, actionOf(registry, SPLASH.settings), openMenuHandler),
     bus.registerHandler(HOME_ROUTER, actionOf(registry, SPLASH.retry), retry),
   ];
-  bus.setDisabled(SPLASH.recentProjects, homeCopy.noRecentProjects);
-  bus.setDisabled(SPLASH.recentWorlds, homeCopy.noRecentWorlds);
   return () => {
     for (const remove of removers) remove();
   };

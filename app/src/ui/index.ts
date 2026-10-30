@@ -61,7 +61,7 @@ export { Button, type ButtonProps } from "./primitives/Button";
 export { Dialog, type DialogProps } from "./primitives/Dialog";
 export { Dropdown, type DropdownOption, type DropdownProps } from "./primitives/Dropdown";
 export { IconButton, type IconButtonProps } from "./primitives/IconButton";
-export { Menu, type MenuProps } from "./primitives/Menu";
+export { Menu, openMenuHandler, type MenuChoices, type MenuProps } from "./primitives/Menu";
 export { Progress, type ProgressProps } from "./primitives/Progress";
 export { StatusIndicator, type StatusIndicatorProps, type StatusTone } from "./primitives/StatusIndicator";
 export { Switch, type SwitchProps } from "./primitives/Switch";

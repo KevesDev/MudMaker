@@ -1,15 +1,20 @@
-import type { ActionBus, ControlId, ControlRuntime } from "../ui";
+import type { ActionBus, ControlId, ControlRuntime, ControlState } from "../ui";
 
 interface Notice {
   readonly controlId: ControlId;
   readonly message: string;
+  /** The stable error code of a failure, for support; null for an expected refusal, which needs no reference. */
+  readonly code: string | null;
 }
 
+/** The answers that leave nothing else on screen to say so: an action nobody handles yet, and one that failed and changed nothing. */
+const NOTICE_STATES: ReadonlySet<ControlState> = new Set<ControlState>(["unavailable", "recoverable-error"]);
+
 /**
- * The newest "not available" answer the bus gave to one of the watched controls. It reads the
- * bus's own control state, so one answer is one notice and activating again replaces it.
+ * The newest refusal or failure the bus gave to one of the watched controls. It reads the bus's
+ * own control state, so one answer is one notice and activating again replaces it.
  */
-export class UnavailableNotice {
+export class ControlNotice {
   private current: Notice | null = null;
   private readonly seen = new Map<ControlId, ControlRuntime>();
   private readonly listeners = new Set<() => void>();
@@ -38,10 +43,10 @@ export class UnavailableNotice {
 
   getSnapshot = (): Notice | null => this.current;
 
-  /** Returns every control that is showing the answer to ready, which also clears the notice. */
+  /** Returns every control that is showing an answer to ready, which also clears the notice. */
   dismiss(): void {
     for (const id of this.controlIds) {
-      if (this.bus.getRuntime(id).state === "unavailable") this.bus.reset(id);
+      if (NOTICE_STATES.has(this.bus.getRuntime(id).state)) this.bus.reset(id);
     }
   }
 
@@ -51,8 +56,8 @@ export class UnavailableNotice {
       const runtime = this.bus.getRuntime(id);
       if (this.seen.get(id) === runtime) continue;
       this.seen.set(id, runtime);
-      if (runtime.state === "unavailable" && runtime.message !== null) {
-        this.current = { controlId: id, message: runtime.message };
+      if (NOTICE_STATES.has(runtime.state) && runtime.message !== null) {
+        this.current = { controlId: id, message: runtime.message, code: runtime.state === "recoverable-error" ? runtime.code : null };
         changed = true;
       } else if (this.current?.controlId === id) {
         this.current = null;

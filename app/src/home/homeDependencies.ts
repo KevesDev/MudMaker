@@ -2,6 +2,7 @@ import { getAppInfo, getEngineStatus, quitApp, writeDiagnostic, type DiagnosticR
 import { themeManager } from "../theme";
 import { loadShippedRegistry } from "../ui";
 import { createDiagnosticSink } from "./diagnosticSink";
+import { STARTUP_REQUIRES_ENGINE } from "./startupConfig";
 import type { StartupDependencies } from "./startupChecks";
 
 export interface HomeDependencies extends StartupDependencies {
@@ -24,6 +25,7 @@ export const productionDependencies: HomeDependencies = {
   getEngineStatus,
   loadRegistry: loadShippedRegistry,
   theme: themeManager,
+  requireEngine: STARTUP_REQUIRES_ENGINE,
   quit: quitApp,
   report: createDiagnosticSink({
     write: writeDiagnostic,

@@ -4,12 +4,12 @@ import { useEffect, useState, type ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ActionOutcome, ActionRequest, HandlerRequest } from "../actions/ActionBus";
 import type { PassiveDescriptor } from "../actions/types";
-import { AUTOSAVE, CONNECTION, EDITOR, GO_HELP, GO_SETTINGS, LAYOUT, NAME, SAVE, UNDO, createTestUi, renderWithUi, type TestUi } from "../testSupport";
+import { AUTOSAVE, CONNECTION, EDITOR, GO_HELP, GO_SETTINGS, GO_TO, LAYOUT, NAME, SAVE, UNDO, createTestUi, renderWithUi, type TestUi } from "../testSupport";
 import { Button } from "./Button";
 import { Dialog } from "./Dialog";
 import { Dropdown } from "./Dropdown";
 import { IconButton } from "./IconButton";
-import { Menu } from "./Menu";
+import { Menu, openMenuHandler } from "./Menu";
 import { Progress } from "./Progress";
 import { StatusIndicator } from "./StatusIndicator";
 import { Switch } from "./Switch";
@@ -19,6 +19,11 @@ import { Toolbar } from "./Toolbar";
 import { UiProvider } from "../UiProvider";
 
 const settle = (): Promise<void> => new Promise((resolve) => setTimeout(resolve));
+/** Activates a menu opener and waits for the owner's answer, which is what opens the menu. */
+async function press(opener: HTMLElement): Promise<void> {
+  fireEvent.click(opener);
+  await settle();
+}
 const passive = (id: string, label: string, help: string): PassiveDescriptor => ({ passive: true, id, label, help });
 
 let ui: TestUi;
@@ -50,6 +55,7 @@ beforeEach(() => {
   }
   ui.runtime.bus.registerHandler("WorkspaceNavigator", "ui.nav.settings", handle);
   ui.runtime.bus.registerHandler("WorkspaceNavigator", "ui.nav.help", handle);
+  ui.runtime.bus.registerHandler("WorkspaceNavigator", "ui.nav.openMenu", openMenuHandler);
 });
 
 afterEach(() => {
@@ -68,7 +74,7 @@ describe("roles and accessible names", () => {
           <Button control={ui.control(SAVE)} />
         </Toolbar>
         <Dropdown control={ui.control(LAYOUT)} options={[{ value: "a", label: "Side by side" }]} value="a" />
-        <Menu described={passive("goto", "Go To", "Jump to another screen")} items={[ui.control(GO_SETTINGS)]} />
+        <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_SETTINGS)]} />
         <Toast described={passive("saved", "Saved", "Your project was saved")} tone="success" onDismiss={() => undefined} />
         <Progress described={passive("import", "Importing", "Reading the project package")} fraction={0.5} />
         <StatusIndicator described={ui.control(CONNECTION)} tone="success" text="Connected" />
@@ -219,7 +225,7 @@ describe("activation and states", () => {
     const orphan = ui.control("editor.toolbar.03");
     renderWithUi(ui, <Button control={orphan} />);
     fireEvent.click(screen.getByRole("button", { name: "Unowned Tool" }));
-    expect(await screen.findByText("Unowned Tool is not available in this build yet.", { selector: ".ui-state-text" })).toBeTruthy();
+    expect(await screen.findByText("Unowned Tool is not available yet.", { selector: ".ui-state-text" })).toBeTruthy();
     expect(ui.runtime.bus.getRuntime("editor.toolbar.03").state).toBe("unavailable");
     expect(screen.getByRole("button", { name: "Unowned Tool" }).getAttribute("data-state")).toBe("recoverable-error");
   });
@@ -340,12 +346,12 @@ describe("toolbar and menu", () => {
     expect(document.activeElement).toBe(screen.getByRole("button", { name: "Undo" }));
   });
 
-  it("includes a menu opener, a switch and a field among the toolbar stops, and skips the items of an open menu", () => {
+  it("includes a menu opener, a switch and a field among the toolbar stops, and skips the items of an open menu", async () => {
     renderWithUi(
       ui,
       <Toolbar described={passive("tools", "Editing tools", "Tools for the open project")}>
         <Button control={ui.control(SAVE)} />
-        <Menu described={passive("goto", "Go To", "Jump to another screen")} items={[ui.control(GO_SETTINGS), ui.control(GO_HELP)]} />
+        <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_SETTINGS), ui.control(GO_HELP)]} />
         <Switch control={ui.control(AUTOSAVE)} checked={false} />
         <IconButton control={ui.control(UNDO)} icon="<" />
       </Toolbar>,
@@ -360,7 +366,8 @@ describe("toolbar and menu", () => {
     expect(document.activeElement).toBe(stops[0]);
     fireEvent.keyDown(stops[0] as HTMLElement, { key: "ArrowLeft" });
     expect(document.activeElement).toBe(stops[3]);
-    fireEvent.click(stops[1] as HTMLElement);
+    await press(stops[1] as HTMLElement);
+    expect(screen.queryByRole("menu")).not.toBeNull();
     stops[0]?.focus();
     fireEvent.keyDown(stops[0] as HTMLElement, { key: "ArrowRight" });
     expect(document.activeElement).toBe(stops[1]);
@@ -371,7 +378,7 @@ describe("toolbar and menu", () => {
   it("keeps the menu open and exposes why when a disabled item is chosen", async () => {
     ui.runtime.bus.setDisabled(GO_HELP, "Help is not installed.");
     renderWithUi(ui, <MenuScreen />);
-    fireEvent.click(screen.getByRole("button", { name: "Go To" }));
+    await press(screen.getByRole("button", { name: "Go To" }));
     const help = screen.getByRole("menuitem", { name: "Help", description: /Unavailable: Help is not installed\./ });
     fireEvent.click(help);
     await settle();
@@ -388,10 +395,10 @@ describe("toolbar and menu", () => {
       release = resolve;
     });
     renderWithUi(ui, <MenuScreen />);
-    fireEvent.click(screen.getByRole("button", { name: "Go To" }));
+    await press(screen.getByRole("button", { name: "Go To" }));
     fireEvent.click(screen.getByRole("menuitem", { name: "Help" }));
     expect(screen.queryByRole("menu")).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Go To" }));
+    await press(screen.getByRole("button", { name: "Go To" }));
     fireEvent.click(screen.getByRole("menuitem", { name: "Help" }));
     expect(screen.queryByRole("menu")).not.toBeNull();
     expect(ui.runtime.announcer.getLast()?.text).toBe("Help is already running.");
@@ -418,16 +425,16 @@ describe("toolbar and menu", () => {
     return (
       <>
         <button type="button">Before</button>
-        <Menu described={passive("goto", "Go To", "Jump to another screen")} items={[ui.control(GO_SETTINGS), ui.control(GO_HELP)]} />
+        <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_SETTINGS), ui.control(GO_HELP)]} />
       </>
     );
   }
 
-  it("opens from its button, focuses the first item, moves with arrows and returns focus on Escape", () => {
+  it("opens from its button, focuses the first item, moves with arrows and returns focus on Escape", async () => {
     renderWithUi(ui, <MenuScreen />);
     const opener = screen.getByRole("button", { name: "Go To" });
     expect(screen.queryByRole("menu")).toBeNull();
-    fireEvent.click(opener);
+    await press(opener);
     expect(opener.getAttribute("aria-expanded")).toBe("true");
     const items = screen.getAllByRole("menuitem");
     expect(items.map((item) => item.textContent)).toEqual(["Settings", "Help"]);
@@ -442,7 +449,7 @@ describe("toolbar and menu", () => {
   it("runs the chosen item's action, closes, and returns focus to the opener", async () => {
     renderWithUi(ui, <MenuScreen />);
     const opener = screen.getByRole("button", { name: "Go To" });
-    fireEvent.click(opener);
+    await press(opener);
     fireEvent.click(screen.getByRole("menuitem", { name: "Help" }));
     await settle();
     expect(requests).toEqual([{ actionId: "ui.nav.help", controlId: GO_HELP, correlation: {} }]);
@@ -450,15 +457,15 @@ describe("toolbar and menu", () => {
     expect(document.activeElement).toBe(opener);
   });
 
-  it("closes on a press outside without stealing focus, and toggles closed from the opener", () => {
+  it("closes on a press outside without stealing focus, and toggles closed from the opener", async () => {
     renderWithUi(ui, <MenuScreen />);
     const opener = screen.getByRole("button", { name: "Go To" });
-    fireEvent.click(opener);
+    await press(opener);
     fireEvent.pointerDown(opener);
     expect(screen.queryByRole("menu")).not.toBeNull();
-    fireEvent.click(opener);
+    await press(opener);
     expect(screen.queryByRole("menu")).toBeNull();
-    fireEvent.click(opener);
+    await press(opener);
     const before = screen.getByRole("button", { name: "Before" });
     act(() => before.focus());
     fireEvent.pointerDown(before);
@@ -712,22 +719,20 @@ describe("lifecycle and races", () => {
     expect(screen.getByRole("button", { name: "Save Project" })).toBe(save);
   });
 
-  it("releases its scope and interface command when an open menu or dialog is removed", () => {
+  it("releases its scope when an open menu or dialog is removed", async () => {
     const view = renderWithUi(
       ui,
       <>
-        <Menu described={passive("goto", "Go To", "Jump to another screen")} items={[ui.control(GO_SETTINGS)]} />
+        <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_SETTINGS)]} />
         <Dialog open title="Rename project" onClose={() => undefined}>
           <p>Body</p>
         </Dialog>
       </>,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Go To" }));
+    await press(screen.getByRole("button", { name: "Go To" }));
     expect(ui.runtime.focus.scopes().map((scope) => scope.kind)).toEqual(["app", "dialog", "popup"]);
     view.unmount();
     expect(ui.runtime.focus.scopes().map((scope) => scope.kind)).toEqual(["app"]);
-    const release = ui.runtime.input.registerCommand("menu.toggle.goto", () => undefined);
-    release();
   });
 });
 
@@ -737,7 +742,7 @@ describe("Tab inside a menu", () => {
   /** A destructive dialog has no Close button, so the layout alone decides where the menu opener sits among the stops. */
   function MenuInDialog({ layout }: { readonly layout: Layout }) {
     const [open, setOpen] = useState(false);
-    const menu = <Menu described={passive("goto", "Go To", "Jump to another screen")} items={[ui.control(GO_SETTINGS), ui.control(GO_HELP)]} />;
+    const menu = <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_SETTINGS), ui.control(GO_HELP)]} />;
     return (
       <>
         <button type="button" onClick={() => setOpen(true)}>
@@ -754,11 +759,11 @@ describe("Tab inside a menu", () => {
     );
   }
 
-  function openMenu(layout: Layout): { opener: HTMLElement; item: HTMLElement } {
+  async function openMenu(layout: Layout): Promise<{ opener: HTMLElement; item: HTMLElement }> {
     renderWithUi(ui, <MenuInDialog layout={layout} />);
     fireEvent.click(screen.getByRole("button", { name: "Open dialog" }));
     const opener = screen.getByRole("button", { name: "Go To" });
-    fireEvent.click(opener);
+    await press(opener);
     expect(ui.runtime.focus.scopes().map((scope) => scope.kind)).toEqual(["app", "dialog", "popup"]);
     const item = screen.getAllByRole("menuitem")[0] as HTMLElement;
     expect(document.activeElement).toBe(item);
@@ -772,15 +777,15 @@ describe("Tab inside a menu", () => {
     expect(ui.runtime.focus.scopes().map((scope) => scope.kind)).toEqual(["app", "dialog"]);
   };
 
-  it("keeps Shift+Tab inside the dialog when the menu opener is its first stop, wrapping to the last", () => {
-    const { item } = openMenu("first");
+  it("keeps Shift+Tab inside the dialog when the menu opener is its first stop, wrapping to the last", async () => {
+    const { item } = await openMenu("first");
     expect(fireEvent.keyDown(item, { key: "Tab", shiftKey: true })).toBe(false);
     afterClose();
     expect(document.activeElement).toBe(stop("Undo"));
   });
 
-  it("keeps Tab inside the dialog when the menu opener is its last stop, wrapping to the first", () => {
-    const { item } = openMenu("last");
+  it("keeps Tab inside the dialog when the menu opener is its last stop, wrapping to the first", async () => {
+    const { item } = await openMenu("last");
     expect(fireEvent.keyDown(item, { key: "Tab" })).toBe(false);
     afterClose();
     expect(document.activeElement).toBe(stop("Save Project"));
@@ -789,17 +794,17 @@ describe("Tab inside a menu", () => {
   it.each([
     ["Tab", false],
     ["Shift+Tab", true],
-  ])("leaves %s unprevented, with focus on the opener, when the opener is in the middle of the dialog", (_name, shiftKey) => {
-    const { opener, item } = openMenu("middle");
+  ])("leaves %s unprevented, with focus on the opener, when the opener is in the middle of the dialog", async (_name, shiftKey) => {
+    const { opener, item } = await openMenu("middle");
     expect(fireEvent.keyDown(item, { key: "Tab", shiftKey })).toBe(true);
     afterClose();
     expect(document.activeElement).toBe(opener);
   });
 
-  it("closes a menu on Tab when there is no dialog, with focus on the opener", () => {
-    renderWithUi(ui, <Menu described={passive("goto", "Go To", "Jump to another screen")} items={[ui.control(GO_SETTINGS)]} />);
+  it("closes a menu on Tab when there is no dialog, with focus on the opener", async () => {
+    renderWithUi(ui, <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_SETTINGS)]} />);
     const opener = screen.getByRole("button", { name: "Go To" });
-    fireEvent.click(opener);
+    await press(opener);
     fireEvent.keyDown(screen.getByRole("menuitem"), { key: "Tab" });
     expect(screen.queryByRole("menu")).toBeNull();
     expect(document.activeElement).toBe(opener);
@@ -1081,7 +1086,7 @@ describe("dialogs opened from elsewhere and closed in other orders", () => {
       onHandled = () => setOpen(true);
       return (
         <>
-          <Menu described={passive("goto", "Go To", "Jump to another screen")} items={[ui.control(GO_SETTINGS), ui.control(GO_HELP)]} />
+          <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_SETTINGS), ui.control(GO_HELP)]} />
           <Dialog open={open} title="Help pages" onClose={() => setOpen(false)}>
             <p>Body</p>
           </Dialog>
@@ -1090,7 +1095,7 @@ describe("dialogs opened from elsewhere and closed in other orders", () => {
     }
     renderWithUi(ui, <FromMenu />);
     const trigger = screen.getByRole("button", { name: "Go To" });
-    fireEvent.click(trigger);
+    await press(trigger);
     fireEvent.click(screen.getByRole("menuitem", { name: "Help" }));
     await settle();
     expect(screen.queryByRole("menu")).toBeNull();

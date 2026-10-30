@@ -11,7 +11,7 @@ export function App({ dependencies = productionDependencies }: { readonly depend
   if (state.phase === "checking") {
     screen = <StartupLoading />;
   } else if (state.report.registry === null) {
-    screen = <InstallDamaged report={state.report} />;
+    screen = <InstallDamaged />;
   } else {
     screen = <HomeWorkspace report={state.report} dependencies={dependencies} retry={retry} focusHeading={attempt > 1} />;
   }

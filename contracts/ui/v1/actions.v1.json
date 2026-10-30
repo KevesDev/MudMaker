@@ -2833,6 +2833,16 @@
       "remoteDefinitionAllowed": false
     },
     {
+      "id": "ui.settings.openMenu",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localNavigation",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
       "id": "ui.settings.appearance.preset",
       "owner": "HomeIntentRouter",
       "mutationDomain": "localNavigation",

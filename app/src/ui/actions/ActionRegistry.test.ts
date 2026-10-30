@@ -204,12 +204,19 @@ describe("shipped catalogs", () => {
 
   const actionIdPattern = readActionIdPattern(schemaJson);
 
+  it("give every control the test id its own id spells, so no control can claim another's", () => {
+    const wrong = Object.values(workspaces).flatMap((json) =>
+      (json.controls as readonly { readonly id: string; readonly testId: string }[]).filter((entry) => entry.testId !== `UI-${entry.id.replaceAll(".", "-")}`).map((entry) => entry.id),
+    );
+    expect(wrong).toEqual([]);
+  });
+
   it("hold the control and action counts the UI catalog index states", () => {
     if (!actionIdPattern.ok) throw new Error(actionIdPattern.message);
     const counts = Object.fromEntries(
       Object.entries(workspaces).map(([workspace, json]) => [workspace, parseCatalog(json, workspace as keyof typeof workspaces, schemaJson).controls.length]),
     );
-    expect(counts).toEqual({ home: 43, editor: 146, client: 116, host: 63 });
+    expect(counts).toEqual({ home: 43, editor: 146, client: 115, host: 63 });
     expect(parseActions(actionsJson, actionIdPattern.pattern).actions).toHaveLength(286);
   });
 

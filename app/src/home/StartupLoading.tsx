@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { Progress, type PassiveDescriptor } from "../ui";
 import { homeCopy } from "./homeCopy";
 
-const LOADING: PassiveDescriptor = { passive: true, id: "startup.loading", ...homeCopy.loading };
+const LOADING: PassiveDescriptor = { passive: true, id: "startup.loading", label: homeCopy.loadingLabel, help: "" };
 
+/** The product name and a progress bar; the bar's name is for assistive technology and no words about the checks are drawn. */
 export function StartupLoading() {
   return (
-    <main className="home" aria-busy="true">
-      <Progress described={LOADING} fraction={null} />
+    <main className="home" aria-busy="true" aria-label={homeCopy.productName}>
+      <p className="home-wordmark">{homeCopy.productName}</p>
+      <Progress described={LOADING} fraction={null} showText={false} />
     </main>
   );
 }

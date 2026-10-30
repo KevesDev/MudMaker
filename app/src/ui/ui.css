@@ -216,6 +216,29 @@
   gap: var(--spacing-row);
 }
 
+.ui-menu-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-row);
+}
+
+.ui-menu-group-label {
+  font-family: var(--font-family-interface);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-strong);
+  color: var(--color-text-secondary);
+}
+
+.ui-menu-choice {
+  justify-content: flex-start;
+}
+
+/* Reserves the width of the mark so every option's name lines up whether or not it is the chosen one. */
+.ui-menu-mark {
+  display: inline-block;
+  min-width: var(--font-size-body);
+}
+
 .ui-dialog-backdrop {
   position: fixed;
   inset: 0;

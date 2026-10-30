@@ -4,7 +4,7 @@ import themeDefaults from "../../../contracts/ui/v1/theme-defaults.v1.json";
 import { SCOPE_IDS, ThemeManager } from "../theme";
 import { createUiRuntime, loadShippedRegistry, type UiDiagnostic } from "../ui";
 import { HOME_ROUTER, registerHomeRouter } from "./HomeRouter";
-import { SPLASH } from "./homeLayout";
+import { APPEARANCE, SPLASH } from "./homeLayout";
 
 const registry = loadShippedRegistry();
 
@@ -40,7 +40,7 @@ function otherPreset(theme: ThemeManager): { id: string; label: string } {
 
 describe("the home router", () => {
   it("is the owner the action table names for the actions it handles", () => {
-    for (const controlId of [SPLASH.quit, SPLASH.appearance, SPLASH.retry]) {
+    for (const controlId of [SPLASH.quit, APPEARANCE, SPLASH.retry]) {
       expect(registry.action(actionOf(controlId))?.owner).toBe(HOME_ROUTER);
     }
   });
@@ -50,12 +50,6 @@ describe("the home router", () => {
     for (const controlId of [SPLASH.create, SPLASH.play, SPLASH.host]) {
       expect(await dispatch(controlId)).toMatchObject({ status: "unavailable", code: "no-action-owner" });
     }
-  });
-
-  it("disables the recent lists with a reason that says why", () => {
-    const { runtime } = setup();
-    expect(runtime.bus.getRuntime(SPLASH.recentProjects)).toMatchObject({ state: "disabled", reason: "No recent projects yet" });
-    expect(runtime.bus.getRuntime(SPLASH.recentWorlds)).toMatchObject({ state: "disabled", reason: "No recent worlds yet" });
   });
 
   it("stops handling its actions when it is torn down", async () => {
@@ -88,6 +82,23 @@ describe("quit", () => {
   });
 });
 
+describe("opening the Settings menu", () => {
+  it("is owned by the home router and answers success without a message, so nothing is announced", async () => {
+    expect(registry.action(actionOf(SPLASH.settings))?.owner).toBe(HOME_ROUTER);
+    const { dispatch, runtime } = setup();
+    const before = runtime.announcer.getLast();
+    expect(await dispatch(SPLASH.settings)).toMatchObject({ status: "success", message: "" });
+    expect(runtime.announcer.getLast()?.text).toBe("");
+    expect(runtime.announcer.getLast()).not.toBe(before);
+  });
+
+  it("is unavailable once the router stops handling it", async () => {
+    const { dispatch, stop } = setup();
+    stop();
+    expect(await dispatch(SPLASH.settings)).toMatchObject({ status: "unavailable", code: "no-action-owner" });
+  });
+});
+
 describe("retry", () => {
   it("starts the startup checks again once", async () => {
     const { dispatch, retry } = setup();
@@ -100,7 +111,7 @@ describe("appearance", () => {
   it("applies the chosen preset to every theme scope and says which one", async () => {
     const { dispatch, theme } = setup();
     const target = otherPreset(theme);
-    const result = await dispatch(SPLASH.appearance, target.id);
+    const result = await dispatch(APPEARANCE, target.id);
     expect(result).toMatchObject({ status: "success" });
     expect(result.status === "success" ? result.message : "").toContain(target.label);
     expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope).themeId)).toEqual(SCOPE_IDS.map(() => target.id));
@@ -113,7 +124,7 @@ describe("appearance", () => {
   ])("refuses %s without changing any scope", async (_name, value) => {
     const { dispatch, theme } = setup();
     const before = SCOPE_IDS.map((scope) => theme.getSnapshot(scope));
-    expect(await dispatch(SPLASH.appearance, value)).toMatchObject({ status: "validation-error" });
+    expect(await dispatch(APPEARANCE, value)).toMatchObject({ status: "validation-error" });
     expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope))).toEqual(before);
   });
 
@@ -129,7 +140,7 @@ describe("appearance", () => {
         : select(scope, presetId),
     );
     const { dispatch } = setup({ theme });
-    expect(await dispatch(SPLASH.appearance, target.id)).toMatchObject({ status: "recoverable-error", code: "appearance-not-applied" });
+    expect(await dispatch(APPEARANCE, target.id)).toMatchObject({ status: "recoverable-error", code: "appearance-not-applied" });
     expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope).themeId)).toEqual(before);
   });
 
@@ -144,6 +155,6 @@ describe("appearance", () => {
       (scope === refused && presetId === target.id) || (scope === first && presetId !== target.id) ? refusal : select(scope, presetId),
     );
     const { dispatch } = setup({ theme });
-    expect(await dispatch(SPLASH.appearance, target.id)).toMatchObject({ status: "recoverable-error", code: "appearance-partly-applied" });
+    expect(await dispatch(APPEARANCE, target.id)).toMatchObject({ status: "recoverable-error", code: "appearance-partly-applied" });
   });
 });

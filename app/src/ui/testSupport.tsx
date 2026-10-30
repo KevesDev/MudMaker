@@ -78,6 +78,7 @@ export const CONNECTION = "editor.status.01";
 export const ORPHAN = "editor.toolbar.03";
 export const GO_SETTINGS = "home.menu.01";
 export const GO_HELP = "home.menu.02";
+export const GO_TO = "home.menu.03";
 export const CLIENT_SETTINGS = "client.chat.02";
 
 /** A control that can show every failure and success state on its own. */
@@ -96,6 +97,7 @@ export function fixtureSources(): { schema: unknown; actions: unknown; catalogs:
       action("ui.test.orphan", EDITOR),
       action("ui.nav.settings", NAVIGATOR),
       action("ui.nav.help", NAVIGATOR),
+      action("ui.nav.openMenu", NAVIGATOR),
       action("ui.test.send", "ClientIntentRouter"),
       action("ui.test.stop", "HostAdminIntentRouter"),
     ]),
@@ -103,6 +105,7 @@ export function fixtureSources(): { schema: unknown; actions: unknown; catalogs:
       home: catalog("home", [
         control("home", "menu", 1, { label: "Settings", actionId: "ui.nav.settings", tooltip: "Open the settings screen" }),
         control("home", "menu", 2, { label: "Help", actionId: "ui.nav.help", tooltip: "Open the help pages" }),
+        control("home", "menu", 3, { kind: "dropdown", label: "Go To", actionId: "ui.nav.openMenu", tooltip: "Jump to another screen" }),
       ]),
       editor: catalog("editor", [
         control("editor", "toolbar", 1, { label: "Save Project", actionId: "ui.test.save", stateVariants: FULL_VARIANTS, tooltip: "Save the project draft" }),

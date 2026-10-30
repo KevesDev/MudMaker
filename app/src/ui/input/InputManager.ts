@@ -62,7 +62,10 @@ function helpIdOf(element: Element | null): string | null {
   );
 }
 
+/** An item of a choice list carries the value it stands for; fields and switches report their own. */
 function readControlValue(element: Element): string | boolean | undefined {
+  const chosen = element.getAttribute("data-value");
+  if (chosen !== null) return chosen;
   if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) return element.value;
   if (element.getAttribute("role") === "switch") return element.getAttribute("aria-checked") !== "true";
   return undefined;

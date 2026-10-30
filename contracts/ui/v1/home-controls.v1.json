@@ -639,7 +639,7 @@
       "surface": "home.splash",
       "kind": "text",
       "label": "MudMaker",
-      "tooltip": "Product name and logo, readable by assistive technology",
+      "tooltip": "The name of this program",
       "actionId": null,
       "stateOwner": "HomeState",
       "permission": "localUser",
@@ -660,7 +660,7 @@
       "surface": "home.splash",
       "kind": "text",
       "label": "Version",
-      "tooltip": "Show the exact installed semantic version and build identifier",
+      "tooltip": "The version and build of this copy",
       "actionId": null,
       "stateOwner": "HomeState",
       "permission": "localUser",
@@ -680,12 +680,12 @@
       "workspace": "home",
       "surface": "home.splash",
       "kind": "status",
-      "label": "Loading Status",
-      "tooltip": "Show startup validation, profile recovery and real errors",
+      "label": "Startup Error",
+      "tooltip": "What went wrong while starting",
       "actionId": null,
       "stateOwner": "HomeState",
       "permission": "localUser",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "startupCheckFailed",
       "enabledWhen": "notApplicable",
       "stateVariants": [
         "visible",
@@ -769,7 +769,7 @@
       "actionId": "ui.nav.recentProjects",
       "stateOwner": "HomeState",
       "permission": "localUser",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "recentProjectsExist",
       "enabledWhen": "authorizedAndReady",
       "stateVariants": [
         "ready",
@@ -790,7 +790,7 @@
       "actionId": "ui.nav.recentWorlds",
       "stateOwner": "HomeState",
       "permission": "localUser",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "recentWorldsExist",
       "enabledWhen": "authorizedAndReady",
       "stateVariants": [
         "ready",
@@ -807,7 +807,7 @@
       "surface": "home.splash",
       "kind": "status",
       "label": "Active World",
-      "tooltip": "Show Active World: {world} only while a world is hosted by this app",
+      "tooltip": "The world this computer is hosting right now",
       "actionId": null,
       "stateOwner": "HomeState",
       "permission": "localUser",
@@ -828,7 +828,7 @@
       "surface": "home.splash",
       "kind": "button",
       "label": "Quit",
-      "tooltip": "Close MudMaker and end the application",
+      "tooltip": "Close MudMaker",
       "actionId": "ui.app.quit",
       "stateOwner": "HomeState",
       "permission": "localUser",
@@ -848,8 +848,8 @@
       "workspace": "home",
       "surface": "home.settings",
       "kind": "dropdown",
-      "label": "Appearance Preset",
-      "tooltip": "Choose the appearance preset in Settings > Appearance",
+      "label": "Appearance",
+      "tooltip": "Choose the colors MudMaker uses",
       "actionId": "ui.settings.appearance.preset",
       "stateOwner": "HomeState",
       "permission": "localUser",
@@ -862,7 +862,7 @@
         "error"
       ],
       "keyboard": "focusAndActivate",
-      "testId": "UI-home-splash-12"
+      "testId": "UI-home-settings-07"
     },
     {
       "id": "home.splash.13",
@@ -870,7 +870,7 @@
       "surface": "home.splash",
       "kind": "button",
       "label": "Retry",
-      "tooltip": "Run the startup checks again",
+      "tooltip": "Try starting MudMaker again",
       "actionId": "ui.app.retryStartup",
       "stateOwner": "HomeState",
       "permission": "localUser",
@@ -884,6 +884,27 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-home-splash-13"
+    },
+    {
+      "id": "home.splash.14",
+      "workspace": "home",
+      "surface": "home.splash",
+      "kind": "dropdown",
+      "label": "Settings",
+      "tooltip": "Change how MudMaker looks",
+      "actionId": "ui.settings.openMenu",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-splash-14"
     }
   ]
 }

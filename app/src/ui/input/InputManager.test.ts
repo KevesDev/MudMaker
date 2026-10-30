@@ -108,6 +108,30 @@ describe("activation", () => {
     await settle();
     expect(picks).toEqual([{ actionId: "ui.test.layout", controlId: "editor.fields.03", correlation: {}, value: "b" }]);
   });
+
+  it("sends the value an item of a choice list stands for, from the item that was activated and not its neighbours", async () => {
+    mount(
+      `<div role="menu"><button id="a" role="menuitemradio" data-control-id="editor.fields.03" data-value="a">A</button><button id="b" role="menuitemradio" data-control-id="editor.fields.03" data-value="b">B</button></div>`,
+    );
+    const picks: ActionRequest[] = [];
+    ui.runtime.bus.registerHandler(EDITOR, "ui.test.layout", ({ signal: _signal, ...request }) => {
+      picks.push(request);
+      return Promise.resolve({ status: "success" });
+    });
+    fireEvent.click(element("#b"));
+    await settle();
+    fireEvent.click(element("#a"));
+    await settle();
+    expect(picks.map((request) => request.value)).toEqual(["b", "a"]);
+  });
+
+  it("sends no value for a plain button, so only choice items carry one", async () => {
+    mount(`<button id="save" data-control-id="${SAVE}">Save</button>`);
+    fireEvent.click(element("#save"));
+    await settle();
+    expect(saves).toHaveLength(1);
+    expect("value" in (saves[0] ?? {})).toBe(false);
+  });
 });
 
 describe("typing and composition", () => {

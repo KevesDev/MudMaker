@@ -1,26 +1,24 @@
 import type { AppInfo, EngineStatus } from "../appInfo";
 import type { ScopeId, ThemeManager } from "../theme";
-import type { ActionRegistry, Correlation, UiDiagnostic } from "../ui";
-import { homeCopy } from "./homeCopy";
+import type { ActionRegistry, Correlation, DiagnosticSeverity, UiDiagnostic } from "../ui";
 
 const CHECK_IDS = ["shell", "catalogs", "theme", "engine"] as const;
 export type CheckId = (typeof CHECK_IDS)[number];
 
-/** `attention` means the check ran and found something the user should know, such as an engine that is not installed. */
+/** `attention` means the check ran and found something worth logging that does not stop the launch, such as an engine that is not installed. */
 export type CheckStatus = "passed" | "attention" | "failed";
 
-/** `detail` is always a sentence for the user; raw technical text goes only to the diagnostic. */
+/** What the check found, by name; the words a person reads about a failure come from the home copy. */
 export interface CheckResult {
   readonly id: CheckId;
   readonly status: CheckStatus;
-  readonly detail: string;
 }
 
-/** The record a failed check leaves for the operator log; `attempt` counts starts and retries from 1. */
+/** The record each check leaves for the operator log; `attempt` counts starts and retries from 1. */
 export interface StartupDiagnostic extends UiDiagnostic {
   readonly check: CheckId;
   readonly attempt: number;
-  /** The raw technical text of the failure, kept out of every screen. */
+  /** What the check saw, in technical words, kept out of every screen. */
   readonly detail: string;
 }
 
@@ -31,6 +29,8 @@ export interface StartupDependencies {
   readonly getEngineStatus: () => Promise<EngineStatus>;
   readonly loadRegistry: () => ActionRegistry;
   readonly theme: ThemeManager;
+  /** Whether a missing game engine fails the launch; see STARTUP_REQUIRES_ENGINE. */
+  readonly requireEngine: boolean;
   readonly report: (record: HomeDiagnostic) => void;
 }
 
@@ -69,13 +69,45 @@ type Checked<T> =
   | { readonly ok: true; readonly result: CheckResult; readonly value: T }
   | { readonly ok: false; readonly result: CheckResult };
 
+/** What a check that ran to the end concluded. `detail` is for the log. */
+interface Judgement {
+  readonly status: CheckStatus;
+  readonly code: string;
+  readonly detail: string;
+}
+
 interface CheckSpec<T> {
   readonly id: CheckId;
-  readonly code: string;
+  /** The code logged when the work itself throws. */
+  readonly failureCode: string;
   readonly work: () => T | Promise<T>;
-  readonly passed: (value: T) => { readonly status: "passed" | "attention"; readonly detail: string };
-  /** The sentence for the user when the work throws. */
-  readonly sentence: string;
+  readonly judge: (value: T) => Judgement;
+  /** The correlation for the record of a check that ran to the end; defaults to the one passed to `perform`. */
+  readonly correlate?: (value: T) => Correlation;
+}
+
+const SEVERITY: Readonly<Record<CheckStatus, DiagnosticSeverity>> = { passed: "info", attention: "warning", failed: "error" };
+const OUTCOME_WORDS: Readonly<Record<CheckStatus, string>> = { passed: "passed", attention: "needs attention", failed: "failed" };
+
+function startupRecord(
+  id: CheckId,
+  status: CheckStatus,
+  code: string,
+  detail: string,
+  attempt: number,
+  correlation: Correlation,
+): StartupDiagnostic {
+  return {
+    severity: SEVERITY[status],
+    code,
+    actionId: null,
+    controlId: null,
+    message: `The ${id} startup check ${OUTCOME_WORDS[status]}.`,
+    correlation,
+    check: id,
+    attempt,
+    detail,
+  };
 }
 
 function describeFailure(failure: unknown): string {
@@ -85,29 +117,19 @@ function describeFailure(failure: unknown): string {
   return String(failure);
 }
 
-async function perform<T>(
-  spec: CheckSpec<T>,
-  dependencies: StartupDependencies,
-  attempt: number,
-  correlation: Correlation,
-): Promise<Checked<T>> {
+/** Runs one check against its real owner and writes one log record for the outcome, whatever it is. */
+async function perform<T>(spec: CheckSpec<T>, dependencies: StartupDependencies, attempt: number, correlation: Correlation): Promise<Checked<T>> {
+  let value: T;
   try {
-    const value = await spec.work();
-    return { ok: true, value, result: { id: spec.id, ...spec.passed(value) } };
+    value = await spec.work();
   } catch (failure) {
-    dependencies.report({
-      severity: "error",
-      code: spec.code,
-      actionId: null,
-      controlId: null,
-      message: `The ${spec.id} startup check failed.`,
-      correlation,
-      check: spec.id,
-      attempt,
-      detail: describeFailure(failure),
-    });
-    return { ok: false, result: { id: spec.id, status: "failed", detail: spec.sentence } };
+    dependencies.report(startupRecord(spec.id, "failed", spec.failureCode, describeFailure(failure), attempt, correlation));
+    return { ok: false, result: { id: spec.id, status: "failed" } };
   }
+  const { status, code, detail } = spec.judge(value);
+  dependencies.report(startupRecord(spec.id, status, code, detail, attempt, spec.correlate?.(value) ?? correlation));
+  const result: CheckResult = { id: spec.id, status };
+  return status === "failed" ? { ok: false, result } : { ok: true, value, result };
 }
 
 function activePreset(theme: ThemeManager): string {
@@ -117,29 +139,32 @@ function activePreset(theme: ThemeManager): string {
   return preset.label;
 }
 
-/** Runs the four checks in order, each against its real owner, and reports every one that fails. */
+/** Runs the four checks in order, each against its real owner, and logs every outcome. */
 export async function runStartupChecks(dependencies: StartupDependencies, attempt: number): Promise<StartupReport> {
   const shell = await perform<AppInfo>(
     {
       id: "shell",
-      code: "startup-shell-failed",
+      failureCode: "startup-shell-failed",
       work: dependencies.getAppInfo,
-      passed: () => ({ status: "passed", detail: homeCopy.details.shellPassed }),
-      sentence: homeCopy.details.shellFailed,
+      judge: (info) => ({
+        status: "passed",
+        code: "startup-shell-passed",
+        detail: `${info.name} ${info.version} build ${info.buildId} on ${info.platform} ${info.arch} (${info.profile}).`,
+      }),
+      // The shell stamps its own launch id on a record that arrives without one, so a shell that never answered still correlates.
+      correlate: (info) => ({ launchId: info.launchId }),
     },
     dependencies,
     attempt,
     {},
   );
-  // The shell stamps its own launch id on a record that arrives without one, so a shell that never answered still correlates.
   const correlation: Correlation = shell.ok ? { launchId: shell.value.launchId } : {};
   const catalogs = await perform<ActionRegistry>(
     {
       id: "catalogs",
-      code: "startup-catalogs-invalid",
+      failureCode: "startup-catalogs-invalid",
       work: dependencies.loadRegistry,
-      passed: () => ({ status: "passed", detail: homeCopy.details.catalogsPassed }),
-      sentence: homeCopy.details.catalogsFailed,
+      judge: () => ({ status: "passed", code: "startup-catalogs-passed", detail: "Every screen definition loaded and validated." }),
     },
     dependencies,
     attempt,
@@ -148,10 +173,9 @@ export async function runStartupChecks(dependencies: StartupDependencies, attemp
   const theme = await perform<string>(
     {
       id: "theme",
-      code: "startup-theme-missing",
+      failureCode: "startup-theme-missing",
       work: () => activePreset(dependencies.theme),
-      passed: (label) => ({ status: "passed", detail: homeCopy.details.themeActive(label) }),
-      sentence: homeCopy.details.themeFailed,
+      judge: (label) => ({ status: "passed", code: "startup-theme-passed", detail: `${label} is the active appearance.` }),
     },
     dependencies,
     attempt,
@@ -160,10 +184,12 @@ export async function runStartupChecks(dependencies: StartupDependencies, attemp
   const engine = await perform<EngineStatus>(
     {
       id: "engine",
-      code: "startup-engine-failed",
+      failureCode: "startup-engine-failed",
       work: dependencies.getEngineStatus,
-      passed: (status) => ({ status: status.installed ? "passed" : "attention", detail: status.reason }),
-      sentence: homeCopy.details.engineFailed,
+      judge: (status) => {
+        if (status.installed) return { status: "passed", code: "startup-engine-installed", detail: status.reason };
+        return { status: dependencies.requireEngine ? "failed" : "attention", code: "startup-engine-missing", detail: status.reason };
+      },
     },
     dependencies,
     attempt,

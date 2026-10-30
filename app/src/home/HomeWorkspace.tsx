@@ -29,7 +29,7 @@ export function HomeWorkspace({ report, dependencies, retry, focusHeading }: Hom
   useLayoutEffect(() => registerHomeRouter(runtime.bus, registry, { quit, theme, retryStartup: retry }), [runtime, registry, quit, theme, retry]);
   return (
     <UiProvider runtime={runtime}>
-      {report.ok ? <SplashScreen info={report.info} results={report.results} theme={theme} focusHeading={focusHeading} /> : <StartupFailure report={report} />}
+      {report.ok ? <SplashScreen info={report.info} theme={theme} focusHeading={focusHeading} /> : <StartupFailure report={report} />}
     </UiProvider>
   );
 }

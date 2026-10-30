@@ -27,9 +27,13 @@ const INFO = {
   launchId: "launch-app-test",
 };
 
+/** One record for each of the four startup checks. */
+const STARTUP_RECORDS = 4;
+
 beforeEach(() => {
   shell.getAppInfo.mockResolvedValue(INFO);
   vi.spyOn(console, "info").mockImplementation(() => undefined);
+  vi.spyOn(console, "warn").mockImplementation(() => undefined);
   vi.spyOn(console, "error").mockImplementation(() => undefined);
 });
 
@@ -39,11 +43,19 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-test("starts with the production wiring and shows the version, build and the engine notice", async () => {
+test("starts with the production wiring and shows the version and build, with the missing engine only in the log", async () => {
   render(<App />);
   expect(await screen.findByText("Version 9.8.7, build abc1234")).toBeTruthy();
-  expect(screen.getByRole("status", { name: "Game engine" }).textContent).toContain("The game engine is not installed in this build.");
+  expect(screen.queryByText(/engine/i)).toBeNull();
   expect(screen.getByRole("button", { name: "Quit" })).toBeTruthy();
+  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(STARTUP_RECORDS));
+  expect(shell.writeDiagnostic.mock.calls.map((call) => (call[0] as { severity: string; code: string }).code)).toEqual([
+    "startup-shell-passed",
+    "startup-catalogs-passed",
+    "startup-theme-passed",
+    "startup-engine-missing",
+  ]);
+  expect(shell.writeDiagnostic.mock.calls.map((call) => (call[0] as { severity: string }).severity)).toEqual(["info", "info", "info", "warning"]);
 });
 
 test("clicking Quit requests application exit once", async () => {
@@ -61,8 +73,8 @@ test("sends a refused action to the shell log as information, tagged with the la
   // Input listeners attach in an effect that React may still be holding when the text first appears.
   await act(async () => undefined);
   fireEvent.click(screen.getByRole("button", { name: "Create" }));
-  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(1));
-  expect(shell.writeDiagnostic.mock.calls[0]?.[0]).toMatchObject({
+  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(STARTUP_RECORDS + 1));
+  expect(shell.writeDiagnostic.mock.calls[STARTUP_RECORDS]?.[0]).toMatchObject({
     severity: "info",
     code: "no-action-owner",
     actionId: "ui.nav.create",
@@ -80,7 +92,7 @@ test("sends a failed startup check to the shell log with the raw text only in th
     return found;
   });
   expect(alert.textContent).not.toContain("pipe closed");
-  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(shell.writeDiagnostic).toHaveBeenCalledTimes(STARTUP_RECORDS));
   const record = shell.writeDiagnostic.mock.calls[0]?.[0] as Record<string, unknown>;
   expect(record).toMatchObject({ severity: "error", code: "startup-shell-failed", detail: "pipe closed" });
   expect(String(record["message"])).not.toContain("pipe closed");

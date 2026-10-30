@@ -37,7 +37,7 @@ describe("catalog index counts", () => {
   const total = Object.values(perWorkspace).reduce((sum, count) => sum + count, 0);
 
   it("states the visible element total and action total the files hold", () => {
-    expect(catalogIndex).toContain(`**${total} visible elements**`);
+    expect(catalogIndex).toContain(`**${total} registered elements**`);
     expect(catalogIndex).toContain(`**${actionsJson.actions.length} distinct semantic actions**`);
   });
 

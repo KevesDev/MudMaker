@@ -1,10 +1,12 @@
 /** See homeTestSupport.tsx for what these tests cannot prove. */
-import { act, cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import homeCatalog from "../../../contracts/ui/v1/home-controls.v1.json";
 import { fixtureBaseTokens, fixturePresetTokens, stringToken } from "../theme/fixtures";
 import { SCOPE_IDS } from "../theme";
-import { SPLASH } from "./homeLayout";
-import { healthyHome, renderApp, type TestHome } from "./homeTestSupport";
+import { uiCopy } from "../ui";
+import { APPEARANCE, SPLASH } from "./homeLayout";
+import { healthyHome, liveAnnouncements, renderApp, type TestHome } from "./homeTestSupport";
 
 const SURFACE = "--color-surface-app";
 const FOCUS = "--color-interaction-focus";
@@ -24,13 +26,24 @@ afterEach(() => {
   unbind?.();
   unbind = null;
   document.documentElement.removeAttribute("style");
+  document.documentElement.removeAttribute("data-input-modality");
 });
 
-const select = (): HTMLSelectElement => {
-  const found = document.querySelector<HTMLSelectElement>(`select[data-control-id="${SPLASH.appearance}"]`);
-  if (!found) throw new Error("The appearance control is not on screen.");
+const catalogEntry = (id: string): { readonly label: string; readonly testId: string } => {
+  const found = homeCatalog.controls.find((candidate) => candidate.id === id);
+  if (!found) throw new Error(`No home control ${id}`);
   return found;
 };
+const settingsLabel = catalogEntry(SPLASH.settings).label;
+const appearanceLabel = catalogEntry(APPEARANCE).label;
+const opener = (): HTMLElement => screen.getByRole("button", { name: settingsLabel });
+/** Activating Settings asks the home router, and the menu opens once it answers. */
+const openMenu = async (): Promise<HTMLElement> => {
+  fireEvent.click(opener());
+  return screen.findByRole("menu", { name: settingsLabel });
+};
+const choices = (): HTMLElement[] => within(screen.getByRole("group", { name: appearanceLabel })).getAllByRole("menuitemradio");
+const choiceFor = (label: string): HTMLElement => within(screen.getByRole("group", { name: appearanceLabel })).getByRole("menuitemradio", { name: label });
 const rootVariable = (name: string): string => document.documentElement.style.getPropertyValue(name);
 
 /** The editor tokens a preset gives, which the home scope inherits; read from the pinned defaults file. */
@@ -44,59 +57,139 @@ function otherPreset(home: TestHome): { id: string; label: string } {
   return other;
 }
 
-describe("the appearance control", () => {
-  it("lists every preset the theme manager offers and shows the one in use", async () => {
+const marked = (): string[] => choices().filter((item) => item.getAttribute("aria-checked") === "true").map((item) => item.getAttribute("data-value") ?? "");
+
+describe("the Settings menu", () => {
+  it("opens from the Settings button with Appearance, lists every preset the theme manager offers and marks the one in use", async () => {
     const home = await openSplash();
-    expect([...select().options].map((option) => [option.value, option.textContent])).toEqual(
+    expect(screen.queryByRole("menu")).toBeNull();
+    await openMenu();
+    expect(opener().getAttribute("aria-expanded")).toBe("true");
+    expect(choices().map((item) => [item.getAttribute("data-value"), item.textContent?.replace(uiCopy.chosenMark, "")])).toEqual(
       home.manager.listPresets().map((preset) => [preset.id, preset.label]),
     );
-    expect(select().value).toBe(home.manager.getSnapshot("home").themeId);
+    expect(marked()).toEqual([home.manager.getSnapshot("home").themeId]);
+    expect(choices().filter((item) => item.textContent?.includes(uiCopy.chosenMark))).toHaveLength(1);
+    expect(screen.getByRole("group", { name: appearanceLabel }).getAttribute("data-testid")).toBe(catalogEntry(APPEARANCE).testId);
+    expect(document.activeElement).toBe(choiceFor(home.manager.listPresets().find((preset) => preset.id === marked()[0])?.label ?? ""));
   });
 
-  it("switches every scope, the document variables and the shown value together, without rebuilding the screen", async () => {
+  it("closes on Escape without changing anything and returns focus to the Settings button", async () => {
+    const home = await openSplash();
+    const before = SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId);
+    await openMenu();
+    fireEvent.keyDown(document.activeElement ?? document.body, { key: "Escape" });
+    expect(screen.queryByRole("menu")).toBeNull();
+    expect(document.activeElement).toBe(opener());
+    expect(SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId)).toEqual(before);
+  });
+
+  describe("arrow keys", () => {
+    /** The two built-in presets in the order the theme manager lists them. */
+    const first = 0;
+    const second = 1;
+
+    it.each([
+      ["ArrowDown", first, second],
+      ["ArrowDown", second, first],
+      ["ArrowUp", second, first],
+      ["ArrowUp", first, second],
+      ["Home", second, first],
+      ["End", first, second],
+    ])("%s from preset %i moves focus to preset %i", async (key, from, to) => {
+      const home = healthyHome();
+      const presets = home.manager.listPresets();
+      expect(presets).toHaveLength(2);
+      for (const scope of SCOPE_IDS) expect(home.manager.selectPreset(scope, presets[from]?.id ?? "").ok).toBe(true);
+      await openSplash(home);
+      await openMenu();
+      expect(document.activeElement).toBe(choiceFor(presets[from]?.label ?? ""));
+      fireEvent.keyDown(document.activeElement ?? document.body, { key });
+      expect(document.activeElement).toBe(choiceFor(presets[to]?.label ?? ""));
+    });
+  });
+
+  it("opens through the home router: the Settings control returns to ready and nothing is announced or logged", async () => {
+    const home = await openSplash();
+    const logged = home.records.length;
+    await openMenu();
+    expect(opener().getAttribute("data-state")).toBe("ready");
+    expect(liveAnnouncements("Done")).toEqual([]);
+    expect(home.records).toHaveLength(logged);
+  });
+
+  it("closes again when Settings is activated a second time", async () => {
+    await openSplash();
+    await openMenu();
+    fireEvent.click(opener());
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+  });
+
+  it("switches every scope, the document variables and the mark together, closes, returns focus and announces once", async () => {
     const home = await openSplash();
     const target = otherPreset(home);
     const heading = screen.getByRole("heading", { level: 1 });
-    const selectBefore = select();
     const surfaceBefore = rootVariable(SURFACE);
     const focusBefore = rootVariable(FOCUS);
     expect(surfaceBefore).toBe(expectedToken(home.manager.getSnapshot("home").themeId, "color.surface.app"));
 
-    fireEvent.change(select(), { target: { value: target.id } });
-    await waitFor(() => expect(select().value).toBe(target.id));
+    await openMenu();
+    fireEvent.click(choiceFor(target.label));
+    await waitFor(() => expect(home.manager.getSnapshot("home").themeId).toBe(target.id));
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
 
     expect(rootVariable(SURFACE)).toBe(expectedToken(target.id, "color.surface.app"));
     expect(rootVariable(FOCUS)).toBe(expectedToken(target.id, "color.interaction.focus"));
     expect(rootVariable(SURFACE)).not.toBe(surfaceBefore);
     expect(rootVariable(FOCUS)).not.toBe(focusBefore);
     expect(SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId)).toEqual(SCOPE_IDS.map(() => target.id));
-    expect(select()).toBe(selectBefore);
+    expect(document.activeElement).toBe(opener());
     expect(screen.getByRole("heading", { level: 1 })).toBe(heading);
-    const announced = screen.getAllByRole("status").find((region) => region.closest(".ui-visually-hidden") !== null);
-    expect(announced?.textContent).toBe(`Appearance is now ${target.label}.`);
+    expect(liveAnnouncements(`Appearance is now ${target.label}.`)).toHaveLength(1);
+
+    await openMenu();
+    expect(marked()).toEqual([target.id]);
   });
 
-  it("keeps the old value and the old colors, and says so, when the theme manager does not confirm", async () => {
+  it("marks only a confirmed choice: a refusal leaves the old mark and colors, puts every scope back and says so once", async () => {
     const home = await openSplash();
     const target = otherPreset(home);
-    const before = home.manager.getSnapshot("home").themeId;
+    const before = SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId);
     const surfaceBefore = rootVariable(SURFACE);
+    const select = home.manager.selectPreset.bind(home.manager);
+    const refused = SCOPE_IDS[2];
+    vi.spyOn(home.manager, "selectPreset").mockImplementation((scope, presetId) =>
+      scope === refused && presetId === target.id
+        ? { ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] }
+        : select(scope, presetId),
+    );
+
+    await openMenu();
+    fireEvent.click(choiceFor(target.label));
+    const message = `Appearance could not be changed to ${target.label}. Your current look is unchanged.`;
+    await waitFor(() => expect(document.querySelector(".ui-toast")?.textContent).toContain(message));
+
+    expect(SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId)).toEqual(before);
+    expect(rootVariable(SURFACE)).toBe(surfaceBefore);
+    expect(document.querySelectorAll(".ui-toast")).toHaveLength(1);
+    expect(document.querySelector(".ui-toast-code")?.textContent).toBe("Reference: appearance-not-applied");
+    expect(liveAnnouncements(message)).toHaveLength(1);
+    await openMenu();
+    expect(marked()).toEqual([before[0]]);
+  });
+
+  it("clears the failure message when it is dismissed and keeps focus on the Settings button", async () => {
+    const home = await openSplash();
+    const target = otherPreset(home);
     vi.spyOn(home.manager, "selectPreset").mockReturnValue({
       ok: false,
       errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }],
     });
-
-    fireEvent.change(select(), { target: { value: target.id } });
-    await waitFor(() => expect(select().getAttribute("data-state")).toBe("recoverable-error"));
-
-    expect(select().value).toBe(before);
-    expect(rootVariable(SURFACE)).toBe(surfaceBefore);
-    expect(document.querySelector(".ui-state-text")?.textContent).toBe(`Appearance could not be changed to ${target.label}. Your current look is unchanged.`);
-  });
-
-  it("tells the user the choice is not kept after closing the app", async () => {
-    await openSplash();
-    const section = select().closest("section");
-    expect(section?.textContent).toContain("Your choice is not saved after you close MudMaker yet.");
+    await openMenu();
+    fireEvent.click(choiceFor(target.label));
+    await waitFor(() => expect(document.querySelectorAll(".ui-toast")).toHaveLength(1));
+    fireEvent.click(within(document.querySelector<HTMLElement>(".ui-toast") as HTMLElement).getByRole("button", { name: "Dismiss" }));
+    await waitFor(() => expect(document.querySelectorAll(".ui-toast")).toHaveLength(0));
+    expect(document.activeElement).toBe(opener());
   });
 });
