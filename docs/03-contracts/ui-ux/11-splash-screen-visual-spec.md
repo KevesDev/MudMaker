@@ -22,3 +22,11 @@ Wordmark, launch row, small recent links and footer should fit as a cohesive lau
 
 ## Registry reconciliation
 Keep existing `home.splash` IDs and actions where applicable. The owner-approved appearance relocation and removal of `Connected Worlds` should be reflected in the home catalog. Any extra Help/Settings navigation requires valid control metadata; don't invent commands for art alone.
+
+## Approved visual reference (asset upload pending)
+
+The owner approved the neon-pixel fantasy splash mockup. Place the PNG at **`docs/03-contracts/ui-ux/assets/mudmaker-neon-splash-reference.png`** on branch `working`. This file is an **aesthetic reference only**, not a literal requirement for example build IDs or sampled colors; use current ThemeManager tokens and the screen layout specification. Once uploaded, it will display here:
+
+![Owner-approved MudMaker neon splash reference](assets/mudmaker-neon-splash-reference.png)
+
+See [state-by-state wireframes](15-screen-wireframes-and-interaction-states.md) and [minimalist microcopy acceptance](16-microcopy-and-density-acceptance.md).
