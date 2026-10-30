@@ -105,6 +105,7 @@ describe("help across pointer-over and pointer-out events", () => {
     mount(
       `<button id="a" data-control-id="${SAVE}">A</button><span id="tip" role="tooltip" data-help-for="${SAVE}">Help text</span><p id="away">away</p>`,
     );
+    ui.registerHelp(SAVE);
     return { trigger: element("#a"), tip: element("#tip") };
   }
 
@@ -143,6 +144,7 @@ describe("help across pointer-over and pointer-out events", () => {
 describe("refused activations", () => {
   it("do not tell the enclosing scope, while accepted ones do", async () => {
     mount(`<div id="layer"><button id="a" data-control-id="${SAVE}">A</button></div>`);
+    ui.registerHelp(SAVE);
     const onActivated = vi.fn();
     const leave = ui.runtime.focus.pushScope({ key: "popup:test", kind: "popup", container: element("#layer"), onActivated });
     ui.runtime.bus.setDisabled(SAVE, "Open a project first.");
@@ -208,6 +210,7 @@ describe("correlation of interface intents", () => {
 describe("pointer-over state that outlives its element", () => {
   it("is cleared by an accepted activation, because a removed element never reports the pointer leaving", async () => {
     mount(`<button id="a" data-control-id="${SAVE}">A</button>`);
+    ui.registerHelp(SAVE);
     fireEvent.pointerOver(element("#a"), { pointerType: "mouse" });
     expect(ui.runtime.input.help.isShown(SAVE)).toBe(true);
     fireEvent.click(element("#a"));

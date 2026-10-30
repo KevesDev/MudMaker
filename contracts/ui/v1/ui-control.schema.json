@@ -89,6 +89,10 @@
             "type": "string",
             "minLength": 10
           },
+          "showHelp": {
+            "type": "boolean",
+            "default": false
+          },
           "actionId": {
             "type": [
               "string",

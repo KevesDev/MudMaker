@@ -17,7 +17,7 @@ export interface DropdownProps {
 
 /** Native choice list, so keyboard, touch and screen readers get the platform behavior. */
 export function Dropdown({ control, options, value }: DropdownProps) {
-  const { attributes, runtime, shown, tipId } = useControlBinding(control, ["dropdown"], "Dropdown");
+  const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["dropdown"], "Dropdown");
   const selectId = useId();
   return (
     <span className="ui-anchor ui-field">
@@ -41,7 +41,7 @@ export function Dropdown({ control, options, value }: DropdownProps) {
         ))}
       </select>
       <StateText runtime={runtime} shown={shown} />
-      <Tooltip id={tipId} described={control} helpKey={control.id} />
+      <Tooltip id={tipId} helpKey={control.id} title={control.label} content={tip} />
     </span>
   );
 }

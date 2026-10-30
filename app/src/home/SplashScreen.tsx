@@ -60,7 +60,9 @@ export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
         </nav>
         {notice === null ? null : (
           <Toast
-            described={{ passive: true, id: "home.notice", label: control(notice.controlId).label, help: notice.message }}
+            id="home.notice"
+            title={control(notice.controlId).label}
+            message={notice.message}
             tone="information"
             {...(notice.code === null ? {} : { code: notice.code })}
             live={false}

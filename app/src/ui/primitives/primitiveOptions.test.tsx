@@ -17,14 +17,14 @@ const notice: PassiveDescriptor = { passive: true, id: "notice", label: "Heads u
 describe("Toast live role", () => {
   it("keeps a live role by default, so a notice that nothing else announces still reaches assistive technology", () => {
     const ui = createTestUi();
-    renderWithUi(ui, <Toast described={notice} tone="information" onDismiss={() => undefined} />);
+    renderWithUi(ui, <Toast id="notice" title="Heads up" message="Something happened" tone="information" onDismiss={() => undefined} />);
     expect(document.querySelector(".ui-toast")?.getAttribute("role")).toBe("status");
     expect(document.querySelector(".ui-toast")?.textContent).toContain("Something happened");
   });
 
   it("drops the live role when the owner has already announced the same words", () => {
     const ui = createTestUi();
-    renderWithUi(ui, <Toast described={notice} tone="error" live={false} onDismiss={() => undefined} />);
+    renderWithUi(ui, <Toast id="notice" title="Heads up" message="Something happened" tone="error" live={false} onDismiss={() => undefined} />);
     expect(document.querySelector(".ui-toast")?.hasAttribute("role")).toBe(false);
     expect(document.querySelector(".ui-toast")?.textContent).toContain("Something happened");
   });
@@ -37,8 +37,8 @@ describe("Progress text", () => {
     expect(document.querySelector(".ui-progress-value")?.textContent).toBe("50 percent");
   });
 
-  it("draws no words but keeps its accessible name and value when the screen already says what is happening", () => {
-    renderWithUi(createTestUi(), <Progress described={{ ...notice, help: "" }} fraction={null} showText={false} />);
+  it("draws no words but keeps its accessible name and value, and adds no description because help is not asked for", () => {
+    renderWithUi(createTestUi(), <Progress described={notice} fraction={null} showText={false} />);
     expect(document.querySelector(".ui-progress-label")).toBeNull();
     expect(document.querySelector(".ui-progress-value")).toBeNull();
     const bar = screen.getByRole("progressbar", { name: "Heads up" });
@@ -50,12 +50,12 @@ describe("Progress text", () => {
 
 describe("Toast title", () => {
   it("names the tone and the title by default", () => {
-    renderWithUi(createTestUi(), <Toast described={notice} tone="information" onDismiss={() => undefined} />);
+    renderWithUi(createTestUi(), <Toast id="notice" title="Heads up" message="Something happened" tone="information" onDismiss={() => undefined} />);
     expect(document.querySelector(".ui-toast-title")?.textContent).toBe(`${copy.toneLabel.information}: Heads up`);
   });
 
   it("shows only the message when the owner's sentence is complete on its own", () => {
-    renderWithUi(createTestUi(), <Toast described={notice} tone="information" showTitle={false} onDismiss={() => undefined} />);
+    renderWithUi(createTestUi(), <Toast id="notice" title="Heads up" message="Something happened" tone="information" showTitle={false} onDismiss={() => undefined} />);
     expect(document.querySelector(".ui-toast-title")).toBeNull();
     expect(document.querySelector(".ui-toast")?.textContent?.startsWith("Something happened")).toBe(true);
     expect(document.querySelector(".ui-toast")?.textContent).not.toContain(copy.toneLabel.information);

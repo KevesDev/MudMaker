@@ -10,7 +10,7 @@ export interface IconButtonProps {
 }
 
 export function IconButton({ control, icon }: IconButtonProps) {
-  const { attributes, runtime, shown, tipId } = useControlBinding(control, ["button"], "IconButton");
+  const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["button"], "IconButton", { iconOnly: true });
   return (
     <span className="ui-anchor">
       <button type="button" className="ui-control ui-hit ui-icon-button" aria-label={control.label} {...attributes}>
@@ -19,7 +19,7 @@ export function IconButton({ control, icon }: IconButtonProps) {
         </span>
       </button>
       <StateText runtime={runtime} shown={shown} />
-      <Tooltip id={tipId} described={control} helpKey={control.id} />
+      <Tooltip id={tipId} helpKey={control.id} title={control.label} content={tip} />
     </span>
   );
 }

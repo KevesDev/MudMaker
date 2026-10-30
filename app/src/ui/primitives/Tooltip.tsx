@@ -1,8 +1,7 @@
-import { useCallback, useSyncExternalStore } from "react";
-import { helpOf, isPassive, type Described } from "../actions/types";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { copy } from "../copy";
 import { useUi } from "../UiProvider";
-import { useControlRuntime } from "./shared";
+import type { TooltipContent } from "./tooltipRule";
 
 function useHelpShown(helpKey: string): boolean {
   const { input } = useUi();
@@ -12,46 +11,41 @@ function useHelpShown(helpKey: string): boolean {
   );
 }
 
-function useShortcutLabel(actionId: string | null): string | null {
-  const { shortcuts } = useUi();
-  useSyncExternalStore(
-    useCallback((listener) => shortcuts.subscribe(listener), [shortcuts]),
-    () => shortcuts.getVersion(),
-  );
-  return actionId === null ? null : shortcuts.labelFor(actionId);
-}
-
 export interface TooltipProps {
-  /** DOM id referenced by the control's aria-describedby. */
+  /** DOM id referenced by the control's aria-describedby when the tooltip adds a description. */
   readonly id: string;
-  readonly described: Described;
   /** Key the input manager uses for help state: a control id or a local command id. */
   readonly helpKey: string;
+  /** The control's name. */
+  readonly title: string;
+  /** Null when the tooltip rule gives this control no tooltip; nothing is rendered then. */
+  readonly content: TooltipContent | null;
 }
 
 /**
- * Label, short explanation, why the control is unavailable, and its shortcut. It shows on hover,
- * on keyboard focus and on an explicit help request, and always stays in the accessible description.
+ * The name plus whatever the tooltip rule calls for. It shows on hover, on keyboard focus and on an
+ * explicit help request, so it is never hover-only.
  */
-export function Tooltip({ id, described, helpKey }: TooltipProps) {
-  const passive = isPassive(described);
-  const runtime = useControlRuntime(passive ? null : described.id);
+export function Tooltip({ id, helpKey, title, content }: TooltipProps) {
+  const { input } = useUi();
   const shown = useHelpShown(helpKey);
-  const shortcut = useShortcutLabel(passive ? null : described.actionId);
+  const hasContent = content !== null;
+  useEffect(() => (hasContent ? input.help.register(helpKey) : undefined), [input, helpKey, hasContent]);
+  if (content === null) return null;
   return (
     <span role="tooltip" id={id} data-help-for={helpKey} className="ui-tooltip" hidden={!shown}>
-      <strong className="ui-tooltip-title">{described.label}</strong>
-      <span>{helpOf(described)}</span>
-      {runtime.state === "disabled" && runtime.reason !== null ? (
+      <strong className="ui-tooltip-title">{title}</strong>
+      {content.explanation === null ? null : <span>{content.explanation}</span>}
+      {content.reason === null ? null : (
         <span>
-          {copy.unavailablePrefix} {runtime.reason}
+          {copy.unavailablePrefix} {content.reason}
         </span>
-      ) : null}
-      {shortcut !== null ? (
+      )}
+      {content.shortcut === null ? null : (
         <span>
-          {copy.shortcutPrefix} {shortcut}
+          {copy.shortcutPrefix} {content.shortcut}
         </span>
-      ) : null}
+      )}
     </span>
   );
 }

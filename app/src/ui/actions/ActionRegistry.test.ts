@@ -150,6 +150,42 @@ describe("ActionRegistry validation", () => {
     expect(unknownKind[0]?.message).toContain("kind");
   });
 
+  describe("showHelp", () => {
+    const registryFor = (schema: unknown, fields: Record<string, unknown>): ActionRegistry => {
+      const result = ActionRegistry.create({ ...withEditor([control("editor", "toolbar", 1, { actionId: "ui.test.save", ...fields })]), schema });
+      if (!result.ok) throw new Error(result.issues.map((issue) => issue.message).join(" "));
+      return result.registry;
+    };
+    const withDefault = (value: unknown): unknown => {
+      const copy = JSON.parse(JSON.stringify(schemaJson)) as { properties: { controls: { items: { properties: { showHelp: Record<string, unknown> } } } } };
+      copy.properties.controls.items.properties.showHelp["default"] = value;
+      return copy;
+    };
+
+    it("is false when a catalog entry omits it and true only when the entry sets it", () => {
+      expect(registryFor(schemaJson, {}).requireControl("editor.toolbar.01").showHelp).toBe(false);
+      expect(registryFor(schemaJson, { showHelp: false }).requireControl("editor.toolbar.01").showHelp).toBe(false);
+      expect(registryFor(schemaJson, { showHelp: true }).requireControl("editor.toolbar.01").showHelp).toBe(true);
+    });
+
+    it("takes the value for an omitted entry from the schema default, not from a copy in the code", () => {
+      expect(registryFor(withDefault(true), {}).requireControl("editor.toolbar.01").showHelp).toBe(true);
+      expect(registryFor(withDefault(true), { showHelp: false }).requireControl("editor.toolbar.01").showHelp).toBe(false);
+    });
+
+    it("rejects a value that is not true or false, naming the control and the field", () => {
+      const issues = issuesFor({ actionId: "ui.test.save", showHelp: "yes" });
+      expect(issues).toEqual([expect.objectContaining({ code: "control-malformed", id: "editor.toolbar.01" })]);
+      expect(issues[0]?.message).toContain("showHelp");
+    });
+
+    it("rejects a schema that gives no true or false default", () => {
+      const issues = issuesOf({ ...fixtureSources(), schema: withDefault("no") });
+      expect(issues[0]).toMatchObject({ code: "schema-malformed" });
+      expect(issues[0]?.message).toContain("showHelp");
+    });
+  });
+
   it("rejects a schema that uses a rule the registry cannot enforce, instead of skipping it", () => {
     const odd = JSON.parse(JSON.stringify(schemaJson)) as { properties: { controls: { items: { properties: { label: Record<string, unknown> } } } } };
     odd.properties.controls.items.properties.label["maxLength"] = 5;
@@ -254,9 +290,14 @@ describe("the code that mirrors the control schema", () => {
   it("declares the property set the registry builds descriptors from", () => {
     expect(Object.keys(control).sort()).toEqual(
       [
-        "actionId", "enabledWhen", "id", "keyboard", "kind", "label", "permission", "stateOwner", "stateVariants", "surface", "testId", "tooltip", "visibleWhen", "workspace",
+        "actionId", "enabledWhen", "id", "keyboard", "kind", "label", "permission", "showHelp", "stateOwner", "stateVariants", "surface", "testId", "tooltip", "visibleWhen", "workspace",
       ].sort(),
     );
     expect(schemaJson.properties.controls.items.additionalProperties).toBe(false);
+  });
+
+  it("keeps showHelp optional and off by default, as the tooltip display rule requires", () => {
+    expect(schemaJson.properties.controls.items.required).not.toContain("showHelp");
+    expect(control.showHelp).toEqual({ type: "boolean", default: false });
   });
 });

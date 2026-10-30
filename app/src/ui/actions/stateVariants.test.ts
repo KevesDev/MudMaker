@@ -11,6 +11,7 @@ function withVariants(...stateVariants: string[]): ControlDescriptor {
     kind: "button",
     label: "Label",
     tooltip: "Explains what this does",
+    showHelp: false,
     actionId: "ui.test.save",
     stateOwner: "EditorState",
     permission: "localUser",

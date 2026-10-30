@@ -111,15 +111,16 @@ type Refusal =
 const READY: ControlRuntime = Object.freeze({ state: "ready", message: null, code: null, reason: null });
 const FAILURE_STATUSES: readonly FailureStatus[] = ["validation-error", "denied", "unavailable", "recoverable-error"];
 
+function hasText(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+/** A failure or refusal must say what happened and carry a code, because the UI shows both and cannot invent either. */
 function isOutcome(value: unknown): value is ActionOutcome {
   if (typeof value !== "object" || value === null) return false;
   const record = value as Readonly<Record<string, unknown>>;
   if (record["status"] === "success") return record["message"] === undefined || typeof record["message"] === "string";
-  return (
-    FAILURE_STATUSES.includes(record["status"] as FailureStatus) &&
-    typeof record["code"] === "string" &&
-    typeof record["message"] === "string"
-  );
+  return FAILURE_STATUSES.includes(record["status"] as FailureStatus) && hasText(record["code"]) && hasText(record["message"]);
 }
 
 type Listener = () => void;

@@ -75,7 +75,7 @@ describe("roles and accessible names", () => {
         </Toolbar>
         <Dropdown control={ui.control(LAYOUT)} options={[{ value: "a", label: "Side by side" }]} value="a" />
         <Menu opener={ui.control(GO_TO)} items={[ui.control(GO_SETTINGS)]} />
-        <Toast described={passive("saved", "Saved", "Your project was saved")} tone="success" onDismiss={() => undefined} />
+        <Toast id="saved" title="Saved" message="Your project was saved" tone="success" onDismiss={() => undefined} />
         <Progress described={passive("import", "Importing", "Reading the project package")} fraction={0.5} />
         <StatusIndicator described={ui.control(CONNECTION)} tone="success" text="Connected" />
         <TextField control={ui.control(NAME)} value="Moonhaven" onValueChange={() => undefined} />
@@ -86,7 +86,7 @@ describe("roles and accessible names", () => {
       </>,
     );
     expect(screen.getByRole("dialog", { name: "Rename project" })).toBeTruthy();
-    expect(screen.getAllByRole("tooltip", { hidden: true }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("tooltip", { hidden: true }).map((tip) => tip.textContent)).toEqual(["Undo"]);
     expect(screen.getAllByRole("button", { name: "Save Project" }).length).toBeGreaterThan(0);
     expect(screen.getByRole("button", { name: "Undo" })).toBeTruthy();
     expect(screen.getByRole("toolbar", { name: "Editing tools" })).toBeTruthy();
@@ -99,11 +99,11 @@ describe("roles and accessible names", () => {
     expect(screen.getByText("Done: Saved")).toBeTruthy();
   });
 
-  it("gives every control the catalog test id and its tooltip as an accessible description", () => {
+  it("gives a control its catalog test id and its label as the accessible name, with no description", () => {
     renderWithUi(ui, <Button control={ui.control(SAVE)} />);
     const button = screen.getByTestId("UI-editor-toolbar-01");
     expect(button.getAttribute("data-control-id")).toBe(SAVE);
-    expect(screen.getByRole("button", { name: "Save Project", description: /Save Project\s*Save the project draft/ })).toBe(button);
+    expect(screen.getByRole("button", { name: "Save Project", description: "" })).toBe(button);
   });
 
   it("refuses an icon-only control with a blank name, a display-only control, the wrong kind or an unlisted control", () => {
@@ -180,15 +180,17 @@ describe("activation and states", () => {
     expect(tip.textContent).toContain("Unavailable: Open a project first.");
   });
 
-  it("includes the assigned shortcut in the tooltip text", () => {
+  it("shows the assigned shortcut in the tooltip and leaves the catalog help text out of it", () => {
     ui.shortcut({ scope: "app", chord: "ctrl+s", actionId: "ui.test.save", owner: "test" });
     renderWithUi(ui, <Button control={ui.control(SAVE)} />);
     const tip = screen.getByRole("tooltip", { hidden: true });
     expect(tip.textContent).toContain("Shortcut: Ctrl+S");
-    expect(tip.textContent).toContain("Save the project draft");
+    expect(tip.textContent).not.toContain("Save the project draft");
+    expect(screen.getByRole("button", { name: "Save Project", description: /Shortcut: Ctrl\+S/ })).toBeTruthy();
   });
 
   it("unhides the tooltip element on keyboard focus and hides it again on Escape", () => {
+    ui.shortcut({ scope: "app", chord: "ctrl+s", actionId: "ui.test.save", owner: "test" });
     renderWithUi(ui, <Button control={ui.control(SAVE)} />);
     const tip = screen.getByRole("tooltip", { hidden: true });
     expect(tip.hidden).toBe(true);
@@ -408,6 +410,7 @@ describe("toolbar and menu", () => {
   });
 
   it("keeps help showing across the pointer-over and pointer-out events that move from a control onto its help text", () => {
+    ui.shortcut({ scope: "app", chord: "ctrl+s", actionId: "ui.test.save", owner: "test" });
     renderWithUi(ui, <Button control={ui.control(SAVE)} />);
     const button = screen.getByRole("button", { name: "Save Project" });
     const tip = screen.getByRole("tooltip", { hidden: true });
@@ -561,7 +564,7 @@ describe("dialog", () => {
 describe("toast, progress and status", () => {
   it("gives problems an alert role, spells out the tone, renders the code and dismisses through the input manager", () => {
     const onDismiss = vi.fn();
-    renderWithUi(ui, <Toast described={passive("failed", "Could not save", "The project folder is read only.")} tone="error" code="E-SAVE-12" onDismiss={onDismiss} />);
+    renderWithUi(ui, <Toast id="failed" title="Could not save" message="The project folder is read only." tone="error" code="E-SAVE-12" onDismiss={onDismiss} />);
     const toast = screen.getByText("Problem: Could not save").closest<HTMLElement>(".ui-toast");
     if (toast === null) throw new Error("Toast did not render");
     expect(toast.getAttribute("role")).toBe("alert");
@@ -572,7 +575,7 @@ describe("toast, progress and status", () => {
   });
 
   it("describes unknown progress in words and rejects a fraction outside 0 to 1", () => {
-    renderWithUi(ui, <Progress described={passive("scan", "Scanning", "Looking for project files")} fraction={null} />);
+    renderWithUi(ui, <Progress described={{ ...passive("scan", "Scanning", "Looking for project files"), showHelp: true }} fraction={null} />);
     const bar = screen.getByRole("progressbar", { name: "Scanning", description: "Looking for project files" });
     expect(bar.hasAttribute("aria-valuenow")).toBe(false);
     expect(bar.getAttribute("aria-valuetext")).toBe("Working");
@@ -588,8 +591,15 @@ describe("toast, progress and status", () => {
     }
   });
 
-  it("keeps the help text outside the live status element, and still describes the status with it", () => {
+  it("shows no hidden help for a status whose catalog entry does not ask for help", () => {
     renderWithUi(ui, <StatusIndicator described={ui.control(CONNECTION)} tone="warning" text="Reconnecting" />);
+    const status = screen.getByRole("status", { name: "Connection", description: "" });
+    expect(status.hasAttribute("aria-describedby")).toBe(false);
+    expect(screen.queryByText("Shows whether the engine is reachable")).toBeNull();
+  });
+
+  it("keeps the help text outside the live status element, and still describes the status with it", () => {
+    renderWithUi(ui, <StatusIndicator described={{ ...ui.control(CONNECTION), showHelp: true }} tone="warning" text="Reconnecting" />);
     const status = screen.getByRole("status", { name: "Connection", description: "Shows whether the engine is reachable" });
     expect(status.textContent).not.toContain("Shows whether the engine is reachable");
     expect(status.querySelector(".ui-visually-hidden")).toBeNull();
@@ -600,7 +610,7 @@ describe("toast, progress and status", () => {
 
   it("names the state in words, not only by color", () => {
     renderWithUi(ui, <StatusIndicator described={ui.control(CONNECTION)} tone="warning" text="Reconnecting" />);
-    const status = screen.getByRole("status", { name: "Connection", description: "Shows whether the engine is reachable" });
+    const status = screen.getByRole("status", { name: "Connection" });
     expect(status.textContent).toContain("Connection:");
     expect(status.textContent).toContain("Reconnecting");
     expect(status.getAttribute("data-tone")).toBe("warning");

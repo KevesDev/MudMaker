@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AUTOSAVE, CLIENT_SETTINGS, EDITOR, GO_SETTINGS, HOME, NAME, ORPHAN, SAVE, createTestUi, deferred, type TestUi } from "../testSupport";
+import { AUTOSAVE, CLIENT_SETTINGS, EDITOR, GO_SETTINGS, HOME, NAME, ORPHAN, SAVE, UNDO, createTestUi, deferred, type TestUi } from "../testSupport";
 import type { ActionOutcome, ActionRequest, HandlerRequest } from "./ActionBus";
 import { UI_LIMITS } from "./config";
 import { ActionBus } from "./ActionBus";
@@ -86,6 +86,32 @@ describe("ActionBus dispatch", () => {
     const result = await ui.runtime.bus.dispatch({ actionId: "ui.test.save", controlId: SAVE });
     expect(result).toMatchObject({ status: "recoverable-error", code: "handler-invalid-outcome" });
     expect(ui.runtime.bus.getRuntime(SAVE).state).toBe("recoverable-error");
+  });
+
+  it.each(FAILURES)(
+    "treats a %s result with an empty or blank message or code as invalid, and shows the safe sentence with one announcement and one diagnostic",
+    async (status) => {
+      for (const [message, code] of [["", "E-1"], ["   ", "E-1"], ["\n\t", "E-1"], ["Words.", ""], ["Words.", "  "]] as const) {
+        const ui = createTestUi();
+        const bad = (() => Promise.resolve({ status, code, message })) as unknown as (request: ActionRequest) => Promise<ActionOutcome>;
+        ui.runtime.bus.registerHandler(EDITOR, "ui.test.save", bad);
+        const result = await ui.runtime.bus.dispatch({ actionId: "ui.test.save", controlId: SAVE });
+        const label = JSON.stringify({ message, code });
+        expect(result, label).toMatchObject({ status: "recoverable-error", code: "handler-invalid-outcome", message: "Save Project did not finish. Please try again." });
+        expect(ui.runtime.bus.getRuntime(SAVE), label).toMatchObject({ state: "recoverable-error", message: "Save Project did not finish. Please try again." });
+        expect(ui.runtime.announcer.getLast()?.text, label).toBe("Save Project did not finish. Please try again.");
+        expect(ui.diagnostics.map((record) => record.code), label).toEqual(["handler-invalid-outcome"]);
+      }
+    },
+  );
+
+  it("still accepts a failure with real words and a code, and a success with no message", async () => {
+    const ui = createTestUi();
+    ui.runtime.bus.registerHandler(EDITOR, "ui.test.save", () => Promise.resolve<ActionOutcome>({ status: "denied", code: "E-1", message: "You cannot save here." }));
+    expect(await ui.runtime.bus.dispatch({ actionId: "ui.test.save", controlId: SAVE })).toMatchObject({ status: "denied", message: "You cannot save here." });
+    ui.runtime.bus.reset(SAVE);
+    ui.runtime.bus.registerHandler(EDITOR, "ui.test.undo", () => Promise.resolve<ActionOutcome>({ status: "success" }));
+    expect(await ui.runtime.bus.dispatch({ actionId: "ui.test.undo", controlId: UNDO })).toMatchObject({ status: "success" });
   });
 
   it("passes the typed value to the handler", async () => {

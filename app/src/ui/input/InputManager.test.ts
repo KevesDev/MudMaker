@@ -86,6 +86,7 @@ describe("activation", () => {
 
   it("explains a disabled control when it is pressed, without running its action", async () => {
     mount(`<button id="save" data-control-id="${SAVE}" aria-disabled="true">Save</button>`);
+    ui.registerHelp(SAVE);
     ui.runtime.bus.setDisabled(SAVE, "Open a project first.");
     fireEvent.click(element("#save"));
     await settle();
@@ -398,6 +399,7 @@ describe("arrow key groups", () => {
 describe("help", () => {
   it("tracks help for focus and pointer-over events, and Escape hides it as well as leaving the open dialog", () => {
     mount(`<button id="a" data-control-id="${SAVE}">A</button><div id="dialog" tabindex="-1"></div>`);
+    ui.registerHelp(SAVE);
     const onEscape = vi.fn();
     const a = element<HTMLButtonElement>("#a");
     a.focus();
@@ -417,21 +419,124 @@ describe("help", () => {
 
   it("opens on F1 for the focused control", () => {
     mount(`<button id="a" data-control-id="${SAVE}">A</button>`);
+    ui.registerHelp(SAVE);
     const a = element<HTMLButtonElement>("#a");
     fireEvent.keyDown(a, { key: "F1" });
     expect(ui.runtime.input.help.isShown(SAVE)).toBe(true);
   });
 
-  it("opens help on a context-menu event that follows a touch or pen press, and leaves a mouse context menu alone", () => {
-    mount(`<button id="a" data-control-id="${SAVE}">A</button>`);
-    const a = element<HTMLButtonElement>("#a");
-    fireEvent.pointerDown(a, { pointerType: "mouse" });
-    expect(fireEvent.contextMenu(a)).toBe(true);
-    expect(ui.runtime.input.help.isShown(SAVE)).toBe(false);
-    fireEvent.pointerDown(a, { pointerType: "touch" });
-    expect(fireEvent.contextMenu(a)).toBe(false);
-    expect(ui.runtime.input.help.isShown(SAVE)).toBe(true);
-    fireEvent.pointerDown(document.body, { pointerType: "touch" });
-    expect(ui.runtime.input.help.isShown(SAVE)).toBe(false);
+  describe("for a control that has no help yet", () => {
+    const markup = (): void => {
+      mount(
+        `<button id="a" data-control-id="${UNDO}">A</button><button id="b" data-control-id="${SAVE}" aria-disabled="true">B</button>` +
+          `<input id="field" type="text" data-control-id="${NAME}"><textarea id="area" data-ui-command="demo.area"></textarea>`,
+      );
+      ui.registerHelp(SAVE);
+    };
+
+    it("takes the help key and the long-press menu for the application, shows nothing and pins nothing", () => {
+      markup();
+      const a = element<HTMLButtonElement>("#a");
+      expect(fireEvent.keyDown(a, { key: "F1" })).toBe(false);
+      fireEvent.pointerDown(a, { pointerType: "touch" });
+      expect(fireEvent.contextMenu(a)).toBe(false);
+      expect(ui.runtime.input.help.current()).toBeNull();
+    });
+
+    it("keeps the native context menu in text fields but still owns the help key there", () => {
+      markup();
+      for (const id of ["#field", "#area"]) {
+        const field = element(id);
+        fireEvent.pointerDown(field, { pointerType: "touch" });
+        expect(fireEvent.contextMenu(field), id).toBe(true);
+        expect(fireEvent.keyDown(field, { key: "F1" }), id).toBe(false);
+      }
+      expect(ui.runtime.input.help.current()).toBeNull();
+    });
+
+    it("cannot hide the reason of another control that is hovered, focused or asked about", () => {
+      markup();
+      const [a, b] = [element<HTMLButtonElement>("#a"), element<HTMLButtonElement>("#b")];
+      fireEvent.keyDown(a, { key: "F1" });
+      fireEvent.pointerOver(a, { pointerType: "mouse" });
+      b.focus();
+      expect(ui.runtime.input.help.current()).toBe(SAVE);
+      b.blur();
+      a.focus();
+      fireEvent.pointerDown(a, { pointerType: "touch" });
+      fireEvent.contextMenu(a);
+      fireEvent.pointerOver(b, { pointerType: "mouse" });
+      expect(ui.runtime.input.help.current()).toBe(SAVE);
+    });
+
+    it("shows its reason at once when it becomes disabled while hovered or focused, and not before", () => {
+      markup();
+      const a = element<HTMLButtonElement>("#a");
+      fireEvent.pointerOver(a, { pointerType: "mouse" });
+      a.focus();
+      expect(ui.runtime.input.help.current()).toBeNull();
+      ui.registerHelp(UNDO);
+      expect(ui.runtime.input.help.current()).toBe(UNDO);
+    });
+
+    it("falls back to the hovered or focused control when a pinned one loses its help, and does not return to the pin when help comes back", () => {
+      markup();
+      const [a, b] = [element<HTMLButtonElement>("#a"), element<HTMLButtonElement>("#b")];
+      const give = ui.runtime.input.help.register(UNDO);
+      fireEvent.keyDown(a, { key: "F1" });
+      expect(ui.runtime.input.help.current()).toBe(UNDO);
+      fireEvent.pointerOver(b, { pointerType: "mouse" });
+      expect(ui.runtime.input.help.current()).toBe(UNDO);
+      give();
+      expect(ui.runtime.input.help.current()).toBe(SAVE);
+      ui.registerHelp(UNDO);
+      expect(ui.runtime.input.help.current()).toBe(SAVE);
+    });
+  });
+
+  describe("context menu", () => {
+    it.each(["mouse", "touch", "pen"])("is taken for help on a control with help after a %s press, and help hides on the next press elsewhere", (pointerType) => {
+      mount(`<button id="a" data-control-id="${SAVE}">A</button>`);
+      ui.registerHelp(SAVE);
+      const a = element<HTMLButtonElement>("#a");
+      fireEvent.pointerDown(a, { pointerType });
+      expect(fireEvent.contextMenu(a)).toBe(false);
+      expect(ui.runtime.input.help.isShown(SAVE)).toBe(true);
+      fireEvent.pointerDown(document.body, { pointerType });
+      expect(ui.runtime.input.help.isShown(SAVE)).toBe(false);
+    });
+
+    it("is taken for help when the keyboard context key is used on a focused control, with no pointer press before it", () => {
+      mount(`<button id="a" data-control-id="${SAVE}">A</button>`);
+      ui.registerHelp(SAVE);
+      const a = element<HTMLButtonElement>("#a");
+      a.focus();
+      fireEvent.keyDown(a, { key: "ContextMenu" });
+      expect(fireEvent.contextMenu(a)).toBe(false);
+      expect(ui.runtime.input.help.isShown(SAVE)).toBe(true);
+    });
+
+    it("is taken even by a control with no help, which shows nothing, and by a mouse right click after touch use", () => {
+      mount(`<button id="a" data-control-id="${UNDO}">A</button>`);
+      const a = element<HTMLButtonElement>("#a");
+      fireEvent.pointerDown(a, { pointerType: "touch" });
+      fireEvent.pointerDown(a, { pointerType: "mouse" });
+      expect(fireEvent.contextMenu(a)).toBe(false);
+      expect(ui.runtime.input.help.current()).toBeNull();
+    });
+
+    it("stays native in a text field for every pointer kind and the keyboard, and over elements that are not controls", () => {
+      mount(`<input id="field" type="text" data-control-id="${NAME}"><p id="plain">text</p>`);
+      ui.registerHelp(NAME);
+      const field = element<HTMLInputElement>("#field");
+      for (const pointerType of ["mouse", "touch", "pen"]) {
+        fireEvent.pointerDown(field, { pointerType });
+        expect(fireEvent.contextMenu(field), pointerType).toBe(true);
+        expect(ui.runtime.input.help.current(), pointerType).toBeNull();
+      }
+      expect(fireEvent.contextMenu(element("#plain"))).toBe(true);
+      field.focus();
+      expect(fireEvent.contextMenu(field)).toBe(true);
+    });
   });
 });

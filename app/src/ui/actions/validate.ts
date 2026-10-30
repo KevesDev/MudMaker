@@ -1,3 +1,4 @@
+import { readShowHelpDefault } from "./schemaDefaults";
 import { isRecord, validateAgainst, type SchemaProblem } from "./schemaRules";
 import { CATALOG_STATE_WORDS } from "./stateVariants";
 import type { ActionDescriptor, ControlDescriptor, ControlKind, StateOwner, WorkspaceId } from "./types";
@@ -113,7 +114,7 @@ function fieldName(problem: SchemaProblem): string {
   return problem.path.slice(2).join(".");
 }
 
-function describeControl(entry: Readonly<Record<string, unknown>>): ControlDescriptor {
+function describeControl(entry: Readonly<Record<string, unknown>>, showHelpDefault: boolean): ControlDescriptor {
   const actionId = entry["actionId"];
   return Object.freeze({
     id: String(entry["id"]),
@@ -122,6 +123,7 @@ function describeControl(entry: Readonly<Record<string, unknown>>): ControlDescr
     kind: entry["kind"] as ControlKind,
     label: String(entry["label"]),
     tooltip: String(entry["tooltip"]),
+    showHelp: entry["showHelp"] === undefined ? showHelpDefault : entry["showHelp"] === true,
     actionId: actionId === null ? null : String(actionId),
     stateOwner: entry["stateOwner"] as StateOwner,
     permission: String(entry["permission"]),
@@ -141,6 +143,11 @@ function describeControl(entry: Readonly<Record<string, unknown>>): ControlDescr
 export function parseCatalog(source: unknown, workspace: WorkspaceId, schema: Readonly<Record<string, unknown>>): ParsedCatalog {
   const issues: RegistryIssue[] = [];
   const controls: ControlDescriptor[] = [];
+  const showHelpDefault = readShowHelpDefault(schema);
+  if (!showHelpDefault.ok) {
+    issues.push({ code: "schema-malformed", id: "ui-control.schema", message: showHelpDefault.message });
+    return { controls, issues };
+  }
   const problems = validateAgainst(source, schema);
   const catalogProblems = problems.filter((problem) => problem.path[0] !== "controls" || typeof problem.path[1] !== "number");
   const mismatch = isRecord(source) && source["workspace"] !== workspace;
@@ -179,7 +186,7 @@ export function parseCatalog(source: unknown, workspace: WorkspaceId, schema: Re
       });
       return;
     }
-    const control = describeControl(entry);
+    const control = describeControl(entry, showHelpDefault.value);
     const unknownVariants = control.stateVariants.filter((word) => !CATALOG_STATE_WORDS.has(word));
     if (unknownVariants.length > 0) {
       issues.push({

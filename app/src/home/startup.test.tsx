@@ -109,15 +109,14 @@ describe("when a check that trying again can fix fails", () => {
     expect(shown.map((candidate) => candidate.id)).toEqual([SPLASH.startupStatus, SPLASH.retry]);
   });
 
-  it("shows Retry as the catalog control with its test id, name, tooltip and a keyboard stop", async () => {
+  it("shows Retry as the catalog control with its test id, name and a keyboard stop, and without a tooltip or description", async () => {
     await openFailed(healthyHome({ getAppInfo: () => Promise.reject(new Error("down")) }));
-    const retry = screen.getByRole("button", { name: retryEntry.label });
+    const retry = screen.getByRole("button", { name: retryEntry.label, description: "" });
     expect(retry.getAttribute("data-control-id")).toBe(SPLASH.retry);
     expect(retry.getAttribute("data-testid")).toBe(retryEntry.testId);
     expect(retry.tabIndex).toBe(0);
-    const tooltip = document.getElementById(retry.getAttribute("aria-describedby") ?? "");
-    expect(tooltip?.getAttribute("role")).toBe("tooltip");
-    expect(tooltip?.textContent).toContain(retryEntry.tooltip);
+    expect(retry.hasAttribute("aria-describedby")).toBe(false);
+    expect(document.querySelectorAll('[role="tooltip"]')).toHaveLength(0);
   });
 
   it("runs every check again when Retry is clicked, moves focus to the heading on success and logs nothing more", async () => {

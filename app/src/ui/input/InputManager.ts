@@ -53,7 +53,7 @@ function pointerKindOf(event: PointerEvent): PointerKind {
 }
 
 /** Actions and local commands share one help key space: the control id or the command id. */
-function helpIdOf(element: Element | null): string | null {
+function helpKeyOf(element: Element | null): string | null {
   return (
     element?.getAttribute("data-control-id") ??
     element?.getAttribute("data-ui-command") ??
@@ -81,7 +81,6 @@ export class InputManager {
   private readonly surfaces = new Map<HTMLElement, InputSurface>();
   private readonly surfaceIds = new Set<string>();
   private readonly commands = new Map<string, () => void>();
-  private lastPointerKind: PointerKind = "mouse";
   private teardown: (() => void) | null = null;
   private wheelListener: ((event: WheelEvent) => void) | null = null;
 
@@ -191,7 +190,7 @@ export class InputManager {
     }
     const target = event.target instanceof Element ? event.target : null;
     if (event.key === "F1") {
-      const helpId = helpIdOf(this.helpAt(target));
+      const helpId = helpKeyOf(this.helpAt(target));
       if (helpId !== null) {
         event.preventDefault();
         this.help.pin(helpId);
@@ -342,7 +341,7 @@ export class InputManager {
   }
 
   private onFocusIn(event: FocusEvent): void {
-    this.help.setFocused(helpIdOf(this.helpAt(event.target)));
+    this.help.setFocused(helpKeyOf(this.helpAt(event.target)));
   }
 
   private onFocusOut(): void {
@@ -352,17 +351,16 @@ export class InputManager {
 
   private onPointerOver(event: PointerEvent): void {
     if (pointerKindOf(event) !== "mouse") return;
-    this.help.setHovered(helpIdOf(this.helpAt(event.target)));
+    this.help.setHovered(helpKeyOf(this.helpAt(event.target)));
   }
 
   /** Moving from a control onto its help text keeps the help showing, so it can be read and hovered. */
   private onPointerOut(event: PointerEvent): void {
-    if (pointerKindOf(event) === "mouse") this.help.setHovered(helpIdOf(this.helpAt(event.relatedTarget)));
+    if (pointerKindOf(event) === "mouse") this.help.setHovered(helpKeyOf(this.helpAt(event.relatedTarget)));
   }
 
   private onPointerDown(event: PointerEvent): void {
     const kind = pointerKindOf(event);
-    this.lastPointerKind = kind;
     this.setModality(kind);
     this.deps.focus.endActivation();
     this.help.unpin();
@@ -373,11 +371,15 @@ export class InputManager {
     }
   }
 
-  /** A long press on touch or pen raises the context menu event; it opens help instead of a hidden command. */
+  /**
+   * A long press, a right click and the keyboard context key all raise the context menu event; the application
+   * takes it for help instead of the native menu, whether or not the control has help. Text fields keep the
+   * native menu for copy and paste.
+   */
   private onContextMenu(event: MouseEvent): void {
-    if (this.lastPointerKind === "mouse") return;
-    const helpId = helpIdOf(this.helpAt(event.target));
-    if (helpId === null) return;
+    const holder = this.helpAt(event.target);
+    const helpId = helpKeyOf(holder);
+    if (helpId === null || isTextEntry(holder)) return;
     event.preventDefault();
     this.help.pin(helpId);
   }
@@ -426,6 +428,7 @@ export class InputManager {
     return target instanceof Element ? target.closest(CONTROL_SELECTOR) : null;
   }
 
+  /** The element under the target that can hold help; whether it has any is the help tracker's to say. */
   private helpAt(target: EventTarget | null): Element | null {
     return target instanceof Element ? target.closest(HELP_SELECTOR) : null;
   }

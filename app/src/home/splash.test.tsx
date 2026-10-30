@@ -1,8 +1,8 @@
 /** See homeTestSupport.tsx for what these tests cannot prove. */
 import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import homeCatalog from "../../../contracts/ui/v1/home-controls.v1.json";
-import { loadShippedRegistry, type ControlDescriptor } from "../ui";
+import { ActionBus, loadShippedRegistry, type ControlDescriptor } from "../ui";
 import { DEFERRED_CONDITIONS, IMPLEMENTED_CONDITIONS, SPLASH, WORKSPACE_ENTRIES, isVisible } from "./homeLayout";
 import { SHELL_INFO, breaksCopyRules, copyOnScreen, healthyHome, liveAnnouncements, renderApp, startupRecords, visibleText, type TestHome } from "./homeTestSupport";
 
@@ -48,22 +48,14 @@ afterEach(() => {
   document.documentElement.removeAttribute("data-input-modality");
 });
 
-function describedBy(element: HTMLElement): string {
-  const ids = (element.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id.length > 0);
-  return ids.map((id) => document.getElementById(id)?.textContent ?? "").join(" ");
-}
-
-/** The checks a rendered action button must pass: test id, name, tooltip help and a native keyboard stop. */
+/** The checks a rendered action button must pass: test id, name, a native keyboard stop and no description, since the screen gives it no reason for a tooltip. */
 function expectActionButton(entry: CatalogControl): void {
   const element = elementOf(entry.id);
-  expect(within(document.body).getByRole("button", { name: entry.label }), entry.id).toBe(element);
+  expect(within(document.body).getByRole("button", { name: entry.label, description: "" }), entry.id).toBe(element);
   expect(element.getAttribute("data-control-id")).toBe(entry.id);
   expect(element.tagName, entry.id).toBe("BUTTON");
   expect(element.tabIndex, entry.id).toBe(0);
-  const tooltip = document.getElementById(element.getAttribute("aria-describedby") ?? "");
-  expect(tooltip?.getAttribute("role"), entry.id).toBe("tooltip");
-  expect(tooltip?.textContent, entry.id).toContain(entry.label);
-  expect(tooltip?.textContent, entry.id).toContain(entry.tooltip);
+  expect(element.hasAttribute("aria-describedby"), entry.id).toBe(false);
 }
 
 describe("every control of the splash surface", () => {
@@ -96,8 +88,10 @@ describe("every control of the splash surface", () => {
     }
   });
 
-  it("is rendered with its catalog test id, name, help and a keyboard path exactly when the catalog shows it on the loaded screen", async () => {
+  it("is rendered with its catalog test id, name and a keyboard path exactly when the catalog shows it on the loaded screen, with no tooltip", async () => {
     await openSplash();
+    expect(document.querySelectorAll('[role="tooltip"]')).toHaveLength(0);
+    for (const entry of shownOnLoadedSplash) expect(document.body.textContent, entry.id).not.toContain(entry.tooltip);
     expect(shownOnLoadedSplash.map((entry) => entry.id)).toEqual([SPLASH.name, SPLASH.version, ...WORKSPACE_ENTRIES, SPLASH.quit, SPLASH.settings]);
     expect(shownOnLoadedSplash.every((entry) => isVisible(descriptorOf(entry.id), "ready"))).toBe(true);
     for (const entry of shownOnLoadedSplash) {
@@ -105,7 +99,7 @@ describe("every control of the splash surface", () => {
         const opener = elementOf(entry.id);
         expect(within(document.body).getByRole("button", { name: entry.label })).toBe(opener);
         expect(opener.getAttribute("aria-haspopup")).toBe("menu");
-        expect(describedBy(opener)).toContain(entry.tooltip);
+        expect(opener.hasAttribute("aria-describedby")).toBe(false);
       } else if (entry.actionId !== null) {
         expectActionButton(entry);
       } else {
@@ -255,6 +249,37 @@ describe("Create, Play and Host", () => {
     await waitFor(() => expect(document.querySelectorAll(".ui-toast")).toHaveLength(0));
     expect(document.activeElement).toBe(elementOf(SPLASH.host));
     expect(elementOf(SPLASH.host).getAttribute("data-state")).toBe("ready");
+  });
+});
+
+describe("an owner that answers a failure with no words", () => {
+  const SAFE_SENTENCE = "Create did not finish. Please try again.";
+
+  it.each([
+    ["an empty message", ""],
+    ["a message of only spaces", "   "],
+  ])("keeps the screen, shows the plain sentence once and announces it once for %s", async (_name, message) => {
+    const held: { bus: ActionBus | null } = { bus: null };
+    const register = ActionBus.prototype.registerHandler;
+    vi.spyOn(ActionBus.prototype, "registerHandler").mockImplementation(function (this: ActionBus, ...args) {
+      held.bus = this;
+      return register.apply(this, args);
+    });
+    try {
+      const home = await openSplash();
+      const create = descriptorOf(SPLASH.create);
+      const owner = registry.action(create.actionId ?? "")?.owner ?? "";
+      held.bus?.registerHandler(owner, create.actionId ?? "", () => Promise.resolve({ status: "recoverable-error", code: "E-BLANK", message }));
+      const heading = screen.getByRole("heading", { level: 1 });
+      fireEvent.click(elementOf(SPLASH.create));
+      await waitFor(() => expect(document.querySelectorAll(".ui-toast")).toHaveLength(1));
+      expect(document.querySelector(".ui-toast")?.textContent?.startsWith(SAFE_SENTENCE)).toBe(true);
+      expect(screen.getByRole("heading", { level: 1 })).toBe(heading);
+      expect(liveAnnouncements(SAFE_SENTENCE)).toHaveLength(1);
+      expect(home.records.filter((record) => !("check" in record)).map((record) => record.code)).toEqual(["handler-invalid-outcome"]);
+    } finally {
+      vi.restoreAllMocks();
+    }
   });
 });
 

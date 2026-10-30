@@ -14,16 +14,19 @@ export interface StatusIndicatorProps {
 export function StatusIndicator({ described, tone, text }: StatusIndicatorProps) {
   const name = requireName(described, "StatusIndicator");
   const helpId = useId();
+  const help = helpOf(described);
   // The help sits beside the live region, not in it, so an update announces the state and not the help again.
   return (
     <>
-      <span role="status" aria-label={name} aria-describedby={helpId} className="ui-status" data-tone={tone}>
+      <span role="status" aria-label={name} aria-describedby={help.length > 0 ? helpId : undefined} className="ui-status" data-tone={tone}>
         <span aria-hidden="true" className="ui-status-dot" />
         <span className="ui-status-name">{name}:</span> <span className="ui-status-text">{text}</span>
       </span>
-      <span id={helpId} className="ui-visually-hidden">
-        {helpOf(described)}
-      </span>
+      {help.length > 0 ? (
+        <span id={helpId} className="ui-visually-hidden">
+          {help}
+        </span>
+      ) : null}
     </>
   );
 }

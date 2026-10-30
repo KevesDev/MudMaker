@@ -30,14 +30,14 @@ export interface MenuChoices {
 export const openMenuHandler: ActionHandler = () => Promise.resolve({ status: "success", message: "" });
 
 function MenuItem({ control }: { readonly control: ControlDescriptor }) {
-  const { attributes, runtime, shown, tipId } = useControlBinding(control, ["button"], "Menu");
+  const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["button"], "Menu");
   return (
     <span className="ui-anchor ui-menu-item">
       <button type="button" role="menuitem" className="ui-control ui-hit ui-button" {...attributes}>
         {control.label}
       </button>
       <StateText runtime={runtime} shown={shown} />
-      <Tooltip id={tipId} described={control} helpKey={control.id} />
+      <Tooltip id={tipId} helpKey={control.id} title={control.label} content={tip} />
     </span>
   );
 }
@@ -79,7 +79,7 @@ function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
  */
 export function Menu({ opener, items, choices }: MenuProps) {
   const ui = useUi();
-  const { attributes, runtime, shown, tipId } = useControlBinding(opener, ["dropdown", "button"], "Menu");
+  const { attributes, runtime, shown, tipId, tip } = useControlBinding(opener, ["dropdown", "button"], "Menu");
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -138,7 +138,7 @@ export function Menu({ opener, items, choices }: MenuProps) {
           {choices === undefined ? null : <MenuChoiceGroup choices={choices} />}
         </div>
       ) : null}
-      <Tooltip id={tipId} described={opener} helpKey={opener.id} />
+      <Tooltip id={tipId} helpKey={opener.id} title={opener.label} content={tip} />
     </span>
   );
 }

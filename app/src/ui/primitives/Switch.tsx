@@ -9,7 +9,7 @@ export interface SwitchProps {
 }
 
 export function Switch({ control, checked }: SwitchProps) {
-  const { attributes, runtime, shown, tipId } = useControlBinding(control, ["toggle"], "Switch");
+  const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["toggle"], "Switch");
   return (
     <span className="ui-anchor">
       <button type="button" role="switch" aria-checked={checked} className="ui-control ui-hit ui-switch" {...attributes}>
@@ -19,7 +19,7 @@ export function Switch({ control, checked }: SwitchProps) {
         <span>{control.label}</span>
       </button>
       <StateText runtime={runtime} shown={shown} />
-      <Tooltip id={tipId} described={control} helpKey={control.id} />
+      <Tooltip id={tipId} helpKey={control.id} title={control.label} content={tip} />
     </span>
   );
 }

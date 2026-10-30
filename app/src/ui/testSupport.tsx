@@ -135,6 +135,8 @@ export function fixtureRegistry(): ActionRegistry {
 
 export interface TestUi {
   readonly runtime: UiRuntime;
+  /** Records that a tooltip with content exists for the key, as a rendered tooltip does. */
+  registerHelp(key: string): void;
   /** Registers a shortcut and fails the test at once if the registry refuses it. */
   shortcut(request: ShortcutRequest): void;
   readonly diagnostics: UiDiagnostic[];
@@ -149,6 +151,9 @@ export function createTestUi(options: Pick<UiRuntimeOptions, "maxPendingMs" | "c
     runtime,
     diagnostics,
     control: (id) => registry.requireControl(id),
+    registerHelp: (key) => {
+      runtime.input.help.register(key);
+    },
     shortcut: (request) => {
       const result = runtime.shortcuts.register(request);
       if (!result.ok) throw new Error(result.error.message);

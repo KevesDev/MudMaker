@@ -25,9 +25,10 @@ const SUPPORTED_KEYWORDS: ReadonlySet<string> = new Set([
   "pattern",
   "minItems",
   "items",
+  "default",
 ]);
 
-const JSON_TYPES = ["object", "array", "string", "null"] as const;
+const JSON_TYPES = ["object", "array", "string", "boolean", "null"] as const;
 
 export function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

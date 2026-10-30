@@ -35,7 +35,9 @@ export interface ControlDescriptor {
   readonly surface: string;
   readonly kind: ControlKind;
   readonly label: string;
+  /** Help content for Help and documentation; it is rendered on screen only when showHelp is true. */
   readonly tooltip: string;
+  readonly showHelp: boolean;
   readonly actionId: ActionId | null;
   readonly stateOwner: StateOwner;
   readonly permission: string;
@@ -54,6 +56,8 @@ export interface PassiveDescriptor {
   readonly id: string;
   readonly label: string;
   readonly help: string;
+  /** The help text is shown or described only when this is true, the same switch a catalog entry has. */
+  readonly showHelp?: boolean;
 }
 
 export type Described = ControlDescriptor | PassiveDescriptor;
@@ -77,7 +81,9 @@ export function isActionControl(control: ControlDescriptor): control is ActionCo
   return control.actionId !== null;
 }
 
+/** The help text a described element may put on screen or in its accessible description; empty unless it sets showHelp. */
 export function helpOf(described: Described): string {
+  if (described.showHelp !== true) return "";
   return isPassive(described) ? described.help : described.tooltip;
 }
 

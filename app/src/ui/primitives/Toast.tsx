@@ -1,12 +1,15 @@
-import { helpOf, type Described } from "../actions/types";
+import { UiContractError } from "../actions/types";
 import { copy } from "../copy";
 import { requireName, useCommand, useLatest } from "./shared";
 
 export type ToastTone = keyof typeof copy.toneLabel;
 
 export interface ToastProps {
-  /** The title and message. The id must be unique among toasts on screen. */
-  readonly described: Described;
+  /** Must be unique among toasts on screen. */
+  readonly id: string;
+  readonly title: string;
+  /** The notice itself. A toast never shows without one. */
+  readonly message: string;
   readonly tone: ToastTone;
   /** Stable error code shown so the user can quote it to support. */
   readonly code?: string;
@@ -21,9 +24,12 @@ export interface ToastProps {
  * A notice that stays until dismissed, so nothing disappears before it is read. Problems use an
  * alert role and everything else a polite status; the tone is also spelled out in words.
  */
-export function Toast({ described, tone, code, onDismiss, live = true, showTitle = true }: ToastProps) {
-  const title = requireName(described, "Toast");
-  const dismissCommand = `toast.dismiss.${described.id}`;
+export function Toast({ id, title: name, message, tone, code, onDismiss, live = true, showTitle = true }: ToastProps) {
+  const title = requireName({ id, label: name }, "Toast");
+  if (message.trim().length === 0) {
+    throw new UiContractError("message-missing", id, `Toast "${id}" has no message to show.`);
+  }
+  const dismissCommand = `toast.dismiss.${id}`;
   const dismiss = useLatest(onDismiss);
   useCommand(dismissCommand, () => dismiss.current());
   return (
@@ -33,7 +39,7 @@ export function Toast({ described, tone, code, onDismiss, live = true, showTitle
           {copy.toneLabel[tone]}: {title}
         </strong>
       ) : null}
-      <span className="ui-toast-message">{helpOf(described)}</span>
+      <span className="ui-toast-message">{message}</span>
       {code === undefined ? null : <span className="ui-toast-code">{copy.reference(code)}</span>}
       <button type="button" className="ui-control ui-hit ui-button" data-ui-command={dismissCommand}>
         {copy.dismiss}

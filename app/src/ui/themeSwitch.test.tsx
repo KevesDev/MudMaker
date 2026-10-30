@@ -39,7 +39,7 @@ describe("theme changes while the shared parts are mounted", () => {
         <TextField control={ui.control(NAME)} value="Moonhaven" onValueChange={() => undefined} />
         <Switch control={ui.control(AUTOSAVE)} checked />
         <Progress described={{ passive: true, id: "scan", label: "Scanning", help: "Looking for project files" }} fraction={null} />
-        <Toast described={{ passive: true, id: "saved", label: "Saved", help: "Your project was saved" }} tone="success" onDismiss={() => undefined} />
+        <Toast id="saved" title="Saved" message="Your project was saved" tone="success" onDismiss={() => undefined} />
         <Dialog open title="Settings" onClose={() => undefined}>
           <Button control={ui.control("editor.toolbar.02")} />
         </Dialog>

@@ -17,14 +17,15 @@ export interface TextFieldProps {
  * by an error, because the value belongs to the owner and only changes through onValueChange.
  */
 export function TextField({ control, value, onValueChange, type = "text", constraints }: TextFieldProps) {
-  const { attributes, runtime, shown, tipId, disabled } = useControlBinding(control, ["input"], "TextField");
+  const { attributes, runtime, shown, tipId, tip, disabled } = useControlBinding(control, ["input"], "TextField");
   const inputId = useId();
   const hintId = useId();
   const messageId = useId();
   const showsMessage = shown !== "ready" && shown !== "disabled" && runtime.message !== null;
-  const describedBy = [constraints === undefined ? null : hintId, showsMessage ? messageId : null, tipId]
-    .filter((id) => id !== null)
-    .join(" ");
+  const describedBy =
+    [constraints === undefined ? null : hintId, showsMessage ? messageId : null, attributes["aria-describedby"] ?? null]
+      .filter((id) => id !== null)
+      .join(" ") || undefined;
   return (
     <span className="ui-anchor ui-field">
       <label htmlFor={inputId} className="ui-label">
@@ -49,7 +50,7 @@ export function TextField({ control, value, onValueChange, type = "text", constr
         </span>
       )}
       <StateText runtime={runtime} shown={shown} id={messageId} />
-      <Tooltip id={tipId} described={control} helpKey={control.id} />
+      <Tooltip id={tipId} helpKey={control.id} title={control.label} content={tip} />
     </span>
   );
 }
