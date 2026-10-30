@@ -30,6 +30,14 @@ export interface ResolvedTheme {
   readonly tokens: TokenMap;
 }
 
+/** What a scope was told to resolve from, as opposed to the tokens that came out. Persistence saves these. */
+export interface ThemeInputs {
+  readonly presetId: string;
+  readonly userTheme: UserThemeDocument | null;
+  readonly overrides: TokenMap;
+  readonly accessibility: AccessibilitySettings;
+}
+
 export const DEFAULTS_SCHEMA = "mudmaker.theme-defaults.v1";
 export const USER_THEME_SCHEMA = "mudmaker.theme.v1";
 

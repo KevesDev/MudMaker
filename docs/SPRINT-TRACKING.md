@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **34/42** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **37/42** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -125,9 +125,9 @@
 | **S02.7b Pen input** | Pen pressure-free drawing and hover semantics, palm rejection rules | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
 | **S02.7c Keyboard workspace navigation** | Complete keyboard path across shells, panels and canvas | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
 | **S02.7d Tablet layout** | Drawers and stacked panels at tablet sizes, target sizes from tokens (USER TEST) | DONE | Auditor PASS round 1 (2026-10-30). Real touch and pen feel needs a device; F6 and narrow-window drawers testable now |
-| **S02.8a Editor control binding** | Bind implemented editor widgets to the editor catalog and action owners | TODO | — |
-| **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | TODO | — |
-| **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | TODO | — |
+| **S02.8a Editor control binding** | Bind implemented editor widgets to the editor catalog and action owners | DONE | Auditor PASS round 1 (2026-10-30) |
+| **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | DONE | Auditor PASS round 1 (2026-10-30) |
+| **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | DONE | Auditor PASS round 1 (2026-10-30) |
 | **S02.9b Theme editor and preview** | Settings > Appearance holds theme preset selection plus custom-theme edit/preview with cancel; remove Appearance selector from Splash, no gameplay effect | TODO | — |
 | **S02.9c Theme import and export** | Data-only import with exact token diagnostics and export (USER TEST) | TODO | — |
 | **S02.9d Shortcut preferences** | Customize, import, export and reset keyboard shortcuts per scope with conflict display (interaction contract obligation; needs S02.9a persistence) | TODO | — |
@@ -553,3 +553,4 @@ Record implementation commit, focused test and Auditor PASS in the phase Evidenc
 - Canvas: log or show a visible failure when no 2D context exists; draw once on mount, not twice; cap the canvas backing-store size for extreme pixel ratios; ignore a second pointer while a drag is active (`GraphViewport.tsx`).
 - Overlay inspector has no dismiss path (Escape, tap outside); add the DockPanel pattern when the selection feature lands (`editor/SplitView.tsx`).
 - Gesture recognizer: treat a repeated pointer id as a cancel and handle lost pointer capture (`GestureRecognizer.ts`).
+- Flush pending preferences before `quit_app` so a theme change within 400 ms of Quit is not lost; keep the file untouched after a failed read once a second owner exists; give the window a dark background while the saved settings load (`PreferencesStore.ts`, `launch.ts`, `index.html`).

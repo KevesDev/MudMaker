@@ -1,7 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
-import { startTheme, themeManager } from "./theme";
+import { readPreferences, writePreferences } from "./appInfo";
+import { productionDependencies } from "./home/homeDependencies";
+import { PreferencesStore } from "./prefs";
+import { launch } from "./launch";
+import { themeManager } from "./theme";
 import "./styles.css";
 import "./home/home.css";
 import "./frame/frame.css";
@@ -10,12 +14,17 @@ import "./workspaces/workspaces.css";
 import "./editor/editor.css";
 import "./canvas/canvas.css";
 
-startTheme(themeManager, "home", window);
-
 const container = document.getElementById("root");
 if (!container) throw new Error("Root element is missing");
-createRoot(container).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+
+void launch({
+  preferences: new PreferencesStore({ bridge: { read: readPreferences, write: writePreferences }, report: productionDependencies.report }),
+  manager: themeManager,
+  window,
+  mount: () =>
+    createRoot(container).render(
+      <StrictMode>
+        <App />
+      </StrictMode>,
+    ),
+});

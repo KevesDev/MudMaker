@@ -17,6 +17,7 @@ export {
   type ResolvedTheme,
   type ScopeId,
   type ThemeError,
+  type ThemeInputs,
   type ThemeErrorCode,
   type ThemeResult,
   type TokenMap,

@@ -1000,7 +1000,7 @@
       "actionId": null,
       "stateOwner": "HostAdminState",
       "permission": "hostOperator",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "hostIsRunning",
       "enabledWhen": "notApplicable",
       "stateVariants": [
         "visible",
@@ -1021,7 +1021,7 @@
       "actionId": "ui.host.projectSelect",
       "stateOwner": "HostAdminState",
       "permission": "hostOperator",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "projectsToHostExist",
       "enabledWhen": "hostLeaseFree",
       "stateVariants": [
         "ready",
@@ -1042,7 +1042,7 @@
       "actionId": null,
       "stateOwner": "HostAdminState",
       "permission": "hostOperator",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "hostIsRunning",
       "enabledWhen": "notApplicable",
       "stateVariants": [
         "visible",

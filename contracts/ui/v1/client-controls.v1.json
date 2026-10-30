@@ -2281,7 +2281,7 @@
       "actionId": null,
       "stateOwner": "ClientState",
       "permission": "localPlayer",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "hostIsRunning",
       "enabledWhen": "notApplicable",
       "stateVariants": [
         "visible",
@@ -2302,7 +2302,7 @@
       "actionId": null,
       "stateOwner": "ClientState",
       "permission": "localPlayer",
-      "visibleWhen": "surfaceActive",
+      "visibleWhen": "remoteSessionsExist",
       "enabledWhen": "notApplicable",
       "stateVariants": [
         "visible",

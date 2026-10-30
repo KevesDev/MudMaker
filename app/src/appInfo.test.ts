@@ -60,6 +60,9 @@ describe("the shell command bridge", () => {
     expect(bridgeCalls(bridgeSource).size).toBeGreaterThan(3);
     expect(shellCommands(shellSource).size).toBeGreaterThan(3);
     expect(shellCommands(shellSource).get("write_diagnostic")).toEqual(["record"]);
+    expect(shellCommands(shellSource).get("read_preferences")).toEqual([]);
+    expect(shellCommands(shellSource).get("write_preferences")).toEqual(["document"]);
+    expect(bridgeCalls(bridgeSource).get("write_preferences")).toEqual(["document"]);
   });
 
   it("agrees between the real bridge and the real shell", () => {
@@ -69,7 +72,9 @@ describe("the shell command bridge", () => {
   it.each([
     ["a command renamed in the shell", bridgeSource, shellSource.replace("fn write_diagnostic(", "fn write_diagnostics(")],
     ["an argument key renamed in the bridge", bridgeSource.replace("{ record }", "{ records }"), shellSource],
-    ["a command left out of the handler list", bridgeSource, shellSource.replace("write_diagnostic, quit_app", "quit_app")],
+    ["a command left out of the handler list", bridgeSource, shellSource.replace("write_diagnostic, read_preferences", "read_preferences")],
+    ["a preferences command left out of the handler list", bridgeSource, shellSource.replace("write_preferences, ", "")],
+    ["a preferences argument key renamed in the bridge", bridgeSource.replace("{ document }", "{ documents }"), shellSource],
     ["a bridge command the shell does not define", `${bridgeSource}\nexport const ghost = () => invoke<void>("ghost_command");`, shellSource],
   ])("reports %s as a mismatch", (_name, bridge, shell) => {
     expect(mismatches(bridge, shell).length).toBeGreaterThan(0);

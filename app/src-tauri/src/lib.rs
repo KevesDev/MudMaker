@@ -1,4 +1,5 @@
 pub mod diagnostic_log;
+pub mod preferences;
 #[cfg(test)]
 mod test_scratch;
 
@@ -119,6 +120,25 @@ fn write_diagnostic(app: tauri::AppHandle, launch: tauri::State<LaunchId>, recor
     diagnostic_log::record_diagnostic(&directory, &launch.0, record, now_ms()).map_err(|error| unwritable(error.to_string()))
 }
 
+fn app_data_directory(app: &tauri::AppHandle, code: &'static str) -> Result<PathBuf, ShellError> {
+    app.path().app_data_dir().map_err(|error| ShellError { code, message: format!("The settings folder could not be found. {error}") })
+}
+
+/// The saved settings document, or null when there is none or it could not be used; a damaged file is set aside and logged.
+#[tauri::command]
+fn read_preferences(app: tauri::AppHandle, launch: tauri::State<LaunchId>) -> Result<Option<serde_json::Value>, ShellError> {
+    let directory = app_data_directory(&app, "preferences_unreadable")?;
+    Ok(preferences::load_and_report(&directory, &launch.0, now_ms(), preferences::MAX_PREFERENCES_BYTES))
+}
+
+/// Replaces the saved settings document atomically. A refusal or failure is returned for the interface to log.
+#[tauri::command]
+fn write_preferences(app: tauri::AppHandle, document: serde_json::Value) -> Result<(), ShellError> {
+    let directory = app_data_directory(&app, "preferences_unwritable")?;
+    preferences::save(&directory, &document, preferences::MAX_PREFERENCES_BYTES)
+        .map_err(|error| ShellError { code: error.code, message: format!("Settings could not be saved. {}", error.detail) })
+}
+
 #[tauri::command]
 fn quit_app(app: tauri::AppHandle) {
     app.exit(0);
@@ -127,7 +147,7 @@ fn quit_app(app: tauri::AppHandle) {
 pub fn run() {
     tauri::Builder::default()
         .manage(LaunchId(new_launch_id()))
-        .invoke_handler(tauri::generate_handler![app_info, engine_status, write_diagnostic, quit_app])
+        .invoke_handler(tauri::generate_handler![app_info, engine_status, write_diagnostic, read_preferences, write_preferences, quit_app])
         .run(tauri::generate_context!())
         .expect("MudMaker could not start the application window");
 }

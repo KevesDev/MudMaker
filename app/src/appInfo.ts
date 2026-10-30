@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import type { PreferencesDocument } from "./prefs";
 import type { UiDiagnostic } from "./ui";
 
 export interface AppInfo {
@@ -31,6 +32,15 @@ export function getEngineStatus(): Promise<EngineStatus> {
 
 export function writeDiagnostic(record: DiagnosticRecord): Promise<void> {
   return invoke<void>("write_diagnostic", { record });
+}
+
+/** The saved settings document, or null when there is none or it could not be used. */
+export function readPreferences(): Promise<unknown> {
+  return invoke<unknown>("read_preferences");
+}
+
+export function writePreferences(document: PreferencesDocument): Promise<void> {
+  return invoke<void>("write_preferences", { document });
 }
 
 export function quitApp(): Promise<void> {

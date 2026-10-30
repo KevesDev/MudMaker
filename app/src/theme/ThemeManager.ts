@@ -9,25 +9,18 @@ import {
   type ResolvedTheme,
   type ScopeId,
   type ThemeError,
+  type ThemeInputs,
   type ThemeResult,
   type TokenMap,
-  type UserThemeDocument,
 } from "./types";
 import { parseTokenLayer, parseUserTheme, themeError, validateAccessibility } from "./validate";
 
 type Listener = () => void;
 
-interface ScopeInputs {
-  readonly presetId: string;
-  readonly userTheme: UserThemeDocument | null;
-  readonly overrides: TokenMap;
-  readonly accessibility: AccessibilitySettings;
-}
-
 interface ScopeState {
   readonly defaultTokens: TokenMap;
   readonly presetTokens: ReadonlyMap<string, TokenMap>;
-  inputs: ScopeInputs;
+  inputs: ThemeInputs;
   snapshot: ResolvedTheme;
   readonly listeners: Set<Listener>;
 }
@@ -58,7 +51,7 @@ export class ThemeManager {
         else problems.push(...check.errors);
       }
       if (problems.length > 0) throw new ThemeDefaultsError(problems);
-      const inputs: ScopeInputs = {
+      const inputs: ThemeInputs = {
         presetId: entry.presetId,
         userTheme: null,
         overrides: NO_TOKENS,
@@ -84,6 +77,11 @@ export class ThemeManager {
 
   getSnapshot(scope: ScopeId): ResolvedTheme {
     return this.stateOf(scope).snapshot;
+  }
+
+  /** The preset, user theme, overrides and accessibility choices the scope currently resolves from. */
+  getInputs(scope: ScopeId): ThemeInputs {
+    return this.stateOf(scope).inputs;
   }
 
   /** Listeners are notified once per accepted change to this scope, never for rejected input. */
@@ -133,7 +131,7 @@ export class ThemeManager {
 
   private apply(
     scope: ScopeId,
-    change: (inputs: ScopeInputs) => ScopeInputs,
+    change: (inputs: ThemeInputs) => ThemeInputs,
     inputErrors: readonly ThemeError[],
   ): ThemeResult {
     if (!isScopeId(scope)) {
