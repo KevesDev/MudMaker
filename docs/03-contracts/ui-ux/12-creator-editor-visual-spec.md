@@ -4,7 +4,7 @@
 
 ## Default screen
 - A **single compact top toolbar**: current project/name and accurate unsaved indicator; frequent **Save**, **Undo/Redo** and relevant **Validate/Test** actions where available; restrained contextual tools; **Settings ▾** and **Go To ▾** at the same predictable far end as Play and Host.
-- **Settings ▾ → Appearance** (editor-scoped theme/typography) plus editor-specific preferences/layout/shortcuts. **Go To ▾ → Play, Host, Splash/Home** while in Create. Current workspace is identifiable, not an active menu item.
+- **Settings ▾ → Appearance** (editor-scoped theme/typography) plus editor-specific preferences/layout/shortcuts. **Go To ▾ → Play, Host** while in Create (no Home or Splash entry). Current workspace is identifiable, not an active menu item.
 - **Central canvas/document dominates**: map, visual graph, script editor or other selected authoring surface. Retain existing dark continuous **graph-paper lines, never dots**, on graph/map canvas as the theme contract requires.
 - **Asset Explorer** available in a compact collapsible rail/drawer, not a full-time huge navigation tree when unneeded. Project-level switching and asset search can live in a small header/command affordance.
 - **Inspector is contextual:** opens for a selected room/entity/node/asset; tight field groups with readable labels. No enormous always-open blank panel; no nested tabs for every property category by default.
@@ -131,11 +131,11 @@ This section maps **every currently registered control** to a visual home. It is
 
 ### editor.navigation
 
-**Where:** Top toolbar → Go To (Play / Host / Home).
+**Where:** Top toolbar → Go To (Play / Host).
 
 **Presentation:** No clickable Create item; active-host indicator conditional; remove obsolete Play connected-state outside Play.
 
-**Registered features (7):** `editor.navigation.01` Go To; `editor.navigation.02` Create; `editor.navigation.03` Play; `editor.navigation.04` Host; `editor.navigation.05` Splash; `editor.navigation.06` Hosting in Background; `editor.navigation.07` Client Connections.
+**Registered features (7):** `editor.navigation.01` Go To; `editor.navigation.02` Create; `editor.navigation.03` Play; `editor.navigation.04` Host; `editor.navigation.06` Hosting in Background; `editor.navigation.07` Client Connections.
 
 ### editor.navigationGuard
 

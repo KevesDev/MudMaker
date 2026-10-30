@@ -4,7 +4,7 @@
 
 ## Default screen
 - Unified **compact top toolbar**: hosted world/release if selected, truthful host state, only a few frequent safe operations such as relevant Start/Stop where allowed; **Settings ▾** and **Go To ▾** at the same positions as the other workspaces.
-- **Settings ▾ → Appearance** for host-scoped visual preferences; separate operational network/security configuration remains under clearly differentiated Host settings, not confused with cosmetic preferences. **Go To ▾ → Create, Play, Splash/Home** while in Host.
+- **Settings ▾ → Appearance** for host-scoped visual preferences; separate operational network/security configuration remains under clearly differentiated Host settings, not confused with cosmetic preferences. **Go To ▾ → Create, Play** while in Host (no Home or Splash entry).
 - **Primary operations area** centers on active/selected world and the next meaningful host action. Display concise actual health, players and listener state when available, not decorative metric cards. If stopped, show selected release and safe start/preflight path; if running, show state and stop/management controls.
 - **Logs, active sessions/moderation, backups/recovery, networking/security and metrics** remain available in compact menu-led sections, contextual drawers or focused views. Do not show every tool as a permanently open column of data panels; do not hide dangerous actions behind ambiguous icons.
 - Destructive operations, recovery, active players and network exposure require clear labels, verified pending/error state and proper confirmations. Nothing silently binds public ports.
@@ -62,11 +62,11 @@ This section maps **every currently registered control** to a visual home. It is
 
 ### host.navigation
 
-**Where:** Top toolbar → Go To (Create / Play / Home).
+**Where:** Top toolbar → Go To (Create / Play).
 
 **Presentation:** No clickable Host item; hosted project selector and single-host lock live in Host, not in a duplicated nav rail.
 
-**Registered features (8):** `host.navigation.01` Go To; `host.navigation.02` Create; `host.navigation.03` Play; `host.navigation.04` Host; `host.navigation.05` Splash; `host.navigation.06` Current Hosted Project; `host.navigation.07` Project to Host; `host.navigation.08` Single Host Lock.
+**Registered features (8):** `host.navigation.01` Go To; `host.navigation.02` Create; `host.navigation.03` Play; `host.navigation.04` Host; `host.navigation.06` Current Hosted Project; `host.navigation.07` Project to Host; `host.navigation.08` Single Host Lock.
 
 ### host.navigationGuard
 
