@@ -2823,7 +2823,7 @@
       "surface": "editor.navigation",
       "kind": "dropdown",
       "label": "Go To",
-      "tooltip": "Navigate to Create, Play, Host or Splash with state-safe prompts",
+      "tooltip": "Navigate to Create, Play or Host with state-safe prompts",
       "actionId": "ui.nav.openMenu",
       "stateOwner": "EditorState",
       "permission": "localUser",
@@ -2900,27 +2900,6 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-editor-navigation-04"
-    },
-    {
-      "id": "editor.navigation.05",
-      "workspace": "editor",
-      "surface": "editor.navigation",
-      "kind": "button",
-      "label": "Splash",
-      "tooltip": "Return to MudMaker launcher with retained sessions",
-      "actionId": "ui.nav.home",
-      "stateOwner": "EditorState",
-      "permission": "localUser",
-      "visibleWhen": "surfaceActive",
-      "enabledWhen": "authorizedAndReady",
-      "stateVariants": [
-        "ready",
-        "disabled",
-        "pending",
-        "error"
-      ],
-      "keyboard": "focusAndActivate",
-      "testId": "UI-editor-navigation-05"
     },
     {
       "id": "editor.navigation.06",

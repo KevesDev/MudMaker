@@ -13,7 +13,7 @@
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-- The workspace's current identity is plain text; it must NOT be a redundant clickable Go To item. Go To offers the other two workspaces plus Home/Splash. In Host: Create, Play, Home. In Create: Play, Host, Home. In Play: Create, Host, Home.
+- The workspace's current identity is plain text; it must NOT be a redundant clickable Go To item. There are exactly three workspaces, Create, Play and Host, besides the Splash. Go To offers only the other two. In Host: Create, Play. In Create: Play, Host. In Play: Create, Host.
 - Settings → Appearance is always findable in the same menu location, but editor/client/host preference scope remains separate. Other settings grouped by purpose. Secondary functionality belongs to contextual menus and drawers, not an always-visible app-wide tab strip.
 - Opening menu: anchored to trigger, compact one-column options, keyboard focus, Escape dismissal and focus restoration. Active, disabled and pending states have explicit accessible explanations. A dropdown never automatically changes workspace merely by focus/hover.
 - When width contracts: keep Settings and Go To reachable in compact overflow or appropriate drawer, not clipped; never transform the main surface into four columns.

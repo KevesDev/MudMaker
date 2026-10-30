@@ -1423,16 +1423,6 @@
       "remoteDefinitionAllowed": false
     },
     {
-      "id": "ui.nav.home",
-      "owner": "WorkspaceNavigator",
-      "mutationDomain": "workspaceNavigation",
-      "origin": "localUserGesture",
-      "auth": "owningServiceMustRevalidate",
-      "input": "typedByControlSchema",
-      "outcome": "confirmedOrStructuredError",
-      "remoteDefinitionAllowed": false
-    },
-    {
       "id": "ui.nav.editorKeepDraft",
       "owner": "WorkspaceNavigator",
       "mutationDomain": "workspaceNavigation",

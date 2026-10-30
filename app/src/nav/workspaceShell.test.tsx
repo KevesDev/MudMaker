@@ -89,24 +89,23 @@ describe("opening the workspaces", () => {
 });
 
 describe("Go To", () => {
-  it("lists the other two workspaces and then Home, never the current one, and goes through all of them and back to the splash", async () => {
+  it("lists exactly the other two workspaces, never the current one or the splash, and goes through all of them", async () => {
     await openSplash();
     fireEvent.click(screen.getByRole("button", { name: label(SPLASH.create) }));
     await screen.findByRole("main", { name: identityOf("create") });
     const route: readonly [WorkspaceDestination, readonly WorkspaceDestination[], string][] = [
       ["create", ["play", "host"], identityOf("play")],
       ["play", ["create", "host"], identityOf("host")],
-      ["host", ["create", "play"], label(NAVIGATION.host.entries.splash)],
+      ["host", ["create", "play"], identityOf("create")],
     ];
     for (const [from, others, next] of route) {
       const menu = await goTo(from);
-      expect(menuNames(menu)).toEqual([...others.map(identityOf), label(NAVIGATION[from].entries.splash)]);
+      expect(menuNames(menu)).toEqual(others.map(identityOf));
       expect(within(menu).queryByRole("menuitem", { name: identityOf(from) })).toBeNull();
       fireEvent.click(within(menu).getByRole("menuitem", { name: next }));
       await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
     }
-    expect(await screen.findByRole("heading", { level: 1 })).toBeTruthy();
-    expect(visibleText()).not.toContain(MENU_CARET);
+    await screen.findByRole("main", { name: identityOf("create") });
   });
 
   it("closes on Escape without switching and gives focus back to Go To", async () => {
@@ -120,7 +119,7 @@ describe("Go To", () => {
     expect(visibleRegion("play")).toBeTruthy();
   });
 
-  it("keeps every opened workspace and its local state through any route, including a visit to the splash", async () => {
+  it("keeps every opened workspace and its local state through Go To", async () => {
     function Counter() {
       const [count, setCount] = useState(0);
       return (
@@ -137,11 +136,6 @@ describe("Go To", () => {
     await screen.findByRole("main", { name: identityOf("play") });
     expect(region("create").hidden).toBe(true);
     await chooseGoTo("play", identityOf("create"));
-    expect(await screen.findByRole("button", { name: "Count 2" })).toBeTruthy();
-    await chooseGoTo("create", label(NAVIGATION.create.entries.splash));
-    await screen.findByRole("heading", { level: 1 });
-    expect(region("create").hidden).toBe(true);
-    fireEvent.click(screen.getByRole("button", { name: label(SPLASH.create) }));
     expect(await screen.findByRole("button", { name: "Count 2" })).toBeTruthy();
   });
 });

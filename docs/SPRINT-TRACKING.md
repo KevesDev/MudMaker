@@ -546,5 +546,4 @@ Record implementation commit, focused test and Auditor PASS in the phase Evidenc
 - Footer icons (gear, door) do not follow their label color through the role mapping in `home.css`; add mappings if the owner wants one-color pairs.
 - Plate layout coverage over the scene is proven by CSS text only; pixel confirmation is part of the owner review.
 - Rename the window frame action owner to the shared shell router across `actions.v1.json`, `frameActions.ts` and tests, or keep the current name deliberately (S02.4 audit).
-- The Go To Home entry is labelled "Splash"; doc 15 says Home, so relabel the catalog entry `editor.navigation.05` and its siblings to "Home".
 - `WorkspaceNotice` dismiss returns focus through a test id lookup; use a ref.

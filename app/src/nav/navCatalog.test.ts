@@ -3,26 +3,26 @@ import { describe, expect, it } from "vitest";
 import actionsJson from "../../../contracts/ui/v1/actions.v1.json";
 import { SCOPE_IDS } from "../theme";
 import { createUiRuntime, loadShippedRegistry } from "../ui";
-import { DESTINATIONS, DESTINATION_ACTIONS, NAVIGATION, NAVIGATOR_OWNER, WORKSPACE_DESTINATIONS, WORKSPACE_SCOPE, goToDestinations } from "./destinations";
+import { DESTINATION_ACTIONS, NAVIGATION, NAVIGATOR_OWNER, WORKSPACE_DESTINATIONS, WORKSPACE_SCOPE, goToDestinations } from "./destinations";
 import { CHOICE_ACTIONS, OPEN_MENU_ACTION, CANCEL_ACTION, registerNavigatorActions } from "./navigatorActions";
 import { WorkspaceNavigator } from "./WorkspaceNavigator";
 
 const registry = loadShippedRegistry();
 
-/** What docs 10 and 15 list in each workspace: the other two workspaces, then Home. */
-const GO_TO_LISTS = { create: ["play", "host", "splash"], play: ["create", "host", "splash"], host: ["create", "play", "splash"] } as const;
+/** What docs 10 and 15 list in each workspace: the other two workspaces, only. */
+const GO_TO_LISTS = { create: ["play", "host"], play: ["create", "host"], host: ["create", "play"] } as const;
 
 describe("workspace navigation controls", () => {
   it.each(WORKSPACE_DESTINATIONS)("%s has an opener and one entry per destination, bound to that destination's action", (workspace) => {
     const { opener, entries } = NAVIGATION[workspace];
     expect(registry.requireControl(opener).actionId).toBe(OPEN_MENU_ACTION);
-    for (const destination of DESTINATIONS) {
+    for (const destination of WORKSPACE_DESTINATIONS) {
       expect(registry.requireControl(entries[destination]).actionId, `${workspace} entry for ${destination}`).toBe(DESTINATION_ACTIONS[destination]);
     }
   });
 
   it.each(WORKSPACE_DESTINATIONS)("%s marks exactly its own entry as the current destination, which Go To leaves out", (workspace) => {
-    const current = DESTINATIONS.filter((destination) => registry.requireControl(NAVIGATION[workspace].entries[destination]).enabledWhen === "currentDestinationDisabled");
+    const current = WORKSPACE_DESTINATIONS.filter((destination) => registry.requireControl(NAVIGATION[workspace].entries[destination]).enabledWhen === "currentDestinationDisabled");
     expect(current).toEqual([workspace]);
     expect(goToDestinations(workspace)).toEqual(GO_TO_LISTS[workspace]);
   });

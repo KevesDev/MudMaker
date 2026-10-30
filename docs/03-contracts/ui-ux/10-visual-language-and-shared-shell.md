@@ -13,7 +13,7 @@
 ## Unified toolbar, separate commands
 Creator, Play and Host use a **common single-row toolbar design**: compact workspace identity/current context at start, immediate frequent actions in the middle, and stable **Settings ▾** and **Go To ▾** at the end. Same height, alignment, typography, interaction/focus treatment and icon conventions; **content and permissions differ by workspace**.
 - **Settings ▾ → Appearance** in **every** Creator, Play and Host toolbar. Scope-specific appearance changes are applied through the existing ThemeManager (editor, client, host). Other settings can be grouped logically underneath; do not create duplicate appearance systems.
-- **Go To ▾** lists the **other** destinations among Create, Play and Host. Example: from Host → Create, Play. Current workspace is identified in the toolbar but **not offered as a clickable redundant destination**. Provide an unobtrusive **Splash / Home** destination as well, to preserve the navigation contract and return path. Do not duplicate these controls in a second sidebar.
+- **Go To ▾** lists the **other** destinations among Create, Play and Host. Example: from Host → Create, Play. Current workspace is identified in the toolbar but **not offered as a clickable redundant destination**. There are exactly three workspaces, Create, Play and Host, besides the Splash; Go To lists only the other two. Do not duplicate these controls in a second sidebar.
 - Toolbar actions have real registered ActionIds and owners; single-action buttons only for frequent tasks. Less frequent commands belong in compact menus or context surfaces. A workspace-specific overflow is acceptable when needed, never a permanent second button ribbon.
 - Switching **out of Play** disconnects its active game sessions after a Disconnect & Switch / Cancel guard; there is no background client connection. **Hosting** alone can persist on another workspace while the application stays open; app exit stops hosting (or can be canceled).
 - Only show meaningful truthful state: unsaved Editor draft, connected state within Play, active host when applicable. **Splash uses `Active World: {world}` only while hosting**.
@@ -29,7 +29,7 @@ Creator, Play and Host use a **common single-row toolbar design**: compact works
 
 ## Visual acceptance checks
 - At ordinary desktop width, each workspace makes its primary task obvious without scanning a grid of cards or navigating clusters of redundant tabs.
-- Both dropdowns are easy to find and usable from keyboard, pointer and touch; Settings contains Appearance, and Go To offers the other destinations plus Home.
+- Both dropdowns are easy to find and usable from keyboard, pointer and touch; Settings contains Appearance, and Go To offers only the other two workspaces.
 - A basic task is performed with minimal repeated navigation; nothing falsely claims connected/saved/hosted state.
 - Increasing font scale or narrowing window does not hide actions, overlap the primary work area, or make targets inaccessible.
 - Builder must map every newly displayed actionable element to [control/action registry](../../../contracts/ui/v1/INDEX.md). These documents do not supersede functional behavior contracts.

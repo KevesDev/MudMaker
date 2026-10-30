@@ -991,27 +991,6 @@
       "testId": "UI-host-navigation-04"
     },
     {
-      "id": "host.navigation.05",
-      "workspace": "host",
-      "surface": "host.navigation",
-      "kind": "button",
-      "label": "Splash",
-      "tooltip": "Return to launcher, with host leave guard",
-      "actionId": "ui.nav.home",
-      "stateOwner": "HostAdminState",
-      "permission": "hostOperator",
-      "visibleWhen": "surfaceActive",
-      "enabledWhen": "authorizedAndReady",
-      "stateVariants": [
-        "ready",
-        "disabled",
-        "pending",
-        "error"
-      ],
-      "keyboard": "focusAndActivate",
-      "testId": "UI-host-navigation-05"
-    },
-    {
       "id": "host.navigation.06",
       "workspace": "host",
       "surface": "host.navigation",

@@ -13,32 +13,31 @@ export function isWorkspace(destination: Destination): destination is WorkspaceD
 /** The owner the action table names for every `ui.nav.*` action. */
 export const NAVIGATOR_OWNER = "WorkspaceNavigator";
 
-/** The action that asks to go to each destination. */
-export const DESTINATION_ACTIONS: Readonly<Record<Destination, ActionId>> = {
+/** The action that asks to go to each workspace. The splash is only where the app starts. */
+export const DESTINATION_ACTIONS: Readonly<Record<WorkspaceDestination, ActionId>> = {
   create: "ui.nav.create",
   play: "ui.nav.play",
   host: "ui.nav.host",
-  splash: "ui.nav.home",
 };
 
 /** The Go To opener and the entry for each destination in a workspace's own navigation surface. The entry for the workspace itself names it. */
 export interface NavigationControls {
   readonly opener: ControlId;
-  readonly entries: Readonly<Record<Destination, ControlId>>;
+  readonly entries: Readonly<Record<WorkspaceDestination, ControlId>>;
 }
 
 export const NAVIGATION: Readonly<Record<WorkspaceDestination, NavigationControls>> = {
   create: {
     opener: "editor.navigation.01",
-    entries: { create: "editor.navigation.02", play: "editor.navigation.03", host: "editor.navigation.04", splash: "editor.navigation.05" },
+    entries: { create: "editor.navigation.02", play: "editor.navigation.03", host: "editor.navigation.04" },
   },
   play: {
     opener: "client.navigation.01",
-    entries: { create: "client.navigation.02", play: "client.navigation.03", host: "client.navigation.04", splash: "client.navigation.05" },
+    entries: { create: "client.navigation.02", play: "client.navigation.03", host: "client.navigation.04" },
   },
   host: {
     opener: "host.navigation.01",
-    entries: { create: "host.navigation.02", play: "host.navigation.03", host: "host.navigation.04", splash: "host.navigation.05" },
+    entries: { create: "host.navigation.02", play: "host.navigation.03", host: "host.navigation.04" },
   },
 };
 
@@ -48,7 +47,7 @@ export const WORKSPACE_SCOPE = { create: "editor", play: "client", host: "host" 
 /** The decorative caret that tells a menu opener from a plain button. */
 export const MENU_CARET = "▾";
 
-/** The Go To destinations of a workspace in catalog order: every destination except the workspace itself. */
-export function goToDestinations(workspace: WorkspaceDestination): readonly Destination[] {
-  return [...WORKSPACE_DESTINATIONS, "splash" as const].filter((destination) => destination !== workspace);
+/** The Go To destinations of a workspace in catalog order: the other two workspaces. */
+export function goToDestinations(workspace: WorkspaceDestination): readonly WorkspaceDestination[] {
+  return WORKSPACE_DESTINATIONS.filter((destination) => destination !== workspace);
 }

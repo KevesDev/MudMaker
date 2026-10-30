@@ -2193,7 +2193,7 @@
       "surface": "client.navigation",
       "kind": "dropdown",
       "label": "Go To",
-      "tooltip": "Switch among Create, Play, Host, and Splash without losing game state",
+      "tooltip": "Switch among Create, Play and Host without losing game state",
       "actionId": "ui.nav.openMenu",
       "stateOwner": "ClientState",
       "permission": "localPlayer",
@@ -2270,27 +2270,6 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-client-navigation-04"
-    },
-    {
-      "id": "client.navigation.05",
-      "workspace": "client",
-      "surface": "client.navigation",
-      "kind": "button",
-      "label": "Splash",
-      "tooltip": "Return to MudMaker launcher; keep or disconnect as chosen",
-      "actionId": "ui.nav.home",
-      "stateOwner": "ClientState",
-      "permission": "localPlayer",
-      "visibleWhen": "surfaceActive",
-      "enabledWhen": "authorizedAndReady",
-      "stateVariants": [
-        "ready",
-        "disabled",
-        "pending",
-        "error"
-      ],
-      "keyboard": "focusAndActivate",
-      "testId": "UI-client-navigation-05"
     },
     {
       "id": "client.navigation.06",

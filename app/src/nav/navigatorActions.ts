@@ -1,5 +1,5 @@
 import { openMenuHandler, type ActionBus, type ActionHandler, type ActionId, type ActionOutcome } from "../ui";
-import { DESTINATIONS, DESTINATION_ACTIONS, NAVIGATOR_OWNER } from "./destinations";
+import { WORKSPACE_DESTINATIONS, DESTINATION_ACTIONS, NAVIGATOR_OWNER } from "./destinations";
 import { CHOICES, type Choice, type NavigationOutcome, type WorkspaceNavigator } from "./WorkspaceNavigator";
 
 /** The action each choice of the leave guard answers. */
@@ -26,7 +26,7 @@ export function registerNavigatorActions(bus: ActionBus, navigator: WorkspaceNav
   const removers = [
     bus.registerHandler(NAVIGATOR_OWNER, OPEN_MENU_ACTION, openMenuHandler),
     bus.registerHandler(NAVIGATOR_OWNER, CANCEL_ACTION, () => Promise.resolve(outcomeOf(navigator.cancel()))),
-    ...DESTINATIONS.map((destination) => {
+    ...WORKSPACE_DESTINATIONS.map((destination) => {
       const go: ActionHandler = async ({ signal }) => outcomeOf(await navigator.request(destination, signal));
       return bus.registerHandler(NAVIGATOR_OWNER, DESTINATION_ACTIONS[destination], go);
     }),
