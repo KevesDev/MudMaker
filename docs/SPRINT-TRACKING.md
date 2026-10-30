@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **11/37** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **11/39** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -101,7 +101,10 @@
 | **S02.3c Appearance preset switch** | Switch Neon Lights and Neon Dark Mode live through the ThemeManager; says choice is not saved yet (USER TEST) | DONE | Auditor PASS (re-audit 2026-10-29); original implementation checkpoint completed. Owner decision since then: appearance selection belongs under Settings > Appearance, not on Splash; placement to be reconciled in S02.9 |
 | **S02.3d Diagnostic log** | Launch correlation id from the shell and a bounded local structured diagnostic log written by the shell, fed by the UI diagnostic sink with severity levels | DONE | Auditor PASS (final 2026-10-29). Unix permission test compiles for Linux but has not run: run `diagnostic_log_is_private_to_the_owner` on Linux and macOS in S18.1 |
 | **S02.3e Production-only launch screen** | Remove on-screen diagnostics and not-yet-real content: startup check results go to the diagnostic log; success shows none; Recent Projects/Worlds appear only when real data exists (S04.6, S08.2); Active World only while hosting (S17.4); engine check becomes blocking at S03.4 (USER TEST) | TODO | — |
-| **S02.3f Launch screen visual build** | Build the splash to the owner visual spec [11](03-contracts/ui-ux/11-splash-screen-visual-spec.md) and shared language [10](03-contracts/ui-ux/10-visual-language-and-shared-shell.md) with ASCII artwork rendered from theme tokens (USER TEST) | TODO | — |
+| **S02.3f Settings and Appearance** | Settings menu on the launch screen with Appearance (preset choice for every scope) per [11](03-contracts/ui-ux/11-splash-screen-visual-spec.md) and [17](03-contracts/ui-ux/17-splash-art-and-window-frame.md); selector removed from the splash; catalog reconciled (USER TEST) | TODO | — |
+| **S02.3g Window frame** | Custom top row per [17](03-contracts/ui-ux/17-splash-art-and-window-frame.md): OS title bar removed, drag region, minimize, maximize and close as registered controls, close behaves as Quit; reusable as the shared toolbar row (USER TEST) | TODO | — |
+| **S02.3h Splash layout and wordmark** | Block-letter wordmark, divider, equal-weight Create/Play/Host row with accent tokens, footer, Active World line, loading and failure states, narrow reflow, all per [15](03-contracts/ui-ux/15-screen-wireframes-and-interaction-states.md) and [17](03-contracts/ui-ux/17-splash-art-and-window-frame.md) (USER TEST) | TODO | — |
+| **S02.3i Text-mode art and icons** | Palette-index art renderer (half-block pixels, token colors), pixel icons and the fantasy landscape from the owner mockup, clear zone and contrast proof (USER TEST) | TODO | — |
 | **S02.4a Workspace navigator** | One navigator for Create/Play/Host/Splash: preserve editor drafts and active hosting across workspace changes, never a Play network connection | TODO | — |
 | **S02.4b Go To menu** | Shared toolbar Go To menu on every workspace shell with current destination marked (USER TEST) | TODO | — |
 | **S02.4c Draft retention and transition guard** | Retain editor drafts; Save/Keep Draft/Cancel. Define Play Disconnect & Switch/Cancel (no background Play sockets) and Host Keep Hosting/Stop Hosting/Cancel; S08/S17 wire real services (USER TEST) | TODO | — |

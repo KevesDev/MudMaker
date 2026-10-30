@@ -6,6 +6,7 @@
 |---|---|
 | Use the shared **retro minimalist layout, compact toolbar and anti-clutter rules** | [10 shared visual language](10-visual-language-and-shared-shell.md) |
 | Mock up or implement the Splash layout | [11 Splash visual specification](11-splash-screen-visual-spec.md) |
+| Build the splash art, wordmark, icons and custom window frame | [17 Splash art and window frame](17-splash-art-and-window-frame.md) |
 | Mock up or implement Creator workspace layout | [12 Creator visual specification](12-creator-editor-visual-spec.md) |
 | Mock up or implement Play workspace layout | [13 Play visual specification](13-play-client-visual-spec.md) |
 | Mock up or implement Host workspace layout | [14 Host visual specification](14-host-operations-visual-spec.md) |
