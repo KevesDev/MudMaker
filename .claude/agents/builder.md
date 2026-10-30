@@ -61,3 +61,6 @@ Build ONLY the Lead-assigned [phase ID](../../docs/05-sprints/specs/INDEX.md) an
 
 ## Proportionality (owner rule, 2026-10-30)
 Hold professional industry standards, not maximal ones. Write the tests that guard real risks and the acceptance criteria; skip extra harnesses, mutation campaigns, custom evaluators and speculative edge-case suites unless the Lead asks or the risk is real. Reuse existing helpers. Keep reports under 25 lines. If the spec's scope grows while you work, stop and tell the Lead instead of expanding it.
+
+## Seams versus placeholders (owner rule, 2026-10-30)
+A seam specifically planned for a named later phase to wire into is acceptable: typed, exercised by a test with a real component, a short timeless comment naming the capability, the owning phase named in docs/SPRINT-TRACKING.md, and nothing visible until the feature exists. Loose placeholder junk is not acceptable: stub text, fake data, scaffolding with no planned consumer, empty components nothing mounts.
