@@ -2,17 +2,21 @@
 
 **Status: DECIDED implementation contract for the owner-approved splash. Not implementation proof.** Layout, states and copy rules are owned by [11 splash visual spec](11-splash-screen-visual-spec.md), [15 wireframes](15-screen-wireframes-and-interaction-states.md), [16 microcopy](16-microcopy-and-density-acceptance.md) and [10 shared language](10-visual-language-and-shared-shell.md). This page adds only what they leave open: how the artwork, wordmark, icons and window frame are built. Visual reference: [owner mockup](assets/mudmaker-neon-splash-reference.png) (aesthetic reference; its sample version, build id and tagline are not content).
 
-## Resolved differences between the mockup and the binding docs
-| Mockup shows | Decision | Source |
+## Matching the mockup (owner instruction 2026-10-29: match as closely as possible)
+The splash follows the [mockup](assets/mudmaker-neon-splash-reference.png) in composition, proportions, ornament and color roles. Deliberate decisions where the mockup and other documents meet:
+| Mockup shows | Decision | Why |
 |---|---|---|
-| Tagline "BUILD WORLDS. YOUR WAY." | Not shown (marketing prose) | 16 |
-| Recent Projects / Recent Worlds always present | Links shown only when their Home/Library lists exist and hold data | 11, 15, owner rule: no placeholder content |
-| Appearance not visible | Appearance lives under Settings, not on the splash | 11, 15 |
-| Version in two places | Version and build once, in the frame row (right side) | 15 |
-| Background hosting | `Active World: {name}` only while hosting; otherwise nothing | 11, 15 |
+| Tagline "BUILD WORLDS. YOUR WAY." under the wordmark | **Shown, letter-spaced, in the secondary accent**, as in the mockup. It is one fixed brand line stored as a single string and can be removed by deleting that string. | Owner asked for the mockup as closely as possible; this overrides the general no-subtitle rule of doc 16 for this one brand line only. Flagged for owner confirmation. |
+| Version at the left of the title row and again beside the wordmark | **Once**, small, beside the wordmark (version, then build on the next line), exactly where the mockup places it. The frame row carries the application mark and `MudMaker` only. | doc 16 one label per intent |
+| Recent Projects and Recent Worlds row | Built and styled as in the mockup but **rendered only when their Home/Library lists exist and hold data** (S04.6, S08.2). Until then the splash omits the row. | owner rule: no placeholder content in production UI |
+| Settings and Quit at the bottom with icons, a thin divider with a center ornament above | As in the mockup. | |
+| Fantasy landscape filling the window behind the content | As in the mockup, built as text-mode pixel art (below), scaled to the window. | |
+| Sample version and build id | Real installed values from the shell. | doc 15 |
+| Appearance not visible | Under Settings. | doc 11, 15 |
+| Background hosting | `Active World: {name}` only while hosting. | doc 11, 15 |
 
 ## Window frame (the top row)
-- The application draws its own frame row, matching the wireframe `┌ MudMaker ... version · build ┐`: at the start the application mark and `MudMaker`; at the end `version · build` (small), then minimize, maximize or restore, and close. The OS title bar is removed (`decorations: false`); the whole row except its controls is a drag region; double click toggles maximize.
+- The application draws its own frame row, matching the wireframe and the mockup: at the start the application mark and `MudMaker`; at the end minimize, maximize or restore, and close. The OS title bar is removed (`decorations: false`); the whole row except its controls is a drag region; double click toggles maximize.
 - The same row becomes the shared toolbar row for Create, Play and Host (doc 10 and 15): identity at the start, frequent actions in the middle, `Settings ▾` and `Go To ▾` at the end. The window controls stay at the far end. One component, one height token, one set of window actions.
 - Window controls are registered controls with action ids owned by the shell (minimize, maximize or restore, close). Close behaves exactly as Quit, including the stop-hosting guard. Every control is keyboard reachable with an accessible name and tooltip; targets meet the pointer and touch hit-size tokens.
 - A thin continuous border in an accent token surrounds the window; it is part of the frame, not a card.
@@ -22,8 +26,8 @@
 
 ## Wordmark
 - Block-letter text banner of `MudMaker` made of full and half block characters in a fixed monospace grid, stored as data (rows of text), rendered as text in `color.accent.primary` with a restrained dithered lower edge as in the mockup. Not an image, not a font. Accessible name `MudMaker` (the banner itself is `aria-hidden`; the h1 text is the real wordmark text, visually hidden or the banner's accessible label).
-- Installed version and build identifier sit in the frame row, from `app_info`.
-- Thin divider below the wordmark: line characters with a small center ornament, in a border token.
+- Installed version and build identifier sit beside the wordmark at its right, small, from `app_info` (as in the mockup).
+- Thin divider below the wordmark: line characters with a small center ornament (a four-point star glyph as in the mockup), in the tertiary accent token, then the letter-spaced tagline line in the secondary accent.
 
 ## Text-mode art system
 - **Format:** art is data, never a bitmap file. Each piece is a grid of palette indices, authored in a plain text file with one character per pixel and a legend. Two pixel rows map to one character cell using the upper half block with foreground and background colors (so one cell shows two pixels). Ordered dither is expressed in the data. Stars and sparkles use plain ASCII characters (`·`, `+`, `*`).
@@ -44,7 +48,7 @@
 Keep existing ids where they apply. Appearance moves from `home.splash.12` to the Settings surface; `home.splash.10` Connected Worlds is removed; `home.splash.09` becomes the conditional `Active World: {name}` line; add window frame and Settings entries with full metadata; Recent controls stay registered and are hidden until their lists exist. Counts and drift tests update in the same phase.
 
 ## Acceptance checks
-1. Text inventory of the default state is exactly: frame title and version/build, wordmark, Create, Play, Host, Settings, Quit (plus Recent links, Active World or failure text only when their conditions are real). Anything else fails.
+1. Text inventory of the default state is exactly: frame title, wordmark, version and build, the tagline, Create, Play, Host, Settings, Quit (plus Recent links, Active World or failure text only when their conditions are real). Anything else fails.
 2. Art renders deterministically from data with token colors only; changing preset recolors it; no hex literals in art data.
 3. Contrast of every text color against the actual rendered cell colors beneath it, computed, passes in both presets including over the art edge cases.
 4. Narrow width stacks the action row with no horizontal scroll down to the minimum window size; text scale 200 percent keeps all actions reachable.
