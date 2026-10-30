@@ -17,7 +17,7 @@ export interface TextFieldProps {
  * by an error, because the value belongs to the owner and only changes through onValueChange.
  */
 export function TextField({ control, value, onValueChange, type = "text", constraints }: TextFieldProps) {
-  const { attributes, runtime, shown, tipId, tip, disabled } = useControlBinding(control, ["input"], "TextField");
+  const { attributes, runtime, shown, tipId, tip, disabled } = useControlBinding(control, ["input", "textarea"], "TextField");
   const inputId = useId();
   const hintId = useId();
   const messageId = useId();

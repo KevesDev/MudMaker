@@ -1,8 +1,10 @@
-import { CreateShell } from "../editor/EditorShell";
+import { CreateShell } from "../editor/CreateShell";
 import { getAppInfo, getEngineStatus, quitApp, writeDiagnostic, type DiagnosticRecord } from "../appInfo";
 import { loadFrameRegistry } from "../frame/frameRegistry";
+import { HostWorkspace } from "../host/HostWorkspace";
 import { tauriWindowShell, type WindowShell } from "../frame/windowShell";
 import type { LeaveServices } from "../nav/leaveImpact";
+import { PlayWorkspace } from "../play/PlayWorkspace";
 import { themeManager } from "../theme";
 import { loadShippedRegistry, type ActionRegistry } from "../ui";
 import type { WorkspaceSurfaces } from "../workspaces/WorkspaceStage";
@@ -42,7 +44,7 @@ export const productionDependencies: HomeDependencies = {
   windowShell: tauriWindowShell,
   loadFrameRegistry,
   leaveServices: {},
-  surfaces: { create: CreateShell },
+  surfaces: { create: CreateShell, play: PlayWorkspace, host: HostWorkspace },
   report: createDiagnosticSink({
     write: writeDiagnostic,
     logFailed: reportLogFailure,

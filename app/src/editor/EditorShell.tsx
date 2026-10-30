@@ -1,5 +1,4 @@
-import { useId, useState, type ReactNode } from "react";
-import { CANVAS_LIMITS, CanvasState, GraphViewport } from "../canvas";
+import { useId, type ReactNode } from "react";
 import { Inspector, inspectorHasContent, type InspectorProps } from "./Inspector";
 import { editorCopy } from "./editorCopy";
 import { SplitView } from "./SplitView";
@@ -44,10 +43,4 @@ export function EditorShell({ documents, assets, surface, inspector }: EditorShe
       </div>
     </div>
   );
-}
-
-/** The Create workspace as the application mounts it: the structure around an empty graph-paper canvas. */
-export function CreateShell() {
-  const [canvas] = useState(() => new CanvasState({ min: CANVAS_LIMITS.minZoom, max: CANVAS_LIMITS.maxZoom }));
-  return <EditorShell surface={<GraphViewport state={canvas} />} />;
 }

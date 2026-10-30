@@ -1,0 +1,177 @@
+/** Mounts each workspace through the real application. jsdom draws nothing, so layout, focus rings and touch feel are checked by hand. */
+import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { CreateShell } from "../editor/CreateShell";
+import { ASSET_CATEGORIES } from "../editor/editorLayout";
+import { HostWorkspace } from "../host/HostWorkspace";
+import { healthyHome, renderApp } from "../home/homeTestSupport";
+import { SPLASH } from "../home/homeLayout";
+import { NAVIGATION, type WorkspaceDestination } from "../nav/destinations";
+import { ClientSessions } from "../play/ClientSessions";
+import { PlayWorkspace } from "../play/PlayWorkspace";
+import { loadShippedRegistry } from "../ui";
+
+const registry = loadShippedRegistry();
+const label = (id: string): string => registry.requireControl(id).label;
+const button = (id: string): HTMLElement => screen.getByRole("button", { name: label(id) });
+const testId = (id: string): string => registry.requireControl(id).testId;
+let unbind: (() => void) | null = null;
+const sessions = new ClientSessions();
+
+beforeEach(() => {
+  Element.prototype.scrollIntoView = () => undefined;
+  for (const session of sessions.getSnapshot().sessions) sessions.close(session.id);
+});
+
+afterEach(() => {
+  cleanup();
+  unbind?.();
+  unbind = null;
+  document.documentElement.removeAttribute("style");
+  document.documentElement.removeAttribute("data-input-modality");
+});
+
+async function open(workspace: WorkspaceDestination): Promise<HTMLElement> {
+  const Play = () => <PlayWorkspace sessions={sessions} />;
+  unbind = renderApp(healthyHome({ surfaces: { create: CreateShell, play: Play, host: HostWorkspace } })).unbind;
+  await screen.findByRole("heading", { level: 1 });
+  await act(async () => undefined);
+  fireEvent.click(screen.getByRole("button", { name: label(SPLASH[workspace]) }));
+  return screen.findByRole("main", { name: label(NAVIGATION[workspace].entries[workspace]) });
+}
+
+/** The refusal text drawn beside a control whose action nobody handles yet. */
+async function expectNotAvailable(id: string): Promise<void> {
+  await waitFor(() => expect(document.querySelector(`[data-control-id="${id}"]`)?.closest(".ui-anchor")?.querySelector(".ui-state-text")?.textContent).toBe(`${label(id)} is not available yet.`));
+}
+
+/** Every catalog control on screen carries its catalog test id and is known to the registry. */
+function expectCatalogControls(surface: HTMLElement, expected: readonly string[]): void {
+  const found = [...surface.querySelectorAll<HTMLElement>("[data-control-id]")].map((element) => element.getAttribute("data-control-id") ?? "");
+  for (const id of found) expect(registry.control(id)?.testId, id).toBe(surface.querySelector(`[data-control-id="${id}"]`)?.closest("[data-testid]")?.getAttribute("data-testid"));
+  for (const id of expected) expect(found, id).toContain(id);
+}
+
+describe("Create", () => {
+  it("registers its toolbar, map tools and bottom tab, and answers an unbuilt action honestly", async () => {
+    const surface = await open("create");
+    expectCatalogControls(surface, ["editor.shell.01", "editor.shell.03", "editor.shell.04", "editor.shell.05", "editor.shell.06", "editor.shell.08", "editor.shell.09", "editor.shell.10", "editor.map.02", "editor.map.07", "editor.diagnostics.01"]);
+    fireEvent.click(button("editor.shell.01"));
+    await expectNotAvailable("editor.shell.01");
+  });
+
+  it("cycles View Panels from nothing to the Assets drawer to Assets with the Inspector, whose fields take typing", async () => {
+    const surface = await open("create");
+    expect(screen.queryByRole("complementary", { name: label("editor.assets.01") })).toBeNull();
+    fireEvent.click(button("editor.shell.09"));
+    const assets = await screen.findByRole("complementary", { name: label("editor.assets.01") });
+    expect(within(assets).getAllByRole("treeitem").map((row) => row.textContent)).toEqual(ASSET_CATEGORIES.map((category) => expect.stringContaining(category.label)));
+    fireEvent.click(button("editor.shell.09"));
+    const name = await within(surface).findByLabelText(label("editor.inspector.02"));
+    fireEvent.change(name, { target: { value: "Ashenvale" } });
+    expect((name as HTMLInputElement).value).toBe("Ashenvale");
+    fireEvent.click(button("editor.shell.09"));
+    await waitFor(() => expect(screen.queryByRole("complementary", { name: label("editor.assets.01") })).toBeNull());
+  });
+
+  it("expands a folder, filters folders by the filter list, and opens then folds the output strip", async () => {
+    const surface = await open("create");
+    fireEvent.click(button("editor.shell.09"));
+    const assets = await screen.findByRole("complementary", { name: label("editor.assets.01") });
+    const first = within(assets).getAllByRole("treeitem")[0] as HTMLElement;
+    expect(first.getAttribute("aria-expanded")).toBe("false");
+    fireEvent.click(within(first).getByRole("button"));
+    await waitFor(() => expect(first.getAttribute("aria-expanded")).toBe("true"));
+    const filter = within(assets).getByLabelText(label("editor.assets.03"));
+    fireEvent.change(filter, { target: { value: "scripts" } });
+    await waitFor(() => expect(within(assets).getAllByRole("treeitem")).toHaveLength(1));
+    expect(within(surface).queryByRole("tab", { name: label("editor.diagnostics.02") })).toBeNull();
+    fireEvent.click(screen.getByRole("tab", { name: label("editor.diagnostics.01") }));
+    expect(await screen.findByText("No problems.")).toBeTruthy();
+    fireEvent.click(screen.getByRole("tab", { name: label("editor.diagnostics.02") }));
+    expect(await screen.findByText("No test output.")).toBeTruthy();
+    fireEvent.click(screen.getByRole("tab", { name: label("editor.diagnostics.02") }));
+    await waitFor(() => expect(screen.queryByText("No test output.")).toBeNull());
+  });
+});
+
+describe("Play", () => {
+  it("shows the library, opens the profile form, warns only when TLS is off and flags a bad port", async () => {
+    const surface = await open("play");
+    expectCatalogControls(surface, ["client.worlds.01", "client.worlds.02", "client.worlds.03", "client.worlds.04", "client.worlds.05", "client.worlds.07"]);
+    expect(screen.getByText("No saved worlds.")).toBeTruthy();
+    fireEvent.click(button("client.worlds.05"));
+    await expectNotAvailable("client.worlds.05");
+    fireEvent.click(button("client.worlds.02"));
+    const host = await screen.findByLabelText(label("client.worlds.09"));
+    fireEvent.change(host, { target: { value: "mud.example.test" } });
+    expect((host as HTMLInputElement).value).toBe("mud.example.test");
+    fireEvent.change(screen.getByLabelText(label("client.worlds.10")), { target: { value: "70000" } });
+    expect(screen.getByText("Enter a port from 1 to 65535.").getAttribute("role")).toBe("alert");
+    fireEvent.change(screen.getByLabelText(label("client.worlds.10")), { target: { value: "7000" } });
+    expect(screen.queryByText("Enter a port from 1 to 65535.")).toBeNull();
+    expect(document.querySelector(`[data-testid="${testId("client.worlds.12")}"]`)).toBeNull();
+    fireEvent.click(screen.getByRole("switch", { name: label("client.worlds.11") }));
+    await waitFor(() => expect(document.querySelector(`[data-testid="${testId("client.worlds.12")}"]`)?.textContent).toBe("Not encrypted"));
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    expect(await screen.findByText("No saved worlds.")).toBeTruthy();
+  });
+
+  it("shows the open game with its composer, toggles the side drawer, and returns to the library on Disconnect", async () => {
+    sessions.open({ id: "one", worldName: "Ashenvale" });
+    const surface = await open("play");
+    expectCatalogControls(surface, ["client.game.03", "client.game.09", "client.transcript.02", "client.transcript.06", "client.composer.02", "client.composer.03"]);
+    expect(document.querySelector(`[data-testid="${testId("client.game.01")}"]`)?.textContent).toBe("Ashenvale");
+    expect(screen.getByRole("log", { name: label("client.transcript.01") })).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(label("client.composer.02")), { target: { value: "look" } });
+    expect((screen.getByLabelText(label("client.composer.02")) as HTMLInputElement).value).toBe("look");
+    fireEvent.click(button("client.composer.03"));
+    await expectNotAvailable("client.composer.03");
+    expect(screen.getByRole("log").getAttribute("data-wrap")).toBe("true");
+    fireEvent.click(screen.getByRole("switch", { name: label("client.transcript.06") }));
+    await waitFor(() => expect(screen.getByRole("log").getAttribute("data-wrap")).toBe("false"));
+    fireEvent.click(button("client.game.09"));
+    const drawer = await screen.findByRole("complementary", { name: "Side panel" });
+    fireEvent.click(within(drawer).getByRole("tab", { name: label("client.panels.03") }));
+    await waitFor(() => expect(within(drawer).getByRole("tab", { name: label("client.panels.03") }).getAttribute("aria-selected")).toBe("true"));
+    fireEvent.click(button("client.game.03"));
+    expect(await screen.findByText("No saved worlds.")).toBeTruthy();
+    expect(sessions.getSnapshot().sessions).toEqual([]);
+  });
+
+  it("draws the session tab strip only while two games are open", async () => {
+    sessions.open({ id: "one", worldName: "Ashenvale" });
+    await open("play");
+    expect(screen.queryAllByRole("tab")).toHaveLength(0);
+    act(() => sessions.open({ id: "two", worldName: "Brackwater" }));
+    expect((await screen.findAllByRole("tab")).map((tab) => tab.textContent)).toEqual(expect.arrayContaining([expect.stringContaining("Ashenvale"), expect.stringContaining("Brackwater")]));
+  });
+});
+
+describe("Host", () => {
+  it("shows the stopped state with Start, and Start answers that it is not available", async () => {
+    const surface = await open("host");
+    expectCatalogControls(surface, ["host.dashboard.03", "host.recovery.01", "host.dashboard.08", "host.dashboard.12", "host.security.01"]);
+    expect(document.querySelector(`[data-testid="${testId("host.dashboard.02")}"]`)?.textContent).toBe("Stopped");
+    expect(screen.queryByRole("button", { name: label("host.dashboard.04") })).toBeNull();
+    fireEvent.click(button("host.dashboard.03"));
+    await expectNotAvailable("host.dashboard.03");
+  });
+
+  it("switches sections and warns about public exposure only for an address open to other machines", async () => {
+    await open("host");
+    fireEvent.click(screen.getByRole("tab", { name: label("host.dashboard.10") }));
+    expect(await screen.findByText("No log entries.")).toBeTruthy();
+    fireEvent.click(screen.getByRole("tab", { name: label("host.dashboard.09") }));
+    const bind = await screen.findByLabelText(label("host.network.01"));
+    fireEvent.change(bind, { target: { value: "127.0.0.1" } });
+    expect(document.querySelector(`[data-testid="${testId("host.network.09")}"]`)).toBeNull();
+    fireEvent.change(bind, { target: { value: "0.0.0.0" } });
+    expect(document.querySelector(`[data-testid="${testId("host.network.09")}"]`)?.textContent).toBe("Public connections enabled");
+    expect(screen.queryByLabelText(label("host.network.06"))).toBeNull();
+    fireEvent.click(screen.getByRole("switch", { name: label("host.network.05") }));
+    expect(await screen.findByLabelText(label("host.network.06"))).toBeTruthy();
+    fireEvent.click(screen.getByRole("tab", { name: label("host.dashboard.11") }));
+    expect(await screen.findByRole("button", { name: label("host.recovery.04") })).toBeTruthy();
+  });
+});

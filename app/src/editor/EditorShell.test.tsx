@@ -1,14 +1,14 @@
 import { act, cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { frameCopy } from "../frame/frameCopy";
-import { GLYPHS } from "../frame/frameLayout";
 import { SPLASH } from "../home/homeLayout";
-import { healthyHome, renderApp, visibleText } from "../home/homeTestSupport";
-import { MENU_CARET, NAVIGATION } from "../nav/destinations";
+import { healthyHome, renderApp } from "../home/homeTestSupport";
+import { NAVIGATION } from "../nav/destinations";
 import { REGION, focusableWithin, loadShippedRegistry } from "../ui";
 import { createTestUi, renderWithUi } from "../ui/testSupport";
 import { DockPanel } from "./DockPanel";
-import { CreateShell, EditorShell } from "./EditorShell";
+import { CreateShell } from "./CreateShell";
+import { EditorShell } from "./EditorShell";
 import { described, stubBox } from "./editorTestSupport";
 
 const registry = loadShippedRegistry();
@@ -28,7 +28,7 @@ afterEach(() => {
 });
 
 describe("the Create workspace as the application mounts it", () => {
-  it("shows empty graph paper and its two toggles and nothing else beyond the frame row", async () => {
+  it("shows the project toolbar, the map tools, the graph paper and a closed Problems tab, with no drawer and no document strip", async () => {
     unbind = renderApp(healthyHome({ surfaces: { create: CreateShell } })).unbind;
     await screen.findByRole("heading", { level: 1 });
     await act(async () => undefined);
@@ -36,27 +36,17 @@ describe("the Create workspace as the application mounts it", () => {
     const surface = await screen.findByRole("main", { name: label(NAVIGATION.create.entries.create) });
     await waitFor(() => expect(document.activeElement).toBe(surface));
     expect(surface.querySelector(".editor-shell")).not.toBeNull();
-    expect(focusableWithin(surface).map((stop) => stop.getAttribute("aria-label") ?? stop.textContent)).toEqual([label("editor.graph.10"), label("editor.graph.09"), label("editor.graph.01")]);
-    expect(surface.querySelector("h1, h2, h3, [role=tab], [role=tablist], [role=separator], p")).toBeNull();
+    const names = focusableWithin(surface).map((stop) => stop.getAttribute("aria-label") ?? stop.textContent);
+    for (const id of ["editor.shell.01", "editor.shell.09", "editor.map.02", "editor.graph.10", "editor.graph.09", "editor.graph.01", "editor.diagnostics.01"]) expect(names, id).toContain(label(id));
+    expect(names).not.toContain(label("editor.diagnostics.02"));
+    expect(screen.queryByRole("complementary")).toBeNull();
+    expect(surface.querySelector("[role=separator]")).toBeNull();
     expect(surface.querySelector("canvas")?.getAttribute("aria-hidden")).toBe("true");
-    expect(visibleText()).toEqual([
-      "MudMaker",
-      label(NAVIGATION.create.entries.create),
-      label(SPLASH.settings),
-      MENU_CARET,
-      label(NAVIGATION.create.opener),
-      MENU_CARET,
-      GLYPHS.minimize,
-      GLYPHS.maximize,
-      GLYPHS.close,
-      label("editor.graph.10"),
-      label("editor.graph.09"),
-    ]);
   });
 });
 
 describe("keyboard regions of the Create workspace", () => {
-  it("cycles with F6 between the window bar and the graph paper, backwards with Shift+F6, and names the window bar", async () => {
+  it("cycles with F6 between the window bar, the graph paper and the Problems strip, backwards with Shift+F6, and names the window bar", async () => {
     unbind = renderApp(healthyHome({ surfaces: { create: CreateShell } })).unbind;
     await screen.findByRole("heading", { level: 1 });
     await act(async () => undefined);
@@ -65,6 +55,7 @@ describe("keyboard regions of the Create workspace", () => {
     await waitFor(() => expect(document.activeElement).toBe(surface));
     const paper = screen.getByRole("application", { name: label("editor.graph.01") });
     const bar = screen.getByRole("region", { name: frameCopy.regionName });
+    const problems = screen.getByRole("region", { name: "Problems and output" });
     const press = async (shiftKey: boolean): Promise<void> => {
       fireEvent.keyDown(document.activeElement ?? document.body, { key: "F6", shiftKey });
       await act(async () => undefined);
@@ -74,7 +65,11 @@ describe("keyboard regions of the Create workspace", () => {
     await press(false);
     expect(document.activeElement).toBe(paper);
     await press(false);
+    expect(problems.contains(document.activeElement)).toBe(true);
+    await press(false);
     expect(bar.contains(document.activeElement)).toBe(true);
+    await press(true);
+    expect(problems.contains(document.activeElement)).toBe(true);
     await press(true);
     expect(document.activeElement).toBe(paper);
   });

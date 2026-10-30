@@ -556,3 +556,5 @@ Record implementation commit, focused test and Auditor PASS in the phase Evidenc
 - Gesture recognizer: treat a repeated pointer id as a cancel and handle lost pointer capture (`GestureRecognizer.ts`).
 - Flush pending preferences before `quit_app` so a theme change within 400 ms of Quit is not lost; keep the file untouched after a failed read once a second owner exists; give the window a dark background while the saved settings load (`PreferencesStore.ts`, `launch.ts`, `index.html`).
 - Browser zoom is blocked and the app has no text-size control: owner deferred this; add an app-owned text size control and shortcuts in the accessibility pass (S18.2) or earlier if asked.
+
+**UI-first build (2026-10-30):** the visible chrome of Create (toolbar, Assets drawer, Inspector, Problems drawer, map tool strip), Play (World Library, profile form, connected layout) and Host (status, releases, five sections) is built per docs 12 to 14. Backend actions reply "is not available yet" until wired: Create by S09, Play by S08, Host by S17. The Play connected layout is reachable only once S08 opens a session.

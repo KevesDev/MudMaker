@@ -1,0 +1,15 @@
+export const playCopy = {
+  noWorlds: "No saved worlds.",
+  back: "Back",
+  library: "World Library",
+  session: "Game",
+  sessionsName: "Sessions",
+  connected: "Connected",
+  notEncrypted: "Not encrypted",
+  sidePanel: "Side panel",
+  transcriptOptions: "Transcript options",
+  gameActions: "Game actions",
+  composer: "Composer",
+  invalidChoice: "Choose one of the listed adapters.",
+  invalidToggle: "That setting could not be changed.",
+} as const;

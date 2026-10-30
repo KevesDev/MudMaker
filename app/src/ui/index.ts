@@ -73,7 +73,7 @@ export { TextField, type TextFieldProps } from "./primitives/TextField";
 export { Toast, type ToastProps, type ToastTone } from "./primitives/Toast";
 export { Toolbar, type ToolbarProps } from "./primitives/Toolbar";
 export { Tooltip, type TooltipProps } from "./primitives/Tooltip";
-export { requireName, useCommand, useLatest } from "./primitives/shared";
+export { StateText, requireName, useCommand, useControlBinding, useLatest } from "./primitives/shared";
 export { focusableWithin } from "./input/dom";
 export { createUiRuntime, type UiRuntime, type UiRuntimeOptions } from "./runtime";
 export { UiProvider, useUi } from "./UiProvider";
