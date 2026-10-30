@@ -1,7 +1,7 @@
 /** Sentences the navigator reports; the labels of its controls come from the catalog. */
 export const navCopy = {
   busy: "Another switch is still in progress.",
-  notOffered: "That choice is not available right now.",
+  notOffered: "That choice cannot be used right now.",
   cancelled: "The switch was cancelled.",
   timedOut: "The switch took too long and was stopped. Nothing was changed.",
   checkFailed: "MudMaker could not check what leaving would affect, so it stayed here.",

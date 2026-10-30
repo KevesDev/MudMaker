@@ -100,6 +100,18 @@
   outline-offset: calc(var(--interaction-focusOutlineWidth) * -1);
 }
 
+.workspace-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-row);
+}
+
+.workspace-choice[aria-checked="true"],
+.workspace-choice[aria-checked="true"]:hover {
+  background: var(--color-interaction-selection);
+  border-color: var(--color-accent-primary);
+}
+
 .workspace-list {
   box-sizing: border-box;
   min-height: var(--layout-panelMinSize);
@@ -275,4 +287,17 @@
   overflow: auto;
   background: var(--color-surface-panel);
   border-inline-start: var(--shape-borderWidth) solid var(--color-border-normal);
+}
+
+.play-profile-row {
+  inline-size: 100%;
+  justify-content: flex-start;
+  background: transparent;
+  border: 0;
+  color: var(--color-text-secondary);
+}
+
+.play-profile-row[aria-selected="true"] {
+  color: var(--color-text-primary);
+  box-shadow: inset var(--spacing-row) 0 0 var(--color-accent-primary);
 }

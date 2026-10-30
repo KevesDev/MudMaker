@@ -8,7 +8,7 @@ import { createDiagnosticSink } from "./diagnosticSink";
 const record: DiagnosticRecord = {
   severity: "info",
   code: "no-action-owner",
-  message: "Create is not available yet.",
+  message: "Create has no registered owner.",
   actionId: "ui.nav.create",
   controlId: "home.splash.04",
   correlation: { launchId: "launch-1" },

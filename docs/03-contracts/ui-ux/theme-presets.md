@@ -71,7 +71,7 @@ The client scope inherits the editor tokens of its preset, so the text, status, 
 | High contrast mode: `color.accent.onSecondary` against `color.accent.secondary` | 7:1 |
 | High contrast mode: `color.accent.secondary`, unless it already reaches 3:1 against every editor surface, against `color.text.primary` | 7:1 |
 
-High contrast mode only moves a color that does not already comply, toward white or black by the smallest blend that reaches the floor, and never moves a surface. The normal-mode palette values are never edited. In high contrast the exact secondary accents of both presets are left as they are; in neon-lights `color.border.frame` and `color.accent.tertiary` are the same exact Intense Hot Pink, which is 2.63:1 on the overlay surface, so high contrast lightens both of them there. The primary and tertiary accents are drawn as text on the canvas by the launch screen (Create, Host, the wordmark), so in high contrast they are raised by the same smallest blend to the 7:1 text floor on the canvas; that moves them toward white, so their 3:1 against every other surface still holds. In normal mode they keep the exact palette values. The secondary accent is a boundary or a fill under primary text, never pushed toward a surface color: if it bounds every surface at 3:1 it is left alone, otherwise it moves away from the text color until the text reaches 7:1 on it. That second rule only changes a user theme whose secondary accent can do neither.
+High contrast mode only moves a color that does not already comply, toward white or black by the smallest blend that reaches the floor, and never moves a surface. The normal-mode palette values are never edited. In high contrast the exact neon-dark-mode secondary accent is left as it is, and the neon-lights one, which bounds no surface, is darkened by the smallest blend that gives primary text 7:1 on it (#2927A8); in neon-lights `color.border.frame` and `color.accent.tertiary` are the same exact Intense Hot Pink, which already reaches 3:1 on every surface, so high contrast leaves both as they are there. The primary and tertiary accents are drawn as text on the canvas by the launch screen (Create, Host, the wordmark), so in high contrast they are raised by the same smallest blend to the 7:1 text floor on the canvas; that moves them toward white, so their 3:1 against every other surface still holds. In normal mode they keep the exact palette values. The secondary accent is a boundary or a fill under primary text, never pushed toward a surface color: if it bounds every surface at 3:1 it is left alone, otherwise it moves away from the text color until the text reaches 7:1 on it. That second rule only changes a user theme whose secondary accent can do neither.
 
 ## neon-lights
 
@@ -80,33 +80,39 @@ Palette colors and the tokens that use them directly:
 | Palette color | Hex | Tokens |
 |---|---|---|
 | Vulcan | #111320 | `color.art.deep`, `color.surface.app`, `color.surface.canvas`, `color.terminal.background` |
-| Persian Blue | #232175 | `color.art.sky`, `color.client.inputBackground`, `color.graph.node.surface`, `color.surface.inspector`, `color.surface.panel` |
-| American Purple | #41204D | `color.art.haze`, `color.graph.node.header`, `color.surface.toolbar` |
-| Electric Navy | #2A28AD | `color.accent.secondary`, `color.graph.node.selected`, `color.surface.overlay` |
+| Persian Blue | #232175 | `color.art.sky` |
+| American Purple | #41204D | `color.art.haze` |
+| Electric Navy | #2A28AD | `color.accent.secondary` |
 | Digital Mint | #5EEA91 | `color.accent.onSecondary`, `color.accent.primary`, `color.art.glow`, `color.graph.edge.active`, `color.graph.node.action`, `color.graph.port.value`, `color.status.connected`, `color.status.success`, `color.terminal.foreground`, `color.text.primary` |
 | Intense Hot Pink | #E23D8A | `color.accent.tertiary`, `color.art.accent`, `color.border.frame` |
 
-Intense Hot Pink is below 4.5:1 on these surfaces, so it appears exact only as the tertiary accent, the window border and the decorative art accent (3.41:1 or more on every surface but the overlay, 3.42:1 for the border against the page and the frame row), and otherwise only as lightened border, focus ring and edge colors, a darkened selection fill and an error tone, never as body text. Electric Navy is exact as the secondary accent, a fill under Digital Mint text (6.81:1); it is 1.0:1 to 1.76:1 against the surfaces, so it never draws a boundary or text. Status warning has no amber in the palette, so it is a lightened American Purple.
+Intense Hot Pink is below 4.5:1 on these surfaces, so it appears exact only as the tertiary accent, the window border and the decorative art accent (4.44:1 or more on every surface, 4.44:1 for the border against the page and the frame row), and otherwise only as lightened border, focus ring and edge colors, a darkened selection fill and an error tone, never as body text. Electric Navy is exact as the secondary accent, a fill under Digital Mint text (6.81:1); it is 1.56:1 to 1.76:1 against the surfaces, so it never draws a boundary or text. The surfaces are near black steps derived from Vulcan, Persian Blue and Electric Navy so that the saturated palette colors stay accents, borders and focus. Status warning has no amber in the palette, so it is a lightened American Purple.
 
 | Token | Source color | Blend toward | Amount | Result | Rule |
 |---|---|---|---|---|---|
-| `color.terminal.chat`, `color.text.secondary` | Digital Mint #5EEA91 | black | 6% | `#58DC88` | one third of the 18% floor |
-| `color.status.offline`, `color.terminal.system`, `color.text.muted` | Digital Mint #5EEA91 | black | 12% | `#53CE80` | two thirds of the 18% floor |
-| `color.text.disabled` | Digital Mint #5EEA91 | black | 18% | `#4DC077` | largest darkening that keeps 4.5:1 on every surface |
-| `color.border.invalid`, `color.client.channelAccent`, `color.graph.edge.invalid`, `color.graph.node.data`, `color.status.error` | Intense Hot Pink #E23D8A | white | 40% | `#EE8BB9` | smallest lightening reaching 4.5:1 on every surface |
-| `color.graph.node.event`, `color.graph.port.event`, `color.status.information`, `color.terminal.link`, `color.terminal.prompt` | Electric Navy #2A28AD | white | 58% | `#A6A5DD` | smallest lightening reaching 4.5:1 on every surface |
-| `color.graph.node.condition`, `color.graph.port.condition`, `color.status.reconnecting`, `color.status.warning`, `color.terminal.tell`, `color.terminal.warning` | American Purple #41204D | white | 60% | `#B3A6B8` | smallest lightening reaching 4.5:1 on every surface |
-| `color.border.focused`, `color.graph.edge.selected`, `color.graph.port.execution`, `color.interaction.focus` | Intense Hot Pink #E23D8A | white | 12% | `#E55498` | smallest lightening reaching 3:1 on every surface |
-| `color.border.normal` | Digital Mint #5EEA91 | black | 33% | `#3F9D61` | largest darkening that keeps 3:1 on every surface |
-| `color.border.subtle` | Electric Navy #2A28AD | white | 4% | `#3331B0` | smallest lightening reaching 1.1:1 on every surface |
-| `color.graph.grid.minor` | American Purple #41204D | white | 0% | `#41204D` | smallest lightening reaching 1.2:1 on the canvas; the palette color already reaches 1.35:1, so the blend is 0% |
-| `color.graph.grid.major` | Electric Navy #2A28AD | white | 0% | `#2A28AD` | smallest lightening reaching 1.5:1 on the canvas; the palette color already reaches 1.76:1, so the blend is 0% |
+| `color.terminal.chat`, `color.text.secondary` | Digital Mint #5EEA91 | black | 6% | `#58DC88` | one third of the 18% step |
+| `color.status.offline`, `color.terminal.system`, `color.text.muted` | Digital Mint #5EEA91 | black | 12% | `#53CE80` | two thirds of the 18% step |
+| `color.text.disabled` | Digital Mint #5EEA91 | black | 18% | `#4DC077` | the 18% step; 7.50:1 on the lowest surface |
+| `color.border.invalid`, `color.client.channelAccent`, `color.graph.edge.invalid`, `color.graph.node.data`, `color.status.error` | Intense Hot Pink #E23D8A | white | 40% | `#EE8BB9` | fixed step reaching 4.5:1 on every surface |
+| `color.graph.node.event`, `color.graph.port.event`, `color.status.information`, `color.terminal.link`, `color.terminal.prompt` | Electric Navy #2A28AD | white | 58% | `#A6A5DD` | fixed step reaching 4.5:1 on every surface |
+| `color.graph.node.condition`, `color.graph.port.condition`, `color.status.reconnecting`, `color.status.warning`, `color.terminal.tell`, `color.terminal.warning` | American Purple #41204D | white | 60% | `#B3A6B8` | fixed step reaching 4.5:1 on every surface |
+| `color.border.focused`, `color.graph.edge.selected`, `color.graph.port.execution`, `color.interaction.focus` | Intense Hot Pink #E23D8A | white | 12% | `#E55498` | fixed step reaching 3:1 on every surface |
+| `color.client.inputBackground`, `color.graph.node.surface`, `color.surface.panel` | Persian Blue #232175 | black | 54% | `#100F36` | layer step: the first layer above Vulcan, near black |
+| `color.surface.inspector` | Persian Blue #232175 | black | 50% | `#12113B` | layer step above the panel |
+| `color.surface.toolbar` | Persian Blue #232175 | black | 46% | `#13123F` | layer step above the inspector |
+| `color.graph.node.header` | Persian Blue #232175 | black | 40% | `#151446` | header step above the node surface |
+| `color.surface.overlay` | Electric Navy #2A28AD | black | 56% | `#12124C` | top layer step, the brightest surface |
+| `color.graph.node.selected` | Electric Navy #2A28AD | black | 48% | `#16155A` | selected node step above the header |
+| `color.border.normal` | Electric Navy #2A28AD | white | 24% | `#5D5CC1` | smallest lightening reaching 3:1 on every surface (3.10:1 at the lowest) |
+| `color.border.subtle` | Electric Navy #2A28AD | black | 42% | `#181764` | largest darkening that keeps 1.1:1 on every surface (1.11:1 at the lowest) |
+| `color.graph.grid.minor` | Vulcan #111320 | white | 8% | `#242632` | smallest whole-percent lightening reaching 1.2:1 on the canvas (1.23:1) |
+| `color.graph.grid.major` | Vulcan #111320 | white | 15% | `#353641` | smallest whole-percent lightening reaching 1.5:1 on the canvas (1.54:1) |
 | `color.graph.edge.default` | Digital Mint #5EEA91 | black | 39% | `#398F58` | largest darkening that keeps 4.5:1 on the canvas |
 | `color.graph.edge.disabled` | Digital Mint #5EEA91 | black | 53% | `#2C6E44` | largest darkening that keeps 3:1 on the canvas |
 | `color.graph.node.shadow`, `color.surface.scrim` | Vulcan #111320 | black | 100% | `#000000` | shadow and scrim are the black end of the blend |
-| `color.client.matchHighlight`, `color.interaction.selection` | Intense Hot Pink #E23D8A | black | 29% | `#A02B62` | smallest darkening that gives Digital Mint text 4.5:1 |
-| `color.client.historyHighlight`, `color.interaction.hover` | Electric Navy #2A28AD | white | 8% | `#3B39B4` | smallest lightening reaching 1.2:1 from every surface |
-| `color.interaction.pressed` | Electric Navy #2A28AD | white | 16% | `#4C4ABA` | largest lightening that keeps Digital Mint text at 4.5:1 and 1.2:1 from every surface |
+| `color.client.matchHighlight`, `color.interaction.selection` | Intense Hot Pink #E23D8A | black | 66% | `#4D152F` | largest darkening that keeps 1.2:1 from every surface and the node surface (1.20:1 at the lowest); Digital Mint text on it is 9.33:1 |
+| `color.client.historyHighlight`, `color.interaction.hover` | Electric Navy #2A28AD | black | 32% | `#1D1B76` | largest darkening that keeps 1.2:1 from every surface and the node surface (1.21:1 at the lowest) |
+| `color.interaction.pressed` | Electric Navy #2A28AD | black | 16% | `#232291` | pressed step: brighter than hover (1.41:1 from the lowest surface) |
 | `color.art.far` | Electric Navy #2A28AD | black | 55% | `#13124E` | depth step: the farthest land, darker than the sky behind it |
 | `color.art.mid` | Electric Navy #2A28AD | white | 12% | `#4442B7` | depth step: the brightest land layer, between the far hills and the dark foreground |
 | `color.art.near` | Persian Blue #232175 | black | 62% | `#0D0D2C` | depth step: the darkest land, silhouettes in front of every other layer |
@@ -207,31 +213,31 @@ Lowest ratio over every pair in each group, computed with the WCAG 2.2 relative 
 
 | Group | neon-lights | neon-dark-mode |
 |---|---|---|
-| Text primary | 6.81:1 | 10.29:1 |
-| Text secondary | 5.99:1 | 8.19:1 |
-| Text muted | 5.24:1 | 6.12:1 |
-| Text disabled | 4.55:1 | 4.63:1 |
-| Status colors on editor surfaces | 4.50:1 | 6.37:1 |
-| Normal, focused and invalid borders | 3.02:1 | 3.03:1 |
-| Focus ring | 3.02:1 | 3.03:1 |
-| Primary accent against every editor surface | 6.81:1 | 3.03:1 |
-| Tertiary accent against every editor surface but the overlay | 3.41:1 | 11.95:1 |
-| Window border against the page and toolbar surfaces | 3.42:1 | 3.93:1 |
+| Text primary | 11.22:1 | 10.29:1 |
+| Text secondary | 9.87:1 | 8.19:1 |
+| Text muted | 8.64:1 | 6.12:1 |
+| Text disabled | 7.50:1 | 4.63:1 |
+| Status colors on editor surfaces | 7.42:1 | 6.37:1 |
+| Normal, focused and invalid borders | 3.10:1 | 3.03:1 |
+| Focus ring | 4.98:1 | 3.03:1 |
+| Primary accent against every editor surface | 11.22:1 | 3.03:1 |
+| Tertiary accent against every editor surface but the overlay | 4.44:1 | 11.95:1 |
+| Window border against the page and toolbar surfaces | 4.44:1 | 3.93:1 |
 | Secondary accent (fill under primary text in neon-lights, boundary in neon-dark-mode) | 6.81:1 | 8.64:1 |
 | Text on the secondary accent fill | 6.81:1 | 14.11:1 |
 | Primary and tertiary accent text on the canvas | 4.63:1 | 4.95:1 |
-| Primary text on selection, hover, pressed and node fills | 4.53:1 | 4.54:1 |
+| Primary text on selection, hover, pressed and node fills | 7.99:1 | 4.54:1 |
 | Graph edges, ports and node types | 3.01:1 | 4.34:1 |
-| Subtle border against every surface | 1.10:1 | 1.11:1 |
-| Grid minor line against the canvas | 1.35:1 | 1.20:1 |
-| Grid major line against the canvas | 1.76:1 | 1.52:1 |
-| Selection, hover and pressed from every surface and the node surface | 1.21:1 | 1.22:1 |
-| Client history and match highlights from client surfaces and terminal background | 1.57:1 | 1.75:1 |
-| Client text | 7.77:1 | 11.74:1 |
-| Client status colors | 5.84:1 | 8.14:1 |
-| Client borders | 3.92:1 | 4.34:1 |
+| Subtle border against every surface | 1.11:1 | 1.11:1 |
+| Grid minor line against the canvas | 1.23:1 | 1.20:1 |
+| Grid major line against the canvas | 1.54:1 | 1.52:1 |
+| Selection, hover and pressed from every surface and the node surface | 1.20:1 | 1.22:1 |
+| Client history and match highlights from client surfaces and terminal background | 1.28:1 | 1.75:1 |
+| Client text | 10.50:1 | 11.74:1 |
+| Client status colors | 7.93:1 | 8.14:1 |
+| Client borders | 3.29:1 | 4.34:1 |
 | Terminal message colors | 7.95:1 | 4.95:1 |
 | ANSI palette | 3.71:1 | 4.03:1 |
 | Channel accent | 7.94:1 | 14.11:1 |
-| Terminal text on highlights and input background | 4.53:1 | 4.54:1 |
-| Map symbols | 3.02:1 | 3.91:1 |
+| Terminal text on highlights and input background | 9.28:1 | 4.54:1 |
+| Map symbols | 4.09:1 | 3.91:1 |

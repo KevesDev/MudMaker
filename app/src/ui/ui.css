@@ -135,10 +135,6 @@
   color: var(--color-status-error);
 }
 
-.ui-state-text[data-state="unavailable"] {
-  color: var(--color-status-warning);
-}
-
 .ui-switch-track {
   display: inline-flex;
   box-sizing: border-box;

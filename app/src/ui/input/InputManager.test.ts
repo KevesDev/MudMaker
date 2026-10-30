@@ -110,7 +110,7 @@ describe("activation", () => {
     await settle();
     expect(saves).toHaveLength(0);
     expect(ui.runtime.input.help.current()).toBe(SAVE);
-    expect(ui.runtime.announcer.getLast()?.text).toBe("Save Project is not available. Open a project first.");
+    expect(ui.runtime.announcer.getLast()?.text).toBe("Save Project is turned off. Open a project first.");
   });
 
   it("sends a chosen option with its value to the owning action", async () => {

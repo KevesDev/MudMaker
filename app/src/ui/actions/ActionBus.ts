@@ -214,9 +214,9 @@ export class ActionBus {
       this.announcer.announce(refusal.message);
       return { actionId, status: "ignored", code: refusal.code, message: refusal.message };
     }
-    if (refusal?.kind === "refused") return this.refuse(request, refusal.status, refusal.code, refusal.message);
+    if (refusal?.kind === "refused") return this.refuseQuietly(request, refusal.status, refusal.code, refusal.message);
     const handler = this.handlers.get(actionId);
-    if (!handler) return this.refuse(request, "unavailable", NO_OWNER_CODE, copy.notInThisBuild(label));
+    if (!handler) return this.refuseQuietly(request, "unavailable", NO_OWNER_CODE, `${label} has no registered owner.`);
 
     this.inFlight.add(actionId);
     const bound = this.registry.controlsForAction(actionId);
@@ -272,6 +272,10 @@ export class ActionBus {
 
   /** Writes an outcome to the controls still showing the state it replaces, then announces it. */
   private show(bound: readonly { readonly id: ControlId }[], outcome: ActionOutcome, label: string, replaces: ControlState, code?: string): void {
+    if (outcome.status === "unavailable") {
+      this.writeMany(bound, (runtime) => runtime.state === replaces && (code === undefined || runtime.code === code), READY);
+      return;
+    }
     this.writeMany(bound, (runtime) => runtime.state === replaces && (code === undefined || runtime.code === code), this.runtimeFor(outcome));
     this.announcer.announce(this.outcomeText(outcome, label), outcome.status === "success" ? "polite" : "assertive");
   }
@@ -280,7 +284,7 @@ export class ActionBus {
     const { actionId } = request;
     const label = this.labelFor(request);
     if (!this.registry.action(actionId)) {
-      return { kind: "refused", status: "unavailable", code: "action-unknown", message: copy.notInThisBuild(label) };
+      return { kind: "refused", status: "unavailable", code: "action-unknown", message: `${label} is not in the action table.` };
     }
     if (this.inFlight.has(actionId)) {
       return { kind: "ignored", code: "already-running", message: copy.alreadyRunning(label) };
@@ -288,7 +292,7 @@ export class ActionBus {
     const reason = this.disabledReasonFor(request);
     if (reason !== null) return { kind: "ignored", code: "control-disabled", message: copy.disabledBecause(label, reason) };
     if (!this.handlers.has(actionId)) {
-      return { kind: "refused", status: "unavailable", code: NO_OWNER_CODE, message: copy.notInThisBuild(label) };
+      return { kind: "refused", status: "unavailable", code: NO_OWNER_CODE, message: `${label} has no registered owner.` };
     }
     return null;
   }
@@ -310,15 +314,9 @@ export class ActionBus {
     return runtimes.every((runtime) => runtime.state === "disabled") ? (runtimes[0]?.reason ?? null) : null;
   }
 
-  private refuse(request: ActionRequest, status: FailureStatus, code: string, message: string): DispatchResult {
+  /** An action nobody owns changes nothing on screen; the diagnostic log is its only trace. */
+  private refuseQuietly(request: ActionRequest, status: FailureStatus, code: string, message: string): DispatchResult {
     this.report(request, code === NO_OWNER_CODE ? "info" : "error", code, message);
-    this.writeMany(this.registry.controlsForAction(request.actionId), (runtime) => runtime.state !== "disabled", {
-      state: status,
-      message,
-      code,
-      reason: null,
-    });
-    this.announcer.announce(message, "assertive");
     return { actionId: request.actionId, status, code, message };
   }
 

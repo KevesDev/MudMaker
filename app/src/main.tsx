@@ -4,6 +4,7 @@ import { App } from "./App";
 import { readPreferences, writePreferences } from "./appInfo";
 import { productionDependencies } from "./home/homeDependencies";
 import { PreferencesStore } from "./prefs";
+import { clientProfiles } from "./play/clientProfiles";
 import { launch } from "./launch";
 import { themeManager } from "./theme";
 import "./styles.css";
@@ -18,7 +19,7 @@ const container = document.getElementById("root");
 if (!container) throw new Error("Root element is missing");
 
 void launch({
-  preferences: new PreferencesStore({ bridge: { read: readPreferences, write: writePreferences }, report: productionDependencies.report }),
+  preferences: new PreferencesStore({ bridge: { read: readPreferences, write: writePreferences }, report: productionDependencies.report, profiles: clientProfiles }),
   manager: themeManager,
   window,
   mount: () =>

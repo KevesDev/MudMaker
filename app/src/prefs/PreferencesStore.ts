@@ -1,6 +1,7 @@
 import { SCOPE_IDS, type ScopeId, type ThemeManager } from "../theme";
 import type { UiDiagnostic } from "../ui";
-import { PREFERENCES_VERSION, SAVE_DEBOUNCE_MS, SCOPE_NAMESPACE, SHELL_CALL_TIMEOUT_MS, THEME_KEY } from "./prefsConfig";
+import type { ClientProfileBook } from "./ClientProfileBook";
+import { PREFERENCES_VERSION, PROFILES_KEY, SAVE_DEBOUNCE_MS, SCOPE_NAMESPACE, SHELL_CALL_TIMEOUT_MS, THEME_KEY } from "./prefsConfig";
 import { applyPreference, preferenceOf } from "./themePreference";
 
 export type PreferencesDocument = Readonly<Record<string, unknown>> & { readonly version: number };
@@ -14,6 +15,8 @@ export interface PreferencesBridge {
 export interface PreferencesOptions {
   readonly bridge: PreferencesBridge;
   readonly report: (record: UiDiagnostic) => void;
+  /** The saved world profiles, kept in the client namespace beside its appearance. */
+  readonly profiles: ClientProfileBook;
 }
 
 const isRecord = (value: unknown): value is Readonly<Record<string, unknown>> => typeof value === "object" && value !== null && !Array.isArray(value);
@@ -49,6 +52,7 @@ function withinTimeout<T>(call: Promise<T>): Promise<T> {
 export class PreferencesStore {
   private readonly bridge: PreferencesBridge;
   private readonly report: (record: UiDiagnostic) => void;
+  private readonly profiles: ClientProfileBook;
   /** The last document read, kept so saving does not drop namespaces or keys this build does not own. */
   private base: Readonly<Record<string, unknown>> = {};
   private manager: ThemeManager | null = null;
@@ -61,6 +65,7 @@ export class PreferencesStore {
   constructor(options: PreferencesOptions) {
     this.bridge = options.bridge;
     this.report = options.report;
+    this.profiles = options.profiles;
   }
 
   /** Applies the saved appearance to every scope. Never throws: anything unusable is reported and the defaults stay. */
@@ -82,13 +87,14 @@ export class PreferencesStore {
     }
     this.base = document;
     for (const scope of SCOPE_IDS) this.restoreScope(manager, scope, document);
+    this.restoreProfiles(document);
     this.settled = this.serialize(manager);
   }
 
   /** Saves every later accepted change to any scope. The returned function stops that. */
   bind(manager: ThemeManager): () => void {
     this.manager = manager;
-    const stops = SCOPE_IDS.map((scope) => manager.subscribe(scope, () => this.changed()));
+    const stops = [...SCOPE_IDS.map((scope) => manager.subscribe(scope, () => this.changed())), this.profiles.subscribe(() => this.changed())];
     return () => {
       for (const stop of stops) stop();
       if (this.timer !== null) clearTimeout(this.timer);
@@ -109,6 +115,17 @@ export class PreferencesStore {
     }
   }
 
+  private restoreProfiles(document: Readonly<Record<string, unknown>>): void {
+    const namespace = document[SCOPE_NAMESPACE.client];
+    const rejections = this.profiles.load(isRecord(namespace) ? namespace[PROFILES_KEY] : undefined);
+    for (const rejection of rejections) {
+      this.warn("preferences-profile-dropped", "A saved world could not be used and was left out.", {
+        code: "preferences-profile-dropped",
+        detail: `${SCOPE_NAMESPACE.client} ${PROFILES_KEY}[${rejection.index}]: ${rejection.reason}`,
+      });
+    }
+  }
+
   private serialize(manager: ThemeManager): string {
     return JSON.stringify(this.build(manager));
   }
@@ -120,6 +137,8 @@ export class PreferencesStore {
       const current = document[key];
       document[key] = { ...(isRecord(current) ? current : {}), [THEME_KEY]: preferenceOf(manager.getInputs(scope)) };
     }
+    const client = document[SCOPE_NAMESPACE.client];
+    document[SCOPE_NAMESPACE.client] = { ...(isRecord(client) ? client : {}), [PROFILES_KEY]: this.profiles.getSnapshot() };
     return document as PreferencesDocument;
   }
 
@@ -148,7 +167,7 @@ export class PreferencesStore {
       this.settled = text;
       this.base = document;
     } catch (failure) {
-      this.warn("preferences-write-failed", "Your appearance choice is applied but could not be saved.", describeFailure(failure));
+      this.warn("preferences-write-failed", "Your change is applied but could not be saved.", describeFailure(failure));
     } finally {
       this.writing = false;
     }

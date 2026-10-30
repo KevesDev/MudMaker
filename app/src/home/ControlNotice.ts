@@ -3,15 +3,15 @@ import type { ActionBus, ControlId, ControlRuntime, ControlState } from "../ui";
 interface Notice {
   readonly controlId: ControlId;
   readonly message: string;
-  /** The stable error code of a failure, for support; null for an expected refusal, which needs no reference. */
+  /** The stable error code of the failure, for support. */
   readonly code: string | null;
 }
 
-/** The answers that leave nothing else on screen to say so: an action nobody handles yet, and one that failed and changed nothing. */
-const NOTICE_STATES: ReadonlySet<ControlState> = new Set<ControlState>(["unavailable", "recoverable-error"]);
+/** The answer that leaves nothing else on screen to say so: an action that failed and changed nothing. */
+const NOTICE_STATES: ReadonlySet<ControlState> = new Set<ControlState>(["recoverable-error"]);
 
 /**
- * The newest refusal or failure the bus gave to one of the watched controls. It reads the bus's
+ * The newest failure the bus gave to one of the watched controls. It reads the bus's
  * own control state, so one answer is one notice and activating again replaces it.
  */
 export class ControlNotice {
@@ -57,7 +57,7 @@ export class ControlNotice {
       if (this.seen.get(id) === runtime) continue;
       this.seen.set(id, runtime);
       if (NOTICE_STATES.has(runtime.state) && runtime.message !== null) {
-        this.current = { controlId: id, message: runtime.message, code: runtime.state === "recoverable-error" ? runtime.code : null };
+        this.current = { controlId: id, message: runtime.message, code: runtime.code };
         changed = true;
       } else if (this.current?.controlId === id) {
         this.current = null;

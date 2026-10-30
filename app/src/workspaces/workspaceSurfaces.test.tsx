@@ -40,9 +40,13 @@ async function open(workspace: WorkspaceDestination): Promise<HTMLElement> {
   return screen.findByRole("main", { name: label(NAVIGATION[workspace].entries[workspace]) });
 }
 
-/** The refusal text drawn beside a control whose action nobody handles yet. */
-async function expectNotAvailable(id: string): Promise<void> {
-  await waitFor(() => expect(document.querySelector(`[data-control-id="${id}"]`)?.closest(".ui-anchor")?.querySelector(".ui-state-text")?.textContent).toBe(`${label(id)} is not available yet.`));
+/** A control whose action nobody handles stays an ordinary button with no state text and no notice. */
+async function expectNothingShown(id: string): Promise<void> {
+  await act(async () => undefined);
+  const control = document.querySelector(`[data-control-id="${id}"]`);
+  expect(control?.closest(".ui-anchor")?.querySelector(".ui-state-text")).toBeNull();
+  expect(document.querySelector(".ui-toast")).toBeNull();
+  expect(control?.getAttribute("data-state")).toBe("ready");
 }
 
 /** Every catalog control on screen carries its catalog test id and is known to the registry. */
@@ -53,11 +57,11 @@ function expectCatalogControls(surface: HTMLElement, expected: readonly string[]
 }
 
 describe("Create", () => {
-  it("registers its toolbar, map tools and bottom tab, and answers an unbuilt action honestly", async () => {
+  it("registers its toolbar, map tools and bottom tab, and shows nothing for an unbuilt action", async () => {
     const surface = await open("create");
     expectCatalogControls(surface, ["editor.shell.01", "editor.shell.03", "editor.shell.04", "editor.shell.05", "editor.shell.06", "editor.shell.08", "editor.shell.09", "editor.shell.10", "editor.map.02", "editor.map.07", "editor.diagnostics.01"]);
     fireEvent.click(button("editor.shell.01"));
-    await expectNotAvailable("editor.shell.01");
+    await expectNothingShown("editor.shell.01");
   });
 
   it("cycles View Panels from nothing to the Assets drawer to Assets with the Inspector, whose fields take typing", async () => {
@@ -98,10 +102,10 @@ describe("Create", () => {
 describe("Play", () => {
   it("shows the library, opens the profile form, warns only when TLS is off and flags a bad port", async () => {
     const surface = await open("play");
-    expectCatalogControls(surface, ["client.worlds.01", "client.worlds.02", "client.worlds.03", "client.worlds.04", "client.worlds.05", "client.worlds.07"]);
+    expectCatalogControls(surface, ["client.worlds.02", "client.worlds.03", "client.worlds.04", "client.worlds.05", "client.worlds.07"]);
     expect(screen.getByText("No saved worlds.")).toBeTruthy();
     fireEvent.click(button("client.worlds.05"));
-    await expectNotAvailable("client.worlds.05");
+    await expectNothingShown("client.worlds.05");
     fireEvent.click(button("client.worlds.02"));
     const host = await screen.findByLabelText(label("client.worlds.09"));
     fireEvent.change(host, { target: { value: "mud.example.test" } });
@@ -126,7 +130,7 @@ describe("Play", () => {
     fireEvent.change(screen.getByLabelText(label("client.composer.02")), { target: { value: "look" } });
     expect((screen.getByLabelText(label("client.composer.02")) as HTMLInputElement).value).toBe("look");
     fireEvent.click(button("client.composer.03"));
-    await expectNotAvailable("client.composer.03");
+    await expectNothingShown("client.composer.03");
     expect(screen.getByRole("log").getAttribute("data-wrap")).toBe("true");
     fireEvent.click(screen.getByRole("switch", { name: label("client.transcript.06") }));
     await waitFor(() => expect(screen.getByRole("log").getAttribute("data-wrap")).toBe("false"));
@@ -149,20 +153,20 @@ describe("Play", () => {
 });
 
 describe("Host", () => {
-  it("shows the stopped state with Start, and Start answers that it is not available", async () => {
+  it("shows the stopped state with Start, and Start shows nothing", async () => {
     const surface = await open("host");
-    expectCatalogControls(surface, ["host.dashboard.03", "host.recovery.01", "host.dashboard.08", "host.dashboard.12", "host.security.01"]);
+    expectCatalogControls(surface, ["host.dashboard.03", "host.dashboard.08", "host.dashboard.12"]);
     expect(document.querySelector(`[data-testid="${testId("host.dashboard.02")}"]`)?.textContent).toBe("Stopped");
     expect(screen.queryByRole("button", { name: label("host.dashboard.04") })).toBeNull();
     fireEvent.click(button("host.dashboard.03"));
-    await expectNotAvailable("host.dashboard.03");
+    await expectNothingShown("host.dashboard.03");
   });
 
   it("switches sections and warns about public exposure only for an address open to other machines", async () => {
     await open("host");
-    fireEvent.click(screen.getByRole("tab", { name: label("host.dashboard.10") }));
+    fireEvent.click(screen.getByRole("radio", { name: label("host.dashboard.10") }));
     expect(await screen.findByText("No log entries.")).toBeTruthy();
-    fireEvent.click(screen.getByRole("tab", { name: label("host.dashboard.09") }));
+    fireEvent.click(screen.getByRole("radio", { name: label("host.dashboard.09") }));
     const bind = await screen.findByLabelText(label("host.network.01"));
     fireEvent.change(bind, { target: { value: "127.0.0.1" } });
     expect(document.querySelector(`[data-testid="${testId("host.network.09")}"]`)).toBeNull();
@@ -171,7 +175,7 @@ describe("Host", () => {
     expect(screen.queryByLabelText(label("host.network.06"))).toBeNull();
     fireEvent.click(screen.getByRole("switch", { name: label("host.network.05") }));
     expect(await screen.findByLabelText(label("host.network.06"))).toBeTruthy();
-    fireEvent.click(screen.getByRole("tab", { name: label("host.dashboard.11") }));
+    fireEvent.click(screen.getByRole("radio", { name: label("host.dashboard.11") }));
     expect(await screen.findByRole("button", { name: label("host.recovery.04") })).toBeTruthy();
   });
 });

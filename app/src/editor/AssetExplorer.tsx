@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { ControlList, EmptyCue } from "../workspaces/controlParts";
+import { ControlList } from "../workspaces/controlParts";
 import { Button, Dropdown, TextField, useCommand, useUi, type DropdownOption } from "../ui";
 import { ASSETS, ASSET_CATEGORIES } from "./editorLayout";
 import { editorCopy } from "./editorCopy";
@@ -21,7 +21,6 @@ function CategoryRow({ label }: { readonly label: string }) {
         </span>
         {label}
       </button>
-      {expanded ? <p className="workspace-cue">{editorCopy.emptyCategory}</p> : null}
     </div>
   );
 }
@@ -52,7 +51,6 @@ export function AssetExplorer({ query, onQueryChange, filter }: AssetExplorerPro
           <CategoryRow key={id} label={label} />
         ))}
       </ControlList>
-      {folders.length === 0 ? <EmptyCue>{editorCopy.emptyCategory}</EmptyCue> : null}
     </div>
   );
 }

@@ -3,16 +3,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import themeDefaults from "../../../contracts/ui/v1/theme-defaults.v1.json";
 import { SCOPE_IDS, ThemeManager, USER_THEME_SCHEMA } from "../theme";
 import type { UiDiagnostic } from "../ui";
+import { ClientProfileBook } from "./ClientProfileBook";
 import { PreferencesStore, type PreferencesBridge, type PreferencesDocument } from "./PreferencesStore";
 import { PREFERENCES_VERSION, SAVE_DEBOUNCE_MS, SCOPE_NAMESPACE, SHELL_CALL_TIMEOUT_MS } from "./prefsConfig";
 
 interface Harness {
   readonly manager: ThemeManager;
   readonly store: PreferencesStore;
+  readonly profiles: ClientProfileBook;
   readonly reports: UiDiagnostic[];
   readonly writes: PreferencesDocument[];
   readonly bridge: { read: ReturnType<typeof vi.fn<PreferencesBridge["read"]>>; write: ReturnType<typeof vi.fn<PreferencesBridge["write"]>> };
 }
+
+const ADAPTER_IDS = ["telnet", "mudmaker"];
 
 function harness(saved: unknown = null): Harness {
   const writes: PreferencesDocument[] = [];
@@ -24,7 +28,8 @@ function harness(saved: unknown = null): Harness {
     }),
   };
   const reports: UiDiagnostic[] = [];
-  return { manager: new ThemeManager(themeDefaults), store: new PreferencesStore({ bridge, report: (record) => reports.push(record) }), reports, writes, bridge };
+  const profiles = new ClientProfileBook(ADAPTER_IDS);
+  return { profiles, manager: new ThemeManager(themeDefaults), store: new PreferencesStore({ bridge, report: (record) => reports.push(record), profiles }), reports, writes, bridge };
 }
 
 const reference = new ThemeManager(themeDefaults);

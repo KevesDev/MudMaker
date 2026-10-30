@@ -224,14 +224,14 @@ describe("preset palette rules", () => {
     expect(fixtureTokens("editor", "neon-dark-mode")["color.status.success"]).not.toBe(lime);
   });
 
-  it("maps neon-lights surfaces to the palette: app and canvas Vulcan, panel and inspector Persian Blue", () => {
+  it("maps neon-lights surfaces to the palette: app and canvas Vulcan, layers derived from Persian Blue and Electric Navy", () => {
     const tokens = fixtureTokens("editor", "neon-lights");
     expect(tokens["color.surface.app"]).toBe("#111320");
     expect(tokens["color.surface.canvas"]).toBe("#111320");
-    expect(tokens["color.surface.panel"]).toBe("#232175");
-    expect(tokens["color.surface.inspector"]).toBe("#232175");
-    expect(tokens["color.surface.toolbar"]).toBe("#41204D");
-    expect(tokens["color.surface.overlay"]).toBe("#2A28AD");
+    expect(tokens["color.surface.panel"]).toBe("#100F36");
+    expect(tokens["color.surface.inspector"]).toBe("#12113B");
+    expect(tokens["color.surface.toolbar"]).toBe("#13123F");
+    expect(tokens["color.surface.overlay"]).toBe("#12124C");
     expect(tokens["color.text.primary"]).toBe("#5EEA91");
   });
 

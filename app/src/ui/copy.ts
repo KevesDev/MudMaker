@@ -8,8 +8,7 @@ export const copy = {
   unavailablePrefix: "Unavailable:",
   shortcutPrefix: "Shortcut:",
   alreadyRunning: (label: string): string => `${label} is already running.`,
-  disabledBecause: (label: string, reason: string): string => `${label} is not available. ${reason}`,
-  notInThisBuild: (label: string): string => `${label} is not available yet.`,
+  disabledBecause: (label: string, reason: string): string => `${label} is turned off. ${reason}`,
   /** Shown before the option a choice list currently has. */
   chosenMark: "✓",
   takingLong: (label: string): string => `${label} is taking longer than expected.`,

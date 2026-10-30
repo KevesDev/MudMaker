@@ -19,8 +19,8 @@ type OutputView = (typeof OUTPUT_VIEWS)[number];
 
 /**
  * The Create workspace: the project toolbar, the Asset Explorer drawer, the map canvas with its tool strip, the Inspector
- * and the Problems strip. A control that needs a project, a build or a save has no handler yet, so it answers that it is
- * not available; everything that is only layout works now.
+ * and the Problems strip. A control that needs a project, a build or a save has no handler yet, so it does nothing visible;
+ * everything that is only layout works now.
  */
 export function CreateShell() {
   const { registry } = useUi();

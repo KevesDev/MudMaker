@@ -200,7 +200,7 @@ describe("activation and states", () => {
     expect(tip.hidden).toBe(true);
   });
 
-  it.each(["validation-error", "denied", "unavailable", "recoverable-error"] as const)(
+  it.each(["validation-error", "denied", "recoverable-error"] as const)(
     "carries a %s outcome beside a control that lists that state, in words and as its state",
     async (status) => {
       outcome = { status, code: "E-1", message: `Words for ${status}.` };
@@ -223,13 +223,14 @@ describe("activation and states", () => {
     expect((await screen.findByText("Project saved", { selector: ".ui-state-text" })).getAttribute("data-state")).toBe("success");
   });
 
-  it("reports an action that has no owner as unavailable on the control", async () => {
+  it("leaves a control with no owner as an ordinary ready button", async () => {
     const orphan = ui.control("editor.toolbar.03");
     renderWithUi(ui, <Button control={orphan} />);
     fireEvent.click(screen.getByRole("button", { name: "Unowned Tool" }));
-    expect(await screen.findByText("Unowned Tool is not available yet.", { selector: ".ui-state-text" })).toBeTruthy();
-    expect(ui.runtime.bus.getRuntime("editor.toolbar.03").state).toBe("unavailable");
-    expect(screen.getByRole("button", { name: "Unowned Tool" }).getAttribute("data-state")).toBe("recoverable-error");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(document.querySelector(".ui-state-text")).toBeNull();
+    expect(ui.runtime.bus.getRuntime("editor.toolbar.03").state).toBe("ready");
+    expect(screen.getByRole("button", { name: "Unowned Tool" }).getAttribute("data-state")).toBe("ready");
   });
 
   it("never shows a state the catalog does not list for the control", async () => {
@@ -388,7 +389,7 @@ describe("toolbar and menu", () => {
     expect(screen.queryByRole("menu")).not.toBeNull();
     const tips = screen.getAllByRole("tooltip");
     expect(tips.filter((tip) => !tip.hidden).map((tip) => tip.textContent)).toEqual([expect.stringContaining("Unavailable: Help is not installed.")]);
-    expect(ui.runtime.announcer.getLast()?.text).toBe("Help is not available. Help is not installed.");
+    expect(ui.runtime.announcer.getLast()?.text).toBe("Help is turned off. Help is not installed.");
   });
 
   it("keeps the menu open when the chosen item's action is already running", async () => {

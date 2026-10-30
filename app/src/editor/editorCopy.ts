@@ -16,7 +16,6 @@ export const editorCopy = {
   inspectorGeneral: "General",
   inspectorComponents: "Components",
   assetFilterAll: "All",
-  emptyCategory: "Empty",
   problemsDrawer: "Problems and output",
   /** What each output view says while it holds nothing, keyed by the catalog control that shows the view. */
   emptyOutput: {

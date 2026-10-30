@@ -1,5 +1,5 @@
 import { useId, useState, type ReactNode } from "react";
-import { ControlList, ControlTab, ControlTabList, EmptyCue, PassiveText } from "../workspaces/controlParts";
+import { ControlChoice, ControlChoiceGroup, ControlList, EmptyCue, PassiveText } from "../workspaces/controlParts";
 import { PORT_INVALID_MESSAGE, portIsInvalid } from "../workspaces/ports";
 import { SILENT, useIntentRouter } from "../workspaces/useIntentRouter";
 import { Button, Switch, TextField, Toolbar, useUi, type ActionHandler, type PassiveDescriptor } from "../ui";
@@ -105,13 +105,13 @@ export function HostWorkspace() {
       <div className="host-selector">
         <ControlList control={control(RELEASES)} />
         <EmptyCue>{hostCopy.noReleases}</EmptyCue>
-        <ControlTabList label={hostCopy.sections}>
+        <ControlChoiceGroup label={hostCopy.sections}>
           {SECTIONS.map((id) => (
-            <ControlTab key={id} control={control(id)} selected={id === section} />
+            <ControlChoice key={id} control={control(id)} selected={id === section} />
           ))}
-        </ControlTabList>
+        </ControlChoiceGroup>
       </div>
-      <div role="tabpanel" id={panelId} className="host-section">
+      <div role="region" aria-label={hostCopy.sections} id={panelId} className="host-section">
         <SectionContent section={section} />
       </div>
     </div>

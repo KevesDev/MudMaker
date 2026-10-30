@@ -5,7 +5,7 @@ import { addsDescription, tooltipContent } from "./tooltipRule";
 
 const ready: ControlRuntime = { state: "ready", message: null, code: null, reason: null };
 const disabled: ControlRuntime = { state: "disabled", message: null, code: null, reason: "Open a project first." };
-const unavailable: ControlRuntime = { state: "unavailable", message: "Save is not available yet.", code: "E-NONE", reason: null };
+const unavailable: ControlRuntime = { state: "unavailable", message: "Save has no registered owner.", code: "E-NONE", reason: null };
 const control = fixtureRegistry().requireControl(SAVE);
 const facts = { control, runtime: ready, shortcut: null, iconOnly: false };
 

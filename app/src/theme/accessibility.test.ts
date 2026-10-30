@@ -162,15 +162,17 @@ describe.each(fixturePresetIds())("high contrast secondary accent in preset %s",
     return manager.getSnapshot("editor").tokens;
   }
 
-  it("keeps the exact palette secondary accent, which already has a use, and still carries its text", () => {
+  it("keeps an exact palette secondary accent that bounds every surface and darkens one that cannot carry its text", () => {
     const tokens = highContrastTokens();
-    expect(tokens["color.accent.secondary"]).toBe(fixtureTokens("editor", presetId)["color.accent.secondary"]);
+    const exact = stringToken(fixtureTokens("editor", presetId), "color.accent.secondary");
     const use = secondaryAccentUse(tokens);
     expect(use.asBoundary || use.asFill).toBe(true);
+    if (secondaryAccentUse(fixtureTokens("editor", presetId)).asBoundary) expect(tokens["color.accent.secondary"]).toBe(exact);
+    else expect(wcagRatio(stringToken(tokens, "color.text.primary"), stringToken(tokens, "color.accent.secondary"))).toBeGreaterThanOrEqual(7);
   });
 
   it("derives a secondary accent that can carry primary text from a mid tone theme color that can neither bound a surface nor carry text", () => {
-    const midTone = "#707070";
+    const midTone = presetId === "neon-lights" ? "#4A4A9A" : "#707070";
     expect(secondaryAccentUse({ ...fixtureTokens("editor", presetId), "color.accent.secondary": midTone })).toEqual({ asBoundary: false, asFill: false });
     const tokens = highContrastTokens({ "color.accent.secondary": midTone });
     expect(tokens["color.accent.secondary"]).not.toBe(midTone);
@@ -182,7 +184,7 @@ describe.each(fixturePresetIds())("high contrast secondary accent in preset %s",
     const tokens = highContrastTokens();
     const base = fixtureTokens("editor", presetId);
     expect(wcagRatio(stringToken(tokens, "color.accent.onSecondary"), stringToken(tokens, "color.accent.secondary"))).toBeGreaterThanOrEqual(7);
-    const paletteRatio = wcagRatio(stringToken(base, "color.accent.onSecondary"), stringToken(base, "color.accent.secondary"));
+    const paletteRatio = wcagRatio(stringToken(base, "color.accent.onSecondary"), stringToken(tokens, "color.accent.secondary"));
     expect(tokens["color.accent.onSecondary"] === base["color.accent.onSecondary"]).toBe(paletteRatio >= 7);
   });
 

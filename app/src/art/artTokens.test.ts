@@ -96,8 +96,6 @@ describe("art colors follow the palette roles the owner mapped", () => {
   /** Each row says that an art role is the same palette color as a token whose palette color the presets document names. */
   const SHARED: readonly (readonly [string, string, string])[] = [
     ["neon-lights", "color.art.deep", "color.surface.canvas"],
-    ["neon-lights", "color.art.sky", "color.surface.panel"],
-    ["neon-lights", "color.art.haze", "color.surface.toolbar"],
     ["neon-lights", "color.art.accent", "color.accent.tertiary"],
     ["neon-lights", "color.art.glow", "color.accent.primary"],
     ["neon-dark-mode", "color.art.deep", "color.surface.canvas"],

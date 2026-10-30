@@ -126,13 +126,13 @@ describe("Menu opener", () => {
 
   it("does not open or ask the owner when the control is disabled, and says why", async () => {
     const { ui, seen, opener } = render(openMenuHandler);
-    ui.runtime.bus.setDisabled(GO_TO, "Go To is not available while saving.");
+    ui.runtime.bus.setDisabled(GO_TO, "Go To is locked while saving.");
     fireEvent.click(opener);
     await SETTLE();
     expect(seen).toEqual([]);
     expect(screen.queryByRole("menu")).toBeNull();
     expect(opener.getAttribute("aria-disabled")).toBe("true");
-    expect(ui.runtime.announcer.getLast()?.text).toBe("Go To is not available. Go To is not available while saving.");
+    expect(ui.runtime.announcer.getLast()?.text).toBe("Go To is turned off. Go To is locked while saving.");
   });
 
   it("opens once when the opener is activated again while the owner is still answering", async () => {
@@ -192,12 +192,12 @@ describe("Menu opener", () => {
     expect(opener.getAttribute("aria-expanded")).toBe("false");
   });
 
-  it("does not open when nobody owns the action yet, and says so", async () => {
+  it("does not open when nobody owns the action yet, and shows nothing", async () => {
     const { opener } = render(null);
     fireEvent.click(opener);
     await SETTLE();
     expect(screen.queryByRole("menu")).toBeNull();
-    expect(document.querySelector(".ui-state-text")?.textContent).toBe("Go To is not available yet.");
+    expect(document.querySelector(".ui-state-text")).toBeNull();
   });
 });
 
@@ -270,13 +270,17 @@ describe("Menu with a choice group", () => {
 });
 
 describe("Button state text", () => {
-  it("shows the outcome beside the button by default and hides it when another part carries the message", async () => {
+  const failing = () => Promise.resolve({ status: "recoverable-error", code: "E-1", message: "It failed." } as const);
+
+  it("shows a failure beside the button by default and hides it when another part carries the message", async () => {
     const shown = createTestUi();
+    shown.runtime.bus.registerHandler(EDITOR, "ui.test.orphan", failing);
     renderWithUi(shown, <Button control={shown.control(ORPHAN)} />);
     await shown.runtime.bus.dispatch({ actionId: "ui.test.orphan", controlId: ORPHAN });
     expect(document.querySelectorAll(".ui-state-text")).toHaveLength(1);
     cleanup();
     const hidden = createTestUi();
+    hidden.runtime.bus.registerHandler(EDITOR, "ui.test.orphan", failing);
     renderWithUi(hidden, <Button control={hidden.control(ORPHAN)} showState={false} />);
     await hidden.runtime.bus.dispatch({ actionId: "ui.test.orphan", controlId: ORPHAN });
     expect(document.querySelectorAll(".ui-state-text")).toHaveLength(0);
@@ -337,8 +341,4 @@ describe("Dialog close button", () => {
   });
 });
 
-describe("shared unavailable wording", () => {
-  it("is one plain sentence naming the control", () => {
-    expect(copy.notInThisBuild("Create")).toBe("Create is not available yet.");
-  });
-});
+

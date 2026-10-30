@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Children, type ReactNode } from "react";
 import { StateText, Tooltip, useControlBinding, type ControlDescriptor } from "../ui";
 
 /** One choice of a tab list. The owner says which is selected and changes it when the control's action succeeds. */
@@ -23,9 +23,32 @@ export function ControlTabList({ label, children }: { readonly label: string; re
   );
 }
 
-/** A list or tree the owner fills. It has no rows of its own, so an empty one shows only what the owner puts beside it. */
+/** One choice of a single-select button group. The owner says which is chosen and changes it when the control's action succeeds. */
+export function ControlChoice({ control, selected }: { readonly control: ControlDescriptor; readonly selected: boolean }) {
+  const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["tab"], "ControlChoice");
+  return (
+    <span className="ui-anchor">
+      <button type="button" role="radio" aria-checked={selected} className="ui-control ui-hit workspace-choice" {...attributes}>
+        {control.label}
+      </button>
+      <StateText runtime={runtime} shown={shown} />
+      <Tooltip id={tipId} helpKey={control.id} title={control.label} content={tip} />
+    </span>
+  );
+}
+
+export function ControlChoiceGroup({ label, children }: { readonly label: string; readonly children: ReactNode }) {
+  return (
+    <div role="radiogroup" aria-label={label} data-roving-group="horizontal" className="workspace-choices">
+      {children}
+    </div>
+  );
+}
+
+/** A list or tree the owner fills. With no rows it draws nothing, so the owner's empty cue stands alone. */
 export function ControlList({ control, children }: { readonly control: ControlDescriptor; readonly children?: ReactNode }) {
   const { attributes } = useControlBinding(control, ["list", "tree"], "ControlList");
+  if (Children.toArray(children).length === 0) return null;
   return (
     <div role={control.kind === "tree" ? "tree" : "listbox"} aria-label={control.label} tabIndex={0} className="workspace-list" {...attributes}>
       {children}

@@ -7,7 +7,7 @@ export const SILENT: ActionOutcome = { status: "success", message: "" };
 
 /**
  * Registers, for the lifetime of a workspace, the handlers of the controls whose actions only change local
- * presentation. A control without a handler keeps the shared answer that the feature is not available yet.
+ * presentation. A control without a handler does nothing visible; the bus logs it.
  */
 export function useIntentRouter(owner: string, handlers: Readonly<Record<ControlId, ActionHandler>>): void {
   const { bus, registry } = useUi();

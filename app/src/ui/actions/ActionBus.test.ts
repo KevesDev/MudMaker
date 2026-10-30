@@ -5,7 +5,7 @@ import { UI_LIMITS } from "./config";
 import { ActionBus } from "./ActionBus";
 import { UiContractError } from "./types";
 
-const FAILURES = ["validation-error", "denied", "unavailable", "recoverable-error"] as const;
+const FAILURES = ["validation-error", "denied", "recoverable-error"] as const;
 
 describe("ActionBus dispatch", () => {
   it("shows pending until the handler confirms, then the exact outcome it returned", async () => {
@@ -29,12 +29,22 @@ describe("ActionBus dispatch", () => {
     expect(ui.runtime.bus.getRuntime(SAVE)).toMatchObject({ state: status, code: "E-1", message: "Words for the user" });
   });
 
-  it("answers an action with no registered owner as unavailable and names the action", async () => {
+  it("shows nothing for an action with no registered owner and logs one info entry naming the action", async () => {
     const ui = createTestUi();
     const result = await ui.runtime.bus.dispatch({ actionId: "ui.test.orphan", controlId: ORPHAN });
     expect(result).toMatchObject({ actionId: "ui.test.orphan", status: "unavailable", code: "no-action-owner" });
-    expect(ui.runtime.bus.getRuntime(ORPHAN).state).toBe("unavailable");
-    expect(ui.diagnostics).toEqual([expect.objectContaining({ code: "no-action-owner", actionId: "ui.test.orphan" })]);
+    expect(ui.runtime.bus.getRuntime(ORPHAN)).toMatchObject({ state: "ready", message: null });
+    expect(ui.runtime.announcer.getLast()).toBeNull();
+    expect(ui.diagnostics).toEqual([expect.objectContaining({ severity: "info", code: "no-action-owner", actionId: "ui.test.orphan" })]);
+  });
+
+  it("shows nothing when the owner reports the action as unavailable", async () => {
+    const ui = createTestUi();
+    ui.runtime.bus.registerHandler(EDITOR, "ui.test.save", () => Promise.resolve({ status: "unavailable", code: "E-1", message: "Words" }));
+    const result = await ui.runtime.bus.dispatch({ actionId: "ui.test.save", controlId: SAVE });
+    expect(result).toMatchObject({ status: "unavailable", code: "E-1" });
+    expect(ui.runtime.bus.getRuntime(SAVE)).toMatchObject({ state: "ready", message: null });
+    expect(ui.runtime.announcer.getLast()).toBeNull();
   });
 
   it("answers an action missing from the table as unavailable without touching any control", async () => {
@@ -130,7 +140,7 @@ describe("ActionBus dispatch", () => {
     const result = await ui.runtime.bus.dispatch({ actionId: "ui.test.save", controlId: SAVE });
     expect(result).toMatchObject({ status: "ignored", code: "control-disabled" });
     expect(handler).not.toHaveBeenCalled();
-    expect(ui.runtime.announcer.getLast()?.text).toBe("Save Project is not available. Open a project first.");
+    expect(ui.runtime.announcer.getLast()?.text).toBe("Save Project is turned off. Open a project first.");
     expect(ui.runtime.bus.getRuntime(SAVE)).toMatchObject({ state: "disabled", reason: "Open a project first." });
   });
 

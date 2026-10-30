@@ -10,7 +10,7 @@ import { useTabletLayoutMark } from "./useTabletLayout";
 import { WindowControls } from "./WindowControls";
 
 export interface FrameWindowProps {
-  /** Holds at least the frame controls: the full catalogs, or the frame's own registry while those are not available. */
+  /** Holds at least the frame controls: the full catalogs, or the frame's own registry before those load. */
   readonly registry: ActionRegistry;
   /** Owned by the caller, so what is known of the window survives a change of screen. */
   readonly controller: WindowController;

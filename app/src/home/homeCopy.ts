@@ -25,7 +25,7 @@ export const homeCopy = {
   /** The one brand line under the wordmark. Deleting this string and its element removes it. */
   tagline: "BUILD WORLDS. YOUR WAY.",
   appearanceChanged: (presetLabel: string): string => `Appearance is now ${presetLabel}.`,
-  appearanceUnknown: "That appearance is not available.",
+  appearanceUnknown: "That appearance could not be found.",
   appearanceNotApplied: (presetLabel: string): string => `Appearance could not be changed to ${presetLabel}. Your current look is unchanged.`,
   appearancePartlyApplied: (presetLabel: string): string =>
     `Appearance could only be partly changed to ${presetLabel}. Choose a look again to bring every screen into step.`,
