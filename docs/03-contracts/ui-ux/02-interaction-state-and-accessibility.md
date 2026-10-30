@@ -35,3 +35,10 @@ For every registry entry, assert it renders (or visible condition explains hidin
 
 ## Handler contract
 Action handlers must honour the `AbortSignal` they receive and settle promptly after it fires. The bus keeps an action blocked until its handler settles, so a handler that never settles after abort is an owner defect.
+
+## Owner decisions on browser behavior and unwired controls (2026-10-30)
+- The application owns every context menu. The native browser menu (Inspect, Save image and the rest) never appears anywhere in the app. Only text entry (input, textarea, select, editable content) keeps the native menu for copy and paste.
+- Browser-chrome shortcuts are blocked in every build: reload, developer tools, view source, print, save page, find, browser zoom (including Ctrl plus wheel and pinch), history navigation (Alt plus arrows, Backspace outside text entry), file drop navigating the window, image dragging and middle-click autoscroll. Development builds keep reload and developer tools only. The WebView2 engine settings disable default menus and accelerator keys in release builds.
+- Application chrome text is not selectable; text entry and opted-in content are.
+- A control whose feature has no backend yet is a real registered control. Pressing it does nothing visible: no message, toast, state label or announcement (only a quiet diagnostic log entry). The application never shows "not available yet" or similar placeholder text.
+- Text size: browser zoom is blocked and the app has no text-size control yet; the owner deferred it to the accessibility pass.

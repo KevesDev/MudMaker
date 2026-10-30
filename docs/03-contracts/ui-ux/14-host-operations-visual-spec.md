@@ -87,3 +87,7 @@ This section maps **every currently registered control** to a visual home. It is
 ## Visual audit rule for this workspace
 
 A Builder must demonstrate a discoverable route to each registered feature, with valid disabled/error states and keyboard access, without promoting every control to the main toolbar or leaving every panel visible. Existing contract-mandated tabs represent document/session or contextual mode switching; default navigation must not become a permanently stacked tab wall. Any mismatch between this map and a feature contract is resolved through an explicit indexed documentation change, not agent invention.
+
+## Owner implementation decisions (2026-10-30)
+- The section chooser (Player Sessions, Traffic, Logs, Backups, Release) is a row of bordered buttons in the same style as the splash action buttons, one selected at a time, with no underlines or tab styling.
+- An empty list (releases, players) draws no box; only its short empty cue shows.

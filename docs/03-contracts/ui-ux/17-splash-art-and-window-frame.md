@@ -6,7 +6,7 @@
 The splash follows the [mockup](assets/mudmaker-neon-splash-reference.png) in composition, proportions, ornament and color roles. Deliberate decisions where the mockup and other documents meet:
 | Mockup shows | Decision | Why |
 |---|---|---|
-| Tagline "BUILD WORLDS. YOUR WAY." under the wordmark | **Shown, letter-spaced, in the secondary accent**, as in the mockup. It is one fixed brand line stored as a single string and can be removed by deleting that string. | Owner asked for the mockup as closely as possible; this overrides the general no-subtitle rule of doc 16 for this one brand line only. Flagged for owner confirmation. |
+| Tagline "The Ultimate MUD Suite" under the wordmark | **Shown, letter-spaced, in the secondary accent**, as in the mockup. It is one fixed brand line stored as a single string and can be removed by deleting that string. | Owner asked for the mockup as closely as possible; this overrides the general no-subtitle rule of doc 16 for this one brand line only. Flagged for owner confirmation. |
 | Version at the left of the title row and again beside the wordmark | **Once**, small, beside the wordmark (version, then build on the next line), exactly where the mockup places it. The frame row carries the application mark and `MudMaker` only. | doc 16 one label per intent |
 | Recent Projects and Recent Worlds row | Built and styled as in the mockup but **rendered only when their Home/Library lists exist and hold data** (S04.6, S08.2). Until then the splash omits the row. | owner rule: no placeholder content in production UI |
 | Settings and Quit at the bottom with icons, a thin divider with a center ornament above | As in the mockup. | |

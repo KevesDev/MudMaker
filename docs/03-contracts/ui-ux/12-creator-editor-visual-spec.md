@@ -148,3 +148,8 @@ This section maps **every currently registered control** to a visual home. It is
 ## Visual audit rule for this workspace
 
 A Builder must demonstrate a discoverable route to each registered feature, with valid disabled/error states and keyboard access, without promoting every control to the main toolbar or leaving every panel visible. Existing contract-mandated tabs represent document/session or contextual mode switching; default navigation must not become a permanently stacked tab wall. Any mismatch between this map and a feature contract is resolved through an explicit indexed documentation change, not agent invention.
+
+## Owner implementation decisions (2026-10-30)
+- Panel visibility is chosen with a single View Panels control that cycles through the closed state, Assets drawer, and Assets plus Inspector.
+- The graph-paper canvas is the dominant surface; its grid and snap toggles sit in the canvas strip. The theme keeps large surfaces dark and near-black; saturated palette colors are for accents, borders and focus only.
+- Empty asset folders show no placeholder text.

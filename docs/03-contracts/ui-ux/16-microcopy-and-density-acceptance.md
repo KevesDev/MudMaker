@@ -53,3 +53,6 @@ Before approving a screen, Builder and Auditor inspect every always-visible text
 9. Hiding required warnings, errors or confirmations under the pretext of minimalism.
 
 **Evidence:** screenshot with visible-state text inventory; screen-reader names/help path; keyboard focus sequence; narrow-window/large-font comparison; examples of at least normal, empty, busy, error and guarded-exit states for applicable workspaces. These rules apply to new features added after this spec—never treat the existing control catalog as a license to render every control at once.
+
+## Owner rule: no placeholder text (2026-10-30)
+Placeholder, status or "not available yet" text never appears on screen for features that are not wired yet. Unwired controls are silent. Empty states use only the short cue the docs define (for example "No saved worlds."), and a list with no rows draws no box.
