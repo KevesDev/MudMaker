@@ -14,6 +14,8 @@
 
 **Binding S03 close-out gate:** owner clarified S02.10a/b/c (hardware detection, fixed model catalog/recommendations, wizard screens) must be completed before the end of S03. They remain S02 work. Only theme import/export moved to polish; S03 cannot be signed off with S02.10 unfinished.
 
+**Current pickup:** S03.3 passed/pushed258aa01; engine3/10. At6%primary remaining, agents finished and work checkpointed. Pickup scheduled2026-10-31 19:15 America/Denver after reset. [S03.4 preflight](06-quality/reports/s03-4-preflight.md) has process/Protobuf dependency contract work, no code or app-readiness claim.
+
 **Owner acceptance (2026-10-31):** compact UI appearance/feel accepted; owner authorized proceeding with sprint order. Preserve the accepted visual baseline and start S02.9c theme import/export. Separate touch/native-picker validation is not claimed.
 
 ## Real application and testing milestones
@@ -160,7 +162,7 @@
 | **S03.1 Identity allocator** | World scoped entity generations | DONE | [Independent audit PASS](06-quality/reports/s03-1-audit.md); all six named native commands, seven cases in both Release/ASan. Full 128-bit WorldId, stale/foreign/retirement checks; library scope only |
 | **S03.2 Component schema** | Typed component registry | DONE | [Independent audit PASS](06-quality/reports/s03-2-audit.md); all six named native commands, eight schema cases in Release/ASan; logical schemas/value validation only |
 | **S03.3 Mutation API** | Writer-only field mutation | DONE | [Independent audit PASS](06-quality/reports/s03-3-audit.md); six named commands, eight World cases each Release/ASan; native World library, not app-ready |
-| **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API; the launch screen engine startup check becomes blocking once the engine ships (it is only logged until then) | TODO | — |
+| **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API; the launch screen engine startup check becomes blocking once the engine ships (it is only logged until then) | TODO | [Preflight](06-quality/reports/s03-4-preflight.md) complete; actual process/Protobuf bridge and then realUI slices need contract/runtime pins before code. First engine app milestone; not ready yet |
 | **S03.5 Query API** | Bounded entity query | TODO | — |
 | **S03.6 Revision guard** | ExpectedVersion write checks | TODO | — |
 | **S03.7 Event commit** | Atomic state plus domain event | TODO | — |
