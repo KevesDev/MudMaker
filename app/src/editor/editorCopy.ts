@@ -8,20 +8,7 @@ export const editorCopy = {
   dirtyMark: "●",
   closeMark: "×",
   projectActions: "Project actions",
-  viewActions: "View actions",
-  assetFilterInvalid: "Choose one of the listed folders.",
-  expandedMark: "▾",
-  collapsedMark: "▸",
   mapTools: "Map tools",
-  inspectorGeneral: "General",
-  inspectorComponents: "Components",
-  assetFilterAll: "All",
+  mapToggleInvalid: "That setting could not be changed.",
   problemsDrawer: "Problems and output",
-  /** What each output view says while it holds nothing, keyed by the catalog control that shows the view. */
-  emptyOutput: {
-    "editor.diagnostics.01": "No problems.",
-    "editor.diagnostics.02": "No test output.",
-    "editor.diagnostics.03": "No trace.",
-    "editor.diagnostics.04": "No build output.",
-  },
 } as const;

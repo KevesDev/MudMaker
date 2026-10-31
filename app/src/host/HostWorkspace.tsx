@@ -1,8 +1,10 @@
 import { useId, useState, type ReactNode } from "react";
-import { ControlChoice, ControlChoiceGroup, ControlList, EmptyCue, PassiveText } from "../workspaces/controlParts";
+import { MENU_CARET } from "../nav/destinations";
+import { ControlList, EmptyCue, PassiveText } from "../workspaces/controlParts";
 import { PORT_INVALID_MESSAGE, portIsInvalid } from "../workspaces/ports";
-import { SILENT, useIntentRouter } from "../workspaces/useIntentRouter";
-import { Button, Switch, TextField, Toolbar, useUi, type ActionHandler, type PassiveDescriptor } from "../ui";
+import { ToolbarSlot } from "../workspaces/ToolbarSlot";
+import { SILENT, useIntentRouter, useMenuOpeners } from "../workspaces/useIntentRouter";
+import { Button, Menu, Switch, TextField, Toolbar, useUi, type ActionHandler, type PassiveDescriptor } from "../ui";
 import { DASHBOARD, HOST_OWNER, NETWORK, PLAYERS, PUBLIC_BINDS, RECOVERY, RELEASES, SECTIONS, type Section } from "./hostLayout";
 import { hostCopy } from "./hostCopy";
 
@@ -62,6 +64,8 @@ function SectionContent({ section }: { readonly section: Section }): ReactNode {
         </>
       );
     case "host.dashboard.09":
+      return null;
+    case "host.network.10":
       return <NetworkForm />;
     case "host.dashboard.10":
       return <EmptyCue>{hostCopy.noLogs}</EmptyCue>;
@@ -75,15 +79,19 @@ function SectionContent({ section }: { readonly section: Section }): ReactNode {
       );
     case "host.dashboard.12":
       return (
-        <div className="workspace-row">
-          <Button control={control(RECOVERY.validate)} />
-          <Button control={control(RECOVERY.activate)} />
-        </div>
+        <>
+          <ControlList control={control(RELEASES)} />
+          <EmptyCue>{hostCopy.noReleases}</EmptyCue>
+          <div className="workspace-row">
+            <Button control={control(RECOVERY.validate)} />
+            <Button control={control(RECOVERY.activate)} />
+          </div>
+        </>
       );
   }
 }
 
-/** Host operations: the state and the next safe action on top, a release list, and one section at a time below. */
+/** Host operations: state and Start in the frame row, then one section at a time, chosen from the Operations menu. */
 export function HostWorkspace() {
   const { registry } = useUi();
   const control = (id: string) => registry.requireControl(id);
@@ -93,25 +101,20 @@ export function HostWorkspace() {
     setSection(next);
     return Promise.resolve(SILENT);
   };
+  useMenuOpeners(HOST_OWNER, [DASHBOARD.operations]);
   useIntentRouter(HOST_OWNER, Object.fromEntries(SECTIONS.map((id) => [id, showSection(id)])));
   return (
     <div className="host-workspace">
-      <div className="workspace-bar">
+      <ToolbarSlot>
         <PassiveText control={control(DASHBOARD.status)}>{hostCopy.stopped}</PassiveText>
         <Toolbar described={HOST_BAR}>
           <Button control={control(DASHBOARD.start)} />
         </Toolbar>
-      </div>
+      </ToolbarSlot>
       <div className="host-selector">
-        <ControlList control={control(RELEASES)} />
-        <EmptyCue>{hostCopy.noReleases}</EmptyCue>
-        <ControlChoiceGroup label={hostCopy.sections}>
-          {SECTIONS.map((id) => (
-            <ControlChoice key={id} control={control(id)} selected={id === section} />
-          ))}
-        </ControlChoiceGroup>
+        <Menu opener={control(DASHBOARD.operations)} items={SECTIONS.map(control)} currentId={section} trailingGlyph={MENU_CARET} />
       </div>
-      <div role="region" aria-label={hostCopy.sections} id={panelId} className="host-section">
+      <div role="region" aria-label={control(section).label} id={panelId} className="host-section">
         <SectionContent section={section} />
       </div>
     </div>

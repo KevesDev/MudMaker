@@ -1,6 +1,8 @@
 export interface ClientSession {
   readonly id: string;
   readonly worldName: string;
+  /** Whether the world has answered. The Connected label follows it. */
+  readonly connected: boolean;
 }
 
 export interface ClientSessionsSnapshot {

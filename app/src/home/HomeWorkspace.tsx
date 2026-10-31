@@ -1,4 +1,4 @@
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { FrameWindow } from "../frame/FrameWindow";
 import type { WindowController } from "../frame/WindowController";
 import { isWorkspace } from "../nav/destinations";
@@ -8,6 +8,7 @@ import { registerShellRouter } from "../nav/ShellRouter";
 import { WorkspaceIdentity, WorkspaceMenus } from "../nav/WorkspaceToolbar";
 import type { WorkspaceNavigator } from "../nav/WorkspaceNavigator";
 import type { UiRuntime } from "../ui";
+import { ToolbarTargetContext } from "../workspaces/ToolbarSlot";
 import { WorkspaceStage } from "../workspaces/WorkspaceStage";
 import type { HomeDependencies } from "./homeDependencies";
 import { registerHomeRouter } from "./HomeRouter";
@@ -41,6 +42,8 @@ export function HomeWorkspace({ report, dependencies, controller, navigator, ret
   );
   const { destination } = snapshot;
   const workspace = isWorkspace(destination) ? destination : null;
+  const [slot, setSlot] = useState<HTMLElement | null>(null);
+  const target = useMemo(() => ({ element: slot }), [slot]);
   return (
     <FrameWindow
       registry={registry}
@@ -49,13 +52,22 @@ export function HomeWorkspace({ report, dependencies, controller, navigator, ret
       report={dependencies.report}
       correlation={info === null ? {} : { launchId: info.launchId }}
       registerScreen={registerScreen}
-      middle={workspace === null ? undefined : <WorkspaceIdentity workspace={workspace} />}
+      middle={
+        workspace === null ? undefined : (
+          <>
+            <WorkspaceIdentity workspace={workspace} />
+            <div ref={setSlot} className="workspace-toolbar-slot" />
+          </>
+        )
+      }
       end={workspace === null ? undefined : <WorkspaceMenus key={workspace} workspace={workspace} theme={theme} />}
     >
       {report.ok ? (
         <>
           {destination === "splash" ? <SplashScreen info={report.info} theme={theme} focusHeading={focusHeading || snapshot.opened.length > 0} /> : null}
-          <WorkspaceStage snapshot={snapshot} surfaces={dependencies.surfaces} />
+          <ToolbarTargetContext.Provider value={target}>
+            <WorkspaceStage snapshot={snapshot} surfaces={dependencies.surfaces} />
+          </ToolbarTargetContext.Provider>
           <GuardDialog navigator={navigator} />
         </>
       ) : (

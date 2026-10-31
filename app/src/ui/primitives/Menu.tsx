@@ -11,12 +11,22 @@ export interface MenuProps {
   /** The catalog control that opens the menu; activating it runs its action, and the menu opens once the owner answers success. */
   readonly opener: ControlDescriptor;
   readonly items: readonly ControlDescriptor[];
+  /** The item that names the current choice, such as the section being shown; it is marked. */
+  readonly currentId?: string;
+  /** On/off settings listed with the items. Each is marked while its confirmed value is on. */
+  readonly checks?: readonly MenuCheck[];
   /** A list of values for one control, such as a preset. Choosing one sends it to that control's action. */
   readonly choices?: MenuChoices;
   /** Decorative art drawn before the opener's label; it is hidden from assistive technology. */
   readonly leading?: ReactNode;
   /** A decorative character drawn after the opener's label, such as a caret; it is hidden from assistive technology. */
   readonly trailingGlyph?: string;
+}
+
+export interface MenuCheck {
+  readonly control: ControlDescriptor;
+  /** The confirmed value. Activating the item asks the owner to flip it; the mark follows only once the owner updates this. */
+  readonly checked: boolean;
 }
 
 export interface MenuChoices {
@@ -33,11 +43,31 @@ export interface MenuChoices {
  */
 export const openMenuHandler: ActionHandler = () => Promise.resolve({ status: "success", message: "" });
 
-function MenuItem({ control }: { readonly control: ControlDescriptor }) {
-  const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["button"], "Menu");
+function MenuItem({ control, current }: { readonly control: ControlDescriptor; readonly current: boolean }) {
+  const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["button", "tab"], "Menu");
   return (
     <span className="ui-anchor ui-menu-item">
-      <button type="button" role="menuitem" className="ui-control ui-hit ui-button" {...attributes}>
+      <button type="button" role="menuitem" aria-current={current ? "true" : undefined} className="ui-control ui-hit ui-button" {...attributes}>
+        <span className="ui-menu-mark" aria-hidden="true">
+          {current ? copy.chosenMark : ""}
+        </span>
+        {control.label}
+      </button>
+      <StateText runtime={runtime} shown={shown} />
+      <Tooltip id={tipId} helpKey={control.id} title={control.label} content={tip} />
+    </span>
+  );
+}
+
+function MenuCheckItem({ check }: { readonly check: MenuCheck }) {
+  const { control, checked } = check;
+  const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["toggle"], "Menu");
+  return (
+    <span className="ui-anchor ui-menu-item">
+      <button type="button" role="menuitemcheckbox" aria-checked={checked} className="ui-control ui-hit ui-button" {...attributes}>
+        <span className="ui-menu-mark" aria-hidden="true">
+          {checked ? copy.chosenMark : ""}
+        </span>
         {control.label}
       </button>
       <StateText runtime={runtime} shown={shown} />
@@ -81,7 +111,7 @@ function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
  * and outside presses arrive through the input manager, and choosing an item closes the list and
  * returns focus to the opener.
  */
-export function Menu({ opener, items, choices, leading, trailingGlyph }: MenuProps) {
+export function Menu({ opener, items, currentId, checks, choices, leading, trailingGlyph }: MenuProps) {
   const ui = useUi();
   const { attributes, runtime, shown, tipId, tip } = useControlBinding(opener, ["dropdown", "button"], "Menu");
   const [open, setOpen] = useState(false);
@@ -146,10 +176,13 @@ export function Menu({ opener, items, choices, leading, trailingGlyph }: MenuPro
       {runtime.state === "success" ? null : <StateText runtime={runtime} shown={shown} />}
       {open ? (
         <div ref={popupRef} role="menu" aria-label={opener.label} data-roving-group="vertical" className="ui-menu-popup">
-          {items.map((item) => (
-            <MenuItem key={item.id} control={item} />
-          ))}
           {choices === undefined ? null : <MenuChoiceGroup choices={choices} />}
+          {checks?.map((check) => (
+            <MenuCheckItem key={check.control.id} check={check} />
+          ))}
+          {items.map((item) => (
+            <MenuItem key={item.id} control={item} current={item.id === currentId} />
+          ))}
         </div>
       ) : null}
       <Tooltip id={tipId} helpKey={opener.id} title={opener.label} content={tip} />

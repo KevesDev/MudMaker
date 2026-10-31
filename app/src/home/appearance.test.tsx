@@ -91,11 +91,8 @@ describe("the Settings menu", () => {
 
     it.each([
       ["ArrowDown", first, second],
-      ["ArrowDown", second, first],
       ["ArrowUp", second, first],
-      ["ArrowUp", first, second],
       ["Home", second, first],
-      ["End", first, second],
     ])("%s from preset %i moves focus to preset %i", async (key, from, to) => {
       const home = healthyHome();
       const presets = home.manager.listPresets();
@@ -107,6 +104,15 @@ describe("the Settings menu", () => {
       fireEvent.keyDown(document.activeElement ?? document.body, { key });
       expect(document.activeElement).toBe(choiceFor(presets[to]?.label ?? ""));
     });
+  });
+
+  it("lists the other Settings entries after the presets, so End leaves the presets", async () => {
+    await openSplash();
+    await openMenu();
+    const menu = screen.getByRole("menu");
+    fireEvent.keyDown(document.activeElement ?? document.body, { key: "End" });
+    expect(menu.contains(document.activeElement)).toBe(true);
+    expect(document.activeElement?.getAttribute("role")).toBe("menuitem");
   });
 
   it("opens through the home router: the Settings control returns to ready and nothing is announced or logged", async () => {
@@ -145,7 +151,7 @@ describe("the Settings menu", () => {
     expect(SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId)).toEqual(SCOPE_IDS.map(() => target.id));
     expect(document.activeElement).toBe(opener());
     expect(screen.getByRole("heading", { level: 1 })).toBe(heading);
-    expect(liveAnnouncements(`Appearance is now ${target.label}.`)).toHaveLength(1);
+    expect(liveAnnouncements(`Appearance is now ${target.label}.`)).toHaveLength(0);
 
     await openMenu();
     expect(marked()).toEqual([target.id]);

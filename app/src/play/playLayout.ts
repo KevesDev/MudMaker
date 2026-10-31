@@ -23,23 +23,17 @@ export const GAME = {
   title: "client.game.01",
   status: "client.game.02",
   disconnect: "client.game.03",
-  help: "client.game.08",
-  panels: "client.game.09",
+  view: "client.game.09",
 } as const satisfies Readonly<Record<string, ControlId>>;
 
-export const TRANSCRIPT = {
-  view: "client.transcript.01",
-  find: "client.transcript.02",
-  copy: "client.transcript.03",
-  timestamps: "client.transcript.05",
-  wrap: "client.transcript.06",
-  pause: "client.transcript.07",
-  latest: "client.transcript.08",
-} as const satisfies Readonly<Record<string, ControlId>>;
+export const TRANSCRIPT = { view: "client.transcript.01", find: "client.transcript.02" } as const satisfies Readonly<Record<string, ControlId>>;
+
+/** The Settings entry that turns transcript timestamps on and off. */
+export const TIMESTAMPS = "client.preferences.07" as const satisfies ControlId;
 
 export const COMPOSER = { message: "client.composer.02", send: "client.composer.03" } as const satisfies Readonly<Record<string, ControlId>>;
 
-/** The sections of the one secondary drawer, in order. */
+/** The sections the View menu offers for the one secondary drawer, in order. */
 export const PANEL_TABS = [
   "client.panels.01",
   "client.panels.02",

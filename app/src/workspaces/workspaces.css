@@ -302,3 +302,16 @@
   color: var(--color-text-primary);
   border-inline-start-color: var(--color-accent-primary);
 }
+
+.workspace-toolbar-slot {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--spacing-toolbar);
+  min-width: 0;
+}
+
+.play-drawer-title {
+  margin: 0;
+  font-size: var(--font-size-body);
+}

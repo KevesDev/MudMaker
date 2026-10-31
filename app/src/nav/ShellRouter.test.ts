@@ -49,12 +49,12 @@ describe("opening the Settings menu", () => {
 });
 
 describe("appearance", () => {
-  it("applies the chosen preset to every theme scope and says which one", async () => {
+  it("applies the chosen preset to every theme scope and announces nothing", async () => {
     const { dispatch, theme } = setup();
     const target = otherPreset(theme);
     const result = await dispatch(APPEARANCE, target.id);
     expect(result).toMatchObject({ status: "success" });
-    expect(result.status === "success" ? result.message : "").toContain(target.label);
+    expect(result.status === "success" ? result.message : null).toBe("");
     expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope).themeId)).toEqual(SCOPE_IDS.map(() => target.id));
   });
 

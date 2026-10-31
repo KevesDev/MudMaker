@@ -1,6 +1,5 @@
 export const hostCopy = {
   stopped: "Stopped",
-  sections: "Sections",
   hostActions: "Host actions",
   noPlayers: "No players.",
   noLogs: "No log entries.",

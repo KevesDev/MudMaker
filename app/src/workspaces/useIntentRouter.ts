@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { actionIdOf } from "../frame/frameActions";
-import { useLatest, useUi, type ActionHandler, type ActionOutcome, type ControlId } from "../ui";
+import { openMenuHandler, useLatest, useUi, type ActionHandler, type ActionOutcome, type ControlId } from "../ui";
 
 /** The answer of an action that only changes what the screen shows: nothing to announce and nothing to keep on the control. */
 export const SILENT: ActionOutcome = { status: "success", message: "" };
@@ -33,4 +33,19 @@ export function useIntentRouter(owner: string, handlers: Readonly<Record<Control
       for (const remove of removers) remove();
     };
   }, [bus, registry, owner, controls, latest]);
+}
+
+/**
+ * Registers the owner's answer for menu openers. Opening is a presentation change that the menu performs itself
+ * on a silent success, so the answer must not be reset the way local presentation answers are.
+ */
+export function useMenuOpeners(owner: string, controlIds: readonly ControlId[]): void {
+  const { bus, registry } = useUi();
+  const controls = controlIds.join(" ");
+  useEffect(() => {
+    const removers = controls.split(" ").map((controlId) => bus.registerHandler(owner, actionIdOf(registry, controlId), openMenuHandler));
+    return () => {
+      for (const remove of removers) remove();
+    };
+  }, [bus, registry, owner, controls]);
 }

@@ -175,9 +175,9 @@
       "id": "editor.shell.09",
       "workspace": "editor",
       "surface": "editor.shell",
-      "kind": "button",
-      "label": "View Panels",
-      "tooltip": "Show and hide Editor dock panels",
+      "kind": "dropdown",
+      "label": "View",
+      "tooltip": "Choose which panels are shown",
       "actionId": "ui.editor.panels",
       "stateOwner": "EditorState",
       "permission": "localProjectUser",
@@ -275,6 +275,69 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-editor-shell-13"
+    },
+    {
+      "id": "editor.shell.14",
+      "workspace": "editor",
+      "surface": "editor.shell",
+      "kind": "dropdown",
+      "label": "Build",
+      "tooltip": "Validate, test or publish the project",
+      "actionId": "ui.editor.buildMenu",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-shell-14"
+    },
+    {
+      "id": "editor.shell.15",
+      "workspace": "editor",
+      "surface": "editor.shell",
+      "kind": "button",
+      "label": "Assets",
+      "tooltip": "Show or hide the Asset Explorer",
+      "actionId": "ui.editor.showAssets",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-shell-15"
+    },
+    {
+      "id": "editor.shell.16",
+      "workspace": "editor",
+      "surface": "editor.shell",
+      "kind": "button",
+      "label": "Inspector",
+      "tooltip": "Show or hide the Inspector for the selection",
+      "actionId": "ui.editor.showInspector",
+      "stateOwner": "EditorState",
+      "permission": "localProjectUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-editor-shell-16"
     },
     {
       "id": "editor.assets.01",

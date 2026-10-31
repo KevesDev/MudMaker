@@ -1,61 +1,49 @@
 import { useId, useState } from "react";
 import { TabStrip } from "../editor/TabStrip";
-import { ControlTab, ControlTabList, PassiveText } from "../workspaces/controlParts";
-import { SILENT, useIntentRouter } from "../workspaces/useIntentRouter";
-import { Button, REGION, Switch, TextField, Toolbar, useUi, type ActionHandler, type PassiveDescriptor } from "../ui";
+import { MENU_CARET } from "../nav/destinations";
+import { PassiveText } from "../workspaces/controlParts";
+import { ToolbarSlot } from "../workspaces/ToolbarSlot";
+import { SILENT, useIntentRouter, useMenuOpeners } from "../workspaces/useIntentRouter";
+import { Button, Menu, REGION, TextField, Toolbar, useUi, type ActionHandler, type PassiveDescriptor } from "../ui";
 import type { ClientSession, ClientSessions } from "./ClientSessions";
-import { CLIENT_OWNER, COMPOSER, GAME, PANEL_CLOSE, PANEL_TABS, PANEL_UNAVAILABLE, TRANSCRIPT } from "./playLayout";
+import { CLIENT_OWNER, COMPOSER, GAME, PANEL_CLOSE, PANEL_TABS, TRANSCRIPT } from "./playLayout";
 import { playCopy } from "./playCopy";
 
 const GAME_BAR: PassiveDescriptor = { passive: true, id: "play.gameActions", label: playCopy.gameActions, help: "" };
-const TRANSCRIPT_BAR: PassiveDescriptor = { passive: true, id: "play.transcriptOptions", label: playCopy.transcriptOptions, help: "" };
 const SESSION_TABS: PassiveDescriptor = { passive: true, id: "play.sessions", label: playCopy.sessionsName, help: "" };
 
 type PanelTab = (typeof PANEL_TABS)[number];
-type Toggle = "timestamps" | "wrap" | "pause";
 
 export interface ConnectedSessionProps {
   readonly sessions: ClientSessions;
   readonly all: readonly ClientSession[];
   readonly active: ClientSession;
+  readonly timestamps: boolean;
 }
 
-/** An open game: the transcript with its options, the composer, and one secondary drawer that the toolbar opens. */
-export function ConnectedSession({ sessions, all, active }: ConnectedSessionProps) {
+/** An open game: the transcript, the composer, and one secondary drawer that the View menu in the frame row chooses. */
+export function ConnectedSession({ sessions, all, active, timestamps }: ConnectedSessionProps) {
   const { registry } = useUi();
   const control = (id: string) => registry.requireControl(id);
   const panelId = useId();
   const [find, setFind] = useState("");
   const [message, setMessage] = useState("");
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [panel, setPanel] = useState<PanelTab>(PANEL_TABS[0]);
-  const [toggles, setToggles] = useState<Readonly<Record<Toggle, boolean>>>({ timestamps: false, wrap: true, pause: false });
+  const [panel, setPanel] = useState<PanelTab | null>(null);
 
-  const toggle = (name: Toggle): ActionHandler => ({ value }) => {
-    if (typeof value !== "boolean") return Promise.resolve({ status: "validation-error", code: "toggle-invalid", message: playCopy.invalidToggle });
-    setToggles((current) => ({ ...current, [name]: value }));
-    return Promise.resolve(SILENT);
-  };
   const showPanel = (id: PanelTab): ActionHandler => () => {
     setPanel(id);
     return Promise.resolve(SILENT);
   };
+  useMenuOpeners(CLIENT_OWNER, [GAME.view]);
   useIntentRouter(CLIENT_OWNER, {
     [GAME.disconnect]: () => {
       sessions.close(active.id);
       return Promise.resolve(SILENT);
     },
-    [GAME.panels]: () => {
-      setDrawerOpen((open) => !open);
-      return Promise.resolve(SILENT);
-    },
     [PANEL_CLOSE]: () => {
-      setDrawerOpen(false);
+      setPanel(null);
       return Promise.resolve(SILENT);
     },
-    [TRANSCRIPT.timestamps]: toggle("timestamps"),
-    [TRANSCRIPT.wrap]: toggle("wrap"),
-    [TRANSCRIPT.pause]: toggle("pause"),
     ...Object.fromEntries(PANEL_TABS.map((id) => [id, showPanel(id)])),
   });
 
@@ -63,15 +51,15 @@ export function ConnectedSession({ sessions, all, active }: ConnectedSessionProp
   const tabbed = tabs.length > 1;
   return (
     <div className="play-session">
-      <div className="workspace-bar">
+      <ToolbarSlot>
         <PassiveText control={control(GAME.title)}>{active.worldName}</PassiveText>
-        <PassiveText control={control(GAME.status)}>{playCopy.connected}</PassiveText>
+        {active.connected ? <PassiveText control={control(GAME.status)}>{playCopy.connected}</PassiveText> : null}
         <Toolbar described={GAME_BAR}>
           <Button control={control(GAME.disconnect)} />
-          <Button control={control(GAME.panels)} />
-          <Button control={control(GAME.help)} />
+          <TextField control={control(TRANSCRIPT.find)} value={find} onValueChange={setFind} type="search" />
+          <Menu opener={control(GAME.view)} items={PANEL_TABS.map(control)} {...(panel === null ? {} : { currentId: panel })} trailingGlyph={MENU_CARET} />
         </Toolbar>
-      </div>
+      </ToolbarSlot>
       {tabbed ? (
         <TabStrip
           described={SESSION_TABS}
@@ -85,23 +73,13 @@ export function ConnectedSession({ sessions, all, active }: ConnectedSessionProp
       ) : null}
       <div className="play-body">
         <div className="play-main" {...(tabbed ? { role: "tabpanel", id: panelId } : {})}>
-          <div className="workspace-bar">
-            <Toolbar described={TRANSCRIPT_BAR}>
-              <TextField control={control(TRANSCRIPT.find)} value={find} onValueChange={setFind} type="search" />
-              <Button control={control(TRANSCRIPT.copy)} />
-              <Switch control={control(TRANSCRIPT.timestamps)} checked={toggles.timestamps} />
-              <Switch control={control(TRANSCRIPT.wrap)} checked={toggles.wrap} />
-              <Switch control={control(TRANSCRIPT.pause)} checked={toggles.pause} />
-              <Button control={control(TRANSCRIPT.latest)} />
-            </Toolbar>
-          </div>
           <div
             role="log"
             tabIndex={0}
             aria-label={control(TRANSCRIPT.view).label}
             data-testid={control(TRANSCRIPT.view).testId}
             data-region={REGION.canvas}
-            data-wrap={toggles.wrap ? "true" : "false"}
+            data-timestamps={timestamps ? "true" : "false"}
             className="play-transcript"
           />
           <div className="workspace-bar play-composer" role="group" aria-label={playCopy.composer}>
@@ -109,17 +87,12 @@ export function ConnectedSession({ sessions, all, active }: ConnectedSessionProp
             <Button control={control(COMPOSER.send)} />
           </div>
         </div>
-        {drawerOpen ? (
-          <aside aria-label={playCopy.sidePanel} data-region={REGION.assets} className="play-drawer">
-            <ControlTabList label={playCopy.sidePanel}>
-              {PANEL_TABS.map((id) => (
-                <ControlTab key={id} control={control(id)} selected={id === panel} />
-              ))}
-            </ControlTabList>
-            <PassiveText control={control(PANEL_UNAVAILABLE)}>{control(PANEL_UNAVAILABLE).label}</PassiveText>
+        {panel === null ? null : (
+          <aside aria-label={control(panel).label} data-region={REGION.assets} className="play-drawer">
+            <h2 className="play-drawer-title">{control(panel).label}</h2>
             <Button control={control(PANEL_CLOSE)} />
           </aside>
-        ) : null}
+        )}
       </div>
     </div>
   );

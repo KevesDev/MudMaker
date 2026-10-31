@@ -6,7 +6,7 @@ import { useTheme, type ThemeManager } from "../theme";
 import { Button, Menu, Toast, useUi, type ControlDescriptor, type ControlId } from "../ui";
 import { ControlNotice } from "./ControlNotice";
 import { homeCopy } from "./homeCopy";
-import { APPEARANCE, FOOTER_ICONS, NOTICE_CONTROLS, SPLASH, SPLASH_GLYPHS, WORKSPACE_ACTIONS } from "./homeLayout";
+import { APPEARANCE, FOOTER_ICONS, NOTICE_CONTROLS, SPLASH, SPLASH_GLYPHS, SPLASH_SETTINGS, WORKSPACE_ACTIONS } from "./homeLayout";
 import { Brand } from "./Brand";
 import { Ornament } from "./Ornament";
 import { Shown } from "./Shown";
@@ -98,7 +98,8 @@ export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
                 <Menu
                   opener={settings}
                   leading={<TextArt piece={ICONS[FOOTER_ICONS.settings]} size="icon" />}
-                  items={[]}
+                  items={SPLASH_SETTINGS.items.map(control)}
+                  checks={SPLASH_SETTINGS.checks.map((id) => ({ control: control(id), checked: false }))}
                   choices={{ control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId }}
                 />
               </Shown>

@@ -256,6 +256,27 @@
       "testId": "UI-host-dashboard-12"
     },
     {
+      "id": "host.dashboard.13",
+      "workspace": "host",
+      "surface": "host.dashboard",
+      "kind": "dropdown",
+      "label": "Operations",
+      "tooltip": "Choose which part of hosting to work on",
+      "actionId": "ui.host.operationsMenu",
+      "stateOwner": "HostAdminState",
+      "permission": "hostOperator",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-host-dashboard-13"
+    },
+    {
       "id": "host.network.01",
       "workspace": "host",
       "surface": "host.network",
@@ -443,6 +464,27 @@
       ],
       "keyboard": "semanticRead",
       "testId": "UI-host-network-09"
+    },
+    {
+      "id": "host.network.10",
+      "workspace": "host",
+      "surface": "host.network",
+      "kind": "tab",
+      "label": "Network",
+      "tooltip": "Review and change how players reach the server",
+      "actionId": "ui.host.network",
+      "stateOwner": "HostAdminState",
+      "permission": "hostOperator",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-host-network-10"
     },
     {
       "id": "host.security.01",

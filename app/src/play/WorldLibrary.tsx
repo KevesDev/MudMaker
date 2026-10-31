@@ -7,7 +7,6 @@ import { PORT_INVALID_MESSAGE, portIsInvalid } from "../workspaces/ports";
 import { ADAPTERS, CLIENT_OWNER, LIBRARY } from "./playLayout";
 import { playCopy } from "./playCopy";
 
-const BACK_COMMAND = "play.library.back";
 const CANCEL_COMMAND = "play.library.cancel";
 const SAVE_COMMAND = "play.library.save";
 const FAVORITE_COMMAND = "play.library.favorite";
@@ -77,7 +76,6 @@ export function WorldLibrary({ profiles }: { readonly profiles: ClientProfileBoo
     } else setErrors(result.errors);
   };
 
-  useCommand(BACK_COMMAND, leaveForm);
   useCommand(CANCEL_COMMAND, leaveForm);
   useCommand(SAVE_COMMAND, save);
   useCommand(FAVORITE_COMMAND, () => {
@@ -151,9 +149,6 @@ export function WorldLibrary({ profiles }: { readonly profiles: ClientProfileBoo
           </button>
           <Button control={control(LIBRARY.test)} />
           <Button control={control(LIBRARY.connect)} />
-          <button type="button" data-ui-command={BACK_COMMAND} className="ui-control ui-hit ui-button">
-            {playCopy.back}
-          </button>
         </div>
       </div>
     );
@@ -173,12 +168,12 @@ export function WorldLibrary({ profiles }: { readonly profiles: ClientProfileBoo
       <div className="workspace-row">
         <Button control={control(LIBRARY.edit)} />
         <Button control={control(LIBRARY.remove)} />
-        <button type="button" data-ui-command={FAVORITE_COMMAND} aria-disabled={selected === undefined ? true : undefined} className="ui-control ui-hit ui-button">
-          {selected?.favorite === true ? playCopy.unfavorite : playCopy.favorite}
+        <button type="button" data-ui-command={FAVORITE_COMMAND} aria-disabled={selected === undefined ? true : undefined} aria-pressed={selected?.favorite === true} className="ui-control ui-hit ui-button">
+          {playCopy.favorite}
         </button>
         <Button control={control(LIBRARY.connect)} />
       </div>
-      <Dialog open={confirmingDelete && selected !== undefined} title={playCopy.deleteTitle(selected?.name ?? "")} description={playCopy.deleteDescription} destructive closeButton={false} onClose={() => setConfirmingDelete(false)}>
+      <Dialog open={confirmingDelete && selected !== undefined} title={playCopy.deleteTitle(selected?.name ?? "")} destructive closeButton={false} onClose={() => setConfirmingDelete(false)}>
         <div className="workspace-row">
           <button type="button" data-ui-command={CONFIRM_DELETE_COMMAND} className="ui-control ui-hit ui-button">
             {playCopy.deleteConfirm}

@@ -2891,6 +2891,56 @@
       "input": "typedByControlSchema",
       "outcome": "confirmedOrStructuredError",
       "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.buildMenu",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.showAssets",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.showInspector",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "projectDraft",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.host.operationsMenu",
+      "owner": "HostAdminIntentRouter",
+      "mutationDomain": "hostOperator",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.host.network",
+      "owner": "HostAdminIntentRouter",
+      "mutationDomain": "hostOperator",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
     }
   ]
 }

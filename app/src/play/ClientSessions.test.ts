@@ -8,8 +8,8 @@ describe("the open game sessions", () => {
     const sessions = new ClientSessions();
     const heard = vi.fn();
     sessions.subscribe(heard);
-    sessions.open({ id: "a", worldName: "Ashenvale" });
-    sessions.open({ id: "b", worldName: "Brackwater" });
+    sessions.open({ id: "a", worldName: "Ashenvale", connected: true });
+    sessions.open({ id: "b", worldName: "Brackwater", connected: true });
     expect(sessions.getSnapshot().activeId).toBe("b");
     sessions.close("b");
     expect(sessions.getSnapshot().activeId).toBe("a");
@@ -20,7 +20,7 @@ describe("the open game sessions", () => {
 
   it("reorders sessions, ignores an unknown id, and keeps the showing session", () => {
     const sessions = new ClientSessions();
-    for (const id of ["a", "b", "c"]) sessions.open({ id, worldName: id });
+    for (const id of ["a", "b", "c"]) sessions.open({ id, worldName: id, connected: true });
     sessions.move("c", 0);
     expect(ids(sessions)).toEqual(["c", "a", "b"]);
     sessions.select("a");

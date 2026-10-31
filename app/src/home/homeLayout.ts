@@ -68,3 +68,6 @@ export function isVisible(control: ControlDescriptor, phase: StartupPhase): bool
 
 /** The controls whose refusal or failure shows as a message on the screen, because nothing next to them can carry it. */
 export const NOTICE_CONTROLS: readonly ControlId[] = [...WORKSPACE_ENTRIES, APPEARANCE];
+
+/** The Settings entries after Appearance on the launch screen: buttons, then on/off settings. */
+export const SPLASH_SETTINGS = { items: ["home.settings.05", "home.settings.06"], checks: ["home.settings.03", "home.settings.04"] } as const satisfies Readonly<Record<string, readonly ControlId[]>>;

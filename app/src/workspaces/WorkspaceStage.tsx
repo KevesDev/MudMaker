@@ -4,6 +4,7 @@ import { APPEARANCE, SPLASH } from "../home/homeLayout";
 import { NAVIGATION, goToDestinations, type WorkspaceDestination } from "../nav/destinations";
 import type { NavigatorSnapshot } from "../nav/WorkspaceNavigator";
 import { REGION, Toast, useUi } from "../ui";
+import { WorkspaceActiveContext } from "./ToolbarSlot";
 
 /**
  * The working surface each workspace feature mounts into: the editor shell, the player client and host
@@ -28,7 +29,11 @@ function Region({ workspace, active, Surface }: RegionProps) {
   // The Create surface is made of its own regions; Play and Host are each a single region.
   return (
     <main ref={ref} hidden={!active} tabIndex={-1} aria-label={name} className="workspace-surface" data-workspace={workspace} {...(workspace === "create" ? {} : { "data-region": REGION.surface })}>
-      {Surface === undefined ? null : <Surface />}
+      {Surface === undefined ? null : (
+        <WorkspaceActiveContext.Provider value={active}>
+          <Surface />
+        </WorkspaceActiveContext.Provider>
+      )}
     </main>
   );
 }

@@ -107,7 +107,7 @@ describe("World Library profiles", () => {
     await waitFor(() => expect(screen.getByRole("button", { name: label(LIBRARY.edit) }).getAttribute("aria-disabled")).toBe("true"));
   });
 
-  it("shows inline errors and saves nothing for an incomplete form, and Cancel and Back leave without saving", async () => {
+  it("shows inline errors and saves nothing for an incomplete form, and Cancel leaves without saving", async () => {
     await openLibrary();
     click(label(LIBRARY.add));
     click("Save");
@@ -115,9 +115,6 @@ describe("World Library profiles", () => {
     expect(book.getSnapshot()).toEqual([]);
     type("Name", "Ashenvale");
     click("Cancel");
-    expect(await screen.findByText("No saved worlds.")).toBeTruthy();
-    click(label(LIBRARY.add));
-    click("Back");
     expect(await screen.findByText("No saved worlds.")).toBeTruthy();
     expect(book.getSnapshot()).toEqual([]);
   });

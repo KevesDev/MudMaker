@@ -37,7 +37,7 @@ export function registerShellRouter(bus: ActionBus, registry: ActionRegistry, de
       }
       applied.push(scope);
     }
-    return { status: "success", message: homeCopy.appearanceChanged(preset.label) };
+    return { status: "success", message: "" };
   };
 
   const removers = [
