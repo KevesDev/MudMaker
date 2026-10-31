@@ -2,6 +2,7 @@ import { FRAME_ACTION_OWNER, actionIdOf } from "../frame/frameActions";
 import { homeCopy } from "../home/homeCopy";
 import { APPEARANCE, SPLASH } from "../home/homeLayout";
 import { type ThemeManager } from "../theme";
+import { CUSTOMIZE_CONTROL } from "../theme/themeEditorControls";
 import { openMenuHandler, type ActionBus, type ActionHandler, type ActionRegistry } from "../ui";
 import { WORKSPACE_SCOPE } from "./destinations";
 import { registerNavigatorActions } from "./navigatorActions";
@@ -13,6 +14,7 @@ export const SHELL_ROUTER_OWNER = FRAME_ACTION_OWNER;
 export interface ShellRouterDependencies {
   readonly theme: Pick<ThemeManager, "listPresets" | "getSnapshot" | "selectPreset">;
   readonly navigator: WorkspaceNavigator;
+  readonly openThemeEditor?: () => void;
 }
 
 /**
@@ -28,7 +30,7 @@ export function registerShellRouter(bus: ActionBus, registry: ActionRegistry, de
     if (preset === undefined) return { status: "validation-error", code: "appearance-unknown", message: homeCopy.appearanceUnknown };
     const destination = navigator.getSnapshot().destination;
     const scope = destination === "splash" ? "home" : WORKSPACE_SCOPE[destination];
-    if (!theme.selectPreset(scope, preset.id).ok) {
+    if (!theme.selectPreset(scope, preset.id, true).ok) {
       return { status: "recoverable-error", code: "appearance-not-applied", message: homeCopy.appearanceNotApplied(preset.label) };
     }
     return { status: "success", message: "" };
@@ -39,6 +41,14 @@ export function registerShellRouter(bus: ActionBus, registry: ActionRegistry, de
     bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, SPLASH.settings), openMenuHandler),
     registerNavigatorActions(bus, navigator),
   ];
+  if (dependencies.openThemeEditor !== undefined) {
+    for (const id of new Set(Object.values(CUSTOMIZE_CONTROL))) {
+      removers.push(bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, id), async () => {
+        dependencies.openThemeEditor?.();
+        return { status: "success", message: "" };
+      }));
+    }
+  }
   return () => {
     for (const remove of removers) remove();
   };

@@ -18,7 +18,7 @@ function aliasTarget(value: TokenValue): string | null {
 function dedupe(errors: readonly ThemeError[]): readonly ThemeError[] {
   const seen = new Set<string>();
   return errors.filter((error) => {
-    const key = `${error.code}\u0000${error.token}`;
+    const key = `${error.code}\u0000${error.token}\u0000${error.sourceToken ?? ""}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -45,7 +45,7 @@ function resolveAliases(
       const targetType = ThemeSchema.describeToken(target)?.type;
       if (!targetType) {
         errors.push(
-          themeError("unknown-token", target, `Token "${target}" is not part of the theme schema (referenced by "${current}").`),
+          { ...themeError("unknown-token", target, `Token "${target}" is not part of the theme schema (referenced by "${current}").`), sourceToken: start },
         );
         break;
       }

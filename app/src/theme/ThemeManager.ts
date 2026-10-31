@@ -22,6 +22,7 @@ interface ScopeState {
   readonly presetTokens: ReadonlyMap<string, TokenMap>;
   inputs: ThemeInputs;
   snapshot: ResolvedTheme;
+  committedSnapshot: ResolvedTheme | null;
   readonly listeners: Set<Listener>;
 }
 
@@ -64,6 +65,7 @@ export class ThemeManager {
         presetTokens,
         inputs,
         snapshot: this.freezeSnapshot(scope, entry.presetId, 1, inputs.accessibility, resolved.tokens),
+        committedSnapshot: null,
         listeners: new Set(),
       };
     };
@@ -84,6 +86,36 @@ export class ThemeManager {
     return this.stateOf(scope).inputs;
   }
 
+  /** Editable values before accessibility adjustments, keeping aliases intact. */
+  getEditableTokens(scope: ScopeId): TokenMap {
+    const state = this.stateOf(scope);
+    const inputs = state.inputs;
+    return Object.freeze({ ...state.defaultTokens, ...state.presetTokens.get(inputs.presetId), ...inputs.userTheme?.tokens, ...inputs.overrides });
+  }
+
+  /** Validates and displays a custom draft without changing the committed inputs. */
+  previewCustomTheme(scope: ScopeId, theme: unknown): ThemeResult {
+    return this.applyCustomTheme(scope, theme, true);
+  }
+
+  /** Commits the custom document atomically, absorbing the old overrides into its editable values. */
+  saveCustomTheme(scope: ScopeId, theme: unknown): ThemeResult {
+    return this.applyCustomTheme(scope, theme, false);
+  }
+
+  cancelPreview(scope: ScopeId): void {
+    const state = this.stateOf(scope);
+    if (state.committedSnapshot === null) return;
+    state.snapshot = state.committedSnapshot;
+    state.committedSnapshot = null;
+    this.notify(state);
+  }
+
+  private applyCustomTheme(scope: ScopeId, theme: unknown, preview: boolean): ThemeResult {
+    const parsed = parseUserTheme(theme);
+    return this.apply(scope, (inputs) => ({ ...inputs, userTheme: parsed.theme, overrides: NO_TOKENS }), parsed.errors, preview);
+  }
+
   /** Listeners are notified once per accepted change to this scope, never for rejected input. */
   subscribe(scope: ScopeId, listener: Listener): () => void {
     const { listeners } = this.stateOf(scope);
@@ -98,12 +130,12 @@ export class ThemeManager {
   }
 
   /** Chooses the built-in preset that sits between the application defaults and the user theme. */
-  selectPreset(scope: ScopeId, presetId: string): ThemeResult {
+  selectPreset(scope: ScopeId, presetId: string, resetCustom = false): ThemeResult {
     const known = this.presets.some((preset) => preset.id === presetId);
     const errors = known
       ? []
       : [themeError("unknown-preset", String(presetId), `There is no built-in preset named "${String(presetId)}".`)];
-    return this.apply(scope, (inputs) => ({ ...inputs, presetId }), errors);
+    return this.apply(scope, (inputs) => ({ ...inputs, presetId, ...(resetCustom ? { userTheme: null, overrides: NO_TOKENS } : {}) }), errors);
   }
 
   /** Selects a user theme document, or clears the selection with null. */
@@ -133,6 +165,7 @@ export class ThemeManager {
     scope: ScopeId,
     change: (inputs: ThemeInputs) => ThemeInputs,
     inputErrors: readonly ThemeError[],
+    preview = false,
   ): ThemeResult {
     if (!isScopeId(scope)) {
       return {
@@ -149,7 +182,11 @@ export class ThemeManager {
       next.accessibility,
     );
     if (!resolved.ok) return resolved;
-    state.inputs = next;
+    if (preview) state.committedSnapshot ??= state.snapshot;
+    else {
+      state.inputs = next;
+      state.committedSnapshot = null;
+    }
     state.snapshot = this.freezeSnapshot(
       scope,
       next.userTheme?.id ?? next.presetId,

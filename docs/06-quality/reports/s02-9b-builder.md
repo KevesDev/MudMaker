@@ -1,0 +1,24 @@
+# S02.9b Builder report
+Status: implementation and focused checks complete; independent Auditor and owner visual acceptance pending.
+Owner: existing ThemeManager validates/previews/commits; PreferencesStore persists committed changes; ShellRouter/InputManager route intent. No alternate owner or runtime dependency.
+Contract: UI theme contract plus catalog index updated; Editor/Client customize actions migrated to HomeIntentRouter, without old handlers. Catalog: 546 elements / 299 actions (Home 220; other counts unchanged).
+| AC | Source evidence | Executed evidence |
+|---|---|---|
+| 1 | nav/ShellRouter.ts:44, nav/WorkspaceToolbar.tsx:37, home/SplashScreen.tsx:104 | ThemeEditor route cases for home/Create/Play/Host; existing Appearance and workspace shell cases |
+| 2 | theme/ThemeManager.ts:90, theme/ThemeEditor.tsx:39, prefs/PreferencesStore.ts:98 | real typed edit/preview, invalid color atomicity, no writes past debounce, actual scope CSS binding |
+| 3 | theme/ThemeManager.ts:102, home/startupChecks.ts:135 | Save -> real preference bridge -> fresh manager -> actual fresh App; numeric/font/alias values and unaffected scopes/presets |
+| 4 | theme/ThemeManager.ts:106, home/HomeWorkspace.tsx:53, theme/ThemeEditor.tsx:37 | Cancel, Escape/unmount with custom+overrides after two previews; scope switch, return and clean reopen |
+| 5 | theme/themeEditorControls.ts:5, ui/primitives/TextField.tsx:13, ui/ui.css:394 | field-key/kind/owner drift; token/color discipline; actual text-field shortcut suppression and keyboard navigation |
+| 6 | pending independent scoped audit | no acceptance claim; runtime not launched |
+Paths above are relative to app/src. New behavior tests: app/src/theme/ThemeEditor.test.tsx:52,78,119,142,176,210,224.
+Red: `npx vitest run src/theme/ThemeEditor.test.tsx --maxWorkers=2` failed on missing Customize Theme, before implementation.
+Checkpoint from app: `npx vitest run src/theme src/prefs src/home/appearance.test.tsx src/home/controlCoverage.test.tsx src/nav/ShellRouter.test.ts src/nav/workspaceShell.test.tsx src/workspaces/workspaceSurfaces.test.tsx src/ui/actions/contractDrift.test.ts src/ui/tokenDiscipline.test.ts src/colorLiterals.test.ts --maxWorkers=2`: initially 262 passed / 7 new failures; 19 existing files passed.
+Repair: `npx vitest run src/theme/ThemeEditor.test.tsx src/home/startupChecks.test.ts src/home/startup.test.tsx src/ui/tokenDiscipline.test.ts --maxWorkers=2`: 64 passed, 0 failed; then strengthened scope-change case via `npx vitest run src/theme/ThemeEditor.test.tsx -t "scope change discards" --maxWorkers=2`: 1 passed, 9 intentionally filtered out.
+Other focused diagnostic editor runs isolated label-query cost; no raised deadlines. Final editor file has 10 passing cases; cumulative covered checkpoint plus new startup regressions: 301 distinct passing cases.
+`npx tsc --noEmit` from app: PASS. `npm --prefix app run build` from root: PASS (frontend only; Vite retains >500 kB chunk advisory).
+Repairs: bounded label association lookup replaces quadratic testing-library queries; actual startup now accepts validated committed custom ids and still rejects unknown ids. Active scope binds actual shell CSS through existing theme binding.
+Limitations: jsdom proves state, routing, persistence through controlled external storage and DOM variables, not pixels/native picker/touch feel. Existing debounced-save/quit timing remains; no native executable, packages, commit/push or app launch.
+Owner clicks after Lead restarts app: Settings > Appearance > Customize Theme; change color.surface.app or font.size.body, Preview, then Cancel/Escape; reopen, edit and Save; reopen/restart to confirm; repeat in Create/Play/Host and confirm their appearances stay separate. Scroll fields and keyboard-tab to Preview/Save/Cancel at normal and narrow window sizes.
+Unresolved decisions: none. Independent acceptance and owner visual review remain separate gates.
+AC2 audit repair: `theme/types.ts:72` and `theme/resolve.ts:48` preserve target diagnostics and add sourceToken provenance; `theme/ThemeEditor.tsx:72` associates the exact reason with the originating field and invalid state. Contract sentence added. Existing resolver case asserts provenance (`theme/ThemeManager.test.ts:118`); real editor regression (`theme/ThemeEditor.test.tsx:224`) separately clears errors with a valid preview before invalid Preview and invalid Save, asserts adjacent described error, unchanged committed/preview state and no preferences write. Red: missing aria-invalid reproduced before repair.
+Repair verification from app: `npx tsc --noEmit` PASS; `npx vitest run src/theme/ThemeEditor.test.tsx src/theme/ThemeManager.test.ts --maxWorkers=2` PASS, 64 tests / 2 files, no skips. `git diff --check` PASS; repair files LF. No build repeat or native visual/picker acceptance; ready for delta audit.

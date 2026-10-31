@@ -109,13 +109,13 @@ describe("invalid input (AC-03)", () => {
     (manager) =>
       manager.setOverrides("editor", tokens);
 
-  const cases: readonly { name: string; attempt: Attempt; code: string; token: string }[] = [
+  const cases: readonly { name: string; attempt: Attempt; code: string; token: string; sourceToken?: string }[] = [
     { name: "bad color", attempt: overrides({ "color.surface.app": "red" }), code: "invalid-color", token: "color.surface.app" },
     { name: "short hex color", attempt: overrides({ "color.surface.app": "#FFF" }), code: "invalid-color", token: "color.surface.app" },
     { name: "negative dimension", attempt: overrides({ "spacing.panel": -1 }), code: "invalid-dimension", token: "spacing.panel" },
     { name: "wrong type", attempt: overrides({ "font.size.body": "big" }), code: "invalid-type", token: "font.size.body" },
     { name: "unknown token", attempt: overrides({ "color.surface.nope": "#000000" }), code: "unknown-token", token: "color.surface.nope" },
-    { name: "alias to unknown token", attempt: overrides({ "color.text.muted": "{color.text.nope}" }), code: "unknown-token", token: "color.text.nope" },
+    { name: "alias to unknown token", attempt: overrides({ "color.text.muted": "{color.text.nope}" }), code: "unknown-token", token: "color.text.nope", sourceToken: "color.text.muted" },
     { name: "fractional integer", attempt: overrides({ "grid.majorEvery": 2.5 }), code: "invalid-integer", token: "grid.majorEvery" },
     { name: "zero positive integer", attempt: overrides({ "grid.majorEvery": 0 }), code: "out-of-range", token: "grid.majorEvery" },
     { name: "font list without a generic family", attempt: overrides({ "font.family.interface": "Papyrus" }), code: "invalid-font-stack", token: "font.family.interface" },
@@ -160,7 +160,7 @@ describe("invalid input (AC-03)", () => {
     },
   ];
 
-  it.each(cases)("rejects $name and keeps the last valid snapshot", ({ attempt, code, token }) => {
+  it.each(cases)("rejects $name and keeps the last valid snapshot", ({ attempt, code, token, sourceToken }) => {
     const manager = newManager();
     manager.setOverrides("editor", { "color.text.muted": "#334455" });
     const before = manager.getSnapshot("editor");
@@ -170,6 +170,7 @@ describe("invalid input (AC-03)", () => {
     expect(result.ok).toBe(false);
     if (result.ok) return;
     expect(result.errors.some((error) => error.code === code && error.token === token)).toBe(true);
+    if (sourceToken !== undefined) expect(result.errors).toContainEqual(expect.objectContaining({ code, token, sourceToken }));
     for (const error of result.errors) expect(error.message.length).toBeGreaterThan(0);
     expect(manager.getSnapshot("editor")).toBe(before);
   });

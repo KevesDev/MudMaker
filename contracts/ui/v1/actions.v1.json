@@ -1334,8 +1334,8 @@
     },
     {
       "id": "ui.editor.themeEdit",
-      "owner": "EditorIntentRouter",
-      "mutationDomain": "projectDraft",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPreferences",
       "origin": "localUserGesture",
       "auth": "owningServiceMustRevalidate",
       "input": "typedByControlSchema",
@@ -2224,8 +2224,8 @@
     },
     {
       "id": "ui.client.themeCustomize",
-      "owner": "ClientIntentRouter",
-      "mutationDomain": "clientLocalOrAdapter",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPreferences",
       "origin": "localUserGesture",
       "auth": "owningServiceMustRevalidate",
       "input": "typedByControlSchema",
@@ -2936,6 +2936,56 @@
       "id": "ui.host.network",
       "owner": "HostAdminIntentRouter",
       "mutationDomain": "hostOperator",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.settings.appearance.customize",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPreferences",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.settings.appearance.preview",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPreferences",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.settings.appearance.save",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPreferences",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.settings.appearance.cancel",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPreferences",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.settings.appearance.editToken",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPreferences",
       "origin": "localUserGesture",
       "auth": "owningServiceMustRevalidate",
       "input": "typedByControlSchema",

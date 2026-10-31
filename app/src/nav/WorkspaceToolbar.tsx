@@ -1,6 +1,7 @@
 import { APPEARANCE, SPLASH } from "../home/homeLayout";
 import { clientDisplay } from "../prefs";
 import { useTheme, type ThemeManager } from "../theme";
+import { CUSTOMIZE_CONTROL } from "../theme/themeEditorControls";
 import { useSyncExternalStore } from "react";
 import { Menu, useUi } from "../ui";
 import { SETTINGS_CHECKS, SETTINGS_ITEMS, TIMESTAMPS_SETTING } from "./settingsMenu";
@@ -33,6 +34,7 @@ export function WorkspaceMenus({ workspace, theme }: { readonly workspace: Works
           control: registry.requireControl(APPEARANCE),
           options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })),
           value: presetId,
+          items: [registry.requireControl(CUSTOMIZE_CONTROL[WORKSPACE_SCOPE[workspace]])],
           checks: workspace === "play" ? [{ control: registry.requireControl(TIMESTAMPS_SETTING), checked: display.timestamps }] : [],
         }}
         trailingGlyph={MENU_CARET}

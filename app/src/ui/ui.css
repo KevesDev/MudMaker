@@ -390,3 +390,57 @@
 .ui-status[data-tone="error"] .ui-status-dot {
   background: var(--color-status-error);
 }
+
+.theme-editor-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack);
+  overflow: auto;
+  min-height: 0;
+}
+
+.theme-scope {
+  display: contents;
+}
+
+.theme-editor-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--layout-panelMinSize)), 1fr));
+  gap: var(--spacing-row);
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.theme-editor-group legend {
+  padding: 0;
+  margin-bottom: var(--spacing-row);
+  color: var(--color-text-secondary);
+}
+
+.theme-editor-group .ui-field,
+.theme-editor-group .ui-input,
+.theme-editor-group .ui-select {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.theme-editor-group .ui-label {
+  overflow-wrap: anywhere;
+}
+
+.theme-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-row);
+  flex-shrink: 0;
+}
+
+.ui-dialog-body:has(.theme-editor-fields) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-stack);
+  overflow: hidden;
+  min-height: 0;
+}

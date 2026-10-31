@@ -1,7 +1,9 @@
-import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { FrameWindow } from "../frame/FrameWindow";
 import type { WindowController } from "../frame/WindowController";
-import { isWorkspace } from "../nav/destinations";
+import { isWorkspace, WORKSPACE_SCOPE } from "../nav/destinations";
+import { ThemeEditor } from "../theme/ThemeEditor";
+import { bindThemeToElement } from "../theme";
 import { GuardDialog } from "../nav/GuardDialog";
 import { registerRegionCycling } from "../nav/regionActions";
 import { registerShellRouter } from "../nav/ShellRouter";
@@ -31,48 +33,59 @@ export function HomeWorkspace({ report, dependencies, controller, navigator, ret
   const { theme } = dependencies;
   const { info, registry } = report;
   const snapshot = useSyncExternalStore(navigator.subscribe, navigator.getSnapshot);
+  const [editingScope, setEditingScope] = useState<typeof snapshot.destination | null>(null);
+  const openThemeEditor = useCallback(() => setEditingScope(navigator.getSnapshot().destination), [navigator]);
   const registerScreen = useCallback(
     (runtime: UiRuntime) => {
-      const removers = [registerHomeRouter(runtime.bus, registry, { retryStartup: retry }), registerShellRouter(runtime.bus, registry, { theme, navigator }), registerRegionCycling(runtime, dependencies.report)];
+      const removers = [registerHomeRouter(runtime.bus, registry, { retryStartup: retry }), registerShellRouter(runtime.bus, registry, { theme, navigator, openThemeEditor }), registerRegionCycling(runtime, dependencies.report)];
       return () => {
         for (const remove of removers) remove();
       };
     },
-    [registry, theme, retry, navigator, dependencies.report],
+    [registry, theme, retry, navigator, dependencies.report, openThemeEditor],
   );
   const { destination } = snapshot;
+  const scope = destination === "splash" ? "home" : WORKSPACE_SCOPE[destination];
+  const themeRoot = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (themeRoot.current !== null) return bindThemeToElement(theme, scope, themeRoot.current);
+  }, [theme, scope]);
+  useEffect(() => setEditingScope(null), [destination]);
   const workspace = isWorkspace(destination) ? destination : null;
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const target = useMemo(() => ({ element: slot }), [slot]);
   return (
-    <FrameWindow
-      registry={registry}
-      controller={controller}
-      quit={dependencies.quit}
-      report={dependencies.report}
-      correlation={info === null ? {} : { launchId: info.launchId }}
-      registerScreen={registerScreen}
-      middle={
-        workspace === null ? undefined : (
+    <div ref={themeRoot} className="theme-scope">
+      <FrameWindow
+        registry={registry}
+        controller={controller}
+        quit={dependencies.quit}
+        report={dependencies.report}
+        correlation={info === null ? {} : { launchId: info.launchId }}
+        registerScreen={registerScreen}
+        middle={
+          workspace === null ? undefined : (
+            <>
+              <WorkspaceIdentity workspace={workspace} />
+              <div ref={setSlot} className="workspace-toolbar-slot" />
+            </>
+          )
+        }
+        end={workspace === null ? undefined : <WorkspaceMenus key={workspace} workspace={workspace} theme={theme} />}
+      >
+        {report.ok ? (
           <>
-            <WorkspaceIdentity workspace={workspace} />
-            <div ref={setSlot} className="workspace-toolbar-slot" />
+            {destination === "splash" ? <SplashScreen info={report.info} theme={theme} focusHeading={focusHeading || snapshot.opened.length > 0} /> : null}
+            <ToolbarTargetContext.Provider value={target}>
+              <WorkspaceStage snapshot={snapshot} surfaces={dependencies.surfaces} />
+            </ToolbarTargetContext.Provider>
+            <GuardDialog navigator={navigator} />
+            {editingScope === destination ? <ThemeEditor manager={theme} scope={scope} onClose={() => setEditingScope(null)} /> : null}
           </>
-        )
-      }
-      end={workspace === null ? undefined : <WorkspaceMenus key={workspace} workspace={workspace} theme={theme} />}
-    >
-      {report.ok ? (
-        <>
-          {destination === "splash" ? <SplashScreen info={report.info} theme={theme} focusHeading={focusHeading || snapshot.opened.length > 0} /> : null}
-          <ToolbarTargetContext.Provider value={target}>
-            <WorkspaceStage snapshot={snapshot} surfaces={dependencies.surfaces} />
-          </ToolbarTargetContext.Provider>
-          <GuardDialog navigator={navigator} />
-        </>
-      ) : (
-        <StartupFailure report={report} theme={theme} />
-      )}
-    </FrameWindow>
+        ) : (
+          <StartupFailure report={report} theme={theme} />
+        )}
+      </FrameWindow>
+    </div>
   );
 }

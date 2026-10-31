@@ -68,6 +68,8 @@ export interface ThemeError {
   readonly code: ThemeErrorCode;
   /** Exact token name, or the document field when the problem is not a token. */
   readonly token: string;
+  /** Originating editable token when an alias diagnostic identifies its missing target in token. */
+  readonly sourceToken?: string;
   readonly message: string;
 }
 

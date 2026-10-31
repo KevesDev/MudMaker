@@ -37,6 +37,7 @@ export interface MenuChoices {
   readonly value: string;
   /** Related on/off appearance settings stay inside this named group. */
   readonly checks?: readonly MenuCheck[];
+  readonly items?: readonly ControlDescriptor[];
 }
 
 /**
@@ -103,6 +104,7 @@ function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
         </button>
       ))}
       {choices.checks?.map((check) => <MenuCheckItem key={check.control.id} check={check} />)}
+      {choices.items?.map((item) => <MenuItem key={item.id} control={item} current={false} />)}
     </div>
   );
 }

@@ -94,7 +94,15 @@ export class PreferencesStore {
   /** Saves every later accepted change to any scope. The returned function stops that. */
   bind(manager: ThemeManager): () => void {
     this.manager = manager;
-    const stops = [...SCOPE_IDS.map((scope) => manager.subscribe(scope, () => this.changed())), this.profiles.subscribe(() => this.changed())];
+    const stops = [...SCOPE_IDS.map((scope) => {
+      let committed = manager.getInputs(scope);
+      return manager.subscribe(scope, () => {
+        const next = manager.getInputs(scope);
+        if (next === committed) return;
+        committed = next;
+        this.changed();
+      });
+    }), this.profiles.subscribe(() => this.changed())];
     return () => {
       for (const stop of stops) stop();
       if (this.timer !== null) clearTimeout(this.timer);

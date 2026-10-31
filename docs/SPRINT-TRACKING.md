@@ -24,7 +24,7 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **38/43** | S01 UI/platform choice | IN PROGRESS |
+| [S02](#s02) | Launchable application shell and shared UI | **39/43** | S01 UI/platform choice | IN PROGRESS |
 | [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
@@ -129,7 +129,7 @@
 | **S02.8a Editor control binding** | Bind implemented editor widgets to the editor catalog and action owners | DONE | Auditor PASS round 1 (2026-10-30) |
 | **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | DONE | Auditor PASS round 1 (2026-10-30) |
 | **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | DONE | Auditor PASS round 1 (2026-10-30) |
-| **S02.9b Theme editor and preview** | Settings > Appearance holds theme preset selection plus custom-theme edit/preview with cancel; remove Appearance selector from Splash, no gameplay effect | TODO | — |
+| **S02.9b Theme editor and preview** | Settings > Appearance holds theme preset selection plus custom-theme edit/preview with cancel; remove Appearance selector from Splash, no gameplay effect | DONE | [Independent re-audit PASS](06-quality/reports/s02-9b-reaudit.md): 301 scoped tests/typecheck/frontend build; repair 64 tests/typecheck. Native app launched; owner visual acceptance pending |
 | **S02.9c Theme import and export** | Data-only import with exact token diagnostics and export (USER TEST) | TODO | — |
 | **S02.9d Shortcut preferences** | Customize, import, export and reset keyboard shortcuts per scope with conflict display (interaction contract obligation; needs S02.9a persistence) | TODO | — |
 | **S02.10a Hardware detection** | Real CPU, RAM, disk and instruction-support detection through the shell | TODO | — |
@@ -559,4 +559,4 @@ Record implementation commit, focused test and Auditor PASS in the phase Evidenc
 
 **UI-first build (2026-10-30):** visible Create, Play and Host chrome is built per docs 12 to 14. Unwired backend actions are silent on screen; Create wiring is S09, Play S08, Host S17. The Play connected layout is reachable only once S08 opens a session.
 
-**UI alignment closeout:** [independent re-audit PASS](06-quality/reports/s02-ui-alignment-reaudit.md), including Host bordered sections, documentation reconciliation, startup-test repair and Appearance scope isolation. Original independent scope: 958 tests/typecheck/frontend build PASS; repair: 53 tests/typecheck PASS. Owner visual acceptance pending. S02 phase counts unchanged; next S02.9b.
+**UI alignment closeout:** [independent re-audit PASS](06-quality/reports/s02-ui-alignment-reaudit.md), including Host bordered sections, documentation reconciliation, startup-test repair and Appearance scope isolation. Original independent scope: 958 tests/typecheck/frontend build PASS; repair: 53 tests/typecheck PASS. Owner visual acceptance pending. Custom theme editor S02.9b subsequently passed; next S02.9c.

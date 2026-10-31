@@ -82,7 +82,7 @@ describe("appearance", () => {
     const select = vi.spyOn(theme, "selectPreset").mockReturnValue({ ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] });
     expect(await navigator.request(destination as Destination, new AbortController().signal)).toEqual({ ok: true });
     expect(await dispatch(APPEARANCE, target.id)).toMatchObject({ status: "recoverable-error", code: "appearance-not-applied" });
-    expect(select).toHaveBeenCalledExactlyOnceWith(activeScope, target.id);
+    expect(select).toHaveBeenCalledExactlyOnceWith(activeScope, target.id, true);
     expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope))).toEqual(before);
   });
 });

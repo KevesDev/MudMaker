@@ -132,8 +132,9 @@ async function perform<T>(spec: CheckSpec<T>, dependencies: StartupDependencies,
   return status === "failed" ? { ok: false, result } : { ok: true, value, result };
 }
 
-function activePreset(theme: ThemeManager): string {
+function activeAppearance(theme: ThemeManager): string {
   const themeId = theme.getSnapshot(HOME_SCOPE).themeId;
+  if (theme.getInputs(HOME_SCOPE).userTheme?.id === themeId) return themeId;
   const preset = theme.listPresets().find((candidate) => candidate.id === themeId);
   if (preset === undefined) throw new Error(`The active appearance "${themeId}" is not a built-in preset.`);
   return preset.label;
@@ -174,7 +175,7 @@ export async function runStartupChecks(dependencies: StartupDependencies, attemp
     {
       id: "theme",
       failureCode: "startup-theme-missing",
-      work: () => activePreset(dependencies.theme),
+      work: () => activeAppearance(dependencies.theme),
       judge: (label) => ({ status: "passed", code: "startup-theme-passed", detail: `${label} is the active appearance.` }),
     },
     dependencies,

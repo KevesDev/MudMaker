@@ -3,6 +3,7 @@ import type { AppInfo } from "../appInfo";
 import { ICONS } from "../art/library";
 import { TextArt } from "../art/TextArt";
 import { useTheme, type ThemeManager } from "../theme";
+import { CUSTOMIZE_CONTROL } from "../theme/themeEditorControls";
 import { Button, Menu, Toast, useUi, type ControlDescriptor, type ControlId } from "../ui";
 import { ControlNotice } from "./ControlNotice";
 import { homeCopy } from "./homeCopy";
@@ -100,7 +101,7 @@ export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
                   leading={<TextArt piece={ICONS[FOOTER_ICONS.settings]} size="icon" />}
                   items={SPLASH_SETTINGS.items.map(control)}
                   checks={SPLASH_SETTINGS.checks.map((id) => ({ control: control(id), checked: false }))}
-                  choices={{ control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId }}
+                  choices={{ control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId, items: [control(CUSTOMIZE_CONTROL.home)] }}
                 />
               </Shown>
               <span className="home-footer-rule" aria-hidden="true" />
