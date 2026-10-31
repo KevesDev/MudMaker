@@ -1,5 +1,7 @@
 # MudMaker — Mandatory AI Agent Contract
 
+**Temporary Lead handoff (2026-10-30):** if you are Codex or another agent acting as Lead while Claude is out of budget, read [docs/HANDOFF-CODEX.md](docs/HANDOFF-CODEX.md) first; the owner rules there override older text.
+
 For Claude Code sessions, start with [CLAUDE.md](CLAUDE.md) and the assigned role file. Otherwise start with [docs/INDEX.md](docs/INDEX.md), then read **only** the authoritative documents listed for the task. Read [docs/07-decisions/OPEN_DECISIONS.md](docs/07-decisions/OPEN_DECISIONS.md) before proposing new interfaces or technologies. Read [docs/06-quality/agent-policy.md](docs/06-quality/agent-policy.md) for all implementation work.
 
 ## Status model
