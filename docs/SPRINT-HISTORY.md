@@ -12,6 +12,10 @@
 ## Future entries
 Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visible scope, measured test/benchmark/UX results, auditor verdict, decisions and lessons. Do not paste raw logs or restate the entire spec.
 
+## 2026-10-31 — Owner accepts UI baseline, resumes sprint work
+- Owner confirmed compact UI appearance/feel is good and authorized moving forward on sprints. Preserve the accepted visual baseline; next is S02.9c theme import/export. This acceptance does not claim separate touch/native-picker testing.
+- Owner used a usage reset; reset verified and the queued 15:00 continuation removed to prevent duplicate work. No implementation or test reruns were needed to record this acceptance.
+
 ## 2026-10-31 — Compact retro controls (scoped audit PASS)
 - Shared tokens/primitives now give menus/buttons square, compact chrome; conflicting frame overrides and width-only touch sizing were removed. Desktop/constrained browser rows measured 37/44px before and 24px after, with padding 8/12 to 2/4 and corner radius 8 to 0. Genuine coarse-pointer sizing stays 44px; body/art composition, palette and authored overrides remain intact.
 - Output underlines replaced by coherent selected chrome; tool choices now expose truthful UI-only selection through the existing router. Momentary Save has pointer/Space press feedback without sticky selection. Settings > Appearance > Theme groups global theme commands separately from local appearance siblings.

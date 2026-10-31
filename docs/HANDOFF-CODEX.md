@@ -33,6 +33,10 @@ Lead plans, writes the spec, dispatches, commits. Builder implements one scoped 
 
 ## 4. Status (S02 shell and UI foundation, 39 of 43 phases done)
 
+**Owner acceptance, 2026-10-31:** owner confirmed the compact UI "looks much better" and "Feels good", and authorized moving forward on sprints. Preserve this visual baseline; no further unsolicited style polish. Resume tracker order at S02.9c theme import/export. This is owner desktop visual/feel acceptance, not separate touch-device or native-picker validation.
+
+**Resume after owner reset:** primary/weekly usage reset verified; the 15:00 continuation heartbeat was removed to prevent a duplicate run. S02.9c is in preflight with the same one Builder; define portable theme data and produced-file verification before implementation. The preceding usage checkpoint and pending-acceptance notes are historical.
+
 **Current visual refinement, 2026-10-31:** [compact retro controls](05-sprints/specs/S02-COMPACT-RETRO-CONTROLS-SPEC.md) independently passed: 862 scoped tests, typecheck/frontend build and browser visual matrix in both presets at 1280/800px. Menus/buttons are square 24px desktop rows with 2px/4px padding; Output has no underlines, tool/view choices show consistent selection and commands show press feedback. Settings > Appearance > Theme separates global theme options from local siblings. Catalog 557 controls / 300 actions. Native owner visual/touch acceptance pending; next planned S02.9c.
 
 **Current owner correction, 2026-10-31:** [UI correction spec](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md) independently passed: app-wide preset/shared custom Preview/Save, a true Appearance submenu, one View > Output route and an explicitly openable Inspector. Independent checks: 563 tests / 38 files, typecheck and frontend build PASS. Catalog 548 controls / 299 actions; current docs replace older scoped-selection/selection-only rules. Earlier audit results below are historical. Owner visual acceptance pending; next planned S02.9c. Legacy scoped preference data is preserved in one bounded backup under the existing store.

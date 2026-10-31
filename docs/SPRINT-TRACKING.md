@@ -8,9 +8,11 @@
 
 **Owner correction verified (2026-10-31):** [app-wide Appearance, nested Settings, one Output route, explicit Inspector](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md). [Independent audit PASS](06-quality/reports/s02-owner-ui-corrections-audit.md): 563 tests / 38 files, typecheck and frontend build. Prior separate-workspace theme and selection-only Inspector rules are superseded. Phase counts unchanged; owner visual acceptance pending.
 
-**Current owner refinement:** [compact retro controls and consistent feedback](05-sprints/specs/S02-COMPACT-RETRO-CONTROLS-SPEC.md), including Settings > Appearance > Theme > options and all dropdown/button consumers. [Independent audit PASS](06-quality/reports/s02-compact-retro-audit.md): 862 tests/typecheck/frontend build and browser visual evidence. Owner native visual acceptance pending; no phase-count change.
+**Accepted visual baseline:** [compact retro controls and consistent feedback](05-sprints/specs/S02-COMPACT-RETRO-CONTROLS-SPEC.md), including Settings > Appearance > Theme > options and all dropdown/button consumers. [Independent audit PASS](06-quality/reports/s02-compact-retro-audit.md): 862 tests/typecheck/frontend build and browser visual evidence. Owner accepted desktop appearance/feel 2026-10-31; no phase-count change.
 
-**Usage checkpoint:** compact slice pushed as `3bec018`, dev window restarted. At 5% remaining, agents finished and work checkpointed; continuation scheduled 2026-10-31 15:00 America/Denver after reset. New owner feedback takes priority over next S02.9c.
+**Resumed after owner reset:** compact slice pushed as `3bec018`; owner reset confirmed, scheduled 15:00 continuation removed to prevent duplication. S02.9c preflight started, no implementation until portable data/file contract is identified.
+
+**Owner acceptance (2026-10-31):** compact UI appearance/feel accepted; owner authorized proceeding with sprint order. Preserve the accepted visual baseline and start S02.9c theme import/export. Separate touch/native-picker validation is not claimed.
 
 ## Real application and testing milestones
 

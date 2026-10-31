@@ -1,6 +1,6 @@
 # Compact retro controls and consistent interaction feedback
 
-**Status:** scoped implementation and independent audit PASS, 2026-10-31; owner native visual acceptance pending.
+**Status:** scoped implementation and independent audit PASS; owner desktop visual/feel acceptance received 2026-10-31. Separate touch/native-picker validation not claimed.
 **Authority:** owner screenshot and follow-ups require tight minimalist retro controls throughout the app, no generic rounded padded buttons, no underlined Output controls, consistent selected/pressed feedback, and Settings > Appearance > Theme > theme options. These refine earlier menu placement rules.
 **Owners:** existing ThemeManager/token bundle owns style values; existing shared primitives own control rendering; InputManager/action routers and existing workspace view/tool state own interaction. No new theme/style manager, world authority, technology or backend. ADR-005 decided; no affected OPEN gate.
 **Predecessor:** owner UI fixes at 8dd5bf6. Preserve their app-wide theme behavior, original legacy-data backup, atomic preview/save/cancel, explicit Inspector and single Output route.
