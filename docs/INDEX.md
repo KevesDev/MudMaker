@@ -81,6 +81,10 @@
 
 ## Current editor appearance and sprint execution authority
 
+- [Production native identity allocator](05-sprints/specs/S03-1-SPEC.md) — S03.1 independent audit PASS; production library and seven identity cases in Release/ASan. Current next work is S03.2 component registry preflight.
+
+- [Theme import/export polish](05-sprints/specs/S18-17-THEME-IO-SPEC.md) — moved by owner from S02.9c to S18.17; partial work parked, no completion claim. Current priority is S03 native ECS.
+
 - [Compact retro controls](05-sprints/specs/S02-COMPACT-RETRO-CONTROLS-SPEC.md) — independent audit PASS; owner accepted desktop UI appearance/feel and authorized returning to sprint work. Preserve this visual baseline.
 
 - [Owner UI corrections](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md) — current app-wide Appearance, nested Settings, one Output route and explicitly openable Inspector; supersedes older separate-workspace theme and selection-only visibility rules.

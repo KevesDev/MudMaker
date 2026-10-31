@@ -1,6 +1,6 @@
 # ECS Core — Identity, Components, Queries, Systems and Safety
 
-**Status:** ECS requirement CONFIRMED; mechanics below PROPOSED pending ADR-002/003. **Owner:** ECS runtime. **Dependencies:** system-boundaries.
+**Status:** ECS requirement CONFIRMED; identity/storage/writer decisions in ADR-RECORDS-S01 supersede older OPEN/proposed language below. Production identity refinement is [S03.1](../05-sprints/specs/S03-1-SPEC.md): opaque cryptographic 128-bit WorldId plus uint32 index/generation, one owner, no generation wrap. Other unassigned mechanics remain proposals. **Owner:** ECS runtime. **Dependencies:** system-boundaries.
 
 ## Mandatory ECS principles
 - Runtime game concepts are entities with identity and component composition. Behavior lives in systems or registered graph/script hooks; entities are not gameplay class inheritance trees.

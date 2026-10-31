@@ -1,0 +1,18 @@
+# S03.1 native identity — Builder evidence
+Status: ready for independent scoped audit; no commit/push. Production Windows/MSVC C++20 library and dedicated identity executable are built, not a running sidecar/world.
+Ownership: `engine/include/mudmaker/ecs/identity.h`, `engine/src/ecs/identity.cpp`, private `identity_rules.h`; `engine/CMakeLists.txt`, `engine/tests/identity_allocator_tests.cpp`, minimal engine README. Spike/results, parked theme work and unrelated/Lead changes preserved.
+Contract: complete opaque 16-byte WorldId plus uint32 index/generation (24-byte EntityId); one explicitly owned move-only domain issues namespaces through BCryptGenRandom. Shared domain state/tombstones outlive issued allocators; no process-global game state or caller-selected world namespace.
+AC1: actual system entropy creates live distinct worlds. Controlled entropy boundary proves foreign rejection when namespaces differ only in the last byte despite identical index/generation; all 128 bits participate.
+AC2: production create/validate/release tests prove deterministic LIFO generation reuse, stale/dead/invalid/duplicate rejection and unchanged diagnostic state on rejection. Actual private production helpers test UINT32_MAX retirement and reserved-index capacity boundaries without public state-forcing hooks or billions of iterations.
+AC3: structured OS entropy failure propagates platform code without fallback; zero/duplicate results retry at most eight times. Eight is a bounded broken-provider guard for effectively impossible healthy 128-bit collisions, not a workload budget. Destroyed-world namespaces remain burned. Move/copy rules and authority lifetime are asserted.
+AC4: dense slot metadata/intrusive free list; release performs no allocation. World/slot allocation failures are structured; a namespace already inserted before storage failure remains burned. No UI/components/gameplay/persistence/codec framework added; no performance/scalability claim.
+Commands from repository root (only the named identity target/filter):
+`cmake -S engine -B engine/build/s03-release -G "Visual Studio 18 2026" -A x64` — PASS, MSVC19.51.36248.0 / SDK10.0.26100.0.
+`cmake --build engine/build/s03-release --config Release --target mudmaker_identity_tests` — PASS after one focused build repair: test optional<uint32> comparison used signed literal; changed to unsigned, /W4 /WX retained.
+`ctest --test-dir engine/build/s03-release -C Release -R "^ecs_identity_allocator$" --output-on-failure` — PASS 1/1 CTest, seven assertion-bearing identity cases, 0 failed (0.03s test).
+`cmake -S engine -B engine/build/s03-asan -G "Visual Studio 18 2026" -A x64 -DMUDMAKER_ENABLE_ASAN=ON` — PASS.
+`cmake --build engine/build/s03-asan --config Release --target mudmaker_identity_tests` — PASS; library and executable instrumented.
+`ctest --test-dir engine/build/s03-asan -C Release -R "^ecs_identity_allocator$" --output-on-failure` — PASS 1/1 CTest, same seven cases, 0 failed (0.07s test); compiler runtime PATH configured by CTest.
+Artifacts: `engine/build/s03-{release,asan}/Release/mudmaker_engine_core.lib` and `mudmaker_identity_tests.exe`; detailed executed-case output in each build's `Testing/Temporary/LastTest.log`.
+Limits: Windows only; MSVC UBSan unavailable and not run. Generation/index exhaustion uses actual production boundary decisions, not enormous allocations. No durable restart/restore, wire codec, sidecar, packaging, benchmark or running-world proof claimed. No speculative toolchain/package installs or extra suites.
+Concrete blocker: none remaining. Independent Auditor PASS is pending; Lead owns final acceptance/Git.

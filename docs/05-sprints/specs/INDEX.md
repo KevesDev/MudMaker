@@ -8,7 +8,9 @@ Latest phase: [S02.9b custom theme editor, preview and cancel](S02-9B-SPEC.md), 
 
 Before S02.9c: [owner UI corrections](S02-OWNER-UI-CORRECTIONS-SPEC.md), scoped independent audit PASS; current owner instructions override older independent Appearance selections and selection-only Inspector visibility.
 
-Current owner refinement: [compact retro controls, feedback and Theme submenu](S02-COMPACT-RETRO-CONTROLS-SPEC.md), independent audit PASS before S02.9c; owner native visual acceptance pending.
+Current owner refinement: [compact retro controls, feedback and Theme submenu](S02-COMPACT-RETRO-CONTROLS-SPEC.md), independent audit PASS and owner desktop appearance/feel accepted before S02.9c; separate touch/native-picker validation not claimed.
+
+Owner priority: S03 native ECS, beginning with [S03.1 identity allocator](S03-1-SPEC.md). [Theme import/export polish](S18-17-THEME-IO-SPEC.md) moved from S02.9c to S18.17; partial work parked, not verified. Preserve accepted desktop UI.
 
 | Sprint | Specification |
 |---|---|

@@ -12,6 +12,15 @@
 ## Future entries
 Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visible scope, measured test/benchmark/UX results, auditor verdict, decisions and lessons. Do not paste raw logs or restate the entire spec.
 
+## 2026-10-31 — S03.1 production native identity (independent PASS)
+- C++20 production identity library now uses 16-byte cryptographic WorldId plus uint32 index/generation; one explicit lifetime domain, burned namespaces, move-only allocators and allocation-free intrusive free-list release. Spike's uint32 world tag remains benchmark-only. Zero/duplicate entropy results are bounded to eight attempts, no weak fallback; generation overflow retires slots.
+- [Independent audit PASS](06-quality/reports/s03-1-audit.md): all six exact configure/build/filtered CTest commands, seven identity cases under Release and ASan, zero findings. Initial /WX failure was a signed test literal, repaired without warning suppression. No extra suites/benchmarks; UBSan unavailable. [Scope/evidence](05-sprints/specs/S03-1-SPEC.md).
+- Engine is 1/10. This proves native identity, not components, a running world/sidecar, persistence or scale. Next S03.2 typed registry; owner receives concrete failures and design decisions. Deferred theme work stays parked and unaudited.
+
+## 2026-10-31 — Owner prioritizes native engine; theme files moved to polish
+- Owner directed theme import/export to polish rather than blocking engine work. Moved S02.9c intact to S18.17; unfinished unaudited implementation is parked for recovery, not accepted. Preserve the accepted UI baseline. Start S03 from completed S01; other unfinished S02 requirements remain queued.
+- Recounted the actual S02 table: 38 DONE plus five queued phases after excluding the moved phase, hence 38/43; prior summary 39/43 was stale. No acceptance was revoked. S18 becomes 0/17. No extra tests were requested for this administrative change.
+
 ## 2026-10-31 — Owner accepts UI baseline, resumes sprint work
 - Owner confirmed compact UI appearance/feel is good and authorized moving forward on sprints. Preserve the accepted visual baseline; next is S02.9c theme import/export. This acceptance does not claim separate touch/native-picker testing.
 - Owner used a usage reset; reset verified and the queued 15:00 continuation removed to prevent duplicate work. No implementation or test reruns were needed to record this acceptance.

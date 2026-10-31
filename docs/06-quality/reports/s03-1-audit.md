@@ -1,0 +1,15 @@
+# S03.1 native identity audit — PASS
+- Scope/authority: production identity headers/source/private rules, CMake and dedicated tests checked against S03.1, ADR-001/002/003, S01.6 and identity/system boundaries. No unresolved real findings.
+- AC1 MET: opaque 16-byte CSPRNG WorldId and full-world comparison; EntityId retains uint32 index/generation. Real system entropy creates live distinct worlds; fixture worlds differing only in the final byte reject foreign references with matching index/generation.
+- AC2 MET: actual allocator create/release/validate proves deterministic LIFO reuse, stale/dead/invalid/double-release rejection and unchanged counts on failed release. Production private helpers govern and test maximum-generation retirement and reserved-index capacity; no public state-forcing hook.
+- AC3 MET: BCryptGenRandom is the default boundary, OS errors retain platform status, zero/duplicate results exhaust the named eight-attempt bound without fallback. Move-only domain/allocators preserve shared namespace tombstones; issued allocators retain authority after facade destruction.
+- AC4 MET: one focused production identity authority, dense metadata/intrusive free list, no allocation during release, structured allocation failures and validate-before-mutation. No UI/gameplay/persistence/thread-manager expansion; spike source not modified by this audit.
+- Independently executed from root, all exit 0:
+- `cmake -S engine -B engine/build/s03-release -G "Visual Studio 18 2026" -A x64` — PASS.
+- `cmake --build engine/build/s03-release --config Release --target mudmaker_identity_tests` — PASS, /W4 /WX retained.
+- `ctest --test-dir engine/build/s03-release -C Release -R "^ecs_identity_allocator$" --output-on-failure` — PASS 1/1, seven identity cases, zero failures (0.01s).
+- `cmake -S engine -B engine/build/s03-asan -G "Visual Studio 18 2026" -A x64 -DMUDMAKER_ENABLE_ASAN=ON` — PASS.
+- `cmake --build engine/build/s03-asan --config Release --target mudmaker_identity_tests` — PASS; library/test ASan instrumentation configured.
+- `ctest --test-dir engine/build/s03-asan -C Release -R "^ecs_identity_allocator$" --output-on-failure` — PASS 1/1, seven identity cases, zero failures (0.03s); CTest supplies compiler runtime PATH.
+- AC5/Verdict: PASS. UBSan unavailable/not run; no extra suites, frontend, spike or benchmark execution. Source read-only; no commit or unrelated/parked edits.
+- Limits: this proves the production identity library only, not a running world/sidecar, durable restore, wire codec, packaging, measured performance or scalability.

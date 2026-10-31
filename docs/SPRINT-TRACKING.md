@@ -10,7 +10,7 @@
 
 **Accepted visual baseline:** [compact retro controls and consistent feedback](05-sprints/specs/S02-COMPACT-RETRO-CONTROLS-SPEC.md), including Settings > Appearance > Theme > options and all dropdown/button consumers. [Independent audit PASS](06-quality/reports/s02-compact-retro-audit.md): 862 tests/typecheck/frontend build and browser visual evidence. Owner accepted desktop appearance/feel 2026-10-31; no phase-count change.
 
-**Resumed after owner reset:** compact slice pushed as `3bec018`; owner reset confirmed, scheduled 15:00 continuation removed to prevent duplication. S02.9c preflight started, no implementation until portable data/file contract is identified.
+**Current owner priority:** start S03 native ECS after the accepted shell. Theme import/export moved from S02.9c to S18.17 polish; partial code is parked, not accepted. Other unfinished S02 work stays queued and is not marked done. S03 requires completed S01, not completion of optional shell preferences/model setup.
 
 **Owner acceptance (2026-10-31):** compact UI appearance/feel accepted; owner authorized proceeding with sprint order. Preserve the accepted visual baseline and start S02.9c theme import/export. Separate touch/native-picker validation is not claimed.
 
@@ -32,8 +32,8 @@
 |---|---|---:|---|---|
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
-| [S02](#s02) | Launchable application shell and shared UI | **39/43** | S01 UI/platform choice | IN PROGRESS |
-| [S03](#s03) | Native ECS | **0/10** | S01 | PLANNED |
+| [S02](#s02) | Launchable application shell and shared UI | **38/43** | S01 UI/platform choice | SHELL ACCEPTED; REMAINDER QUEUED |
+| [S03](#s03) | Native ECS | **1/10** | S01 | IN PROGRESS |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
 | [S06](#s06) | Command harness | **0/17** | S04,S05 | PLANNED |
@@ -48,7 +48,7 @@
 | [S15](#s15) | World authoring | **0/8** | S10,S12,S13 | PLANNED |
 | [S16](#s16) | Quest authoring | **0/6** | S11,S13 | PLANNED |
 | [S17](#s17) | Public hosting | **0/20** | S07,S08,S13 | PLANNED |
-| [S18](#s18) | Release audit | **0/16** | All preceding | PLANNED |
+| [S18](#s18) | Polish and release audit | **0/17** | All preceding | PLANNED |
 ## S00 — Research, design contracts and agent-ready documentation
 
 **Spec:** [S00.md](05-sprints/specs/S00.md) · [Open decisions](07-decisions/OPEN_DECISIONS.md)
@@ -138,7 +138,7 @@
 | **S02.8b Catalog coverage check** | Automatic proof every implemented control has catalog metadata, test id, keyboard and accessible states | DONE | Auditor PASS round 1 (2026-10-30) |
 | **S02.9a Theme persistence** | Store selected presets, user themes and overrides per scope with safe fallback to last valid | DONE | Auditor PASS round 1 (2026-10-30) |
 | **S02.9b Theme editor and preview** | Settings > Appearance holds theme preset selection plus custom-theme edit/preview with cancel; remove Appearance selector from Splash, no gameplay effect | DONE | [Independent re-audit PASS](06-quality/reports/s02-9b-reaudit.md): 301 scoped tests/typecheck/frontend build; repair 64 tests/typecheck. Native app launched; owner visual acceptance pending |
-| **S02.9c Theme import and export** | Data-only import with exact token diagnostics and export (USER TEST) | TODO | — |
+| **S02.9c Theme import and export** | Moved intact to polish S18.17 by owner | MOVED | [Deferred spec](05-sprints/specs/S18-17-THEME-IO-SPEC.md); partial implementation parked, not audited or counted complete |
 | **S02.9d Shortcut preferences** | Customize, import, export and reset keyboard shortcuts per scope with conflict display (interaction contract obligation; needs S02.9a persistence) | TODO | — |
 | **S02.10a Hardware detection** | Real CPU, RAM, disk and instruction-support detection through the shell | TODO | — |
 | **S02.10b Model catalog and recommendation** | Fixed three-model manifest and per-model recommended, not recommended or incompatible reasons | TODO | — |
@@ -146,14 +146,14 @@
 
 ## S03 — ECS foundation
 
-**Implementation spec:** [S04.md](05-sprints/specs/S03.md) · **Prerequisites:** S01
+**Implementation spec:** [S03.md](05-sprints/specs/S03.md) · **Prerequisites:** S01
 
 
 **Checkpoints:** After S03.3 run entity creation/mutation tests; after S03.8 exercise the full native ECS harness. **Hands-on:** S03.4 runs in the existing S02 shell with actual engine results, not mocks.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
-| **S03.1 Identity allocator** | World scoped entity generations | TODO | — |
+| **S03.1 Identity allocator** | World scoped entity generations | DONE | [Independent audit PASS](06-quality/reports/s03-1-audit.md); all six named native commands, seven cases in both Release/ASan. Full 128-bit WorldId, stale/foreign/retirement checks; library scope only |
 | **S03.2 Component schema** | Typed component registry | TODO | — |
 | **S03.3 Mutation API** | Writer-only field mutation | TODO | — |
 | **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API; the launch screen engine startup check becomes blocking once the engine ships (it is only logged until then) | TODO | — |
@@ -519,7 +519,7 @@
 | **S17.19 Account operations** | Host account search, revoke/ban/recovery and session audit without raw DB access | TODO | — |
 | **S17.20 NPC model hosting controls** | Host shows installed packs, compatibility, CPU/RAM budget, runtime health, disable/kill-switch, storage and safe update/rollback | TODO | — |
 
-## S18 — Release audit
+## S18 — Polish and release audit
 
 **Spec:** [S18](05-sprints/specs/S18.md) · **Requires:** All sprints
 
@@ -546,6 +546,7 @@
 | **S18.14 NPC immersion and hardware audit** | Independent Auditor aggressively tests fourth-wall/prompt leak resistance, identity consistency, context isolation, repeat conversations, 2/4-core CPU load, 8GB RAM, attacks, latency, abort/fallback | TODO | — |
 | **S18.15 Combat scenario audit** | Independently test pulse/turn/realtime/hybrid, PvP, hearing/chase, custom stats, durability, replay, disconnect, safe zones, low-end load and malicious scripts | TODO | — |
 | **S18.16 S18.16 Inventory integrity audit** | Audit duplicate custody, loops, stack overflow, theft/permissions, deadlock/races, reconnect, equip conflicts, moving transport and million-item paging | TODO | — |
+| **S18.17 Theme import/export polish** | Versioned theme-only local files, atomic import and produced-file roundtrip (USER TEST) | TODO | [Moved spec](05-sprints/specs/S18-17-THEME-IO-SPEC.md); unfinished S02.9c work preserved for later, not accepted |
 
 ## Phase evidence
 Record implementation commit, focused test and Auditor PASS in the phase Evidence cell; a user exercise when applicable. Longer discussions: [Sprint History](SPRINT-HISTORY.md).

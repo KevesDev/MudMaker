@@ -8,6 +8,8 @@
 **Risk gates:** AddressSanitizer/UBSan builds in CI-equivalent local script; S01.5 benchmark must pass before S03 begins.
 
 ## ADR-002: ECS storage and identity
+
+**S03.1 implementation refinement, 2026-10-31 (Lead decision under owner delegation):** S01.6's 128-bit cryptographic WorldId is binding for production. The spike's caller-supplied uint32 world tag was benchmark-only. Production identity uses one explicit native identity domain issuing opaque 16-byte WorldIds from Windows cryptographic entropy, retaining issued IDs for its lifetime; world allocators are move-only and cannot choose/reissue namespaces. Entity index/generation stay uint32, maximum-generation slots retire rather than wrap. Durable restore is S04; no restart or wire-codec proof is claimed in S03.1. [Scoped contract](../05-sprints/specs/S03-1-SPEC.md). Existing benchmark evidence is not rerun or rewritten.
 **Decision:** Hybrid. Chunked structure-of-arrays **archetype** storage for components that co-occur; **sparse-set** storage for tag and high-churn components. `EntityId` = world id + 32-bit index + 32-bit generation; a generation is never reused while any reference may exist. Component layouts are descriptor-driven (runtime-registered, frozen per world release) so creator-defined schemas use the same path as built-ins.
 **Why:** archetypes give cache-linear query iteration; sparse sets avoid archetype thrash for transient state; descriptor layouts satisfy typed creator components without a second storage engine.
 **Gate:** the S01.5 benchmark compares the two storage paths on named workloads and may amend this record with measured evidence.
