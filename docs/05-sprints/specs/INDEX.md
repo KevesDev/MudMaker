@@ -18,6 +18,8 @@ S03.2 passed and pushed 7046706; current slice [S03.3 native world/mutation](S03
 
 S03.3 independently passed; next S03.4 live integration preflight. S02.10a/b/c must pass before S03 closes.
 
+[S03.4 explicit prerequisite phases](S03-4-SPEC.md): contract/codecs, native process, shell bridge and real inspector. Existing-design review and per-phase specs are required before code.
+
 | Sprint | Specification |
 |---|---|
 | S00 | [Documentation](S00.md) |

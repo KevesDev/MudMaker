@@ -157,6 +157,8 @@
 
 **Owner close-out dependency:** complete and independently pass S02.10a/b/c before S03 sign-off, while retaining their canonical S02 IDs and status. Engine implementation may continue in the meantime.
 
+**S03.4 explicit prerequisite phases:** [integration phase plan](05-sprints/specs/S03-4-SPEC.md): 4a contract/pinned codecs → 4b native engine process → 4c shell lifecycle/typed bridge → 4d real inspector. Each needs scoped spec, existing-design review, one Builder, independent audit and push. Parent S03.4 remains incomplete until all pass; subphase planning does not increase verified counts.
+
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S03.1 Identity allocator** | World scoped entity generations | DONE | [Independent audit PASS](06-quality/reports/s03-1-audit.md); all six named native commands, seven cases in both Release/ASan. Full 128-bit WorldId, stale/foreign/retirement checks; library scope only |
