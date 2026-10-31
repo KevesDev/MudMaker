@@ -12,6 +12,11 @@
 ## Future entries
 Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visible scope, measured test/benchmark/UX results, auditor verdict, decisions and lessons. Do not paste raw logs or restate the entire spec.
 
+## 2026-10-31 — S03.3 native World mutations (independent PASS)
+- One native writer privately owns identity and integrated typed SoA archetype/sparse storage, staged mutations, indexed live reference checks and owned bounded inspection. Text/List lifecycles and nested Record state are real; no canonical map/memcpy storage shortcut.
+- [Independent audit PASS](06-quality/reports/s03-3-audit.md): all six named commands, eight cases in each Release/ASan target, zero findings. Factory review caught live identities lacking storage and premature by-value ownership consumption; guard plus deferred move now preserves rejected allocator state. Lead corrected overbroad scalar-root wording to existing Record roots. Owner informed; no extra suites or warnings suppressed.
+- Engine 3/10; [contract/evidence](05-sprints/specs/S03-3-SPEC.md). S03.4 is the app checkpoint, not yet ready. Owner requires S02.10a/b/c before S03 closure, retained as explicit gate. Theme I/O alone remains deferred to polish.
+
 ## 2026-10-31 — S03.2 typed native schemas (independent PASS)
 - One native registry owns stable component/field IDs, canonical names/revisions, built-in/creator validation, deep immutable descriptors and release freeze. Shared default/value validation covers typed primitives/references/records/lists and explicit caller processing limits. No benchmark caps or byte-copy component store imported.
 - [Independent audit PASS](06-quality/reports/s03-2-audit.md): all six exact commands, eight cases in each Release/ASan target, zero findings. No compile errors/warnings; self-review found and corrected nullable Null entering primitive enum definitions, with a regression. No extra suites or benchmark runs. [Contract/evidence](05-sprints/specs/S03-2-SPEC.md).

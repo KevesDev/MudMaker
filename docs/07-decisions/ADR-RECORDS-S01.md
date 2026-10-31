@@ -17,6 +17,8 @@
 **Gate:** the S01.5 benchmark compares the two storage paths on named workloads and may amend this record with measured evidence.
 
 ## ADR-003: Writer model and ordering
+
+**S03.3 implementation refinement, 2026-10-31 (Lead decision under owner delegation):** one thread-bound native world writer privately owns identity and integrated typed-column archetype/sparse storage. Owned Text/List/Record data uses correct C++ lifecycle, not spike memcpy. Commands stage/validate before publication; live Entity references are checked and indexed, with external inbound references blocking destruction. Logical metadata/value validation remains the existing schema owner. [Scoped API/storage/inspection contract](../05-sprints/specs/S03-3-SPEC.md). Events, ExpectedVersion, authorization and persistence remain later assigned phases; no claim they are implemented here.
 **Decision:** One authoritative **single-writer** simulation loop per world. All mutation enters one command/transaction gateway. Readers (projection, persistence, network) consume immutable epoch snapshots or committed event batches. Phase order is fixed: validate intent, simulate, scheduled behaviors, effects/events, commit, publish. Systems declare read/write sets, enforced by the scheduler. No system owns a thread. Budgets come from named configuration, not literals.
 **Why:** deterministic replay and the test-matrix requirement; avoids lock-order defects.
 

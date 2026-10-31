@@ -14,6 +14,10 @@ Owner priority: S03 native ECS, beginning with [S03.1 identity allocator](S03-1-
 
 S03.1 passed and pushed af9f0ef; current slice [S03.2 typed schema registry](S03-2-SPEC.md).
 
+S03.2 passed and pushed 7046706; current slice [S03.3 native world/mutation](S03-3-SPEC.md). Notify owner for real in-app testing at S03.4.
+
+S03.3 independently passed; next S03.4 live integration preflight. S02.10a/b/c must pass before S03 closes.
+
 | Sprint | Specification |
 |---|---|
 | S00 | [Documentation](S00.md) |

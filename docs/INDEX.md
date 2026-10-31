@@ -81,6 +81,8 @@
 
 ## Current editor appearance and sprint execution authority
 
+- [Native world and mutation gateway](05-sprints/specs/S03-3-SPEC.md) — S03.3 independent audit PASS; actual hybrid storage behind one writer. S03.4 is the next real app checkpoint.
+
 - [Typed native component schema registry](05-sprints/specs/S03-2-SPEC.md) — S03.2 independent audit PASS; immutable typed schemas and real value/default validation. Next is writer/mutation preflight.
 
 - [Production native identity allocator](05-sprints/specs/S03-1-SPEC.md) — S03.1 independent audit PASS; production library and seven identity cases in Release/ASan. Current next work is S03.2 component registry preflight.

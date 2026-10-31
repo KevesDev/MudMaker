@@ -1,0 +1,15 @@
+# S03.3 native World audit — PASS
+- Scope: world header/source/private storage helper/tests plus necessary CMake/README delta; checked against S03.3, ADR-002/003 and ECS mutation boundaries. Zero unresolved real findings.
+- AC1 MET: one thread-bound gateway privately owns the allocator and fixed frozen-release bindings. All live APIs check writer and complete identity; typed schema/revision/presence failures preserve state. Factory rejects pre-existing live identities and moves allocator ownership only after fallible preparation; rejection retains the named caller's live handle/counts.
+- AC2 MET: actual integrated archetype chunks use typed SoA leaves and owned Text/List payloads; nested Record parent state preserves absent/Null/present. Sparse dense/reverse indices repair swap removals without archetype migration. Transition/chunk/swap tests preserve independently owned values; no canonical map of whole components or memcpy ownership shortcut.
+- AC3 MET: Record-root replacement reuses the existing schema validator; FieldId Record paths reject absent/Null parents and require enclosing List replacement for inner fields. Staged cells/rows/index capacity/reference updates precede publication. No fallible owned copies remain in the commit paths reviewed.
+- Nested Entity references validate through live identity; derived outgoing lists/inbound counts reject external inbound destruction and clean self references. Inspection copies values and immutable descriptors; bounded live inspection uses the dense live index. No whole-world reference scan or mutable store escape.
+- Independently executed from root, all exit 0:
+- `cmake -S engine -B engine/build/s03-world-release -G "Visual Studio 18 2026" -A x64` — PASS.
+- `cmake --build engine/build/s03-world-release --config Release --target mudmaker_world_tests` — PASS; /W4 /WX retained.
+- `ctest --test-dir engine/build/s03-world-release -C Release -R "^ecs_world_mutation$" --output-on-failure` — PASS 1/1 CTest, eight World cases, zero failures (0.01s).
+- `cmake -S engine -B engine/build/s03-world-asan -G "Visual Studio 18 2026" -A x64 -DMUDMAKER_ENABLE_ASAN=ON` — PASS.
+- `cmake --build engine/build/s03-world-asan --config Release --target mudmaker_world_tests` — PASS; core/test instrumentation configured.
+- `ctest --test-dir engine/build/s03-world-asan -C Release -R "^ecs_world_mutation$" --output-on-failure` — PASS 1/1 CTest, eight World cases, zero failures (0.04s); CTest supplies runtime PATH.
+- AC4/Verdict: PASS. UBSan unavailable/not run; no identity/schema/frontend/spike/full-suite or benchmark runs. Source read-only; no commit or unrelated/parked edits.
+- Limits: native World library proof only, not app readiness, running sidecar, queries/performance/scalability, durable state, asset resolution, events/epochs/ExpectedVersion, authorization, IPC or packaging. App checkpoint remains S03.4.

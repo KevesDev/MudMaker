@@ -12,6 +12,8 @@
 
 **Current owner priority:** start S03 native ECS after the accepted shell. Theme import/export moved from S02.9c to S18.17 polish; partial code is parked, not accepted. Other unfinished S02 work stays queued and is not marked done. S03 requires completed S01, not completion of optional shell preferences/model setup.
 
+**Binding S03 close-out gate:** owner clarified S02.10a/b/c (hardware detection, fixed model catalog/recommendations, wizard screens) must be completed before the end of S03. They remain S02 work. Only theme import/export moved to polish; S03 cannot be signed off with S02.10 unfinished.
+
 **Owner acceptance (2026-10-31):** compact UI appearance/feel accepted; owner authorized proceeding with sprint order. Preserve the accepted visual baseline and start S02.9c theme import/export. Separate touch/native-picker validation is not claimed.
 
 ## Real application and testing milestones
@@ -33,7 +35,7 @@
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
 | [S02](#s02) | Launchable application shell and shared UI | **38/43** | S01 UI/platform choice | SHELL ACCEPTED; REMAINDER QUEUED |
-| [S03](#s03) | Native ECS | **2/10** | S01 | IN PROGRESS |
+| [S03](#s03) | Native ECS | **3/10** | S01 | IN PROGRESS |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
 | [S06](#s06) | Command harness | **0/17** | S04,S05 | PLANNED |
@@ -151,11 +153,13 @@
 
 **Checkpoints:** After S03.3 run entity creation/mutation tests; after S03.8 exercise the full native ECS harness. **Hands-on:** S03.4 runs in the existing S02 shell with actual engine results, not mocks.
 
+**Owner close-out dependency:** complete and independently pass S02.10a/b/c before S03 sign-off, while retaining their canonical S02 IDs and status. Engine implementation may continue in the meantime.
+
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S03.1 Identity allocator** | World scoped entity generations | DONE | [Independent audit PASS](06-quality/reports/s03-1-audit.md); all six named native commands, seven cases in both Release/ASan. Full 128-bit WorldId, stale/foreign/retirement checks; library scope only |
 | **S03.2 Component schema** | Typed component registry | DONE | [Independent audit PASS](06-quality/reports/s03-2-audit.md); all six named native commands, eight schema cases in Release/ASan; logical schemas/value validation only |
-| **S03.3 Mutation API** | Writer-only field mutation | TODO | — |
+| **S03.3 Mutation API** | Writer-only field mutation | DONE | [Independent audit PASS](06-quality/reports/s03-3-audit.md); six named commands, eight World cases each Release/ASan; native World library, not app-ready |
 | **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API; the launch screen engine startup check becomes blocking once the engine ships (it is only logged until then) | TODO | — |
 | **S03.5 Query API** | Bounded entity query | TODO | — |
 | **S03.6 Revision guard** | ExpectedVersion write checks | TODO | — |
