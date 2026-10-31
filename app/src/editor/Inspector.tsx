@@ -26,9 +26,10 @@ export interface InspectorSectionDescriptor {
 export interface InspectorProps {
   readonly described: Described;
   readonly sections: readonly InspectorSectionDescriptor[];
+  readonly visible?: boolean;
 }
 
-/** Whether there is anything to show. A section without fields is not shown, and without any the inspector is absent. */
+/** Whether there is anything to show. A section without fields is not shown; explicit visibility can still show registered panel chrome. */
 export function inspectorHasContent(sections: readonly InspectorSectionDescriptor[]): boolean {
   return sections.some((section) => section.fields.length > 0);
 }
@@ -84,16 +85,17 @@ function Section({ section, rootId }: { readonly section: InspectorSectionDescri
 
 /**
  * The container for typed fields of whatever is selected: collapsible groups of label, value control and message
- * rows. It renders only the descriptors it is given and draws nothing when there are none.
+ * rows. It renders only supplied descriptors; explicit opening can show registered chrome without fields.
  */
-export function Inspector({ described, sections }: InspectorProps) {
+export function Inspector({ described, sections, visible = false }: InspectorProps) {
   const name = requireName(described, "Inspector");
   const rootId = useId();
   requireUnique("sections", sections.map((section) => section.id));
   for (const section of sections) requireUnique("fields", section.fields.map((field) => field.id));
-  if (!inspectorHasContent(sections)) return null;
+  if (!inspectorHasContent(sections) && !visible) return null;
   return (
     <section aria-label={name} data-region={REGION.inspector} className="editor-inspector">
+      {visible && !inspectorHasContent(sections) ? <h2 className="editor-section-heading" {...("testId" in described ? { "data-testid": described.testId } : {})}>{name}</h2> : null}
       {sections
         .filter((section) => section.fields.length > 0)
         .map((section) => (

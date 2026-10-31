@@ -12,6 +12,12 @@
 ## Future entries
 Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visible scope, measured test/benchmark/UX results, auditor verdict, decisions and lessons. Do not paste raw logs or restate the entire spec.
 
+## 2026-10-31 — Owner UI corrections (scoped audit PASS)
+- Owner corrected the prior scoped-appearance contract: theme selection and shared custom Preview/Save are app-wide. ThemeManager stages all affected scopes atomically; PreferencesStore restores one global selection and retains legacy scoped data in one bounded original-data backup. No new manager/storage authority.
+- Settings now opens a real Appearance submenu with theme choices; nested/root popup bounds are measured and constrained. Create View has one Output entry for its remembered internal diagnostic views. Explicit View > Inspector opens real panel chrome without selection or fabricated data.
+- [Independent audit PASS](06-quality/reports/s02-owner-ui-corrections-audit.md): 563 tests / 38 files, typecheck and frontend build PASS, zero outstanding findings. Builder initial menu-race failures and targeted repairs remain recorded. Current contracts replace contradictory rules; historical reports retain executed evidence with superseded notices. Catalog 548 elements / 299 actions.
+- [Scope and reports](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md). Native visual/owner acceptance remains pending; existing Vite chunk advisory and rapid-quit debounce risk remain. S02 counts unchanged; next planned S02.9c.
+
 ## 2026-10-31 — S02.9b custom theme editor (scoped audit PASS)
 - Settings > Appearance > Customize Theme edits schema-derived token fields in the active scope. Existing ThemeManager separates render-only preview from committed input; PreferencesStore persists Save only. Cancel/Escape/destination/unmount discard previews, and saved custom themes pass fresh startup. Actual shell CSS follows active workspace scope.
 - Editor/client customize action ownership moved to the shared shell; catalog additions cover 168 token fields and four dialog controls, totaling 546 elements / 299 actions. No new runtime manager or storage path.

@@ -1,10 +1,9 @@
 import { FRAME_ACTION_OWNER, actionIdOf } from "../frame/frameActions";
 import { homeCopy } from "../home/homeCopy";
-import { APPEARANCE, SPLASH } from "../home/homeLayout";
+import { APPEARANCE, APPEARANCE_MENU, SPLASH } from "../home/homeLayout";
 import { type ThemeManager } from "../theme";
 import { CUSTOMIZE_CONTROL } from "../theme/themeEditorControls";
 import { openMenuHandler, type ActionBus, type ActionHandler, type ActionRegistry } from "../ui";
-import { WORKSPACE_SCOPE } from "./destinations";
 import { registerNavigatorActions } from "./navigatorActions";
 import type { WorkspaceNavigator } from "./WorkspaceNavigator";
 
@@ -12,7 +11,7 @@ import type { WorkspaceNavigator } from "./WorkspaceNavigator";
 export const SHELL_ROUTER_OWNER = FRAME_ACTION_OWNER;
 
 export interface ShellRouterDependencies {
-  readonly theme: Pick<ThemeManager, "listPresets" | "getSnapshot" | "selectPreset">;
+  readonly theme: Pick<ThemeManager, "listPresets" | "selectApplicationPreset">;
   readonly navigator: WorkspaceNavigator;
   readonly openThemeEditor?: () => void;
 }
@@ -28,9 +27,7 @@ export function registerShellRouter(bus: ActionBus, registry: ActionRegistry, de
   const changeAppearance: ActionHandler = async ({ value }) => {
     const preset = typeof value === "string" ? theme.listPresets().find((candidate) => candidate.id === value) : undefined;
     if (preset === undefined) return { status: "validation-error", code: "appearance-unknown", message: homeCopy.appearanceUnknown };
-    const destination = navigator.getSnapshot().destination;
-    const scope = destination === "splash" ? "home" : WORKSPACE_SCOPE[destination];
-    if (!theme.selectPreset(scope, preset.id, true).ok) {
+    if (!theme.selectApplicationPreset(preset.id).ok) {
       return { status: "recoverable-error", code: "appearance-not-applied", message: homeCopy.appearanceNotApplied(preset.label) };
     }
     return { status: "success", message: "" };
@@ -38,6 +35,7 @@ export function registerShellRouter(bus: ActionBus, registry: ActionRegistry, de
 
   const removers = [
     bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, APPEARANCE), changeAppearance),
+    bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, APPEARANCE_MENU), openMenuHandler),
     bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, SPLASH.settings), openMenuHandler),
     registerNavigatorActions(bus, navigator),
   ];

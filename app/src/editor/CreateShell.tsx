@@ -18,8 +18,8 @@ type OutputView = (typeof OUTPUT_VIEWS)[number];
 
 /**
  * The Create workspace: its frequent actions sit in the frame row, below it the Asset Explorer drawer, the map canvas
- * with its one tool strip and the Problems strip. The Inspector appears beside the canvas once something can be
- * selected. A control that needs a project, a build or a save has no handler yet, so it does nothing visible.
+ * with its one tool strip and a shared Output panel. Explicit View commands toggle Output and Inspector;
+ * selection supplies real Inspector fields. A control that needs a project, a build or a save has no handler yet, so it does nothing visible.
  */
 export function CreateShell() {
   const { registry } = useUi();
@@ -29,11 +29,12 @@ export function CreateShell() {
   const [assetsOpen, setAssetsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [outputOpen, setOutputOpen] = useState(false);
+  const [inspectorOpen, setInspectorOpen] = useState(false);
   const [view, setView] = useState<OutputView>(OUTPUT_VIEWS[0]);
 
-  /** Choosing the view that is already showing folds the strip away. */
+  /** Internal output selection keeps the panel open; the View toggle controls visibility. */
   const showView = (next: OutputView): ActionHandler => () => {
-    setOutputOpen(!(outputOpen && next === view));
+    setOutputOpen(true);
     setView(next);
     return Promise.resolve(SILENT);
   };
@@ -44,6 +45,8 @@ export function CreateShell() {
   };
   useMenuOpeners(EDITOR_OWNER, [BUILD_MENU.opener, VIEW_MENU.opener]);
   useIntentRouter(EDITOR_OWNER, {
+    [VIEW_MENU.output]: () => { setOutputOpen((open) => !open); return Promise.resolve(SILENT); },
+    [VIEW_MENU.inspector]: () => { setInspectorOpen((open) => !open); return Promise.resolve(SILENT); },
     [VIEW_MENU.assets]: () => {
       setAssetsOpen((open) => !open);
       return Promise.resolve(SILENT);
@@ -65,12 +68,14 @@ export function CreateShell() {
             <Button key={id} control={control(id)} />
           ))}
           <Menu opener={control(BUILD_MENU.opener)} items={BUILD_MENU.items.map(control)} trailingGlyph={MENU_CARET} />
-          <Menu opener={control(VIEW_MENU.opener)} items={[control(VIEW_MENU.assets), control(VIEW_MENU.inspector), ...OUTPUT_VIEWS.map(control)]} trailingGlyph={MENU_CARET} />
+          <Menu opener={control(VIEW_MENU.opener)} items={[control(VIEW_MENU.assets), control(VIEW_MENU.inspector), control(VIEW_MENU.output)]} trailingGlyph={MENU_CARET} />
           <Button control={control(SEARCH)} />
         </Toolbar>
       </ToolbarSlot>
       <div className="create-main">
         <EditorShell
+          inspector={{ described: control("editor.inspector.01"), sections: [] }}
+          inspectorOpen={inspectorOpen}
           assets={
             <DockPanel described={control(ASSETS.explorer)} open={assetsOpen} onClose={() => setAssetsOpen(false)}>
               <AssetExplorer query={query} onQueryChange={setQuery} />

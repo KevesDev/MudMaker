@@ -2,6 +2,7 @@ import { parseThemeDefaults } from "./defaults";
 import { resolveTokens } from "./resolve";
 import {
   DEFAULT_ACCESSIBILITY,
+  SCOPE_IDS,
   ThemeDefaultsError,
   isScopeId,
   type AccessibilitySettings,
@@ -29,8 +30,8 @@ interface ScopeState {
 const NO_TOKENS: TokenMap = Object.freeze({});
 
 /**
- * Sole owner of theme resolution. Each scope keeps its own preset, user theme, overrides
- * and accessibility inputs; scopes share only the application defaults they inherit.
+ * Sole owner of theme resolution and atomic app-wide appearance changes.
+ * Scopes retain their semantic tokens and accessibility inputs.
  */
 export class ThemeManager {
   private readonly scopes: Readonly<Record<ScopeId, ScopeState>>;
@@ -104,16 +105,32 @@ export class ThemeManager {
   }
 
   cancelPreview(scope: ScopeId): void {
-    const state = this.stateOf(scope);
-    if (state.committedSnapshot === null) return;
-    state.snapshot = state.committedSnapshot;
-    state.committedSnapshot = null;
-    this.notify(state);
+    this.stateOf(scope);
+    const changed = SCOPE_IDS.map((id) => this.scopes[id]).filter((state) => state.committedSnapshot !== null);
+    for (const state of changed) {
+      state.snapshot = state.committedSnapshot as ResolvedTheme;
+      state.committedSnapshot = null;
+    }
+    this.notifyAll(changed);
   }
 
   private applyCustomTheme(scope: ScopeId, theme: unknown, preview: boolean): ThemeResult {
     const parsed = parseUserTheme(theme);
-    return this.apply(scope, (inputs) => ({ ...inputs, userTheme: parsed.theme, overrides: NO_TOKENS }), parsed.errors, preview);
+    if (!parsed.theme || parsed.errors.length > 0) return { ok: false, errors: parsed.errors };
+    const original = this.getEditableTokens(scope);
+    const changes = Object.entries(parsed.theme.tokens).filter(([name, value]) => original[name] !== value);
+    const document = parsed.theme;
+    return this.applyMany(SCOPE_IDS.map((id) => {
+      const editable = this.getEditableTokens(id);
+      const applicable = Object.fromEntries(changes.filter(([name]) => Object.hasOwn(editable, name)));
+      return [id, { ...this.scopes[id].inputs, userTheme: { ...document, tokens: { ...editable, ...applicable } }, overrides: NO_TOKENS }] as const;
+    }), preview, scope);
+  }
+
+  /** Chooses one bundled theme for the entire app, with no observable partial update. */
+  selectApplicationPreset(presetId: string, resetCustom = true): ThemeResult {
+    if (!this.presets.some((preset) => preset.id === presetId)) return { ok: false, errors: [themeError("unknown-preset", String(presetId), `There is no built-in preset named "${String(presetId)}".`)] };
+    return this.applyMany(SCOPE_IDS.map((scope) => [scope, { ...this.scopes[scope].inputs, presetId, ...(resetCustom ? { userTheme: null, overrides: NO_TOKENS } : {}) }] as const), false, "home");
   }
 
   /** Listeners are notified once per accepted change to this scope, never for rejected input. */
@@ -174,28 +191,32 @@ export class ThemeManager {
       };
     }
     if (inputErrors.length > 0) return { ok: false, errors: inputErrors };
-    const state = this.scopes[scope];
-    const next = change(state.inputs);
-    const resolved = resolveTokens(
-      state.defaultTokens,
-      [state.presetTokens.get(next.presetId) ?? NO_TOKENS, next.userTheme?.tokens ?? NO_TOKENS, next.overrides],
-      next.accessibility,
-    );
-    if (!resolved.ok) return resolved;
-    if (preview) state.committedSnapshot ??= state.snapshot;
-    else {
-      state.inputs = next;
-      state.committedSnapshot = null;
+    return this.applyMany([[scope, change(this.scopes[scope].inputs)]], preview, scope);
+  }
+
+  private applyMany(changes: readonly (readonly [ScopeId, ThemeInputs])[], preview: boolean, resultScope: ScopeId): ThemeResult {
+    const staged: { state: ScopeState; inputs: ThemeInputs; snapshot: ResolvedTheme }[] = [];
+    const errors: ThemeError[] = [];
+    for (const [scope, inputs] of changes) {
+      const state = this.scopes[scope];
+      const resolved = resolveTokens(state.defaultTokens, [state.presetTokens.get(inputs.presetId) ?? NO_TOKENS, inputs.userTheme?.tokens ?? NO_TOKENS, inputs.overrides], inputs.accessibility);
+      if (!resolved.ok) errors.push(...resolved.errors);
+      else staged.push({ state, inputs, snapshot: this.freezeSnapshot(scope, inputs.userTheme?.id ?? inputs.presetId, state.snapshot.revision + 1, inputs.accessibility, resolved.tokens) });
     }
-    state.snapshot = this.freezeSnapshot(
-      scope,
-      next.userTheme?.id ?? next.presetId,
-      state.snapshot.revision + 1,
-      next.accessibility,
-      resolved.tokens,
-    );
-    this.notify(state);
-    return { ok: true, theme: state.snapshot };
+    if (errors.length > 0) return { ok: false, errors: [...new Map(errors.map((error) => [`${error.code}\u0000${error.token}\u0000${error.sourceToken ?? ""}\u0000${error.message}`, error])).values()] };
+    for (const { state, inputs, snapshot } of staged) {
+      if (preview) state.committedSnapshot ??= state.snapshot;
+      else { state.inputs = inputs; state.committedSnapshot = null; }
+      state.snapshot = snapshot;
+    }
+    this.notifyAll(staged.map(({ state }) => state));
+    return { ok: true, theme: this.scopes[resultScope].snapshot };
+  }
+
+  private notifyAll(states: readonly ScopeState[]): void {
+    const failures: unknown[] = [];
+    for (const state of states) { try { this.notify(state); } catch (failure) { failures.push(failure); } }
+    if (failures.length > 0) throw failures[0];
   }
 
   private freezeSnapshot(

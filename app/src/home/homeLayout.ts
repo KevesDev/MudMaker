@@ -16,6 +16,7 @@ export const SPLASH = {
 
 /** The appearance choice lives in the catalog's settings surface and is offered from the Settings menu. */
 export const APPEARANCE = "home.settings.07" as const satisfies ControlId;
+export const APPEARANCE_MENU = "home.settings.08" as const satisfies ControlId;
 
 /** The accent colors an action can take; the stylesheet has one rule for each. */
 export const ACTION_ACCENTS = ["primary", "secondary", "tertiary"] as const;
@@ -70,4 +71,4 @@ export function isVisible(control: ControlDescriptor, phase: StartupPhase): bool
 export const NOTICE_CONTROLS: readonly ControlId[] = [...WORKSPACE_ENTRIES, APPEARANCE];
 
 /** The Settings entries after Appearance on the launch screen: buttons, then on/off settings. */
-export const SPLASH_SETTINGS = { items: ["home.settings.05", "home.settings.06"], checks: ["home.settings.03", "home.settings.04"] } as const satisfies Readonly<Record<string, readonly ControlId[]>>;
+export const SPLASH_SETTINGS = { items: ["home.settings.05", "home.settings.06"], checks: ["home.settings.04"], appearanceChecks: ["home.settings.03"] } as const satisfies Readonly<Record<string, readonly ControlId[]>>;

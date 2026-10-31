@@ -52,7 +52,7 @@ describe("opening the Settings menu", () => {
 describe("appearance", () => {
   const scopes = [["splash", "home"], ["create", "editor"], ["play", "client"], ["host", "host"]] as const;
 
-  it.each(scopes)("changes only %s's %s scope and stays silent", async (destination, activeScope) => {
+  it.each(scopes)("changes all scopes from %s (%s) and stays silent", async (destination, activeScope) => {
     const { dispatch, theme, navigator } = setup();
     const target = otherPreset(theme);
     expect(theme.selectPreset("client", target.id).ok).toBe(true);
@@ -61,7 +61,7 @@ describe("appearance", () => {
     if (!next) throw new Error("Two presets are required.");
     expect(await navigator.request(destination, new AbortController().signal)).toEqual({ ok: true });
     expect(await dispatch(APPEARANCE, next.id)).toMatchObject({ status: "success", message: "" });
-    expect(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, theme.getSnapshot(scope).themeId]))).toEqual({ ...before, [activeScope]: next.id });
+    expect(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, theme.getSnapshot(scope).themeId]))).toEqual(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, next.id])));
   });
 
   it.each([
@@ -75,14 +75,14 @@ describe("appearance", () => {
     expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope))).toEqual(before);
   });
 
-  it.each(scopes)("preserves every scope when %s's %s preset is rejected", async (destination, activeScope) => {
+  it.each(scopes)("preserves every scope when %s's %s preset is rejected", async (destination, _activeScope) => {
     const { dispatch, theme, navigator } = setup();
     const target = otherPreset(theme);
     const before = SCOPE_IDS.map((scope) => theme.getSnapshot(scope));
-    const select = vi.spyOn(theme, "selectPreset").mockReturnValue({ ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] });
+    const select = vi.spyOn(theme, "selectApplicationPreset").mockReturnValue({ ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] });
     expect(await navigator.request(destination as Destination, new AbortController().signal)).toEqual({ ok: true });
     expect(await dispatch(APPEARANCE, target.id)).toMatchObject({ status: "recoverable-error", code: "appearance-not-applied" });
-    expect(select).toHaveBeenCalledExactlyOnceWith(activeScope, target.id, true);
+    expect(select).toHaveBeenCalledExactlyOnceWith(target.id);
     expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope))).toEqual(before);
   });
 });

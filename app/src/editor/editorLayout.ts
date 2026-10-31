@@ -10,7 +10,7 @@ export const PROJECT_ACTIONS = ["editor.shell.01", "editor.shell.02", "editor.sh
 export const BUILD_MENU = { opener: "editor.shell.14", items: ["editor.shell.05", "editor.shell.06", "editor.shell.07"] } as const;
 
 /** The View menu: its opener and the toggles it lists ahead of the output views. */
-export const VIEW_MENU = { opener: "editor.shell.09", assets: "editor.shell.15", inspector: "editor.shell.16" } as const satisfies Readonly<Record<string, ControlId>>;
+export const VIEW_MENU = { opener: "editor.shell.09", assets: "editor.shell.15", inspector: "editor.shell.16", output: "editor.shell.17" } as const satisfies Readonly<Record<string, ControlId>>;
 
 export const SEARCH = "editor.shell.08" as const satisfies ControlId;
 
@@ -27,6 +27,6 @@ export const ASSETS = {
   import: "editor.assets.05",
 } as const satisfies Readonly<Record<string, ControlId>>;
 
-/** The output views of the bottom drawer, which the View menu opens. */
+/** The internal output views of the shared bottom panel. */
 export const OUTPUT_VIEWS = ["editor.diagnostics.01", "editor.diagnostics.02", "editor.diagnostics.03", "editor.diagnostics.04"] as const satisfies readonly ControlId[];
 export const CLEAR_COMPLETED = "editor.diagnostics.07" as const satisfies ControlId;

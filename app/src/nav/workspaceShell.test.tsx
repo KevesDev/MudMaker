@@ -179,7 +179,7 @@ describe("Go To", () => {
 });
 
 describe("Settings and Appearance", () => {
-  it.each(WORKSPACE_DESTINATIONS)("offers Appearance in %s, changes only that scope through the theme manager, and marks it", async (workspace) => {
+  it.each(WORKSPACE_DESTINATIONS)("offers Appearance in %s, changes the app-wide choice through the theme manager, and marks it", async (workspace) => {
     const home = await openSplash();
     fireEvent.click(screen.getByRole("button", { name: label(SPLASH[workspace]) }));
     await screen.findByRole("main", { name: identityOf(workspace) });
@@ -187,12 +187,14 @@ describe("Settings and Appearance", () => {
     const target = home.manager.listPresets().find((preset) => preset.id !== before[WORKSPACE_SCOPE[workspace]]);
     if (!target) throw new Error("The defaults must ship at least two presets.");
     fireEvent.click(screen.getByRole("button", { name: settingsLabel }));
-    const group = within(await screen.findByRole("menu", { name: settingsLabel })).getByRole("group", { name: label(APPEARANCE) });
+    fireEvent.click(within(await screen.findByRole("menu", { name: settingsLabel })).getByRole("menuitem", { name: "Appearance" }));
+    const group = within(await screen.findByRole("menu", { name: "Appearance" })).getByRole("group", { name: label(APPEARANCE) });
     fireEvent.click(within(group).getByRole("menuitemradio", { name: target.label }));
-    await waitFor(() => expect(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, home.manager.getSnapshot(scope).themeId]))).toEqual({ ...before, [WORKSPACE_SCOPE[workspace]]: target.id }));
+    await waitFor(() => expect(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, home.manager.getSnapshot(scope).themeId]))).toEqual(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, target.id]))));
     await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
     expect(document.activeElement).toBe(screen.getByRole("button", { name: settingsLabel }));
     fireEvent.click(screen.getByRole("button", { name: settingsLabel }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Appearance" }));
     const marked = within(await screen.findByRole("group", { name: label(APPEARANCE) })).getAllByRole("menuitemradio");
     expect(marked.filter((item) => item.getAttribute("aria-checked") === "true").map((item) => item.getAttribute("data-value"))).toEqual([target.id]);
   });
@@ -201,9 +203,10 @@ describe("Settings and Appearance", () => {
     const home = await openSplash();
     fireEvent.click(screen.getByRole("button", { name: label(SPLASH.host) }));
     await screen.findByRole("main", { name: identityOf("host") });
-    vi.spyOn(home.manager, "selectPreset").mockReturnValue({ ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] });
+    vi.spyOn(home.manager, "selectApplicationPreset").mockReturnValue({ ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] });
     const other = home.manager.listPresets().find((preset) => preset.id !== home.manager.getSnapshot("home").themeId);
     fireEvent.click(screen.getByRole("button", { name: settingsLabel }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Appearance" }));
     fireEvent.click(within(await screen.findByRole("group", { name: label(APPEARANCE) })).getByRole("menuitemradio", { name: other?.label ?? "" }));
     await waitFor(() => expect(document.querySelector(".ui-toast")?.textContent).toContain("Your current look is unchanged."));
     fireEvent.click(within(document.querySelector<HTMLElement>(".ui-toast") as HTMLElement).getByRole("button", { name: uiCopy.dismiss }));

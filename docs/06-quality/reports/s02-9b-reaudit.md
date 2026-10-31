@@ -1,3 +1,5 @@
+> Historical evidence: separate workspace theme selection and selection-only Inspector expectations are superseded by the owner correction of 2026-10-31.
+
 # S02.9b diagnostic repair re-audit — PASS
 - Scope: sole AC2 finding from `s02-9b-audit.md`; original FAIL retained. Reviewed resolver/types, field association, regression and contract delta only.
 - Finding resolved: `app/src/theme/resolve.ts:48` supplies structured originating `sourceToken`; missing target, error code and exact reason remain intact. Dedupe retains distinct originating fields.

@@ -22,6 +22,7 @@ export function ProblemsDrawer({ open, view }: ProblemsDrawerProps) {
         </ControlTabList>
         <Button control={registry.requireControl(CLEAR_COMPLETED)} />
       </div>
+      <div role="tabpanel" aria-label={registry.requireControl(view).label} data-output-view={view} />
     </section>
   );
 }

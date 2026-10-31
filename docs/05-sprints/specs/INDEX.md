@@ -6,6 +6,8 @@ Handoff repair: [S02 UI alignment closeout](S02-UI-ALIGNMENT-SPEC.md), scoped in
 
 Latest phase: [S02.9b custom theme editor, preview and cancel](S02-9B-SPEC.md), scoped independent audit PASS. Next S02.9c.
 
+Before S02.9c: [owner UI corrections](S02-OWNER-UI-CORRECTIONS-SPEC.md), scoped independent audit PASS; current owner instructions override older independent Appearance selections and selection-only Inspector visibility.
+
 | Sprint | Specification |
 |---|---|
 | S00 | [Documentation](S00.md) |

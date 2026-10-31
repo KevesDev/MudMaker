@@ -1,10 +1,10 @@
-import { APPEARANCE, SPLASH } from "../home/homeLayout";
+import { APPEARANCE, APPEARANCE_MENU, SPLASH } from "../home/homeLayout";
 import { clientDisplay } from "../prefs";
 import { useTheme, type ThemeManager } from "../theme";
 import { CUSTOMIZE_CONTROL } from "../theme/themeEditorControls";
 import { useSyncExternalStore } from "react";
 import { Menu, useUi } from "../ui";
-import { SETTINGS_CHECKS, SETTINGS_ITEMS, TIMESTAMPS_SETTING } from "./settingsMenu";
+import { APPEARANCE_CHECKS, APPEARANCE_ITEMS, SETTINGS_CHECKS, SETTINGS_ITEMS, TIMESTAMPS_SETTING } from "./settingsMenu";
 import { MENU_CARET, NAVIGATION, WORKSPACE_SCOPE, goToDestinations, type WorkspaceDestination } from "./destinations";
 
 /** The name of the workspace at the start of the row. It is the current place, so it is text and not a way to go there. */
@@ -30,13 +30,13 @@ export function WorkspaceMenus({ workspace, theme }: { readonly workspace: Works
         opener={registry.requireControl(SPLASH.settings)}
         items={SETTINGS_ITEMS[workspace].map((id) => registry.requireControl(id))}
         checks={SETTINGS_CHECKS[workspace].filter((id) => id !== TIMESTAMPS_SETTING).map((id) => ({ control: registry.requireControl(id), checked: false }))}
-        choices={{
+        submenus={[{ opener: registry.requireControl(APPEARANCE_MENU), choices: {
           control: registry.requireControl(APPEARANCE),
           options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })),
           value: presetId,
-          items: [registry.requireControl(CUSTOMIZE_CONTROL[WORKSPACE_SCOPE[workspace]])],
-          checks: workspace === "play" ? [{ control: registry.requireControl(TIMESTAMPS_SETTING), checked: display.timestamps }] : [],
-        }}
+          items: [registry.requireControl(CUSTOMIZE_CONTROL[WORKSPACE_SCOPE[workspace]]), ...APPEARANCE_ITEMS[workspace].map((id) => registry.requireControl(id))],
+          checks: [...APPEARANCE_CHECKS[workspace].map((id) => ({ control: registry.requireControl(id), checked: false })), ...(workspace === "play" ? [{ control: registry.requireControl(TIMESTAMPS_SETTING), checked: display.timestamps }] : [])],
+        } }]}
         trailingGlyph={MENU_CARET}
       />
       <Menu

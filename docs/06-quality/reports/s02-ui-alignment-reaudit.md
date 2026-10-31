@@ -1,3 +1,5 @@
+> Historical evidence: separate workspace theme selection and selection-only Inspector expectations are superseded by the owner correction of 2026-10-31.
+
 # S02 UI alignment repair re-audit — PASS (2026-10-30)
 
 - Delta-only review of the sole finding in s02-ui-alignment-audit.md; original full-scope evidence retained there.

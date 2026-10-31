@@ -4,10 +4,10 @@
 
 ## Default screen
 - A **single compact top toolbar**: current project/name and accurate unsaved indicator; frequent **Save**, **Save All**, **Undo/Redo**, a **Build** menu (Validate, Play Test, Publish), a **View** menu and Global Search; restrained contextual tools; **Settings ▾** and **Go To ▾** at the same predictable far end as Play and Host.
-- **Settings ▾ → Appearance** (editor-scoped theme/typography) plus editor-specific preferences/layout/shortcuts. **Go To ▾ → Play, Host** while in Create (no Home or Splash entry). Current workspace is identifiable, not an active menu item.
+- **Settings ▾ → Appearance** (app-wide theme and shared typography) plus editor-specific preferences/layout/shortcuts. **Go To ▾ → Play, Host** while in Create (no Home or Splash entry). Current workspace is identifiable, not an active menu item.
 - **Central canvas/document dominates**: map, visual graph, script editor or other selected authoring surface. Retain existing dark continuous **graph-paper lines, never dots**, on graph/map canvas as the theme contract requires.
 - **Asset Explorer** available in a compact collapsible rail/drawer, not a full-time huge navigation tree when unneeded. Project-level switching and asset search can live in a small header/command affordance.
-- **Inspector is contextual:** opens for a selected room/entity/node/asset; tight field groups with readable labels. No enormous always-open blank panel; no nested tabs for every property category by default.
+- **Inspector supports explicit opening:** View > Inspector toggles the right panel even without selection, showing registered chrome only; selection supplies real room/entity/node/asset fields; tight field groups with readable labels. No enormous always-open blank panel; no nested tabs for every property category by default.
 - **Problems/Build/Test Output** lives in a bottom collapsible area and opens when invoked or when important errors must be surfaced. Avoid five permanent tabs consuming the main work height.
 - Multiple documents **may** use a compact document tab strip because switching among open map/graph/code documents is real work. Show only currently open documents; do not present every editor feature as a permanent tab.
 
@@ -29,9 +29,9 @@ This section maps **every currently registered control** to a visual home. It is
 
 **Where:** Top shared Creator toolbar / active-document strip.
 
-**Presentation:** Save, Save All, Undo and Redo in the shared frame row; Build contains Validate, Play Test and Publish. View contains Assets, Inspector and output views. Global Search follows; Help is in Settings.
+**Presentation:** Save, Save All, Undo and Redo in the shared frame row; Build contains Validate, Play Test and Publish. View contains Assets, Inspector and one Output toggle. Global Search follows; Help is in Settings.
 
-**Registered features (16):** `editor.shell.01` Save; `editor.shell.02` Save All; `editor.shell.03` Undo; `editor.shell.04` Redo; `editor.shell.05` Validate; `editor.shell.06` Play Test; `editor.shell.07` Publish; `editor.shell.08` Global Search; `editor.shell.09` View; `editor.shell.10` Help; `editor.shell.11` Project Title; `editor.shell.12` Save Status; `editor.shell.13` Workspace Tabs; `editor.shell.14` Build; `editor.shell.15` Assets; `editor.shell.16` Inspector.
+**Registered features (17):** `editor.shell.01` Save; `editor.shell.02` Save All; `editor.shell.03` Undo; `editor.shell.04` Redo; `editor.shell.05` Validate; `editor.shell.06` Play Test; `editor.shell.07` Publish; `editor.shell.08` Global Search; `editor.shell.09` View; `editor.shell.10` Help; `editor.shell.11` Project Title; `editor.shell.12` Save Status; `editor.shell.13` Workspace Tabs; `editor.shell.14` Build; `editor.shell.15` Assets; `editor.shell.16` Inspector; `editor.shell.17` Output.
 
 ### editor.assets
 
@@ -51,7 +51,7 @@ This section maps **every currently registered control** to a visual home. It is
 
 ### editor.inspector
 
-**Where:** Selection-driven right Inspector drawer.
+**Where:** Right Inspector panel, opened explicitly by View > Inspector or contextually by real selection.
 
 **Presentation:** Inline typed fields and component group actions; show error/origin beside relevant field.
 
@@ -107,7 +107,7 @@ This section maps **every currently registered control** to a visual home. It is
 
 ### editor.diagnostics
 
-**Where:** View → Problems / Test Output / Execution Trace / Build Logs.
+**Where:** View → Output; Problems, Test Output, Execution Trace and Build Logs are internal views of that single bottom panel.
 
 **Presentation:** One bottom output drawer, one active feed at once; auto-open on actionable failure.
 
@@ -150,6 +150,6 @@ This section maps **every currently registered control** to a visual home. It is
 A Builder must demonstrate a discoverable route to each registered feature, with valid disabled/error states and keyboard access, without promoting every control to the main toolbar or leaving every panel visible. Existing contract-mandated tabs represent document/session or contextual mode switching; default navigation must not become a permanently stacked tab wall. Any mismatch between this map and a feature contract is resolved through an explicit indexed documentation change, not agent invention.
 
 ## Owner implementation decisions (2026-10-30)
-- View is one menu: Assets toggles the drawer; Inspector is selection-dependent; Problems, Test Output, Execution Trace and Build Logs choose one bottom drawer, initially closed. Choosing the active output closes it. No Inspector is shown without a selection.
+- View is one menu: Assets toggles its drawer; Inspector explicitly toggles registered panel chrome even without selection; Output toggles one bottom panel, initially closed. Internal Problems/Test Output/Execution Trace/Build Logs choices select content without closing the panel. Reopening Output remembers its last view (Problems initially). Inspector never invents an object or missing-feature message.
 - The graph-paper canvas is the dominant surface; its grid and snap toggles sit in the canvas strip. The theme keeps large surfaces dark and near-black; saturated palette colors are for accents, borders and focus only.
 - Empty asset folders show no placeholder text.

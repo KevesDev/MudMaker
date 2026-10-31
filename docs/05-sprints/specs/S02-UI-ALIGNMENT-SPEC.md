@@ -1,5 +1,7 @@
 # S02 UI alignment closeout
 
+**Historical acceptance notice (2026-10-31):** the owner's [UI correction](S02-OWNER-UI-CORRECTIONS-SPEC.md) supersedes this slice's separate-workspace Appearance and selection-only Inspector rules. Preserve historical evidence; use the new owner contract for current behavior.
+
 **Status:** scoped implementation and independent audit PASS (2026-10-30); owner visual acceptance remains pending.
 **Owner:** existing workspace routers, shared frame, Input Manager and ThemeManager; no new runtime mutation path.
 **Authority:** docs/HANDOFF-CODEX.md sections 0, 4a, 6 and 7 override older wording; UI docs 10, 12, 13, 14, 15 and 16 in docs/03-contracts/ui-ux/ and contracts/ui/v1 catalogs.

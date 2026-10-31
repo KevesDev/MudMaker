@@ -60,6 +60,12 @@ const openAndCollectMenus = async (names: readonly string[]): Promise<void> => {
     fireEvent.click(screen.getByRole("button", { name }));
     await screen.findByRole("menu", { name });
     collect();
+    if (name === registry.requireControl(SPLASH.settings).label) {
+      fireEvent.click(screen.getByRole("menuitem", { name: "Appearance" }));
+      const child = await screen.findByRole("menu", { name: "Appearance" });
+      collect();
+      fireEvent.keyDown(child, { key: "Escape" });
+    }
     fireEvent.keyDown(screen.getByRole("menu", { name }), { key: "Escape" });
     await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
   }

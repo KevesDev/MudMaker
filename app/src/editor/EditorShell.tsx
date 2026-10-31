@@ -11,15 +11,16 @@ export interface EditorShellProps {
   readonly assets?: ReactNode;
   /** The dominant authoring surface. */
   readonly surface?: ReactNode;
-  /** What is selected. The Inspector region exists only while it has something to show. */
+  /** Fields supplied by the selection owner. Explicit visibility may also show empty registered chrome. */
   readonly inspector?: InspectorProps;
+  readonly inspectorOpen?: boolean;
 }
 
 /**
  * The structure of the Create workspace: the open documents above a work area made of an optional Assets drawer, the
  * dominant surface and the Inspector. It adds nothing of its own; each part appears when a feature supplies it.
  */
-export function EditorShell({ documents, assets, surface, inspector }: EditorShellProps) {
+export function EditorShell({ documents, assets, surface, inspector, inspectorOpen }: EditorShellProps) {
   const panelId = useId();
   const tabbed = documents !== undefined && documents.tabs.length > 1;
   return (
@@ -38,7 +39,7 @@ export function EditorShell({ documents, assets, surface, inspector }: EditorShe
               <div className="editor-surface">{surface}</div>
             )
           }
-          secondary={inspector !== undefined && inspectorHasContent(inspector.sections) ? <Inspector {...inspector} /> : null}
+          secondary={inspector !== undefined && (inspectorOpen ?? inspectorHasContent(inspector.sections)) ? <Inspector {...inspector} visible={inspectorOpen === true} /> : null}
         />
       </div>
     </div>

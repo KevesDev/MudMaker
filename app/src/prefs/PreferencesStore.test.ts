@@ -50,17 +50,18 @@ beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
 describe("restoring the saved appearance", () => {
-  it("applies each scope's own preset, overrides, user theme and text scale, and leaves the other scopes alone", async () => {
+  it("reconciles legacy appearance from the first valid scope and retains per-scope accessibility", async () => {
     const userTheme = { schema: USER_THEME_SCHEMA, id: "mine", tokens: { "color.text.muted": "#334455" } };
     const { manager, store, reports } = harness(doc({ editor: { presetId: otherPreset("editor"), overrides: { "font.size.body": 16 }, textScale: 1.25 }, client: { presetId: otherPreset("client"), userTheme } }));
     await store.restore(manager);
-    expect(manager.getSnapshot("editor").themeId).toBe(otherPreset("editor"));
+    expect(manager.getSnapshot("editor").themeId).toBe("custom-editor");
     expect(manager.getSnapshot("editor").tokens["font.size.body"]).toBe(16 * 1.25);
     expect(manager.getSnapshot("editor").accessibility.textScale).toBe(1.25);
-    expect(manager.getSnapshot("client").themeId).toBe("mine");
-    expect(manager.getSnapshot("client").tokens["color.text.muted"]).toBe("#334455");
-    for (const scope of ["host", "home"] as const) expect(manager.getSnapshot(scope).themeId).toBe(reference.getSnapshot(scope).themeId);
-    expect(reports).toEqual([]);
+    for (const scope of SCOPE_IDS) {
+      expect(manager.getInputs(scope).presetId).toBe(otherPreset("editor"));
+      expect(manager.getSnapshot(scope).tokens["font.size.body"]).toBe(16 * (scope === "editor" ? 1.25 : 1));
+    }
+    expect(reports.map((record) => record.code)).toEqual(["preferences-appearance-reconciled"]);
   });
 
   it("refuses an invalid saved value token by token, keeps the valid ones and the default for the rest, and logs each refusal", async () => {
@@ -74,14 +75,15 @@ describe("restoring the saved appearance", () => {
     const { manager, store, reports } = harness(saved);
     await store.restore(manager);
     const home = manager.getSnapshot("home");
-    expect(home.themeId).toBe(reference.getSnapshot("home").themeId);
+    expect(home.themeId).toBe("custom-home");
     expect(home.tokens["color.text.muted"]).toBe("#334455");
     expect(home.tokens["font.size.body"]).toBe(16);
     expect(home.tokens["color.surface.app"]).toBe(reference.getSnapshot("home").tokens["color.surface.app"]);
     expect(home.accessibility.textScale).toBe(1);
     const details = reports.map((record) => record.detail ?? "");
-    expect(reports).toHaveLength(4);
-    expect(reports.every((record) => record.code === "preferences-value-rejected" && record.severity === "warning")).toBe(true);
+    expect(reports.filter((record) => record.code === "preferences-value-rejected")).toHaveLength(4);
+    expect(reports.every((record) => record.severity === "warning")).toBe(true);
+    expect(reports.map((record) => record.code)).toContain("preferences-appearance-reconciled");
     for (const field of ["presetId", "overrides.color.surface.app", "overrides.no.such.token", "textScale"]) {
       expect(details.some((detail) => detail.includes(field)), field).toBe(true);
     }
@@ -92,7 +94,7 @@ describe("restoring the saved appearance", () => {
     await store.restore(manager);
     expect(manager.getSnapshot("host").themeId).toBe(reference.getSnapshot("host").themeId);
     expect(manager.getSnapshot("host").tokens["color.text.muted"]).toBe(reference.getSnapshot("host").tokens["color.text.muted"]);
-    expect(reports.map((record) => record.code)).toEqual(["preferences-value-rejected"]);
+    expect(reports.map((record) => record.code)).toEqual(["preferences-value-rejected", "preferences-appearance-reconciled"]);
   });
 
   it.each([

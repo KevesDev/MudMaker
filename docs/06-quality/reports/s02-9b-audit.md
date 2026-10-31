@@ -1,3 +1,5 @@
+> Historical evidence: separate workspace theme selection and selection-only Inspector expectations are superseded by the owner correction of 2026-10-31.
+
 # S02.9b scoped audit — FAIL
 - Owner/contract: ThemeManager remains validation/commit authority; PreferencesStore persists committed inputs; shared ShellRouter owns customize actions. No duplicate route owner found.
 - AC1/AC3/AC4/AC5: scoped routes, real CSS binding, atomic Save, fresh startup, preview/cancel non-persistence, cleanup and catalog/schema coverage verified in source and independent filtered tests.

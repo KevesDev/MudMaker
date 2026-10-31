@@ -13,6 +13,11 @@ export const SCOPE_NAMESPACE = {
 
 /** Key under a namespace that holds the appearance choices. */
 export const THEME_KEY = "theme";
+/** App-wide selection; scoped theme documents retain semantic custom values. */
+export const APPEARANCE_KEY = "appearance";
+export const APPEARANCE_VERSION = 1;
+/** One immutable migration backup, never an accumulating history. */
+export const LEGACY_THEMES_KEY = "legacyScopedThemesV1";
 
 /** Quiet time after the last appearance change before it is written, so choosing through several options writes once. */
 export const SAVE_DEBOUNCE_MS = 400;

@@ -84,9 +84,11 @@ describe("Create", () => {
     expect(within(assets).queryAllByRole("treeitem")).toHaveLength(0);
     expect(within(assets).getByLabelText(label("editor.assets.02"))).toBeTruthy();
     fireEvent.click(button("editor.shell.09"));
-    fireEvent.click(await screen.findByRole("menuitem", { name: label("editor.diagnostics.02") }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: label("editor.shell.17") }));
     const drawer = await screen.findByRole("region", { name: "Problems and output" });
-    expect(within(drawer).getByRole("tab", { name: label("editor.diagnostics.02") }).getAttribute("aria-selected")).toBe("true");
+    expect(within(drawer).getByRole("tab", { name: label("editor.diagnostics.01") }).getAttribute("aria-selected")).toBe("true");
+    fireEvent.click(within(drawer).getByRole("tab", { name: label("editor.diagnostics.02") }));
+    await waitFor(() => expect(within(drawer).getByRole("tab", { name: label("editor.diagnostics.02") }).getAttribute("aria-selected")).toBe("true"));
     expect(screen.queryByRole("region", { name: label("editor.inspector.01") })).toBeNull();
   });
 });
@@ -151,6 +153,7 @@ describe("Play", () => {
   it("groups the timestamp preference under Settings Appearance", async () => {
     await open("play");
     fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Appearance" }));
     const appearance = await screen.findByRole("group", { name: "Appearance" });
     expect(within(appearance).getByRole("menuitemcheckbox", { name: label("client.preferences.07") })).toBeTruthy();
   });

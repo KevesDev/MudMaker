@@ -1,7 +1,7 @@
-import { SCOPE_IDS, type ScopeId, type ThemeManager } from "../theme";
+import { SCOPE_IDS, USER_THEME_SCHEMA, type ScopeId, type ThemeManager } from "../theme";
 import type { UiDiagnostic } from "../ui";
 import type { ClientProfileBook } from "./ClientProfileBook";
-import { PREFERENCES_VERSION, PROFILES_KEY, SAVE_DEBOUNCE_MS, SCOPE_NAMESPACE, SHELL_CALL_TIMEOUT_MS, THEME_KEY } from "./prefsConfig";
+import { APPEARANCE_KEY, APPEARANCE_VERSION, LEGACY_THEMES_KEY, PREFERENCES_VERSION, PROFILES_KEY, SAVE_DEBOUNCE_MS, SCOPE_NAMESPACE, SHELL_CALL_TIMEOUT_MS, THEME_KEY } from "./prefsConfig";
 import { applyPreference, preferenceOf } from "./themePreference";
 
 export type PreferencesDocument = Readonly<Record<string, unknown>> & { readonly version: number };
@@ -87,8 +87,41 @@ export class PreferencesStore {
     }
     this.base = document;
     for (const scope of SCOPE_IDS) this.restoreScope(manager, scope, document);
+    this.restoreAppearance(manager, document);
     this.restoreProfiles(document);
     this.settled = this.serialize(manager);
+  }
+
+  private restoreAppearance(manager: ThemeManager, document: Readonly<Record<string, unknown>>): void {
+    const globalValue = document[SCOPE_NAMESPACE.home];
+    const global = isRecord(globalValue) ? globalValue : {};
+    const saved = global[APPEARANCE_KEY];
+    const known = (id: unknown): id is string => typeof id === "string" && manager.listPresets().some((preset) => preset.id === id);
+    if (isRecord(saved) && saved["version"] === APPEARANCE_VERSION && known(saved["presetId"])) {
+      const result = manager.selectApplicationPreset(saved["presetId"], false);
+      if (!result.ok) this.warn("preferences-appearance-rejected", "Saved appearance could not be applied.", { code: "preferences-appearance-rejected", detail: result.errors.map((error) => error.message).join(" ") });
+      return;
+    }
+    const priority: readonly ScopeId[] = ["home", "editor", "client", "host"];
+    const legacy = Object.fromEntries(priority.flatMap((scope) => {
+      const namespace = document[SCOPE_NAMESPACE[scope]];
+      return isRecord(namespace) && namespace[THEME_KEY] !== undefined ? [[scope, namespace[THEME_KEY]]] : [];
+    }));
+    if (Object.keys(legacy).length > 0 && global[LEGACY_THEMES_KEY] === undefined) {
+      this.base = { ...this.base, [SCOPE_NAMESPACE.home]: { ...global, [LEGACY_THEMES_KEY]: { version: APPEARANCE_VERSION, themes: legacy } } };
+    }
+    const source = priority.find((scope) => isRecord(legacy[scope]) && known(legacy[scope]["presetId"])) ?? "home";
+    const inputs = manager.getInputs(source);
+    const editable = manager.getEditableTokens(source);
+    const disagrees = priority.some((scope) => isRecord(legacy[scope]) && legacy[scope]["presetId"] !== undefined && legacy[scope]["presetId"] !== inputs.presetId);
+    const otherCustom = priority.some((scope) => scope !== source && isRecord(legacy[scope]) && (legacy[scope]["userTheme"] != null || (isRecord(legacy[scope]["overrides"]) && Object.keys(legacy[scope]["overrides"]).length > 0)));
+    if (disagrees || otherCustom || saved !== undefined) this.warn("preferences-appearance-reconciled", "Saved appearance choices were combined for the whole app.", { code: "preferences-appearance-reconciled", detail: `Using ${source}: ${inputs.presetId}; original scoped theme data is retained in ${LEGACY_THEMES_KEY}.` });
+    const selected = manager.selectApplicationPreset(inputs.presetId);
+    if (!selected.ok) return;
+    if (inputs.userTheme !== null || Object.keys(inputs.overrides).length > 0) {
+      const result = manager.saveCustomTheme(source, { schema: USER_THEME_SCHEMA, id: inputs.userTheme?.id ?? `custom-${source}`, tokens: editable });
+      if (!result.ok) this.warn("preferences-custom-rejected", "Saved custom appearance could not be applied.", { code: "preferences-custom-rejected", detail: result.errors.map((error) => error.message).join(" ") });
+    }
   }
 
   /** Saves every later accepted change to any scope. The returned function stops that. */
@@ -146,6 +179,8 @@ export class PreferencesStore {
       document[key] = { ...(isRecord(current) ? current : {}), [THEME_KEY]: preferenceOf(manager.getInputs(scope)) };
     }
     const client = document[SCOPE_NAMESPACE.client];
+    const global = document[SCOPE_NAMESPACE.home];
+    document[SCOPE_NAMESPACE.home] = { ...(isRecord(global) ? global : {}), [APPEARANCE_KEY]: { version: APPEARANCE_VERSION, presetId: manager.getInputs("home").presetId } };
     document[SCOPE_NAMESPACE.client] = { ...(isRecord(client) ? client : {}), [PROFILES_KEY]: this.profiles.getSnapshot() };
     return document as PreferencesDocument;
   }

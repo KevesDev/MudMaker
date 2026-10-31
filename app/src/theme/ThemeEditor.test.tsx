@@ -40,7 +40,9 @@ async function setup(configure?: (manager: ThemeManager) => void, surfaces = {})
 async function open() {
   fireEvent.click(screen.getByRole("button", { name: "Settings" }));
   const menu = await screen.findByRole("menu", { name: "Settings" });
-  fireEvent.click(within(menu).getByRole("menuitem", { name: "Customize Theme" }));
+  fireEvent.click(within(menu).getByRole("menuitem", { name: "Appearance" }));
+  const appearance = await screen.findByRole("menu", { name: "Appearance" });
+  fireEvent.click(within(appearance).getByRole("menuitem", { name: "Customize Theme" }));
   return waitFor(() => {
     const dialog = document.querySelector<HTMLElement>('[role="dialog"]');
     expect(dialog).not.toBeNull();
@@ -48,18 +50,18 @@ async function open() {
   });
 }
 
-describe("scoped custom theme editor", () => {
+describe("app-wide custom theme editor", () => {
   it("previews real tokens without changing committed choices or writing; rejects invalid color atomically; cancels and reopens cleanly", async () => {
     const test = await setup();
     const original = test.home.manager.getInputs("home");
     const before = test.home.manager.getSnapshot("home");
-    const editor = test.home.manager.getSnapshot("editor");
     await open();
     fireEvent.change(field("color.surface.app"), { target: { value: "#123456" } });
     fireEvent.click(dialogUi().getByRole("button", { name: "Preview" }));
     await waitFor(() => expect(document.documentElement.style.getPropertyValue("--color-surface-app")).toBe("#123456"));
     expect(test.home.manager.getInputs("home")).toBe(original);
-    expect(test.home.manager.getSnapshot("editor")).toBe(editor);
+    expect(test.home.manager.getSnapshot("editor").tokens["color.surface.app"]).toBe("#123456");
+    expect(test.home.manager.getInputs("editor").userTheme).toBeNull();
     await act(async () => { await new Promise((resolve) => setTimeout(resolve, SAVE_DEBOUNCE_MS)); });
     expect(test.write).not.toHaveBeenCalled();
     fireEvent.change(field("color.surface.app"), { target: { value: "broken" } });
@@ -80,7 +82,7 @@ describe("scoped custom theme editor", () => {
     const test = await setup((manager) => {
       expect(manager.setAccessibility("home", { textScale: 1.5, contrast: "normal", reducedMotion: false }).ok).toBe(true);
     });
-    const otherInputs = SCOPE_IDS.filter((scope) => scope !== "home").map((scope) => test.home.manager.getInputs(scope));
+
     await open();
     fireEvent.change(field("font.size.body"), { target: { value: "17" } });
     fireEvent.change(field("color.surface.app"), { target: { value: "{color.accent.primary}" } });
@@ -94,7 +96,8 @@ describe("scoped custom theme editor", () => {
     await new PreferencesStore({ bridge: { read: async () => test.read(), write: async () => undefined }, profiles: new ClientProfileBook([]), report: () => undefined }).restore(fresh);
     expect(fresh.getInputs("home")).toEqual(test.home.manager.getInputs("home"));
     expect(fresh.getSnapshot("home").tokens).toEqual(test.home.manager.getSnapshot("home").tokens);
-    expect(SCOPE_IDS.filter((scope) => scope !== "home").map((scope) => fresh.getInputs(scope))).toEqual(otherInputs);
+    expect(SCOPE_IDS.map((scope) => fresh.getInputs(scope))).toEqual(SCOPE_IDS.map((scope) => test.home.manager.getInputs(scope)));
+    expect(SCOPE_IDS.map((scope) => fresh.getSnapshot(scope).tokens["font.size.body"])).toEqual([17, 17, 17, 25.5]);
     expect(JSON.stringify(defaults)).toBe(bundled);
     vi.useRealTimers();
     await open();
@@ -103,6 +106,8 @@ describe("scoped custom theme editor", () => {
     fireEvent.keyDown(document.activeElement ?? document.body, { key: "Escape" });
     await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
     fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Appearance" }));
+    await screen.findByRole("menu", { name: "Appearance" });
     const preset = test.home.manager.listPresets().find((entry) => entry.id !== test.home.manager.getInputs("home").presetId);
     expect(preset).toBeDefined();
     fireEvent.click(await screen.findByRole("menuitemradio", { name: preset?.label }));
@@ -139,7 +144,7 @@ describe("scoped custom theme editor", () => {
     if (dismissal === "Escape") test.close();
   });
 
-  it.each(["create", "play", "host"] as const)("opens the actual %s scope route and binds live app tokens independently", async (workspace: WorkspaceDestination) => {
+  it.each(["create", "play", "host"] as const)("opens the actual %s route and binds shared preview tokens app-wide", async (workspace: WorkspaceDestination) => {
     const test = await setup();
     const scope = WORKSPACE_SCOPE[workspace];
     const registry = loadShippedRegistry();

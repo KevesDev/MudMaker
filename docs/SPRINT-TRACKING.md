@@ -6,6 +6,8 @@
 
 **Current:** S00 and S01 complete. Decisions: [ADR records](07-decisions/ADR-RECORDS-S01.md). Next: S02 launchable application shell (launch with `npm run dev`).
 
+**Owner correction verified (2026-10-31):** [app-wide Appearance, nested Settings, one Output route, explicit Inspector](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md). [Independent audit PASS](06-quality/reports/s02-owner-ui-corrections-audit.md): 563 tests / 38 files, typecheck and frontend build. Prior separate-workspace theme and selection-only Inspector rules are superseded. Phase counts unchanged; owner visual acceptance pending.
+
 ## Real application and testing milestones
 
 **First platform launch: S01.7**. **Full Create/Play/Host shell: S02.3**, before the ECS. Create/Play/Host shell navigation becomes testable in S02.4; S02.6 tests the real editor canvas without claiming a saved world. Native world/command testing is an executable harness (S03–S06), not a fake GUI. S09.16 introduces **real Creator map editing** only after room topology and persistence exist. S08.6 demonstrates real connected play after S07.9. No mock world counts as a gameplay checkpoint.

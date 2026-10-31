@@ -14,7 +14,7 @@
 ```
 
 - The workspace's current identity is plain text; it must NOT be a redundant clickable Go To item. There are exactly three workspaces, Create, Play and Host, besides the Splash. Go To offers only the other two. In Host: Create, Play. In Create: Play, Host. In Play: Create, Host.
-- Settings → Appearance is always findable in the same menu location, but editor/client/host preference scope remains separate. Other settings grouped by purpose. Secondary functionality belongs to contextual menus and drawers, not an always-visible app-wide tab strip.
+- Settings → Appearance is always findable in the same menu location, and its real submenu lists app-wide themes; internal rendering scopes do not expose separate theme choices. Other settings grouped by purpose. Secondary functionality belongs to contextual menus and drawers, not an always-visible app-wide tab strip.
 - Opening menu: anchored to trigger, compact one-column options, keyboard focus, Escape dismissal and focus restoration. Active, disabled and pending states have explicit accessible explanations. A dropdown never automatically changes workspace merely by focus/hover.
 - When width contracts: keep Settings and Go To reachable in compact overflow or appropriate drawer, not clipped; never transform the main surface into four columns.
 
@@ -48,8 +48,8 @@
 │ (drawer) │ [contextual map/graph/code tools]                                           │
 │          │                     CANVAS / DOCUMENT                                      │
 │          │                                                                            │
-│          │                                      [Inspector ▸ when selected]            │
-├──────────┴────────────────────── [Problems/Output ▴ only as needed] ───────────────────┤
+│          │                                      [Inspector ▸ explicit or selected]            │
+├──────────┴────────────────────── [Output ▴ on demand] ───────────────────┤
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -57,7 +57,7 @@
 - Asset Explorer opens via View/Assets or context; collapsed by default when task does not require it. Node/room selection reveals Inspector directly adjacent; hide irrelevant fields and empty sections.
 - Canvas-specific tools appear in narrow local strip; selecting Graph replaces Map tools, not stacks another toolbar. Code may use a collapsible file tree and a focused diagnostics output.
 - Quests, Dialogue, World Systems, Commands, Blueprints and Publish are **focused document modes/actions**, found via a compact workspace feature chooser or search; no page of launch cards.
-- **No selection:** show canvas, not a giant 'select something' tutorial panel; Inspector can be absent. **Invalid field:** inline short validation tied to field. **Build/Publish errors:** unobtrusive Problems drawer with actionable entries and navigation to issue.
+- **No selection:** show canvas, not a giant 'select something' tutorial panel; Inspector is absent until explicitly requested or selection opens it; View > Inspector must open its registered chrome even without selection. **Invalid field:** inline short validation tied to field. **Build/Publish errors:** unobtrusive Problems drawer with actionable entries and navigation to issue.
 - **Unsaved draft on Go To:** Keep Draft & Switch, Save & Switch, Cancel; save pending state truthful; no discard without explicit destructive operation.
 - **Publish:** focused review/diff with progress and valid confirmation; never a promotional success summary or fake finished state.
 
@@ -119,3 +119,5 @@
 
 ## Test oracle
 For each screen and state above: screenshot at ordinary desktop and constrained width, keyboard and screen reader walk-through, and verify every action maps to its registered UI action. Any permanent panel, tab, subtitle, instruction block or extra label requires a functional reason; [microcopy rules](16-microcopy-and-density-acceptance.md) apply.
+
+Create View offers Assets, Inspector and one Output toggle. The bottom panel retains four internal output categories and remembered selection; no redundant menu rows. Explicit Inspector opening is separate from the existence of selection fields.

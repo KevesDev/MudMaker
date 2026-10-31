@@ -849,7 +849,7 @@
       "surface": "home.settings",
       "kind": "dropdown",
       "label": "Appearance",
-      "tooltip": "Choose the colors MudMaker uses",
+      "tooltip": "Choose the appearance for the entire app",
       "actionId": "ui.settings.appearance.preset",
       "stateOwner": "HomeState",
       "permission": "localUser",
@@ -4790,6 +4790,27 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-home-themeWordmark-02"
+    },
+    {
+      "id": "home.settings.08",
+      "workspace": "home",
+      "surface": "home.settings",
+      "kind": "button",
+      "label": "Appearance",
+      "tooltip": "Open app-wide appearance choices",
+      "actionId": "ui.settings.appearance.open",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-settings-08"
     }
   ]
 }

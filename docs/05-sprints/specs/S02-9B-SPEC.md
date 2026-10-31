@@ -1,5 +1,7 @@
 # S02.9b — Custom theme editor, live preview and cancel
 
+**Historical scope notice (2026-10-31):** the owner's [UI correction](S02-OWNER-UI-CORRECTIONS-SPEC.md) supersedes independent workspace theme selection and the flat Appearance grouping used by this slice. Preview/save/cancel safety remains required; current Settings appearance is app-wide and hierarchically nested.
+
 **Status:** scoped implementation and independent audit PASS (2026-10-31); owner visual acceptance pending.
 **Owner:** existing ThemeManager owns tokens/validation; PreferencesStore owns durable preferences; existing Input Manager/action routers own input and intent. Editor view state owns only the local unsaved draft.
 **Predecessors:** S02.1 and S02.9a audited; UI closeout and scope isolation audited in commits 464ea7d / af2d790. [Tracker](../../SPRINT-TRACKING.md#s02).

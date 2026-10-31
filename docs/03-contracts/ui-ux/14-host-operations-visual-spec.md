@@ -4,7 +4,7 @@
 
 ## Default screen
 - Unified **compact top toolbar**: hosted world/release if selected, truthful host state, only a few frequent safe operations such as relevant Start/Stop where allowed; **Settings ▾** and **Go To ▾** at the same positions as the other workspaces.
-- **Settings ▾ → Appearance** for host-scoped visual preferences; separate operational network/security configuration remains under clearly differentiated Host settings, not confused with cosmetic preferences. **Go To ▾ → Create, Play** while in Host (no Home or Splash entry).
+- **Settings ▾ → Appearance** as a real submenu for the app-wide appearance choice; separate operational network/security configuration remains under clearly differentiated Host settings, not confused with cosmetic preferences. **Go To ▾ → Create, Play** while in Host (no Home or Splash entry).
 - **Primary operations area** centers on active/selected world and the next meaningful host action. Display concise actual health, players and listener state when available, not decorative metric cards. If stopped, show selected release and safe start/preflight path; if running, show state and stop/management controls.
 - **Player Sessions, Traffic, Logs, Backups and Release** use a compact row of bordered splash-style section buttons, with one primary section selected. **Operations → Network** opens the secondary network view; recovery and moderation controls remain in their relevant focused sections. Do not show every tool as a permanently open column of data panels; do not hide dangerous actions behind ambiguous icons.
 - Destructive operations, recovery, active players and network exposure require clear labels, verified pending/error state and proper confirmations. Nothing silently binds public ports.
@@ -56,7 +56,7 @@ This section maps **every currently registered control** to a visual home. It is
 
 **Where:** Settings → Appearance / Host Preferences / Help.
 
-**Presentation:** Host layout, alerts, diagnostic export and help; Appearance uses ThemeManager host scope.
+**Presentation:** Host layout, alerts, diagnostic export and help; Appearance selects the whole app's theme through ThemeManager; Host remains an internal rendering scope.
 
 **Registered features (5):** `host.preferences.01` Host Layout; `host.preferences.02` Alerts; `host.preferences.03` Export Diagnostics; `host.preferences.04` Open Hosting Help; `host.preferences.05` Reset Host View.
 

@@ -444,3 +444,19 @@
   overflow: hidden;
   min-height: 0;
 }
+
+.ui-menu-submenu > .ui-menu-popup {
+  inset-inline-end: 100%;
+  inset-inline-start: auto;
+  top: 0;
+}
+
+.ui-menu-popup[data-positioned="true"] {
+  position: fixed;
+  inset-inline-end: auto;
+  inset-inline-start: auto;
+  width: max-content;
+  max-width: min(100vw, var(--layout-contentMaxWidth));
+  max-height: 100vh;
+  overflow: auto;
+}

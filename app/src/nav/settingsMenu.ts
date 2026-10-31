@@ -3,16 +3,24 @@ import type { WorkspaceDestination } from "./destinations";
 
 /** The Settings entries after Appearance, per workspace, in the order the placement maps list them. Help sits here in every workspace. */
 export const SETTINGS_ITEMS: Readonly<Record<WorkspaceDestination, readonly ControlId[]>> = {
-  create: ["editor.preferences.03", "editor.preferences.04", "editor.preferences.05", "editor.preferences.06", "editor.preferences.07", "editor.preferences.09", "editor.shell.10"],
+  create: ["editor.preferences.06", "editor.preferences.07", "editor.preferences.09", "editor.shell.10"],
   play: ["client.preferences.12", "client.preferences.13", "client.preferences.14", "client.preferences.15", "client.preferences.16", "client.game.08"],
   host: ["host.preferences.03", "host.preferences.05", "host.preferences.04"],
 };
 
 /** The on/off settings listed with them. */
 export const SETTINGS_CHECKS: Readonly<Record<WorkspaceDestination, readonly ControlId[]>> = {
-  create: ["editor.preferences.08"],
+  create: [],
   play: ["client.preferences.07", "client.preferences.08", "client.preferences.09", "client.preferences.10"],
   host: ["host.preferences.02"],
+};
+
+/** Appearance-specific controls stay inside its submenu rather than the root Settings list. */
+export const APPEARANCE_ITEMS: Readonly<Record<WorkspaceDestination, readonly ControlId[]>> = {
+  create: ["editor.preferences.03", "editor.preferences.04", "editor.preferences.05"], play: [], host: [],
+};
+export const APPEARANCE_CHECKS: Readonly<Record<WorkspaceDestination, readonly ControlId[]>> = {
+  create: ["editor.preferences.08"], play: [], host: [],
 };
 
 /** The Play setting whose value the client display owns. */

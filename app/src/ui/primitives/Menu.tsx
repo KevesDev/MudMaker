@@ -1,10 +1,10 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { ActionHandler } from "../actions/ActionBus";
 import type { ControlDescriptor } from "../actions/types";
 import { copy } from "../copy";
 import { useUi } from "../UiProvider";
 import type { DropdownOption } from "./Dropdown";
-import { StateText, useControlBinding } from "./shared";
+import { StateText, useControlBinding, useLatest } from "./shared";
 import { Tooltip } from "./Tooltip";
 
 export interface MenuProps {
@@ -17,10 +17,20 @@ export interface MenuProps {
   readonly checks?: readonly MenuCheck[];
   /** A list of values for one control, such as a preset. Choosing one sends it to that control's action. */
   readonly choices?: MenuChoices;
+  readonly submenus?: readonly MenuSubmenu[];
+  readonly nested?: boolean;
+  readonly onLeafActivate?: () => void;
   /** Decorative art drawn before the opener's label; it is hidden from assistive technology. */
   readonly leading?: ReactNode;
   /** A decorative character drawn after the opener's label, such as a caret; it is hidden from assistive technology. */
   readonly trailingGlyph?: string;
+}
+
+export interface MenuSubmenu {
+  readonly opener: ControlDescriptor;
+  readonly choices?: MenuChoices;
+  readonly items?: readonly ControlDescriptor[];
+  readonly checks?: readonly MenuCheck[];
 }
 
 export interface MenuCheck {
@@ -116,13 +126,44 @@ function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
  * and outside presses arrive through the input manager, and choosing an item closes the list and
  * returns focus to the opener.
  */
-export function Menu({ opener, items, currentId, checks, choices, leading, trailingGlyph }: MenuProps) {
+export function Menu({ opener, items, currentId, checks, choices, submenus, nested = false, onLeafActivate, leading, trailingGlyph }: MenuProps) {
   const ui = useUi();
   const { attributes, runtime, shown, tipId, tip } = useControlBinding(opener, ["dropdown", "button"], "Menu");
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<{ left: number; top: number } | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
   const scopeKey = `popup:${opener.id}`;
+  const leaf = useLatest(onLeafActivate);
+  const branches = useLatest(submenus);
+  const keys = `menu:${opener.id}`;
+  useLayoutEffect(() => {
+    const popup = popupRef.current;
+    const anchor = triggerRef.current;
+    if (!open || popup === null || anchor === null) return;
+    const place = () => {
+      const bounds = anchor.getBoundingClientRect();
+      const content = popup.getBoundingClientRect();
+      const win = popup.ownerDocument.defaultView;
+      if (win === null) return;
+      const preferredLeft = nested ? bounds.left - content.width : bounds.left;
+      const preferredTop = nested ? bounds.top : bounds.bottom + content.height <= win.innerHeight ? bounds.bottom : bounds.top - content.height;
+      const left = Math.max(0, Math.min(preferredLeft, win.innerWidth - content.width));
+      const top = Math.max(0, Math.min(preferredTop, win.innerHeight - content.height));
+      setPosition((current) => current?.left === left && current.top === top ? current : { left, top });
+    };
+    place();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(place);
+    observer.observe(popup.ownerDocument.documentElement);
+    observer.observe(popup);
+    return () => observer.disconnect();
+  }, [open, nested, onLeafActivate]);
+  useEffect(() => ui.input.registerKeys(keys, (event) => {
+    if (event.key === "ArrowRight" && nested && event.target === triggerRef.current && !open) { triggerRef.current?.click(); return true; }
+    if (event.key === "ArrowLeft" && nested && open && popupRef.current?.contains(event.target as Node)) { setOpen(false); triggerRef.current?.focus(); return true; }
+    return false;
+  }), [ui, keys, nested, open]);
 
   const listening = useRef(false);
 
@@ -155,7 +196,11 @@ export function Menu({ opener, items, currentId, checks, choices, leading, trail
       anchor: triggerRef.current,
       onEscape: () => close(true),
       onOutsidePress: () => close(false),
-      onActivated: () => close(true),
+      onActivated: () => {
+        if (branches.current?.some((submenu) => ui.bus.getRuntime(submenu.opener.id).state === "pending")) return;
+        close(true);
+        leaf.current?.();
+      },
     });
     (popup.querySelector<HTMLElement>('[aria-checked="true"]') ?? popup.querySelector<HTMLElement>("[data-control-id]"))?.focus();
     return () => {
@@ -164,8 +209,8 @@ export function Menu({ opener, items, currentId, checks, choices, leading, trail
   }, [open, ui, scopeKey]);
 
   return (
-    <span className="ui-anchor">
-      <button ref={triggerRef} type="button" className="ui-control ui-hit ui-button" aria-haspopup="menu" aria-expanded={open} {...attributes}>
+    <span className={nested ? "ui-anchor ui-menu-item ui-menu-submenu" : "ui-anchor"} data-ui-keys={keys}>
+      <button ref={triggerRef} type="button" role={nested ? "menuitem" : undefined} className="ui-control ui-hit ui-button" aria-haspopup="menu" aria-expanded={open} {...attributes}>
         {leading === undefined ? null : (
           <span className="ui-button-leading" aria-hidden="true">
             {leading}
@@ -180,8 +225,9 @@ export function Menu({ opener, items, currentId, checks, choices, leading, trail
       </button>
       {runtime.state === "success" ? null : <StateText runtime={runtime} shown={shown} />}
       {open ? (
-        <div ref={popupRef} role="menu" aria-label={opener.label} data-roving-group="vertical" className="ui-menu-popup">
+        <div ref={popupRef} role="menu" aria-label={opener.label} data-roving-group="vertical" className="ui-menu-popup" data-positioned={position !== null ? "true" : undefined} style={position ?? undefined}>
           {choices === undefined ? null : <MenuChoiceGroup choices={choices} />}
+          {submenus?.map((submenu) => <Menu key={submenu.opener.id} {...submenu} items={submenu.items ?? []} nested onLeafActivate={() => { setOpen(false); triggerRef.current?.focus(); leaf.current?.(); }} />)}
           {checks?.map((check) => (
             <MenuCheckItem key={check.control.id} check={check} />
           ))}

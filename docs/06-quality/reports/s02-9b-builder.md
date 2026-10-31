@@ -1,3 +1,5 @@
+> Historical evidence: separate workspace theme selection and selection-only Inspector expectations are superseded by the owner correction of 2026-10-31.
+
 # S02.9b Builder report
 Status: implementation and focused checks complete; independent Auditor and owner visual acceptance pending.
 Owner: existing ThemeManager validates/previews/commits; PreferencesStore persists committed changes; ShellRouter/InputManager route intent. No alternate owner or runtime dependency.

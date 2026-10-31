@@ -1323,16 +1323,6 @@
       "remoteDefinitionAllowed": false
     },
     {
-      "id": "ui.editor.themeSelect",
-      "owner": "EditorIntentRouter",
-      "mutationDomain": "projectDraft",
-      "origin": "localUserGesture",
-      "auth": "owningServiceMustRevalidate",
-      "input": "typedByControlSchema",
-      "outcome": "confirmedOrStructuredError",
-      "remoteDefinitionAllowed": false
-    },
-    {
       "id": "ui.editor.themeEdit",
       "owner": "HomeIntentRouter",
       "mutationDomain": "localPreferences",
@@ -2213,16 +2203,6 @@
       "remoteDefinitionAllowed": false
     },
     {
-      "id": "ui.client.themeSelect",
-      "owner": "ClientIntentRouter",
-      "mutationDomain": "clientLocalOrAdapter",
-      "origin": "localUserGesture",
-      "auth": "owningServiceMustRevalidate",
-      "input": "typedByControlSchema",
-      "outcome": "confirmedOrStructuredError",
-      "remoteDefinitionAllowed": false
-    },
-    {
       "id": "ui.client.themeCustomize",
       "owner": "HomeIntentRouter",
       "mutationDomain": "localPreferences",
@@ -2986,6 +2966,26 @@
       "id": "ui.settings.appearance.editToken",
       "owner": "HomeIntentRouter",
       "mutationDomain": "localPreferences",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.settings.appearance.open",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPresentation",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.editor.outputToggle",
+      "owner": "EditorIntentRouter",
+      "mutationDomain": "localPresentation",
       "origin": "localUserGesture",
       "auth": "owningServiceMustRevalidate",
       "input": "typedByControlSchema",

@@ -81,6 +81,8 @@
 
 ## Current editor appearance and sprint execution authority
 
+- [Owner UI corrections](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md) — current app-wide Appearance, nested Settings, one Output route and explicitly openable Inspector; supersedes older separate-workspace theme and selection-only visibility rules.
+
 - [Custom theme editor and preview](05-sprints/specs/S02-9B-SPEC.md) — S02.9b scoped implementation and independent audit PASS; owner visual acceptance pending.
 
 - [UI alignment closeout](05-sprints/specs/S02-UI-ALIGNMENT-SPEC.md) — scoped implementation and independent audit PASS; owner visual acceptance pending.
@@ -95,7 +97,7 @@
 | Every planned visible control, tooltip, action, owner and test ID | [Machine UI control index](../contracts/ui/v1/INDEX.md) |
 | Play non-MudMaker MUDs safely with a real client | [Client toolkit](03-contracts/ui-ux/05-player-client-workspace.md), [protocol adapters](03-contracts/ui-ux/06-external-mud-protocols.md) |
 | Local mini mapper, hotkeys, aliases, triggers, timers | [Client mapper/automation](03-contracts/ui-ux/07-mapper-and-automation.md) |
-| Common ThemeManager with independent client/editor preferences | [UI theme scopes](03-contracts/ui-ux/03-theme-and-preferences.md), [original theme rules](03-contracts/editor-theme-manager.md) |
+| App-wide Appearance through one ThemeManager; internal rendering scopes and separate content preferences | [UI theme scopes](03-contracts/ui-ux/03-theme-and-preferences.md), [original theme rules](03-contracts/editor-theme-manager.md) |
 | Small scoped implementation after S07 + S02 | [S08 Player Client sprint](05-sprints/specs/S08.md) |
 
 
