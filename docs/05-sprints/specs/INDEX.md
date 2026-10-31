@@ -8,6 +8,8 @@ Latest phase: [S02.9b custom theme editor, preview and cancel](S02-9B-SPEC.md), 
 
 Before S02.9c: [owner UI corrections](S02-OWNER-UI-CORRECTIONS-SPEC.md), scoped independent audit PASS; current owner instructions override older independent Appearance selections and selection-only Inspector visibility.
 
+Current owner refinement: [compact retro controls, feedback and Theme submenu](S02-COMPACT-RETRO-CONTROLS-SPEC.md), independent audit PASS before S02.9c; owner native visual acceptance pending.
+
 | Sprint | Specification |
 |---|---|
 | S00 | [Documentation](S00.md) |

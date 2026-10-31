@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SCOPE_IDS } from "../theme";
-import { APPEARANCE, SPLASH } from "./homeLayout";
+import { APPEARANCE_MENU, SPLASH } from "./homeLayout";
 import { healthyHome, renderApp, type TestHome } from "./homeTestSupport";
 import { loadShippedRegistry } from "../ui";
 
@@ -23,8 +23,10 @@ async function rootMenu() {
 }
 async function appearance() {
   const root = await rootMenu();
-  fireEvent.click(within(root).getByRole("menuitem", { name: label(APPEARANCE) }));
-  return screen.findByRole("menu", { name: label(APPEARANCE) });
+  fireEvent.click(within(root).getByRole("menuitem", { name: label(APPEARANCE_MENU) }));
+  await screen.findByRole("menu", { name: "Appearance" });
+  fireEvent.click(screen.getByRole("menuitem", { name: "Theme" }));
+  return screen.findByRole("menu", { name: "Theme" });
 }
 
 describe("hierarchical Settings and app-wide Appearance", () => {
@@ -37,7 +39,10 @@ describe("hierarchical Settings and app-wide Appearance", () => {
     const opener = within(root).getByRole("menuitem", { name: "Appearance" });
     expect(opener.getAttribute("aria-haspopup")).toBe("menu");
     fireEvent.click(opener);
-    const child = await screen.findByRole("menu", { name: "Appearance" });
+    const appearance = await screen.findByRole("menu", { name: "Appearance" });
+    expect(within(appearance).queryAllByRole("menuitemradio")).toEqual([]);
+    fireEvent.click(within(appearance).getByRole("menuitem", { name: "Theme" }));
+    const child = await screen.findByRole("menu", { name: "Theme" });
     expect(within(child).getAllByRole("menuitemradio").map((item) => item.getAttribute("data-value"))).toEqual(home.manager.listPresets().map((preset) => preset.id));
     expect(within(child).getByRole("menuitem", { name: "Customize Theme" })).toBeTruthy();
     expect(SCOPE_IDS.map((scope) => home.manager.getInputs(scope))).toEqual(before);
@@ -50,7 +55,13 @@ describe("hierarchical Settings and app-wide Appearance", () => {
     opener.focus();
     fireEvent.keyDown(opener, { key: "ArrowRight" });
     await screen.findByRole("menu", { name: "Appearance" });
+    const themeOpener = screen.getByRole("menuitem", { name: "Theme" });
+    expect(document.activeElement).toBe(themeOpener);
+    fireEvent.keyDown(themeOpener, { key: "ArrowRight" });
+    await screen.findByRole("menu", { name: "Theme" });
     expect(document.activeElement?.getAttribute("role")).toBe("menuitemradio");
+    fireEvent.keyDown(document.activeElement ?? document.body, { key: "Escape" });
+    expect(document.activeElement).toBe(themeOpener);
     fireEvent.keyDown(document.activeElement ?? document.body, { key: "ArrowLeft" });
     expect(screen.queryByRole("menu", { name: "Appearance" })).toBeNull();
     expect(document.activeElement).toBe(opener);

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import actionsJson from "../../../../contracts/ui/v1/actions.v1.json";
+import catalogIndex from "../../../../contracts/ui/v1/INDEX.md?raw";
 import clientJson from "../../../../contracts/ui/v1/client-controls.v1.json";
 import editorJson from "../../../../contracts/ui/v1/editor-controls.v1.json";
 import homeJson from "../../../../contracts/ui/v1/home-controls.v1.json";
@@ -270,8 +271,12 @@ describe("shipped catalogs", () => {
     const counts = Object.fromEntries(
       Object.entries(workspaces).map(([workspace, json]) => [workspace, parseCatalog(json, workspace as keyof typeof workspaces, schemaJson).controls.length]),
     );
-    expect(counts).toEqual({ home: 48, editor: 148, client: 114, host: 64 });
-    expect(parseActions(actionsJson, actionIdPattern.pattern).actions).toHaveLength(294);
+    const declared = Object.fromEntries([...catalogIndex.matchAll(/\| (home|editor|client|host) \| (\d+) \|/g)].map((match) => [match[1], Number(match[2])]));
+    expect(Object.keys(declared)).toHaveLength(4);
+    expect(counts).toEqual(declared);
+    const total = /\*\*(\d+) distinct semantic actions\*\*/.exec(catalogIndex);
+    expect(total).not.toBeNull();
+    expect(parseActions(actionsJson, actionIdPattern.pattern).actions).toHaveLength(Number(total?.[1]));
   });
 
   it("all validate against the published schema rules and the action table", () => {

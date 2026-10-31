@@ -55,7 +55,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-toolbar);
-  padding: var(--spacing-row) var(--spacing-toolbar);
+  padding: var(--spacing-controlBlock) var(--spacing-chrome);
   background: var(--color-surface-toolbar);
   border-block-end: var(--shape-borderWidth) solid var(--color-border-normal);
 }
@@ -68,49 +68,25 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
 }
 
 .workspace-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
 }
 
-.workspace-tab {
-  font: inherit;
-  color: var(--color-text-secondary);
-  background: none;
-  border: 0;
-  border-block-end: calc(var(--shape-borderWidth) * 2) solid var(--color-surface-toolbar);
-  cursor: pointer;
-}
 
-.workspace-tab[aria-selected="true"] {
-  color: var(--color-text-primary);
-  border-block-end-color: var(--color-accent-primary);
-}
 
-.workspace-tab:hover {
-  background: var(--color-interaction-hover);
-}
 
-.workspace-tab:focus-visible {
-  outline: var(--interaction-focusOutlineWidth) solid var(--color-interaction-focus);
-  outline-offset: calc(var(--interaction-focusOutlineWidth) * -1);
-}
 
 .workspace-choices {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
 }
 
-.workspace-choice[aria-checked="true"],
-.workspace-choice[aria-checked="true"]:hover {
-  background: var(--color-interaction-selection);
-  border-color: var(--color-accent-primary);
-}
 
 .workspace-list {
   box-sizing: border-box;
@@ -146,8 +122,8 @@
 .editor-assets-header {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-row);
-  padding: var(--spacing-panel);
+  gap: var(--spacing-controlGap);
+  padding: var(--spacing-chrome);
 }
 
 .editor-assets-header {
@@ -180,7 +156,7 @@
 }
 
 .editor-problems .workspace-cue {
-  padding: var(--spacing-row) var(--spacing-toolbar);
+  padding: var(--spacing-controlBlock) var(--spacing-chrome);
 }
 
 .play-library,
@@ -189,8 +165,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-row);
-  padding: var(--spacing-panel);
+  gap: var(--spacing-controlGap);
+  padding: var(--spacing-chrome);
 }
 
 .play-library {
@@ -202,7 +178,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-toolbar);
-  padding: var(--spacing-row) var(--spacing-toolbar);
+  padding: var(--spacing-controlBlock) var(--spacing-chrome);
   border-block-end: var(--shape-borderWidth) solid var(--color-border-subtle);
 }
 
@@ -237,7 +213,7 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
-  padding: var(--spacing-panel);
+  padding: var(--spacing-chrome);
   font-family: var(--font-family-code);
   font-size: var(--font-size-code);
   white-space: pre-wrap;
@@ -279,11 +255,11 @@
   display: flex;
   flex: 0 0 auto;
   flex-direction: column;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
   box-sizing: border-box;
   inline-size: var(--layout-panelDefaultSize);
   max-inline-size: 100%;
-  padding: var(--spacing-panel);
+  padding: var(--spacing-chrome);
   overflow: auto;
   background: var(--color-surface-panel);
   border-inline-start: var(--shape-borderWidth) solid var(--color-border-normal);

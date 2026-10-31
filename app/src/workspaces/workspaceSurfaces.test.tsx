@@ -79,12 +79,12 @@ describe("Create", () => {
     fireEvent.keyDown(build, { key: "Escape" });
     await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
     fireEvent.click(button("editor.shell.09"));
-    fireEvent.click(await screen.findByRole("menuitem", { name: label("editor.shell.15") }));
+    fireEvent.click(await screen.findByRole("menuitemcheckbox", { name: label("editor.shell.15") }));
     const assets = await screen.findByRole("complementary", { name: label("editor.assets.01") });
     expect(within(assets).queryAllByRole("treeitem")).toHaveLength(0);
     expect(within(assets).getByLabelText(label("editor.assets.02"))).toBeTruthy();
     fireEvent.click(button("editor.shell.09"));
-    fireEvent.click(await screen.findByRole("menuitem", { name: label("editor.shell.17") }));
+    fireEvent.click(await screen.findByRole("menuitemcheckbox", { name: label("editor.shell.17") }));
     const drawer = await screen.findByRole("region", { name: "Problems and output" });
     expect(within(drawer).getByRole("tab", { name: label("editor.diagnostics.01") }).getAttribute("aria-selected")).toBe("true");
     fireEvent.click(within(drawer).getByRole("tab", { name: label("editor.diagnostics.02") }));
@@ -154,7 +154,7 @@ describe("Play", () => {
     await open("play");
     fireEvent.click(screen.getByRole("button", { name: "Settings" }));
     fireEvent.click(await screen.findByRole("menuitem", { name: "Appearance" }));
-    const appearance = await screen.findByRole("group", { name: "Appearance" });
+    const appearance = await screen.findByRole("menu", { name: "Appearance" });
     expect(within(appearance).getByRole("menuitemcheckbox", { name: label("client.preferences.07") })).toBeTruthy();
   });
 });

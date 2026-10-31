@@ -1,0 +1,573 @@
+{
+  "fixture": "Browser-only; only native appInfo/windowShell module bridges replaced. Production App, catalogs, ThemeManager, preferences, input, router and workspace components run unchanged.",
+  "results": [
+    {
+      "name": "after-neon-lights-1280-create",
+      "errors": [],
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 760
+        },
+        "save": {
+          "width": 38.796875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "paint": {
+          "width": 48.5,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgb(77, 21, 47)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": "true",
+          "selected": null
+        },
+        "output": {
+          "width": 125.46875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgb(77, 21, 47)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": "true"
+        },
+        "menu": {
+          "width": 126.375,
+          "height": 126,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "0px",
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "background": "rgb(18, 18, 76)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "menuRow": {
+          "width": 122.96875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "12px",
+          "lineHeight": "14.4px",
+          "background": "rgb(77, 21, 47)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "menus": [
+          {
+            "name": "Settings",
+            "left": 1059.515625,
+            "top": 32.5,
+            "right": 1185.890625,
+            "bottom": 158.5
+          },
+          {
+            "name": "Appearance",
+            "left": 933.140625,
+            "top": 35.5,
+            "right": 1059.515625,
+            "bottom": 89.5
+          },
+          {
+            "name": "Theme",
+            "left": 800.171875,
+            "top": 38.5,
+            "right": 933.140625,
+            "bottom": 188.5
+          }
+        ]
+      },
+      "momentary": {
+        "pointer": {
+          "active": true,
+          "background": "rgb(35, 34, 145)",
+          "sticky": null
+        },
+        "keyboard": {
+          "active": true,
+          "background": "rgb(35, 34, 145)",
+          "sticky": null
+        }
+      }
+    },
+    {
+      "name": "after-neon-lights-1280-host",
+      "errors": [],
+      "metrics": {
+        "host": {
+          "actual": "rgb(77, 21, 47)",
+          "expected": "rgb(77, 21, 47)",
+          "checked": "true",
+          "selected": null,
+          "pressed": null
+        },
+        "selectedNames": [
+          "Logs"
+        ],
+        "content": "Logs"
+      }
+    },
+    {
+      "name": "after-neon-lights-800-create",
+      "errors": [],
+      "metrics": {
+        "viewport": {
+          "width": 800,
+          "height": 760
+        },
+        "save": {
+          "width": 38.796875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "paint": {
+          "width": 48.5,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgb(77, 21, 47)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": "true",
+          "selected": null
+        },
+        "output": {
+          "width": 125.46875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgb(77, 21, 47)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": "true"
+        },
+        "menu": {
+          "width": 126.375,
+          "height": 126,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "0px",
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "background": "rgb(18, 18, 76)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "menuRow": {
+          "width": 122.96875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "12px",
+          "lineHeight": "14.4px",
+          "background": "rgb(77, 21, 47)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "menus": [
+          {
+            "name": "Settings",
+            "left": 584.453125,
+            "top": 44,
+            "right": 710.828125,
+            "bottom": 170
+          },
+          {
+            "name": "Appearance",
+            "left": 458.078125,
+            "top": 47,
+            "right": 584.453125,
+            "bottom": 101
+          },
+          {
+            "name": "Theme",
+            "left": 325.109375,
+            "top": 50,
+            "right": 458.078125,
+            "bottom": 200
+          }
+        ]
+      },
+      "momentary": {
+        "pointer": {
+          "active": true,
+          "background": "rgb(35, 34, 145)",
+          "sticky": null
+        },
+        "keyboard": {
+          "active": true,
+          "background": "rgb(35, 34, 145)",
+          "sticky": null
+        }
+      }
+    },
+    {
+      "name": "after-neon-lights-800-host",
+      "errors": [],
+      "metrics": {
+        "host": {
+          "actual": "rgb(77, 21, 47)",
+          "expected": "rgb(77, 21, 47)",
+          "checked": "true",
+          "selected": null,
+          "pressed": null
+        },
+        "selectedNames": [
+          "Logs"
+        ],
+        "content": "Logs"
+      }
+    },
+    {
+      "name": "after-neon-dark-mode-1280-create",
+      "errors": [],
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 760
+        },
+        "save": {
+          "width": 38.796875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "paint": {
+          "width": 48.5,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgb(127, 75, 214)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": "true",
+          "selected": null
+        },
+        "output": {
+          "width": 125.46875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgb(127, 75, 214)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": "true"
+        },
+        "menu": {
+          "width": 126.375,
+          "height": 126,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "0px",
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "background": "rgb(53, 53, 53)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "menuRow": {
+          "width": 122.96875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "12px",
+          "lineHeight": "14.4px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "menus": [
+          {
+            "name": "Settings",
+            "left": 1059.515625,
+            "top": 32.5,
+            "right": 1185.890625,
+            "bottom": 158.5
+          },
+          {
+            "name": "Appearance",
+            "left": 933.140625,
+            "top": 35.5,
+            "right": 1059.515625,
+            "bottom": 89.5
+          },
+          {
+            "name": "Theme",
+            "left": 800.171875,
+            "top": 38.5,
+            "right": 933.140625,
+            "bottom": 188.5
+          }
+        ]
+      },
+      "momentary": {
+        "pointer": {
+          "active": true,
+          "background": "rgb(85, 85, 85)",
+          "sticky": null
+        },
+        "keyboard": {
+          "active": true,
+          "background": "rgb(85, 85, 85)",
+          "sticky": null
+        }
+      }
+    },
+    {
+      "name": "after-neon-dark-mode-1280-host",
+      "errors": [],
+      "metrics": {
+        "host": {
+          "actual": "rgb(127, 75, 214)",
+          "expected": "rgb(127, 75, 214)",
+          "checked": "true",
+          "selected": null,
+          "pressed": null
+        },
+        "selectedNames": [
+          "Logs"
+        ],
+        "content": "Logs"
+      }
+    },
+    {
+      "name": "after-neon-dark-mode-800-create",
+      "errors": [],
+      "metrics": {
+        "viewport": {
+          "width": 800,
+          "height": 760
+        },
+        "save": {
+          "width": 38.796875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "paint": {
+          "width": 48.5,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgb(127, 75, 214)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": "true",
+          "selected": null
+        },
+        "output": {
+          "width": 125.46875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "14px",
+          "lineHeight": "16.8px",
+          "background": "rgb(127, 75, 214)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": "true"
+        },
+        "menu": {
+          "width": 126.375,
+          "height": 126,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "0px",
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "background": "rgb(53, 53, 53)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "menuRow": {
+          "width": 122.96875,
+          "height": 24,
+          "paddingBlock": "2px",
+          "paddingInline": "4px",
+          "radius": "0px",
+          "gap": "2px",
+          "fontSize": "12px",
+          "lineHeight": "14.4px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "menus": [
+          {
+            "name": "Settings",
+            "left": 584.453125,
+            "top": 44,
+            "right": 710.828125,
+            "bottom": 170
+          },
+          {
+            "name": "Appearance",
+            "left": 458.078125,
+            "top": 47,
+            "right": 584.453125,
+            "bottom": 101
+          },
+          {
+            "name": "Theme",
+            "left": 325.109375,
+            "top": 50,
+            "right": 458.078125,
+            "bottom": 200
+          }
+        ]
+      },
+      "momentary": {
+        "pointer": {
+          "active": true,
+          "background": "rgb(85, 85, 85)",
+          "sticky": null
+        },
+        "keyboard": {
+          "active": true,
+          "background": "rgb(85, 85, 85)",
+          "sticky": null
+        }
+      }
+    },
+    {
+      "name": "after-neon-dark-mode-800-host",
+      "errors": [],
+      "metrics": {
+        "host": {
+          "actual": "rgb(127, 75, 214)",
+          "expected": "rgb(127, 75, 214)",
+          "checked": "true",
+          "selected": null,
+          "pressed": null
+        },
+        "selectedNames": [
+          "Logs"
+        ],
+        "content": "Logs"
+      }
+    }
+  ]
+}

@@ -39,12 +39,9 @@ describe("hit areas at the tablet layout", () => {
     }
   });
 
-  it("grow the shared control hit area to the touch token in the tablet layout and for a coarse pointer, without setting a visual size", () => {
+  it("keeps narrow mouse layouts compact and grows shared hit areas only for a genuine coarse pointer", () => {
     expect(declarations(uiSheet, ".ui-hit")).toMatch(/min-width:\s*var\(--interaction-pointerHitSize\)[\s\S]*min-height:\s*var\(--interaction-pointerHitSize\)/);
-    const tablet = declarations(frameSheet, ':root[data-layout="tablet"] .ui-hit');
-    expect(tablet).toMatch(/min-width:\s*var\(--interaction-touchHitSize\)/);
-    expect(tablet).toMatch(/min-height:\s*var\(--interaction-touchHitSize\)/);
-    expect(tablet).not.toMatch(/(?<![-\w])(?:width|height|padding|font-size)\s*:/);
+    expect(withoutComments(frameSheet)).not.toMatch(/:root\[data-layout="tablet"\]\s*\.ui-hit/);
     expect(uiSheet).toMatch(/@media \(pointer: coarse\)\s*\{\s*\.ui-hit\s*\{[^}]*var\(--interaction-touchHitSize\)/);
   });
 

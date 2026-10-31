@@ -15,7 +15,7 @@
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
 }
 
 .ui-field {
@@ -24,7 +24,7 @@
 }
 
 .ui-label {
-  font-family: var(--font-family-interface);
+  font-family: var(--font-family-code);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
@@ -32,7 +32,7 @@
 
 .ui-hint,
 .ui-state-text {
-  font-family: var(--font-family-interface);
+  font-family: var(--font-family-code);
   font-size: var(--font-size-caption);
   line-height: var(--font-lineHeight-body);
   color: var(--color-text-secondary);
@@ -43,12 +43,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-row);
-  padding: var(--spacing-row) var(--spacing-panel);
-  font-family: var(--font-family-interface);
+  gap: var(--spacing-controlGap);
+  padding: var(--spacing-controlBlock) var(--spacing-controlInline);
+  font-family: var(--font-family-code);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-medium);
-  line-height: var(--font-lineHeight-body);
+  line-height: var(--font-lineHeight-control);
   color: var(--color-text-primary);
   background: var(--color-surface-panel);
   border: var(--shape-borderWidth) solid var(--color-border-normal);
@@ -81,6 +81,15 @@
 :root[data-input-modality="pen"] .ui-hit {
   min-width: var(--interaction-touchHitSize);
   min-height: var(--interaction-touchHitSize);
+}
+
+.ui-control[aria-pressed="true"],
+.ui-control[aria-selected="true"],
+.ui-control[aria-checked="true"],
+.ui-control[aria-current="true"] {
+  color: var(--color-text-primary);
+  background: var(--color-interaction-selection);
+  border-color: var(--color-accent-primary);
 }
 
 .ui-control:hover {
@@ -167,7 +176,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--spacing-toolbar);
-  padding: var(--spacing-toolbar);
+  padding: var(--spacing-chrome);
   background: var(--color-surface-toolbar);
   border: var(--shape-borderWidth) solid var(--color-border-subtle);
   border-radius: var(--shape-panelRadius);
@@ -186,7 +195,7 @@
   box-sizing: border-box;
   max-width: var(--layout-contentMaxWidth);
   padding: var(--spacing-tooltip);
-  font-family: var(--font-family-interface);
+  font-family: var(--font-family-code);
   font-size: var(--font-size-caption);
   line-height: var(--font-lineHeight-body);
   color: var(--color-text-primary);
@@ -211,27 +220,34 @@
 }
 
 .ui-menu-popup {
+  padding: var(--spacing-menuBlock) var(--spacing-menuInline);
   z-index: var(--layer-popup);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-row);
+  align-items: stretch;
+  gap: var(--spacing-menuGap);
 }
 
 .ui-menu-group {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-row);
+  gap: var(--spacing-menuGap);
 }
 
-.ui-menu-group-label {
-  font-family: var(--font-family-interface);
-  font-size: var(--font-size-caption);
-  font-weight: var(--font-weight-strong);
-  color: var(--color-text-secondary);
-}
 
-.ui-menu-choice {
+.ui-menu-popup :where(.ui-control) {
+  width: 100%;
   justify-content: flex-start;
+  padding: var(--spacing-menuBlock) var(--spacing-menuInline);
+  font-size: inherit;
+  background: none;
+  border: 0;
+}
+
+.ui-menu-item {
+  display: flex;
+  align-items: stretch;
+  gap: var(--spacing-menuGap);
 }
 
 /* Reserves the width of the mark so every option's name lines up whether or not it is the chosen one. */
@@ -247,7 +263,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-panel);
+  padding: var(--spacing-chrome);
 }
 
 /* The scrim is its own layer so its opacity does not fade the dialog above it. */
@@ -264,13 +280,13 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-stack);
+  gap: var(--spacing-chrome);
   width: 100%;
   max-width: var(--layout-contentMaxWidth);
   max-height: 100%;
   overflow: auto;
-  padding: var(--spacing-panel);
-  font-family: var(--font-family-interface);
+  padding: var(--spacing-chrome);
+  font-family: var(--font-family-code);
   font-size: var(--font-size-body);
   line-height: var(--font-lineHeight-body);
   color: var(--color-text-primary);
@@ -297,11 +313,11 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
   box-sizing: border-box;
   max-width: var(--layout-contentMaxWidth);
-  padding: var(--spacing-panel);
-  font-family: var(--font-family-interface);
+  padding: var(--spacing-chrome);
+  font-family: var(--font-family-code);
   font-size: var(--font-size-body);
   line-height: var(--font-lineHeight-body);
   color: var(--color-text-primary);
@@ -323,8 +339,8 @@
 .ui-progress {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-row);
-  font-family: var(--font-family-interface);
+  gap: var(--spacing-controlGap);
+  font-family: var(--font-family-code);
   font-size: var(--font-size-body);
   color: var(--color-text-primary);
 }
@@ -366,8 +382,8 @@
 .ui-status {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-row);
-  font-family: var(--font-family-interface);
+  gap: var(--spacing-controlGap);
+  font-family: var(--font-family-code);
   font-size: var(--font-size-body);
   color: var(--color-text-primary);
 }
@@ -394,7 +410,7 @@
 .theme-editor-fields {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-stack);
+  gap: var(--spacing-chrome);
   overflow: auto;
   min-height: 0;
 }
@@ -406,7 +422,7 @@
 .theme-editor-group {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--layout-panelMinSize)), 1fr));
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
   border: 0;
   padding: 0;
   margin: 0;
@@ -433,14 +449,14 @@
 .theme-editor-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
   flex-shrink: 0;
 }
 
 .ui-dialog-body:has(.theme-editor-fields) {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-stack);
+  gap: var(--spacing-chrome);
   overflow: hidden;
   min-height: 0;
 }

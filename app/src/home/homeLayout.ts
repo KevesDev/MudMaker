@@ -17,6 +17,7 @@ export const SPLASH = {
 /** The appearance choice lives in the catalog's settings surface and is offered from the Settings menu. */
 export const APPEARANCE = "home.settings.07" as const satisfies ControlId;
 export const APPEARANCE_MENU = "home.settings.08" as const satisfies ControlId;
+export const THEME_MENU = "home.settings.09" as const satisfies ControlId;
 
 /** The accent colors an action can take; the stylesheet has one rule for each. */
 export const ACTION_ACCENTS = ["primary", "secondary", "tertiary"] as const;

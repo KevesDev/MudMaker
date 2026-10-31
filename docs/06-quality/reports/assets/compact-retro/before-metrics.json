@@ -1,0 +1,429 @@
+{
+  "fixture": "Browser-only; only native appInfo/windowShell module bridges replaced. Production App, catalogs, ThemeManager, preferences, input, router and workspace components run unchanged.",
+  "results": [
+    {
+      "name": "before-neon-lights-1280-create",
+      "errors": [],
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 760
+        },
+        "save": {
+          "width": 54.796875,
+          "height": 37,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(19, 18, 63)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "paint": {
+          "width": 57.984375,
+          "height": 39,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(16, 15, 54)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "output": {
+          "width": 119.21875,
+          "height": 39,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px 0px 2px",
+          "borderBottom": "2px",
+          "borderStyle": "none none solid",
+          "pressed": null,
+          "selected": "true"
+        },
+        "menu": {
+          "width": 171.765625,
+          "height": 235,
+          "paddingBlock": "8px",
+          "paddingInline": "8px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "background": "rgb(18, 18, 76)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "menuRow": {
+          "width": 161.46875,
+          "height": 37,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(19, 18, 63)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "menus": [
+          {
+            "name": "Settings",
+            "left": 979.515625,
+            "top": 47,
+            "right": 1151.28125,
+            "bottom": 282
+          },
+          {
+            "name": "Appearance",
+            "left": 809.046875,
+            "top": 56,
+            "right": 988.515625,
+            "bottom": 407
+          }
+        ]
+      }
+    },
+    {
+      "name": "before-neon-lights-800-create",
+      "errors": [],
+      "metrics": {
+        "viewport": {
+          "width": 800,
+          "height": 760
+        },
+        "save": {
+          "width": 54.796875,
+          "height": 44,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(19, 18, 63)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "paint": {
+          "width": 57.984375,
+          "height": 44,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(16, 15, 54)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "output": {
+          "width": 119.21875,
+          "height": 44,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px 0px 2px",
+          "borderBottom": "2px",
+          "borderStyle": "none none solid",
+          "pressed": null,
+          "selected": "true"
+        },
+        "menu": {
+          "width": 171.765625,
+          "height": 270,
+          "paddingBlock": "8px",
+          "paddingInline": "8px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "background": "rgb(18, 18, 76)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "menuRow": {
+          "width": 161.46875,
+          "height": 44,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(19, 18, 63)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "menus": [
+          {
+            "name": "Settings",
+            "left": 486.609375,
+            "top": 106,
+            "right": 658.375,
+            "bottom": 376
+          },
+          {
+            "name": "Appearance",
+            "left": 316.140625,
+            "top": 115,
+            "right": 495.609375,
+            "bottom": 515
+          }
+        ]
+      }
+    },
+    {
+      "name": "before-neon-dark-mode-1280-create",
+      "errors": [],
+      "metrics": {
+        "viewport": {
+          "width": 1280,
+          "height": 760
+        },
+        "save": {
+          "width": 54.796875,
+          "height": 37,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(34, 34, 34)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "paint": {
+          "width": 57.984375,
+          "height": 39,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(25, 25, 25)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "output": {
+          "width": 119.21875,
+          "height": 39,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px 0px 2px",
+          "borderBottom": "2px",
+          "borderStyle": "none none solid",
+          "pressed": null,
+          "selected": "true"
+        },
+        "menu": {
+          "width": 171.765625,
+          "height": 235,
+          "paddingBlock": "8px",
+          "paddingInline": "8px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "background": "rgb(53, 53, 53)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "menuRow": {
+          "width": 161.46875,
+          "height": 37,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(34, 34, 34)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "menus": [
+          {
+            "name": "Settings",
+            "left": 979.515625,
+            "top": 47,
+            "right": 1151.28125,
+            "bottom": 282
+          },
+          {
+            "name": "Appearance",
+            "left": 809.046875,
+            "top": 56,
+            "right": 988.515625,
+            "bottom": 407
+          }
+        ]
+      }
+    },
+    {
+      "name": "before-neon-dark-mode-800-create",
+      "errors": [],
+      "metrics": {
+        "viewport": {
+          "width": 800,
+          "height": 760
+        },
+        "save": {
+          "width": 54.796875,
+          "height": 44,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(34, 34, 34)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "paint": {
+          "width": 57.984375,
+          "height": 44,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(25, 25, 25)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "output": {
+          "width": 119.21875,
+          "height": 44,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgba(0, 0, 0, 0)",
+          "borderWidth": "0px 0px 2px",
+          "borderBottom": "2px",
+          "borderStyle": "none none solid",
+          "pressed": null,
+          "selected": "true"
+        },
+        "menu": {
+          "width": 171.765625,
+          "height": 270,
+          "paddingBlock": "8px",
+          "paddingInline": "8px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "12px",
+          "lineHeight": "18px",
+          "background": "rgb(53, 53, 53)",
+          "borderWidth": "1px",
+          "borderBottom": "1px",
+          "borderStyle": "solid",
+          "pressed": null,
+          "selected": null
+        },
+        "menuRow": {
+          "width": 161.46875,
+          "height": 44,
+          "paddingBlock": "8px",
+          "paddingInline": "12px",
+          "radius": "8px",
+          "gap": "8px",
+          "fontSize": "14px",
+          "lineHeight": "21px",
+          "background": "rgb(34, 34, 34)",
+          "borderWidth": "0px",
+          "borderBottom": "0px",
+          "borderStyle": "none",
+          "pressed": null,
+          "selected": null
+        },
+        "menus": [
+          {
+            "name": "Settings",
+            "left": 486.609375,
+            "top": 106,
+            "right": 658.375,
+            "bottom": 376
+          },
+          {
+            "name": "Appearance",
+            "left": 316.140625,
+            "top": 115,
+            "right": 495.609375,
+            "bottom": 515
+          }
+        ]
+      }
+    }
+  ]
+}

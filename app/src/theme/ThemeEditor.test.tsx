@@ -42,7 +42,9 @@ async function open() {
   const menu = await screen.findByRole("menu", { name: "Settings" });
   fireEvent.click(within(menu).getByRole("menuitem", { name: "Appearance" }));
   const appearance = await screen.findByRole("menu", { name: "Appearance" });
-  fireEvent.click(within(appearance).getByRole("menuitem", { name: "Customize Theme" }));
+  fireEvent.click(within(appearance).getByRole("menuitem", { name: "Theme" }));
+  const themes = await screen.findByRole("menu", { name: "Theme" });
+  fireEvent.click(within(themes).getByRole("menuitem", { name: "Customize Theme" }));
   return waitFor(() => {
     const dialog = document.querySelector<HTMLElement>('[role="dialog"]');
     expect(dialog).not.toBeNull();
@@ -108,6 +110,8 @@ describe("app-wide custom theme editor", () => {
     fireEvent.click(screen.getByRole("button", { name: "Settings" }));
     fireEvent.click(await screen.findByRole("menuitem", { name: "Appearance" }));
     await screen.findByRole("menu", { name: "Appearance" });
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Theme" }));
+    await screen.findByRole("menu", { name: "Theme" });
     const preset = test.home.manager.listPresets().find((entry) => entry.id !== test.home.manager.getInputs("home").presetId);
     expect(preset).toBeDefined();
     fireEvent.click(await screen.findByRole("menuitemradio", { name: preset?.label }));

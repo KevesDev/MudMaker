@@ -1,5 +1,7 @@
 # Owner UI corrections — app-wide Appearance and clear View routes
 
+**Subsequent owner refinement:** [compact retro controls](S02-COMPACT-RETRO-CONTROLS-SPEC.md) specifies tight square control geometry, consistent feedback and the deeper Settings > Appearance > Theme > options path. App-wide theme safety and Inspector/Output behavior from this slice remain binding.
+
 **Status:** scoped implementation and independent audit PASS (2026-10-31); owner visual acceptance pending.
 **Authority:** current owner request supersedes older separate-theme and selection-only Inspector requirements, including prior audit expectations. Do not retain a contradictory rule as current authority.
 **Owners:** existing ThemeManager and PreferencesStore own appearance/persistence; shared ShellRouter/InputManager own input and routes; existing Create shell owns panels. No new manager, world mutation path, backend or technology. ADR-005 is decided; no affected OPEN gate.

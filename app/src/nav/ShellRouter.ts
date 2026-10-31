@@ -1,6 +1,6 @@
 import { FRAME_ACTION_OWNER, actionIdOf } from "../frame/frameActions";
 import { homeCopy } from "../home/homeCopy";
-import { APPEARANCE, APPEARANCE_MENU, SPLASH } from "../home/homeLayout";
+import { APPEARANCE, APPEARANCE_MENU, THEME_MENU, SPLASH } from "../home/homeLayout";
 import { type ThemeManager } from "../theme";
 import { CUSTOMIZE_CONTROL } from "../theme/themeEditorControls";
 import { openMenuHandler, type ActionBus, type ActionHandler, type ActionRegistry } from "../ui";
@@ -36,6 +36,7 @@ export function registerShellRouter(bus: ActionBus, registry: ActionRegistry, de
   const removers = [
     bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, APPEARANCE), changeAppearance),
     bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, APPEARANCE_MENU), openMenuHandler),
+    bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, THEME_MENU), openMenuHandler),
     bus.registerHandler(SHELL_ROUTER_OWNER, actionIdOf(registry, SPLASH.settings), openMenuHandler),
     registerNavigatorActions(bus, navigator),
   ];

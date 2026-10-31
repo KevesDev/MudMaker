@@ -42,3 +42,7 @@ Action handlers must honour the `AbortSignal` they receive and settle promptly a
 - Application chrome text is not selectable; text entry and opted-in content are.
 - A control whose feature has no backend yet is a real registered control. Pressing it does nothing visible: no message, toast, state label or announcement (only a quiet diagnostic log entry). The application never shows "not available yet" or similar placeholder text.
 - Text size: browser zoom is blocked and the app has no text-size control yet; the owner deferred it to the accessibility pass.
+
+## Compact control baseline
+
+Mouse/keyboard desktop controls use the 24px minimum pointer token and visible focus; genuine touch/pen/coarse-pointer interaction uses the existing 44px touch token. Responsive width changes layout, not pointer hit geometry. Native pointer/held-key press feedback is momentary; selected tool/view/tab/radio controls expose their actual owner state. Settings > Appearance > Theme uses the same InputManager routing, arrows and one-level Escape/focus restoration at all three popup levels.

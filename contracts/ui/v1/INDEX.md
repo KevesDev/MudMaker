@@ -1,21 +1,21 @@
 # UI Catalog v1 — Every Planned Visible Element
 
-**Status: SPECIFICATION ONLY — NOT IMPLEMENTED.** Four scoped machine-readable files: [Splash/Home](home-controls.v1.json), [Creator Editor](editor-controls.v1.json), [Player Client](client-controls.v1.json), [Host Operations](host-controls.v1.json). **548 registered elements** across the four catalogs and **299 distinct semantic actions**, each with stable ID, label, tooltip/help, active view, state owner, action (or explicit passive status), permission, visible/enabled condition and test ID. This is a *planning inventory*, extended by each implementation phase; not proof these widgets exist.
+**Status: SPECIFICATION ONLY — NOT IMPLEMENTED.** Four scoped machine-readable files: [Splash/Home](home-controls.v1.json), [Creator Editor](editor-controls.v1.json), [Player Client](client-controls.v1.json), [Host Operations](host-controls.v1.json). **557 registered elements** across the four catalogs and **300 distinct semantic actions**, each with stable ID, label, tooltip/help, active view, state owner, action (or explicit passive status), permission, visible/enabled condition and test ID. This is a *planning inventory*, extended by each implementation phase; not proof these widgets exist.
 
 | Workspace | Items | Primary owner |
 |---|---:|---|
-| home | 221 | HomeIntentRouter |
+| home | 230 | HomeIntentRouter |
 | editor | 149 | EditorIntentRouter |
 | client | 114 | ClientIntentRouter |
 | host | 64 | HostAdminIntentRouter |
 
-**Navigation is cross-workspace**: `ui.nav.*` actions belong **only to [WorkspaceNavigator](../../../docs/03-contracts/ui-ux/00-launch-and-workspace-navigation.md)**, not duplicated in each workspace. App startup → loading → Splash → Create/Play/Host. Every workspace's Go To menu uses the same navigation actions and guards. Leaving Play disconnects all player-client sessions before navigating (or Cancel); only an active host can persist across workspace switches, and app exit stops hosting. Splash shows `Active World: {world}` only when hosting; appearance preset is located in Settings > Appearance. A second hosted project is rejected by HostSupervisor. The window frame row (`home.frame`) is shared by every workspace: Minimize and Maximize or Restore have their own actions, and Close uses `ui.app.quit`, so there is one quit path.
+**Navigation is cross-workspace**: `ui.nav.*` actions belong **only to [WorkspaceNavigator](../../../docs/03-contracts/ui-ux/00-launch-and-workspace-navigation.md)**, not duplicated in each workspace. App startup → loading → Splash → Create/Play/Host. Every workspace's Go To menu uses the same navigation actions and guards. Leaving Play disconnects all player-client sessions before navigating (or Cancel); only an active host can persist across workspace switches, and app exit stops hosting. Splash shows `Active World: {world}` only when hosting; appearance preset is located in Settings > Appearance > Theme. A second hosted project is rejected by HostSupervisor. The window frame row (`home.frame`) is shared by every workspace: Minimize and Maximize or Restore have their own actions, and Close uses `ui.app.quit`, so there is one quit path.
 
 ## Agent lookup (do not load all)
 1. Pick exactly one catalog file for the relevant workspace and `rg -n '"surface": "host.navigation"' contracts/ui/v1/host-controls.v1.json` for a particular surface.
 2. Read `id`, `actionId`, labels/help, state, availability, test ID and [action registry](actions.v1.json), whose `owner` is sole router. No remote server may define these actions.
 3. [Shared component states and focus](../../../docs/03-contracts/ui-ux/02-interaction-state-and-accessibility.md) and [ThemeManager](../../../docs/03-contracts/ui-ux/03-theme-and-preferences.md) define display behavior. [S00 document acceptance](../../../docs/05-sprints/specs/S00.md) is **not** a fake UI runtime test.
-4. Implementation phase must render/bind/test the relevant registered controls, not all 548. If it introduces another visible element it must add it to the scoped catalog and action table in the same phase, including keyboard/touch/failure evidence.
+4. Implementation phase must render/bind/test the relevant registered controls, not all 557. If it introduces another visible element it must add it to the scoped catalog and action table in the same phase, including keyboard/touch/failure evidence.
 
 ## Static audit
 Exactly one action owner per ActionId, catalog IDs unique, every interactive control has action + accessible label + help + relevant failure states, every passive status shows owner/safe value, all four catalog payloads validate with [control schema](ui-control.schema.json). No duplicate ThemeManager, service-bound UI primitive, unauthorized Actor/Host actions, or cross-workspace shortcut. An exhaustive live UI audit happens in **S18**, not S00.
@@ -30,4 +30,8 @@ The historical S02.9b 546-element / 299-action inventory added four shared dialo
 
 ## Owner appearance and View correction
 
-Current inventory: 548 elements / 299 actions. `home.settings.08` opens a real Appearance submenu; `home.settings.07` selects its app-wide theme. `editor.shell.17` toggles the shared Output panel, whose diagnostic category controls stay internal. `editor.shell.16` explicitly toggles Inspector, and `editor.inspector.01` may show registered chrome without selection. Earlier scoped theme selection and selection-only Inspector descriptions are historical.
+Historical owner-correction inventory: 548 elements / 299 actions. `home.settings.08` opens a real Appearance submenu; `home.settings.07` selects its app-wide theme. `editor.shell.17` toggles the shared Output panel, whose diagnostic category controls stay internal. `editor.shell.16` explicitly toggles Inspector, and `editor.inspector.01` may show registered chrome without selection. Earlier scoped theme selection and selection-only Inspector descriptions are historical.
+
+## Compact retro refinement
+
+Current inventory: 557 elements / 300 actions. `home.settings.09` opens Theme inside Appearance; `home.settings.07` is its app-wide Theme choice. Local Timestamps/Reduced Motion stay beside Theme. Eight new schema-owned geometry fields bring the shared custom editor to 176 token fields. Existing Create tool actions now own local selected-tool UI state through EditorIntentRouter; momentary commands stay unselected. Output/view/Host choices expose actual selected state through shared controls.

@@ -188,13 +188,15 @@ describe("Settings and Appearance", () => {
     if (!target) throw new Error("The defaults must ship at least two presets.");
     fireEvent.click(screen.getByRole("button", { name: settingsLabel }));
     fireEvent.click(within(await screen.findByRole("menu", { name: settingsLabel })).getByRole("menuitem", { name: "Appearance" }));
-    const group = within(await screen.findByRole("menu", { name: "Appearance" })).getByRole("group", { name: label(APPEARANCE) });
+    fireEvent.click(within(await screen.findByRole("menu", { name: "Appearance" })).getByRole("menuitem", { name: "Theme" }));
+    const group = within(await screen.findByRole("menu", { name: "Theme" })).getByRole("group", { name: label(APPEARANCE) });
     fireEvent.click(within(group).getByRole("menuitemradio", { name: target.label }));
     await waitFor(() => expect(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, home.manager.getSnapshot(scope).themeId]))).toEqual(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, target.id]))));
     await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
     expect(document.activeElement).toBe(screen.getByRole("button", { name: settingsLabel }));
     fireEvent.click(screen.getByRole("button", { name: settingsLabel }));
     fireEvent.click(await screen.findByRole("menuitem", { name: "Appearance" }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Theme" }));
     const marked = within(await screen.findByRole("group", { name: label(APPEARANCE) })).getAllByRole("menuitemradio");
     expect(marked.filter((item) => item.getAttribute("aria-checked") === "true").map((item) => item.getAttribute("data-value"))).toEqual([target.id]);
   });
@@ -207,6 +209,7 @@ describe("Settings and Appearance", () => {
     const other = home.manager.listPresets().find((preset) => preset.id !== home.manager.getSnapshot("home").themeId);
     fireEvent.click(screen.getByRole("button", { name: settingsLabel }));
     fireEvent.click(await screen.findByRole("menuitem", { name: "Appearance" }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Theme" }));
     fireEvent.click(within(await screen.findByRole("group", { name: label(APPEARANCE) })).getByRole("menuitemradio", { name: other?.label ?? "" }));
     await waitFor(() => expect(document.querySelector(".ui-toast")?.textContent).toContain("Your current look is unchanged."));
     fireEvent.click(within(document.querySelector<HTMLElement>(".ui-toast") as HTMLElement).getByRole("button", { name: uiCopy.dismiss }));

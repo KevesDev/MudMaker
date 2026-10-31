@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { ActionHandler } from "../actions/ActionBus";
 import type { ControlDescriptor } from "../actions/types";
 import { copy } from "../copy";
@@ -13,6 +13,7 @@ export interface MenuProps {
   readonly items: readonly ControlDescriptor[];
   /** The item that names the current choice, such as the section being shown; it is marked. */
   readonly currentId?: string;
+  readonly selectedIds?: readonly string[];
   /** On/off settings listed with the items. Each is marked while its confirmed value is on. */
   readonly checks?: readonly MenuCheck[];
   /** A list of values for one control, such as a preset. Choosing one sends it to that control's action. */
@@ -31,6 +32,7 @@ export interface MenuSubmenu {
   readonly choices?: MenuChoices;
   readonly items?: readonly ControlDescriptor[];
   readonly checks?: readonly MenuCheck[];
+  readonly submenus?: readonly MenuSubmenu[];
 }
 
 export interface MenuCheck {
@@ -56,11 +58,11 @@ export interface MenuChoices {
  */
 export const openMenuHandler: ActionHandler = () => Promise.resolve({ status: "success", message: "" });
 
-function MenuItem({ control, current }: { readonly control: ControlDescriptor; readonly current: boolean }) {
+function MenuItem({ control, current, checked }: { readonly control: ControlDescriptor; readonly current: boolean; readonly checked?: boolean }) {
   const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["button", "tab"], "Menu");
   return (
     <span className="ui-anchor ui-menu-item">
-      <button type="button" role="menuitem" aria-current={current ? "true" : undefined} className="ui-control ui-hit ui-button" {...attributes}>
+      <button type="button" role={checked === undefined ? "menuitem" : "menuitemcheckbox"} aria-checked={checked} aria-current={current ? "true" : undefined} className="ui-control ui-hit ui-button" {...attributes}>
         <span className="ui-menu-mark" aria-hidden="true">
           {current ? copy.chosenMark : ""}
         </span>
@@ -91,12 +93,8 @@ function MenuCheckItem({ check }: { readonly check: MenuCheck }) {
 
 function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
   const { control, options, value } = choices;
-  const labelId = useId();
   return (
-    <div role="group" aria-labelledby={labelId} data-testid={control.testId} className="ui-menu-group">
-      <span id={labelId} className="ui-menu-group-label">
-        {control.label}
-      </span>
+    <div role="group" aria-label={control.label} data-testid={control.testId} className="ui-menu-group">
       {options.map((option) => (
         <button
           key={option.value}
@@ -126,7 +124,7 @@ function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
  * and outside presses arrive through the input manager, and choosing an item closes the list and
  * returns focus to the opener.
  */
-export function Menu({ opener, items, currentId, checks, choices, submenus, nested = false, onLeafActivate, leading, trailingGlyph }: MenuProps) {
+export function Menu({ opener, items, currentId, selectedIds, checks, choices, submenus, nested = false, onLeafActivate, leading, trailingGlyph }: MenuProps) {
   const ui = useUi();
   const { attributes, runtime, shown, tipId, tip } = useControlBinding(opener, ["dropdown", "button"], "Menu");
   const [open, setOpen] = useState(false);
@@ -146,7 +144,10 @@ export function Menu({ opener, items, currentId, checks, choices, submenus, nest
       const content = popup.getBoundingClientRect();
       const win = popup.ownerDocument.defaultView;
       if (win === null) return;
-      const preferredLeft = nested ? bounds.left - content.width : bounds.left;
+      const parent = nested ? anchor.closest<HTMLElement>('[role="menu"]')?.getBoundingClientRect() : undefined;
+      const leftEdge = parent?.left ?? bounds.left;
+      const rightEdge = parent?.right ?? bounds.right;
+      const preferredLeft = nested ? leftEdge >= content.width ? leftEdge - content.width : rightEdge + content.width <= win.innerWidth ? rightEdge : leftEdge - content.width : bounds.left;
       const preferredTop = nested ? bounds.top : bounds.bottom + content.height <= win.innerHeight ? bounds.bottom : bounds.top - content.height;
       const left = Math.max(0, Math.min(preferredLeft, win.innerWidth - content.width));
       const top = Math.max(0, Math.min(preferredTop, win.innerHeight - content.height));
@@ -161,6 +162,7 @@ export function Menu({ opener, items, currentId, checks, choices, submenus, nest
   }, [open, nested, onLeafActivate]);
   useEffect(() => ui.input.registerKeys(keys, (event) => {
     if (event.key === "ArrowRight" && nested && event.target === triggerRef.current && !open) { triggerRef.current?.click(); return true; }
+    if (event.key === "ArrowLeft" && nested && !open && event.target === triggerRef.current) { ui.focus.top().onEscape?.(); return true; }
     if (event.key === "ArrowLeft" && nested && open && popupRef.current?.contains(event.target as Node)) { setOpen(false); triggerRef.current?.focus(); return true; }
     return false;
   }), [ui, keys, nested, open]);
@@ -211,6 +213,7 @@ export function Menu({ opener, items, currentId, checks, choices, submenus, nest
   return (
     <span className={nested ? "ui-anchor ui-menu-item ui-menu-submenu" : "ui-anchor"} data-ui-keys={keys}>
       <button ref={triggerRef} type="button" role={nested ? "menuitem" : undefined} className="ui-control ui-hit ui-button" aria-haspopup="menu" aria-expanded={open} {...attributes}>
+        {nested ? <span className="ui-menu-mark" aria-hidden="true" /> : null}
         {leading === undefined ? null : (
           <span className="ui-button-leading" aria-hidden="true">
             {leading}
@@ -232,7 +235,7 @@ export function Menu({ opener, items, currentId, checks, choices, submenus, nest
             <MenuCheckItem key={check.control.id} check={check} />
           ))}
           {items.map((item) => (
-            <MenuItem key={item.id} control={item} current={item.id === currentId} />
+            <MenuItem key={item.id} control={item} current={item.id === currentId} {...(selectedIds === undefined ? {} : { checked: selectedIds.includes(item.id) })} />
           ))}
         </div>
       ) : null}

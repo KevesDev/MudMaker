@@ -21,7 +21,9 @@ async function appearance() {
   const root = await screen.findByRole("menu", { name: "Settings" });
   expect(within(root).queryByRole("menuitemradio")).toBeNull();
   fireEvent.click(within(root).getByRole("menuitem", { name: "Appearance" }));
-  return screen.findByRole("menu", { name: "Appearance" });
+  await screen.findByRole("menu", { name: "Appearance" });
+  fireEvent.click(screen.getByRole("menuitem", { name: "Theme" }));
+  return screen.findByRole("menu", { name: "Theme" });
 }
 describe("owner UI corrections", () => {
   it.each(["Splash", "Create", "Play", "Host"])("selects both themes app-wide from %s's actual nested Appearance", async (destination) => {
@@ -39,19 +41,19 @@ describe("owner UI corrections", () => {
     await start("Create");
     const viewMenu = async () => { fireEvent.click(screen.getByRole("button", { name: "View" })); return screen.findByRole("menu", { name: "View" }); };
     let menu = await viewMenu();
-    expect(within(menu).getAllByRole("menuitem").map((item) => item.textContent?.trim())).toEqual(["Assets", "Inspector", "Output"]);
-    fireEvent.click(within(menu).getByRole("menuitem", { name: "Output" }));
+    expect(within(menu).getAllByRole("menuitemcheckbox").map((item) => item.textContent?.trim())).toEqual(["Assets", "Inspector", "Output"]);
+    fireEvent.click(within(menu).getByRole("menuitemcheckbox", { name: "Output" }));
     const output = await screen.findByRole("region", { name: "Problems and output" });
     expect(within(output).getByRole("tab", { name: "Problems" }).getAttribute("aria-selected")).toBe("true");
     fireEvent.click(within(output).getByRole("tab", { name: "Execution Trace" }));
     await waitFor(() => expect(within(output).getByRole("tab", { name: "Execution Trace" }).getAttribute("aria-selected")).toBe("true"));
     expect(within(output).getByRole("tabpanel", { name: "Execution Trace" })).toBeTruthy();
-    menu = await viewMenu(); fireEvent.click(within(menu).getByRole("menuitem", { name: "Output" }));
+    menu = await viewMenu(); fireEvent.click(within(menu).getByRole("menuitemcheckbox", { name: "Output" }));
     await waitFor(() => expect(screen.queryByRole("region", { name: "Problems and output" })).toBeNull());
-    menu = await viewMenu(); fireEvent.click(within(menu).getByRole("menuitem", { name: "Output" }));
+    menu = await viewMenu(); fireEvent.click(within(menu).getByRole("menuitemcheckbox", { name: "Output" }));
     expect(await screen.findByRole("tabpanel", { name: "Execution Trace" })).toBeTruthy();
     for (const expectedOpen of [true, false, true]) {
-      menu = await viewMenu(); fireEvent.click(within(menu).getByRole("menuitem", { name: "Inspector" }));
+      menu = await viewMenu(); fireEvent.click(within(menu).getByRole("menuitemcheckbox", { name: "Inspector" }));
       await waitFor(() => expect(screen.queryByRole("region", { name: "Inspector" }) !== null).toBe(expectedOpen));
     }
     const inspector = screen.getByRole("region", { name: "Inspector" });
@@ -68,7 +70,7 @@ describe("owner UI corrections", () => {
     await start("Splash");
     await appearance();
     const menus = screen.getAllByRole("menu");
-    expect(menus).toHaveLength(2);
+    expect(menus).toHaveLength(3);
     for (const menu of menus) {
       expect(menu.getAttribute("data-positioned")).toBe("true");
       const element = menu as HTMLElement;

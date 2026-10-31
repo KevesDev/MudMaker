@@ -268,9 +268,7 @@
   --action-edge: var(--color-accent-tertiary);
 }
 
-.home-action .ui-button,
-.home-action .ui-button:hover,
-.home-action .ui-button:active {
+.home-action .ui-button {
   flex: 1 1 auto;
   justify-content: flex-start;
   font-weight: var(--font-weight-strong);
@@ -292,19 +290,6 @@
   border-color: var(--action-edge);
 }
 
-/* Hover underlines the label; pressing also sits the control one border width lower, which touch shows as well. The fill never changes. */
-.home-action .ui-button:hover,
-.home-action .ui-button:active,
-.home-footer-actions > .ui-anchor > .ui-button:hover,
-.home-footer-actions > .ui-anchor > .ui-button:active {
-  text-decoration: underline;
-}
-
-.home-action .ui-button:active,
-.home-footer-actions > .ui-anchor > .ui-button:active {
-  transform: translateY(var(--shape-borderWidth));
-}
-
 /* The footer actions are plain text: no fill and no border of their own. */
 .home-footer-actions {
   display: flex;
@@ -313,13 +298,23 @@
   gap: var(--spacing-row);
 }
 
-.home-footer-actions > .ui-anchor > .ui-button,
-.home-footer-actions > .ui-anchor > .ui-button:hover,
-.home-footer-actions > .ui-anchor > .ui-button:active {
+.home-footer-actions > .ui-anchor > .ui-button {
   font-size: var(--font-size-caption);
   color: var(--color-text-secondary);
   background: var(--color-surface-canvas);
   border: 0;
+}
+
+.home-action .ui-button:not([aria-disabled="true"]):hover,
+.home-footer-actions > .ui-anchor > .ui-button:hover {
+  color: var(--color-text-primary);
+  background: var(--color-interaction-hover);
+}
+
+.home-action .ui-button:not([aria-disabled="true"]):active,
+.home-footer-actions > .ui-anchor > .ui-button:active {
+  color: var(--color-text-primary);
+  background: var(--color-interaction-pressed);
 }
 
 .home-footer-rule {

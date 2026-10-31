@@ -1,5 +1,5 @@
 /** Renders every shipped screen through the real app and checks the controls on it against the catalogs. See home/homeTestSupport.tsx for what jsdom cannot prove. */
-import { act, cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import actionsJson from "../../../contracts/ui/v1/actions.v1.json";
 import clientCatalog from "../../../contracts/ui/v1/client-controls.v1.json";
@@ -64,6 +64,10 @@ const openAndCollectMenus = async (names: readonly string[]): Promise<void> => {
       fireEvent.click(screen.getByRole("menuitem", { name: "Appearance" }));
       const child = await screen.findByRole("menu", { name: "Appearance" });
       collect();
+      fireEvent.click(within(child).getByRole("menuitem", { name: "Theme" }));
+      const themeMenu = await screen.findByRole("menu", { name: "Theme" });
+      collect();
+      fireEvent.keyDown(themeMenu, { key: "Escape" });
       fireEvent.keyDown(child, { key: "Escape" });
     }
     fireEvent.keyDown(screen.getByRole("menu", { name }), { key: "Escape" });

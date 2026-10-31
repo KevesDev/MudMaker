@@ -2991,6 +2991,16 @@
       "input": "typedByControlSchema",
       "outcome": "confirmedOrStructuredError",
       "remoteDefinitionAllowed": false
+    },
+    {
+      "id": "ui.settings.appearance.themeOpen",
+      "owner": "HomeIntentRouter",
+      "mutationDomain": "localPresentation",
+      "origin": "localUserGesture",
+      "auth": "owningServiceMustRevalidate",
+      "input": "typedByControlSchema",
+      "outcome": "confirmedOrStructuredError",
+      "remoteDefinitionAllowed": false
     }
   ]
 }

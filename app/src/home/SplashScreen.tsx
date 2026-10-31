@@ -7,7 +7,7 @@ import { CUSTOMIZE_CONTROL } from "../theme/themeEditorControls";
 import { Button, Menu, Toast, useUi, type ControlDescriptor, type ControlId } from "../ui";
 import { ControlNotice } from "./ControlNotice";
 import { homeCopy } from "./homeCopy";
-import { APPEARANCE, APPEARANCE_MENU, FOOTER_ICONS, NOTICE_CONTROLS, SPLASH, SPLASH_GLYPHS, SPLASH_SETTINGS, WORKSPACE_ACTIONS } from "./homeLayout";
+import { APPEARANCE, APPEARANCE_MENU, THEME_MENU, FOOTER_ICONS, NOTICE_CONTROLS, SPLASH, SPLASH_GLYPHS, SPLASH_SETTINGS, WORKSPACE_ACTIONS } from "./homeLayout";
 import { Brand } from "./Brand";
 import { Ornament } from "./Ornament";
 import { Shown } from "./Shown";
@@ -101,7 +101,7 @@ export function SplashScreen({ info, theme, focusHeading }: SplashScreenProps) {
                   leading={<TextArt piece={ICONS[FOOTER_ICONS.settings]} size="icon" />}
                   items={SPLASH_SETTINGS.items.map(control)}
                   checks={SPLASH_SETTINGS.checks.map((id) => ({ control: control(id), checked: false }))}
-                  submenus={[{ opener: control(APPEARANCE_MENU), choices: { control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId, checks: SPLASH_SETTINGS.appearanceChecks.map((id) => ({ control: control(id), checked: false })), items: [control(CUSTOMIZE_CONTROL.home)] } }]}
+                  submenus={[{ opener: control(APPEARANCE_MENU), checks: SPLASH_SETTINGS.appearanceChecks.map((id) => ({ control: control(id), checked: false })), submenus: [{ opener: control(THEME_MENU), choices: { control: control(APPEARANCE), options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })), value: presetId, items: [control(CUSTOMIZE_CONTROL.home)] } }] }]}
                 />
               </Shown>
               <span className="home-footer-rule" aria-hidden="true" />

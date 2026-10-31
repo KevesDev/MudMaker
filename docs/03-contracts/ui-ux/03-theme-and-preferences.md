@@ -4,13 +4,13 @@
 
 ## App-wide choice and internal scopes
 
-Settings > Appearance is an actual submenu in Splash, Create, Play and Host. Its child menu lists the bundled theme names, Customize Theme and relevant existing appearance controls. Root Settings contains the Appearance opener and other settings grouped by purpose; it does not list theme names. Selecting a theme changes the whole app. One `selectApplicationPreset` operation stages and validates every affected scope before changing any committed inputs or render snapshot. Every scope is committed before listeners run; failure changes nothing.
+Settings > Appearance > Theme is the exact menu hierarchy in Splash, Create, Play and Host. Theme lists bundled theme names and Customize/Import/Export/Reset commands. Local appearance controls such as Play Timestamps and Reduced Motion are siblings of Theme inside Appearance, not children of Theme. Neither root Settings nor Appearance lists theme options directly; other settings remain grouped by purpose. Selecting a theme changes the whole app. One `selectApplicationPreset` operation stages and validates every affected scope before changing any committed inputs or render snapshot. Every scope is committed before listeners run; failure changes nothing.
 
 The internal `home`, `editor`, `client` and `host` scopes retain their semantic token definitions and accessibility inputs. Home and Host inherit editor defaults and tokens for the **same app-selected preset**; Client additionally defines terminal/map/status values and contrast-safe derivations. Scope existence is not a separate appearance selection. A hosted world cannot replace local appearance.
 
 ## Custom theme editing
 
-Customize Theme uses existing typed token fields grouped by semantic namespace. Color fields offer a native picker and editable hex/alias text; numeric fields accept decimal or alias text; enum/boolean choices read ThemeSchema. No raw document editor or future fields. Shared dialog controls are `home.themeEditor.01` through `.04`; 168 field controls in `home.themeTokens` are shared across destinations, with only existing tokens of the editing scope rendered. Field metadata is covered by schema-kind and key-coverage tests.
+Customize Theme uses existing typed token fields grouped by semantic namespace. Color fields offer a native picker and editable hex/alias text; numeric fields accept decimal or alias text; enum/boolean choices read ThemeSchema. No raw document editor or future fields. Shared dialog controls are `home.themeEditor.01` through `.04`; 176 field controls in `home.themeTokens` are shared across destinations, with only existing tokens of the editing scope rendered. Field metadata is covered by schema-kind and key-coverage tests.
 
 The draft starts from committed merged values before accessibility adjustments. **Changed shared tokens Preview and Save app-wide**, across scopes owning those keys; scope-only tokens change only their valid rendering scope. Unchanged target-specific values remain intact, including client derivations. Existing per-scope custom documents are tied representations owned by the one manager, not independently selectable themes. All affected snapshots validate before publication. Aliases remain data and are validated by ThemeManager.
 
@@ -25,3 +25,5 @@ Other preference ownership stays separate: app language/consent, editor docking/
 ## Examples and boundaries
 
 Choose Neon Dark Mode from Play and Splash/Create/Host immediately follow it. Edit a shared app surface color in Customize Theme and Preview it everywhere; Cancel restores every original scope. Edit a terminal-only value and only the terminal rendering changes. Restart after Save restores the app-selected theme and its tied custom values. Legacy conflicting scoped choices survive in the one-time backup rather than being silently discarded. Import/export remains a later phase; no server, game-content or world-authority behavior changes here.
+
+Menu rows use one square popup outline, compact left-aligned text and no repeated visible submenu heading. Persistent tool/view/Output/Host choices reflect their existing owner state with the shared selected colors; commands remain momentary and use native hover/pressed/focus feedback. CreateShell owns only local map-tool selection until real authoring commands arrive.

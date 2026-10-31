@@ -254,14 +254,17 @@ describe("the action row accents", () => {
     expect(violations(bad, pairs)).toEqual([expect.stringContaining("color.accent.onSecondary on color.accent.secondary")]);
   });
 
-  it("underlines on hover and on press, and sits the control lower only on press, never changing the fill", () => {
-    const states = ruleBody(".home-action .ui-button:hover,\n.home-action .ui-button:active,\n.home-footer-actions > .ui-anchor > .ui-button:hover,\n.home-footer-actions > .ui-anchor > .ui-button:active");
-    expect(states).toMatch(/text-decoration:\s*underline/);
-    expect(states).not.toMatch(/transform|background/);
-    const pressed = ruleBody(".home-action .ui-button:active,\n.home-footer-actions > .ui-anchor > .ui-button:active");
-    expect(pressed).toMatch(/transform:\s*translateY\(var\(--shape-borderWidth\)\)/);
-    expect(ruleBody(".home-action .ui-button,\n.home-action .ui-button:hover,\n.home-action .ui-button:active")).toMatch(/background:\s*var\(--action-fill\)/);
-    expect(ruleBody(".home-footer-actions > .ui-anchor > .ui-button,\n.home-footer-actions > .ui-anchor > .ui-button:hover,\n.home-footer-actions > .ui-anchor > .ui-button:active")).toMatch(/background:\s*var\(--color-surface-canvas\)/);
+  it("uses shared hover and pressed fills without underline or movement, while preserving the authored resting fills", () => {
+    const hover = ruleBody('.home-action .ui-button:not([aria-disabled="true"]):hover,\n.home-footer-actions > .ui-anchor > .ui-button:hover');
+    const pressed = ruleBody('.home-action .ui-button:not([aria-disabled="true"]):active,\n.home-footer-actions > .ui-anchor > .ui-button:active');
+    expect(hover).toContain("background: var(--color-interaction-hover)");
+    expect(pressed).toContain("background: var(--color-interaction-pressed)");
+    for (const state of [hover, pressed]) {
+      expect(state).toContain("color: var(--color-text-primary)");
+      expect(state).not.toMatch(/underline|transform/);
+    }
+    expect(ruleBody(".home-action .ui-button")).toMatch(/background:\s*var\(--action-fill\)/);
+    expect(ruleBody(".home-footer-actions > .ui-anchor > .ui-button")).toMatch(/background:\s*var\(--color-surface-canvas\)/);
   });
 });
 

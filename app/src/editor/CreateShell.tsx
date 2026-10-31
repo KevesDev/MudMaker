@@ -30,6 +30,7 @@ export function CreateShell() {
   const [query, setQuery] = useState("");
   const [outputOpen, setOutputOpen] = useState(false);
   const [inspectorOpen, setInspectorOpen] = useState(false);
+  const [selectedTool, setSelectedTool] = useState<(typeof MAP_TOOLS)[number]>(MAP_TOOLS[0]);
   const [view, setView] = useState<OutputView>(OUTPUT_VIEWS[0]);
 
   /** Internal output selection keeps the panel open; the View toggle controls visibility. */
@@ -45,6 +46,7 @@ export function CreateShell() {
   };
   useMenuOpeners(EDITOR_OWNER, [BUILD_MENU.opener, VIEW_MENU.opener]);
   useIntentRouter(EDITOR_OWNER, {
+    ...Object.fromEntries(MAP_TOOLS.map((id) => [id, () => { setSelectedTool(id); return Promise.resolve(SILENT); }])),
     [VIEW_MENU.output]: () => { setOutputOpen((open) => !open); return Promise.resolve(SILENT); },
     [VIEW_MENU.inspector]: () => { setInspectorOpen((open) => !open); return Promise.resolve(SILENT); },
     [VIEW_MENU.assets]: () => {
@@ -68,7 +70,7 @@ export function CreateShell() {
             <Button key={id} control={control(id)} />
           ))}
           <Menu opener={control(BUILD_MENU.opener)} items={BUILD_MENU.items.map(control)} trailingGlyph={MENU_CARET} />
-          <Menu opener={control(VIEW_MENU.opener)} items={[control(VIEW_MENU.assets), control(VIEW_MENU.inspector), control(VIEW_MENU.output)]} trailingGlyph={MENU_CARET} />
+          <Menu opener={control(VIEW_MENU.opener)} items={[control(VIEW_MENU.assets), control(VIEW_MENU.inspector), control(VIEW_MENU.output)]} selectedIds={[...(assetsOpen ? [VIEW_MENU.assets] : []), ...(inspectorOpen ? [VIEW_MENU.inspector] : []), ...(outputOpen ? [VIEW_MENU.output] : [])]} trailingGlyph={MENU_CARET} />
           <Button control={control(SEARCH)} />
         </Toolbar>
       </ToolbarSlot>
@@ -85,7 +87,7 @@ export function CreateShell() {
             <div className="editor-canvas-column">
               <Toolbar described={MAP_BAR}>
                 {MAP_TOOLS.map((id) => (
-                  <Button key={id} control={control(id)} />
+                  <Button key={id} control={control(id)} selected={id === selectedTool} />
                 ))}
                 <Switch control={control(MAP_VIEW.grid)} checked={gridVisible} />
                 <Switch control={control(MAP_VIEW.snap)} checked={snapEnabled} />

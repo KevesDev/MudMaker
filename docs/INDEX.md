@@ -81,6 +81,8 @@
 
 ## Current editor appearance and sprint execution authority
 
+- [Compact retro controls](05-sprints/specs/S02-COMPACT-RETRO-CONTROLS-SPEC.md) — owner density/geometry, consistent feedback and Appearance > Theme hierarchy; independent audit PASS with browser visual evidence, owner native acceptance pending.
+
 - [Owner UI corrections](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md) — current app-wide Appearance, nested Settings, one Output route and explicitly openable Inspector; supersedes older separate-workspace theme and selection-only visibility rules.
 
 - [Custom theme editor and preview](05-sprints/specs/S02-9B-SPEC.md) — S02.9b scoped implementation and independent audit PASS; owner visual acceptance pending.

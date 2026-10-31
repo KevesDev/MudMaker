@@ -1,4 +1,4 @@
-import { APPEARANCE, APPEARANCE_MENU, SPLASH } from "../home/homeLayout";
+import { APPEARANCE, APPEARANCE_MENU, THEME_MENU, SPLASH } from "../home/homeLayout";
 import { clientDisplay } from "../prefs";
 import { useTheme, type ThemeManager } from "../theme";
 import { CUSTOMIZE_CONTROL } from "../theme/themeEditorControls";
@@ -30,13 +30,12 @@ export function WorkspaceMenus({ workspace, theme }: { readonly workspace: Works
         opener={registry.requireControl(SPLASH.settings)}
         items={SETTINGS_ITEMS[workspace].map((id) => registry.requireControl(id))}
         checks={SETTINGS_CHECKS[workspace].filter((id) => id !== TIMESTAMPS_SETTING).map((id) => ({ control: registry.requireControl(id), checked: false }))}
-        submenus={[{ opener: registry.requireControl(APPEARANCE_MENU), choices: {
+        submenus={[{ opener: registry.requireControl(APPEARANCE_MENU), submenus: [{ opener: registry.requireControl(THEME_MENU), choices: {
           control: registry.requireControl(APPEARANCE),
           options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })),
           value: presetId,
           items: [registry.requireControl(CUSTOMIZE_CONTROL[WORKSPACE_SCOPE[workspace]]), ...APPEARANCE_ITEMS[workspace].map((id) => registry.requireControl(id))],
-          checks: [...APPEARANCE_CHECKS[workspace].map((id) => ({ control: registry.requireControl(id), checked: false })), ...(workspace === "play" ? [{ control: registry.requireControl(TIMESTAMPS_SETTING), checked: display.timestamps }] : [])],
-        } }]}
+        } }], checks: [...APPEARANCE_CHECKS[workspace].map((id) => ({ control: registry.requireControl(id), checked: false })), ...(workspace === "play" ? [{ control: registry.requireControl(TIMESTAMPS_SETTING), checked: display.timestamps }] : [])] }]}
         trailingGlyph={MENU_CARET}
       />
       <Menu

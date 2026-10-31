@@ -12,6 +12,11 @@
 ## Future entries
 Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visible scope, measured test/benchmark/UX results, auditor verdict, decisions and lessons. Do not paste raw logs or restate the entire spec.
 
+## 2026-10-31 — Compact retro controls (scoped audit PASS)
+- Shared tokens/primitives now give menus/buttons square, compact chrome; conflicting frame overrides and width-only touch sizing were removed. Desktop/constrained browser rows measured 37/44px before and 24px after, with padding 8/12 to 2/4 and corner radius 8 to 0. Genuine coarse-pointer sizing stays 44px; body/art composition, palette and authored overrides remain intact.
+- Output underlines replaced by coherent selected chrome; tool choices now expose truthful UI-only selection through the existing router. Momentary Save has pointer/Space press feedback without sticky selection. Settings > Appearance > Theme groups global theme commands separately from local appearance siblings.
+- [Independent audit PASS](06-quality/reports/s02-compact-retro-audit.md): 862 tests, typecheck and frontend build, zero findings. Browser matrix at 1280/800 in both presets plus capture provenance independently reviewed; Lead inspected final images. [Spec/reports](05-sprints/specs/S02-COMPACT-RETRO-CONTROLS-SPEC.md). Native visual/touch acceptance remains pending; Vite chunk advisory remains. No phase-count change; next planned S02.9c.
+
 ## 2026-10-31 — Owner UI corrections (scoped audit PASS)
 - Owner corrected the prior scoped-appearance contract: theme selection and shared custom Preview/Save are app-wide. ThemeManager stages all affected scopes atomically; PreferencesStore restores one global selection and retains legacy scoped data in one bounded original-data backup. No new manager/storage authority.
 - Settings now opens a real Appearance submenu with theme choices; nested/root popup bounds are measured and constrained. Create View has one Output entry for its remembered internal diagnostic views. Explicit View > Inspector opens real panel chrome without selection or fabricated data.

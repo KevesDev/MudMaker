@@ -11,14 +11,16 @@ export interface ButtonProps {
   readonly trailingGlyph?: string;
   /** Decorative art drawn before the label, such as an icon; it is hidden from assistive technology, so the name stays the label. */
   readonly leading?: ReactNode;
+  /** Only persistent choices supply this; ordinary commands never become sticky. */
+  readonly selected?: boolean;
 }
 
 /** A labelled button. It carries no click handler: the input manager activates it by control id. */
-export function Button({ control, showState = true, trailingGlyph, leading }: ButtonProps) {
+export function Button({ control, showState = true, trailingGlyph, leading, selected }: ButtonProps) {
   const { attributes, runtime, shown, tipId, tip } = useControlBinding(control, ["button"], "Button");
   return (
     <span className="ui-anchor">
-      <button type="button" className="ui-control ui-hit ui-button" {...attributes}>
+      <button type="button" className="ui-control ui-hit ui-button" aria-pressed={selected} {...attributes}>
         {leading === undefined ? null : (
           <span className="ui-button-leading" aria-hidden="true">
             {leading}

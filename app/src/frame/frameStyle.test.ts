@@ -70,7 +70,8 @@ describe("frame stylesheet", () => {
     expect(body).toContain("font-family: var(--font-family-code)");
     expect(body).toContain("background: var(--color-surface-toolbar)");
     expect(body).not.toMatch(/(?<![-\w])height\s*:/);
-    expect(ruleBody(".app-frame .ui-control")).toContain("font-family: var(--font-family-code)");
+    expect(ruleBody(".app-frame :where(.ui-control)")).not.toContain("font-family");
+    expect(stylesheet).not.toMatch(/data-layout="tablet"[^}]*interaction-touchHitSize/);
   });
 
   it("keeps the pointer and touch hit sizes of the shared control, by never setting a size on the frame's controls", () => {

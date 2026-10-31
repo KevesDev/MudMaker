@@ -1,6 +1,6 @@
 # Built-in theme presets
 
-The built-in presets are `neon-lights` and `neon-dark-mode`. They live in [theme-defaults.v1.json](../../../contracts/ui/v1/theme-defaults.v1.json) under `presets`. A preset sits between the application defaults and a user theme in the [ThemeManager](../editor-theme-manager.md) resolution order, and each scope chooses its own preset. `neon-lights` is the default for every scope.
+The built-in presets are `neon-lights` and `neon-dark-mode`. They live in [theme-defaults.v1.json](../../../contracts/ui/v1/theme-defaults.v1.json) under `presets`. A preset sits between the application defaults and a user theme in the [ThemeManager](../editor-theme-manager.md) resolution order, and one app-wide selection supplies the preset to every internal rendering scope. `neon-lights` is the default for every scope.
 
 ## Palette values
 
@@ -241,3 +241,21 @@ Lowest ratio over every pair in each group, computed with the WCAG 2.2 relative 
 | Channel accent | 7.94:1 | 14.11:1 |
 | Terminal text on highlights and input background | 9.28:1 | 4.54:1 |
 | Map symbols | 4.09:1 | 3.91:1 |
+
+## Compact retro controls
+
+Both presets inherit these control geometry defaults from the central bundle. They change control chrome, not body text or splash art composition. Existing authored custom values stay intact; selecting a bundled preset uses its defaults.
+
+| Token | Value | Derivation |
+|---|---:|---|
+| `interaction.pointerHitSize` | 24 | Owner desktop row target; compact text remains operable without forcing touch geometry. |
+| `interaction.touchHitSize` | 44 | Existing genuine touch/pen/coarse-pointer target; responsive width alone does not apply it. |
+| `spacing.controlBlock`, `spacing.menuBlock` | 2 | Owner-requested starting vertical padding; with control line height and borders, the desktop minimum governs short rows. |
+| `spacing.controlInline`, `spacing.menuInline` | 4 | Owner-requested narrow horizontal padding. |
+| `spacing.controlGap` | 2 | Minimum compact separation between related control parts. |
+| `spacing.menuGap` | 0 | Contiguous menu text rows inside one popup outline. |
+| `spacing.chrome`, `spacing.toolbar` | 4 | Small grouping and panel chrome gaps without inflated padding. |
+| `font.lineHeight.control` | 1.2 | At 14px control text this is 16.8px; plus 2px padding twice and thin borders fits the 24px pointer target. Content body line height remains unchanged. |
+| `shape.panelRadius` | 0 | Owner-required square control/popup/panel chrome. |
+
+Menu rows are unfilled text at rest, with semantic hover/pressed/selected colors. Persistent selected controls share `color.interaction.selection`, `color.accent.primary` borders and primary text; hover and active press use their existing semantic fills. Momentary commands do not gain selected state. Output categories use a full thin border rather than a bottom underline. No palette changes or arbitrary consumer style values are introduced.

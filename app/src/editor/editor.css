@@ -124,8 +124,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-row);
-  padding: var(--spacing-row);
+  gap: var(--spacing-controlGap);
+  padding: var(--spacing-controlBlock) var(--spacing-controlInline);
   font: inherit;
   color: var(--color-text-secondary);
   background: none;
@@ -135,12 +135,13 @@
 
 .editor-tab {
   min-width: 0;
-  border-block-end: calc(var(--shape-borderWidth) * 2) solid var(--color-surface-toolbar);
+  border: var(--shape-borderWidth) solid var(--color-border-normal);
 }
 
 .editor-tab-item[data-active="true"] .editor-tab {
   color: var(--color-text-primary);
-  border-block-end-color: var(--color-accent-primary);
+  background: var(--color-interaction-selection);
+  border-color: var(--color-accent-primary);
 }
 
 .editor-tab-item[data-lifted="true"] {
@@ -168,8 +169,8 @@
 .editor-inspector {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-row);
-  padding: var(--spacing-panel);
+  gap: var(--spacing-controlGap);
+  padding: var(--spacing-chrome);
 }
 
 .editor-section-heading {
@@ -185,7 +186,7 @@
 .editor-section-body {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
   padding-block-start: var(--spacing-row);
 }
 
@@ -196,7 +197,7 @@
 .editor-field {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-row);
+  gap: var(--spacing-controlGap);
 }
 
 .editor-field[data-invalid="true"] {

@@ -848,7 +848,7 @@
       "workspace": "home",
       "surface": "home.settings",
       "kind": "dropdown",
-      "label": "Appearance",
+      "label": "Theme",
       "tooltip": "Choose the appearance for the entire app",
       "actionId": "ui.settings.appearance.preset",
       "stateOwner": "HomeState",
@@ -4811,6 +4811,203 @@
       ],
       "keyboard": "focusAndActivate",
       "testId": "UI-home-settings-08"
+    },
+    {
+      "id": "home.settings.09",
+      "workspace": "home",
+      "surface": "home.settings",
+      "kind": "button",
+      "label": "Theme",
+      "tooltip": "Open app-wide theme choices",
+      "actionId": "ui.settings.appearance.themeOpen",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "surfaceActive",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-settings-09"
+    },
+    {
+      "id": "home.themeFontLineHeight.05",
+      "workspace": "home",
+      "surface": "home.themeTokens",
+      "kind": "input",
+      "label": "font.lineHeight.control",
+      "tooltip": "Edit the active scope appearance",
+      "actionId": "ui.settings.appearance.editToken",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "themeEditorOpen",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "validation-error",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-themeFontLineHeight-05"
+    },
+    {
+      "id": "home.themeSpacing.08",
+      "workspace": "home",
+      "surface": "home.themeTokens",
+      "kind": "input",
+      "label": "spacing.chrome",
+      "tooltip": "Edit the active scope appearance",
+      "actionId": "ui.settings.appearance.editToken",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "themeEditorOpen",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "validation-error",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-themeSpacing-08"
+    },
+    {
+      "id": "home.themeSpacing.09",
+      "workspace": "home",
+      "surface": "home.themeTokens",
+      "kind": "input",
+      "label": "spacing.controlBlock",
+      "tooltip": "Edit the active scope appearance",
+      "actionId": "ui.settings.appearance.editToken",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "themeEditorOpen",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "validation-error",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-themeSpacing-09"
+    },
+    {
+      "id": "home.themeSpacing.10",
+      "workspace": "home",
+      "surface": "home.themeTokens",
+      "kind": "input",
+      "label": "spacing.controlGap",
+      "tooltip": "Edit the active scope appearance",
+      "actionId": "ui.settings.appearance.editToken",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "themeEditorOpen",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "validation-error",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-themeSpacing-10"
+    },
+    {
+      "id": "home.themeSpacing.11",
+      "workspace": "home",
+      "surface": "home.themeTokens",
+      "kind": "input",
+      "label": "spacing.controlInline",
+      "tooltip": "Edit the active scope appearance",
+      "actionId": "ui.settings.appearance.editToken",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "themeEditorOpen",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "validation-error",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-themeSpacing-11"
+    },
+    {
+      "id": "home.themeSpacing.12",
+      "workspace": "home",
+      "surface": "home.themeTokens",
+      "kind": "input",
+      "label": "spacing.menuBlock",
+      "tooltip": "Edit the active scope appearance",
+      "actionId": "ui.settings.appearance.editToken",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "themeEditorOpen",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "validation-error",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-themeSpacing-12"
+    },
+    {
+      "id": "home.themeSpacing.13",
+      "workspace": "home",
+      "surface": "home.themeTokens",
+      "kind": "input",
+      "label": "spacing.menuGap",
+      "tooltip": "Edit the active scope appearance",
+      "actionId": "ui.settings.appearance.editToken",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "themeEditorOpen",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "validation-error",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-themeSpacing-13"
+    },
+    {
+      "id": "home.themeSpacing.14",
+      "workspace": "home",
+      "surface": "home.themeTokens",
+      "kind": "input",
+      "label": "spacing.menuInline",
+      "tooltip": "Edit the active scope appearance",
+      "actionId": "ui.settings.appearance.editToken",
+      "stateOwner": "HomeState",
+      "permission": "localUser",
+      "visibleWhen": "themeEditorOpen",
+      "enabledWhen": "authorizedAndReady",
+      "stateVariants": [
+        "ready",
+        "disabled",
+        "pending",
+        "validation-error",
+        "error"
+      ],
+      "keyboard": "focusAndActivate",
+      "testId": "UI-home-themeSpacing-14"
     }
   ]
 }

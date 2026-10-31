@@ -21,7 +21,7 @@ export function useTabletLayout(): boolean {
   return useSyncExternalStore(subscribe, () => typeof window.matchMedia === "function" && window.matchMedia(query).matches);
 }
 
-/** Marks the document while the tablet layout applies, so the stylesheets can enlarge hit areas without a width literal. */
+/** Marks the responsive layout independently of pointer hit sizing; narrow mouse windows keep compact controls. */
 export function useTabletLayoutMark(): void {
   const tablet = useTabletLayout();
   useLayoutEffect(() => {
