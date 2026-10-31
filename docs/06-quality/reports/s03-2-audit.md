@@ -1,0 +1,15 @@
+# S03.2 component schema audit — PASS
+- Scope: new component_schema API/source/tests and necessary CMake/README delta, against S03.2, ADR-002/003, ECS schema and existing SDK identity/value contracts. Zero unresolved real findings.
+- AC1 MET: distinct stable 128-bit IDs, readable names/positive revisions and reserved native registration; built-in/creator paths share validation. Duplicate/frozen/invalid registration rejects before publication; const descriptors deeply own nested schema/default data and survive registry destruction.
+- AC2 MET: Boolean/int64/finite Floating/UTF-8 Text/typed Entity and Asset/Record/List validation, required/optional/default/null behavior, constraints and primitive enums use actual production paths. Null enum entries reject independently of nullable value semantics; negative regression retained.
+- Schema cycles, malformed types, duplicate nested field IDs, unknown fields, invalid metadata and explicit node/depth/text/name budgets reject with component/field/path/reason. Validation precedes cloning/publication; runtime normalization recursively applies only validated defaults.
+- Reference checks cover representation only; non-null Entity schema defaults reject. No fake live resolver, authorization or asset service introduced.
+- AC3 MET: one logical registry owner; identity implementation/spike outside changed production scope, no physical storage, live mutation or wire/persistence behavior claimed.
+- Independently executed from root, all exit 0:
+- `cmake -S engine -B engine/build/s03-schema-release -G "Visual Studio 18 2026" -A x64` — PASS.
+- `cmake --build engine/build/s03-schema-release --config Release --target mudmaker_component_schema_tests` — PASS; /W4 /WX retained.
+- `ctest --test-dir engine/build/s03-schema-release -C Release -R "^ecs_component_schema$" --output-on-failure` — PASS 1/1 CTest, eight schema cases, zero failures (0.01s).
+- `cmake -S engine -B engine/build/s03-schema-asan -G "Visual Studio 18 2026" -A x64 -DMUDMAKER_ENABLE_ASAN=ON` — PASS.
+- `cmake --build engine/build/s03-schema-asan --config Release --target mudmaker_component_schema_tests` — PASS; library/test instrumentation configured.
+- `ctest --test-dir engine/build/s03-schema-asan -C Release -R "^ecs_component_schema$" --output-on-failure` — PASS 1/1 CTest, eight schema cases, zero failures (0.03s); runtime PATH supplied by CTest.
+- AC4/Verdict: PASS. UBSan unavailable/not run; no extra suites/benchmarks. Source read-only; no commit or unrelated/parked edits. Evidence proves logical schema/value validation, not live storage/world, sidecar, durable persistence, packaging or performance/scalability.

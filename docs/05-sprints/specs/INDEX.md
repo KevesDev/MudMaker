@@ -12,6 +12,8 @@ Current owner refinement: [compact retro controls, feedback and Theme submenu](S
 
 Owner priority: S03 native ECS, beginning with [S03.1 identity allocator](S03-1-SPEC.md). [Theme import/export polish](S18-17-THEME-IO-SPEC.md) moved from S02.9c to S18.17; partial work parked, not verified. Preserve accepted desktop UI.
 
+S03.1 passed and pushed af9f0ef; current slice [S03.2 typed schema registry](S03-2-SPEC.md).
+
 | Sprint | Specification |
 |---|---|
 | S00 | [Documentation](S00.md) |

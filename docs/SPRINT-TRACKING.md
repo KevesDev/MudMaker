@@ -33,7 +33,7 @@
 | [S00](#s00) | Documents and decisions | **10/10** | — | ACTIVE — owner decisions outstanding |
 | [S01](#s01) | Architecture gates and native launch smoke | **8/8** | S00 + owner ADRs | DONE |
 | [S02](#s02) | Launchable application shell and shared UI | **38/43** | S01 UI/platform choice | SHELL ACCEPTED; REMAINDER QUEUED |
-| [S03](#s03) | Native ECS | **1/10** | S01 | IN PROGRESS |
+| [S03](#s03) | Native ECS | **2/10** | S01 | IN PROGRESS |
 | [S04](#s04) | Assets and persistence | **0/19** | S03 | PLANNED |
 | [S05](#s05) | Rooms and exits | **0/11** | S03,S04 | PLANNED |
 | [S06](#s06) | Command harness | **0/17** | S04,S05 | PLANNED |
@@ -154,7 +154,7 @@
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|
 | **S03.1 Identity allocator** | World scoped entity generations | DONE | [Independent audit PASS](06-quality/reports/s03-1-audit.md); all six named native commands, seven cases in both Release/ASan. Full 128-bit WorldId, stale/foreign/retirement checks; library scope only |
-| **S03.2 Component schema** | Typed component registry | TODO | — |
+| **S03.2 Component schema** | Typed component registry | DONE | [Independent audit PASS](06-quality/reports/s03-2-audit.md); all six named native commands, eight schema cases in Release/ASan; logical schemas/value validation only |
 | **S03.3 Mutation API** | Writer-only field mutation | TODO | — |
 | **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API; the launch screen engine startup check becomes blocking once the engine ships (it is only logged until then) | TODO | — |
 | **S03.5 Query API** | Bounded entity query | TODO | — |

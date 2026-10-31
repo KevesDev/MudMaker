@@ -81,6 +81,8 @@
 
 ## Current editor appearance and sprint execution authority
 
+- [Typed native component schema registry](05-sprints/specs/S03-2-SPEC.md) — S03.2 independent audit PASS; immutable typed schemas and real value/default validation. Next is writer/mutation preflight.
+
 - [Production native identity allocator](05-sprints/specs/S03-1-SPEC.md) — S03.1 independent audit PASS; production library and seven identity cases in Release/ASan. Current next work is S03.2 component registry preflight.
 
 - [Theme import/export polish](05-sprints/specs/S18-17-THEME-IO-SPEC.md) — moved by owner from S02.9c to S18.17; partial work parked, no completion claim. Current priority is S03 native ECS.

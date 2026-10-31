@@ -34,6 +34,8 @@ Lead plans, writes the spec, dispatches, commits. Builder implements one scoped 
 
 ## 4. Status (accepted shell; S03 native ECS is current)
 
+**Latest native phase:** S03.2 independently passed, [report](06-quality/reports/s03-2-audit.md): six named commands, eight schema cases in each Release/ASan build, zero findings. Engine is 2/10; next S03.3 writer/mutation preflight. Component descriptors and value/default validation are real native code; live component storage/world and sidecar are not yet claimed. One enum/nullability issue was corrected and reported; no extra suites. Push this passed phase before next implementation.
+
 **Current owner order:** S03.1 production identity independently passed; [report](06-quality/reports/s03-1-audit.md), all six named commands, seven cases in each Release/ASan build, zero findings. Engine is 1/10; next S03.2 typed component registry preflight. This is a native library/test executable, not a running world/sidecar. Theme import/export is deferred to S18.17 polish; partial unaudited work is parked locally at `_parked/S02-9c/manifest.json`, base d438546, preserved patch/files and not pushed as accepted code. Older S02.9c-in-progress notes below are historical. Accepted compact UI is the baseline. S02 summary corrected to 38/43 from actual table rows; no acceptance revoked.
 
 **Owner acceptance, 2026-10-31:** owner confirmed the compact UI "looks much better" and "Feels good", and authorized moving forward on sprints. Preserve this visual baseline; no further unsolicited style polish. Resume tracker order at S02.9c theme import/export. This is owner desktop visual/feel acceptance, not separate touch-device or native-picker validation.

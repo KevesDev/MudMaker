@@ -7,12 +7,12 @@
 - Support builtin and creator-defined component schemas as first-class data. Schemas are inspectable, versioned and available to visual editors, runtime validation and serialization.
 - An entity may represent: player character, NPC, item, door, train, platform, train interior room, track segment, region controller, spawn point, weather controller, scheduled event or a globally scoped world service instance. Being an entity does not require rendering on map.
 - Any specialized template is *composition*, not a permanently hard-coded engine class.
-- Queryable entities and components remain manageable at scale; the concrete storage technique (archetype vs sparse-set vs hybrid) and benchmarks are OPEN.
+- The selected storage architecture is the ADR-002 hybrid confirmed by S01.5: archetypes for co-occurring hot components, sparse sets for tags/high-churn components. Production workload evidence is still required; the spike is not a scale claim for the engine.
 
 ## Canonical terms and contracts
-**EntityId:** opaque unique runtime identity, immutable within a world instance and never reused while references might exist. IDs must be scoped to world / instance; globally unique UUID vs structured world-scoped IDs is OPEN. An entity's blueprint identity is *not* its instance ID.
+**EntityId:** complete opaque 128-bit WorldId plus uint32 index and uint32 generation, per ADR-002/S01.6 and S03.1. One native identity domain issues cryptographic world namespaces and retains issued IDs for its lifetime; no caller-selected namespace. A maximum-generation slot retires rather than wraps. Blueprint identity is separate from instance identity; durable restore belongs to S04.
 
-**ComponentTypeId / ComponentSchemaVersion:** globally unambiguous namespaced type ID and version, with property names, primitive/structured types, required/default rules, validation ranges, serialization policy, editor hints and migration handling. Dynamic creator components cannot bypass validation. Example creator component: transit.ticket {class: string, validated: boolean}. Reserved builtins cannot be overridden by user assets.
+**ComponentTypeId / ComponentSchemaVersion:** stable opaque 128-bit component and field IDs, readable namespaced type names and positive schema revision. [S03.2](../05-sprints/specs/S03-2-SPEC.md) defines one typed logical-schema/default validator, immutable descriptors and a one-way release freeze; built-in and creator schemas share validation and reserved built-ins cannot be claimed by creators. Serialization/editor/migration metadata is inspectable; their runtime processors are later assigned work, not registry features already proved. Example creator component: transit.ticket {class: string, validated: boolean}.
 
 **Component instance:** data attached to EntityId, with explicit ownership and mutation authority. Prefer data-only, no hidden business logic or Spring service inside a component. Mutability strategy and allocation targets are ADR items; immutable data records may be used at boundaries, not mandated as internal ECS storage.
 
