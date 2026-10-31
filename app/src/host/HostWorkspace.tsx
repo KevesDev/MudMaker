@@ -1,11 +1,11 @@
 import { useId, useState, type ReactNode } from "react";
 import { MENU_CARET } from "../nav/destinations";
-import { ControlList, EmptyCue, PassiveText } from "../workspaces/controlParts";
+import { ControlChoice, ControlChoiceGroup, ControlList, EmptyCue, PassiveText } from "../workspaces/controlParts";
 import { PORT_INVALID_MESSAGE, portIsInvalid } from "../workspaces/ports";
 import { ToolbarSlot } from "../workspaces/ToolbarSlot";
 import { SILENT, useIntentRouter, useMenuOpeners } from "../workspaces/useIntentRouter";
-import { Button, Menu, Switch, TextField, Toolbar, useUi, type ActionHandler, type PassiveDescriptor } from "../ui";
-import { DASHBOARD, HOST_OWNER, NETWORK, PLAYERS, PUBLIC_BINDS, RECOVERY, RELEASES, SECTIONS, type Section } from "./hostLayout";
+import { Button, Dropdown, Menu, Switch, TextField, Toolbar, useUi, type ActionHandler, type PassiveDescriptor } from "../ui";
+import { DASHBOARD, HOST_OWNER, NETWORK, OPERATIONS, PLAYERS, PUBLIC_BINDS, RECOVERY, RELEASES, SECTIONS, type Section } from "./hostLayout";
 import { hostCopy } from "./hostCopy";
 
 const HOST_BAR: PassiveDescriptor = { passive: true, id: "host.actions", label: hostCopy.hostActions, help: "" };
@@ -91,7 +91,7 @@ function SectionContent({ section }: { readonly section: Section }): ReactNode {
   }
 }
 
-/** Host operations: state and Start in the frame row, then one section at a time, chosen from the Operations menu. */
+/** Primary sections share one bordered choice row; secondary operations open a focused view. */
 export function HostWorkspace() {
   const { registry } = useUi();
   const control = (id: string) => registry.requireControl(id);
@@ -102,7 +102,7 @@ export function HostWorkspace() {
     return Promise.resolve(SILENT);
   };
   useMenuOpeners(HOST_OWNER, [DASHBOARD.operations]);
-  useIntentRouter(HOST_OWNER, Object.fromEntries(SECTIONS.map((id) => [id, showSection(id)])));
+  useIntentRouter(HOST_OWNER, Object.fromEntries([...SECTIONS, ...OPERATIONS].map((id) => [id, showSection(id)])));
   return (
     <div className="host-workspace">
       <ToolbarSlot>
@@ -112,7 +112,11 @@ export function HostWorkspace() {
         </Toolbar>
       </ToolbarSlot>
       <div className="host-selector">
-        <Menu opener={control(DASHBOARD.operations)} items={SECTIONS.map(control)} currentId={section} trailingGlyph={MENU_CARET} />
+        <Dropdown control={control(DASHBOARD.project)} options={[]} value="" />
+        <ControlChoiceGroup label={hostCopy.hostActions}>
+          {SECTIONS.map((id) => <ControlChoice key={id} control={control(id)} selected={section === id} />)}
+        </ControlChoiceGroup>
+        <Menu opener={control(DASHBOARD.operations)} items={OPERATIONS.map(control)} currentId={section} trailingGlyph={MENU_CARET} />
       </div>
       <div role="region" aria-label={control(section).label} id={panelId} className="host-section">
         <SectionContent section={section} />

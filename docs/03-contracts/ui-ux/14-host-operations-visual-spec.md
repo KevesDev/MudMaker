@@ -6,7 +6,7 @@
 - Unified **compact top toolbar**: hosted world/release if selected, truthful host state, only a few frequent safe operations such as relevant Start/Stop where allowed; **Settings ▾** and **Go To ▾** at the same positions as the other workspaces.
 - **Settings ▾ → Appearance** for host-scoped visual preferences; separate operational network/security configuration remains under clearly differentiated Host settings, not confused with cosmetic preferences. **Go To ▾ → Create, Play** while in Host (no Home or Splash entry).
 - **Primary operations area** centers on active/selected world and the next meaningful host action. Display concise actual health, players and listener state when available, not decorative metric cards. If stopped, show selected release and safe start/preflight path; if running, show state and stop/management controls.
-- **Logs, active sessions/moderation, backups/recovery, networking/security and metrics** remain available in compact menu-led sections, contextual drawers or focused views. Do not show every tool as a permanently open column of data panels; do not hide dangerous actions behind ambiguous icons.
+- **Player Sessions, Traffic, Logs, Backups and Release** use a compact row of bordered splash-style section buttons, with one primary section selected. **Operations → Network** opens the secondary network view; recovery and moderation controls remain in their relevant focused sections. Do not show every tool as a permanently open column of data panels; do not hide dangerous actions behind ambiguous icons.
 - Destructive operations, recovery, active players and network exposure require clear labels, verified pending/error state and proper confirmations. Nothing silently binds public ports.
 
 ## Lifetime and constraints
@@ -24,9 +24,9 @@ This section maps **every currently registered control** to a visual home. It is
 
 **Where:** Host → primary Operations screen.
 
-**Presentation:** Selected world, running state and Start/Stop/Restart as primary; sessions/traffic/logs/backups/release offered through one Section selector, not permanent five tabs.
+**Presentation:** Truthful running state and Start/Stop/Restart in the frame row. Project to Host sits in the world/release row, followed by Player Sessions, Traffic, Logs, Backups and Release as bordered single-choice buttons, never underlined tabs. Operations offers secondary Network access without duplicating the primary section choices.
 
-**Registered features (12):** `host.dashboard.01` Hosted World; `host.dashboard.02` Server Status; `host.dashboard.03` Start Server; `host.dashboard.04` Stop Server; `host.dashboard.05` Restart; `host.dashboard.06` Open Client; `host.dashboard.07` Copy Join Instructions; `host.dashboard.08` Player Sessions; `host.dashboard.09` Traffic; `host.dashboard.10` Logs; `host.dashboard.11` Backups; `host.dashboard.12` Release.
+**Registered features (13):** `host.dashboard.01` Hosted World; `host.dashboard.02` Server Status; `host.dashboard.03` Start Server; `host.dashboard.04` Stop Server; `host.dashboard.05` Restart; `host.dashboard.06` Open Client; `host.dashboard.07` Copy Join Instructions; `host.dashboard.08` Player Sessions; `host.dashboard.09` Traffic; `host.dashboard.10` Logs; `host.dashboard.11` Backups; `host.dashboard.12` Release; `host.dashboard.13` Operations.
 
 ### host.network
 
@@ -34,11 +34,11 @@ This section maps **every currently registered control** to a visual home. It is
 
 **Presentation:** Focused network configuration view; security and exposure warning adjacent to binding/TLS inputs.
 
-**Registered features (9):** `host.network.01` Bind Address; `host.network.02` Port; `host.network.03` TLS Certificate; `host.network.04` Require TLS; `host.network.05` Reverse Proxy; `host.network.06` Trusted Proxies; `host.network.07` Verify Port; `host.network.08` Apply Network Settings; `host.network.09` Public Exposure Warning.
+**Registered features (10):** `host.network.01` Bind Address; `host.network.02` Port; `host.network.03` TLS Certificate; `host.network.04` Require TLS; `host.network.05` Reverse Proxy; `host.network.06` Trusted Proxies; `host.network.07` Verify Port; `host.network.08` Apply Network Settings; `host.network.09` Public Exposure Warning; `host.network.10` Network.
 
 ### host.security
 
-**Where:** Host → Operations menu → Players & Security.
+**Where:** Host → Player Sessions → player selection and security controls.
 
 **Presentation:** Player list primary; per-player kick/ban in contextual actions; rates/limits and incidents in compact secondary section.
 
@@ -46,7 +46,7 @@ This section maps **every currently registered control** to a visual home. It is
 
 ### host.recovery
 
-**Where:** Host → Operations menu → Releases & Recovery.
+**Where:** Host → Release or Backups → release and recovery controls.
 
 **Presentation:** Release list and validation primary; backup/restore/rollback as deliberate actions with impact dialogs.
 
@@ -91,3 +91,7 @@ A Builder must demonstrate a discoverable route to each registered feature, with
 ## Owner implementation decisions (2026-10-30)
 - The section chooser (Player Sessions, Traffic, Logs, Backups, Release) is a row of bordered buttons in the same style as the splash action buttons, one selected at a time, with no underlines or tab styling.
 - An empty list (releases, players) draws no box; only its short empty cue shows.
+
+- `Stopped` is the truthful Server Status while no host process is active. Start Server remains a silent registered action until the S17 host service is wired; no running state or success is fabricated.
+- The world/release row uses the registered Project to Host selector. Its options remain empty until real project/release data exists, without a fake option or missing-world message. Release opens the focused release controls, with `No releases.` only inside that selected empty view. Player Sessions uses `No players.` and Logs uses `No log entries.` only inside the selected section; empty lists draw no frame.
+- Opening Operations → Network replaces the primary content and clears the primary button selection; choosing a primary button returns to that section. Settings holds Appearance, diagnostics, reset, alerts and hosting Help. The five section controls retain their catalog tab IDs but render as bordered radio choices, not tab styling.

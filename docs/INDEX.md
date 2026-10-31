@@ -80,6 +80,8 @@
 - [Concrete scripting v1 deliverables and evidence gates](03-contracts/scripting-v1/DELIVERABLES.md) — actual file paths and honest source-versus-runtime status.
 
 ## Current editor appearance and sprint execution authority
+
+- [UI alignment closeout](05-sprints/specs/S02-UI-ALIGNMENT-SPEC.md) — scoped implementation and independent audit PASS; owner visual acceptance pending.
 - [Central ThemeManager and dark graph-paper canvas](03-contracts/editor-theme-manager.md) — **DECIDED visual contract**, user-editable themes, one source for font/color/spacing and grid tokens. No dotted node canvas or per-screen styles.
 - [118 small, testable phases across 17 sprints](05-sprints/specs/INDEX.md) and [current 0/N tracker](SPRINT-TRACKING.md) — **one Builder + one independent scoped Auditor per phase**, actual user-testable milestone and evidence before checkoff.
 - [S02 UI/theme deliverables](05-sprints/specs/S02.md); [S13 C#/Proto/dispatch deliverables](05-sprints/specs/S13.md); [S17 startup/recovery deliverables](05-sprints/specs/S17.md).

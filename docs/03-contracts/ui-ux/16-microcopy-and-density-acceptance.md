@@ -29,7 +29,7 @@
 | Host running | `Running`; `Stop` | `Your world is live! Monitor and manage it here` |
 | Host network warning | `Public connections enabled` with relevant concrete risk detail | giant generic security lecture on every visit |
 | Empty searchable library | `No saved worlds.` and `Add World` | multi-paragraph onboarding tutorial |
-| Invalid port | `Enter a port from 1–65535.` | vague top-level `Something went wrong` banner |
+| Invalid port | `Enter a port from 1 to 65535.` | vague top-level `Something went wrong` banner |
 
 Sample names and numbers above are **examples only**, not production default text or data.
 

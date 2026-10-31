@@ -35,6 +35,8 @@ export interface MenuChoices {
   readonly options: readonly DropdownOption[];
   /** The confirmed choice, which is marked. A pick shows as chosen only once the owner updates this. */
   readonly value: string;
+  /** Related on/off appearance settings stay inside this named group. */
+  readonly checks?: readonly MenuCheck[];
 }
 
 /**
@@ -100,6 +102,7 @@ function MenuChoiceGroup({ choices }: { readonly choices: MenuChoices }) {
           {option.label}
         </button>
       ))}
+      {choices.checks?.map((check) => <MenuCheckItem key={check.control.id} check={check} />)}
     </div>
   );
 }

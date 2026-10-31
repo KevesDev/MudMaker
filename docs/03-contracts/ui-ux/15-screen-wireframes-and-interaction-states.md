@@ -43,7 +43,7 @@
 ## Create: workspace / selection / errors
 
 ```text
-┌ CREATE · ProjectName*   [Save] [Undo] [Redo] [Validate/Test ▾] ... Settings ▾ Go To ▾ ┐
+┌ CREATE · ProjectName*   [Save] [Save All] [Undo] [Redo] [Build ▾] [View ▾] ... Settings ▾ Go To ▾ ┐
 ├ Assets ▸ ┬───────────── active document: MAP / GRAPH / CODE ──────────────────────────┤
 │ (drawer) │ [contextual map/graph/code tools]                                           │
 │          │                     CANVAS / DOCUMENT                                      │
@@ -87,7 +87,8 @@
 ```text
 ┌ HOST · WorldName · [Running|Stopped] [Start/Stop] ... Settings ▾ Go To ▾ ┐
 ├──────────────────────────────────────────────────────────────────────────┤
-│ World / Release  [selector]       [Sessions/Logs/Network/Backups ▾]     │
+│ [Project to Host ▾] [Player Sessions] [Traffic] [Logs] [Backups] [Release] │
+│ [Operations ▾ → Network]                                                │
 │                                                                          │
 │            PRIMARY OPERATIONS / SELECTED FOCUSED VIEW                   │
 │         real server state, necessary actions, relevant data             │
@@ -96,7 +97,7 @@
 ```
 
 - **Stopped:** selected world/release, verification and Start. No empty metric cards. **Running:** true running state, actual player count/connection details when useful, Stop and operational view. Never advertise uptime/health without real source.
-- **Switching operations:** a compact section chooser changes the primary content (Sessions, Logs, Traffic, Network, Security, Releases/Backups/Recovery), not a permanent five-tab dashboard with simultaneous charts.
+- **Switching operations:** Player Sessions, Traffic, Logs, Backups and Release are bordered splash-style buttons, one selected at a time, with no underlines or tab styling. Operations → Network is a secondary focused view and does not repeat those five primary routes. Its selection clears the primary choice. Project to Host uses only real project/release options; no fake empty choice or status is drawn.
 - **Player row selected:** contextual moderation actions, with permission check and confirmation for kick/ban. **Network settings:** focused labeled fields and relevant exposure warning by the risky input/action; not a wallpaper of warnings.
 - **Recovery/rollback:** selected release and actual impact confirmation with pending/error states; do not silently modify current host. Single-host conflict offers Go to Existing Host / Stop Existing Host… / Cancel.
 - **Leaving Host:** Keep Hosting & Switch / Stop Hosting & Switch / Cancel, with connected player impact where relevant. **Exit app:** Stop Hosting & Exit / Cancel, never background persistence after app termination.

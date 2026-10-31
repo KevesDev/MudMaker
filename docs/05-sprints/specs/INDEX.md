@@ -2,6 +2,8 @@
 
 [Execution order, phase status and evidence](../../SPRINT-TRACKING.md). S00 is documentation-only. Each implementation sprint uses one scoped Builder/Auditor handoff per phase.
 
+Current handoff repair: [S02 UI alignment closeout](S02-UI-ALIGNMENT-SPEC.md), scoped independent audit PASS; S02.9b is next.
+
 | Sprint | Specification |
 |---|---|
 | S00 | [Documentation](S00.md) |

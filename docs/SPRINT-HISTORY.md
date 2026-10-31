@@ -11,3 +11,9 @@
 
 ## Future entries
 Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visible scope, measured test/benchmark/UX results, auditor verdict, decisions and lessons. Do not paste raw logs or restate the entire spec.
+
+## 2026-10-30 — S02 UI alignment closeout (scoped audit PASS)
+- Host primary sections now use existing bordered choice buttons; the catalog project selector is present, Network remains secondary, and UI docs/catalog index record the kept controls. Removed unused InspectorTextInput. Startup loading test controls its dependency rather than racing immediate rejection.
+- Independent audit caught cross-workspace Appearance changes overwriting all scopes. Builder repaired the existing ShellRouter path; independent delta re-audit passed with scope isolation and rejection evidence.
+- Independent original scope: 66 files / 958 tests, typecheck and frontend build PASS. Repair: 4 files / 53 tests and typecheck PASS. Builder's original two five-second coverage timeouts are preserved in reports; isolated and independent two-worker runs passed without weaker assertions/timeouts. Existing Vite chunk-size warning remains.
+- [Scope and reports](05-sprints/specs/S02-UI-ALIGNMENT-SPEC.md). Owner visual acceptance, native gameplay and performance are not claimed. S02 remains 38/43; next phase S02.9b.

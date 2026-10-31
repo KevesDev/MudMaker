@@ -131,9 +131,10 @@ describe("the Settings menu", () => {
     await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
   });
 
-  it("switches every scope, the document variables and the mark together, closes, returns focus and announces once", async () => {
+  it("switches only home, its document variables and mark, closes, returns focus and stays silent", async () => {
     const home = await openSplash();
     const target = otherPreset(home);
+    const before = Object.fromEntries(SCOPE_IDS.map((scope) => [scope, home.manager.getSnapshot(scope).themeId]));
     const heading = screen.getByRole("heading", { level: 1 });
     const surfaceBefore = rootVariable(SURFACE);
     const focusBefore = rootVariable(FOCUS);
@@ -148,7 +149,7 @@ describe("the Settings menu", () => {
     expect(rootVariable(FOCUS)).toBe(expectedToken(target.id, "color.interaction.focus"));
     expect(rootVariable(SURFACE)).not.toBe(surfaceBefore);
     expect(rootVariable(FOCUS)).not.toBe(focusBefore);
-    expect(SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId)).toEqual(SCOPE_IDS.map(() => target.id));
+    expect(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, home.manager.getSnapshot(scope).themeId]))).toEqual({ ...before, home: target.id });
     expect(document.activeElement).toBe(opener());
     expect(screen.getByRole("heading", { level: 1 })).toBe(heading);
     expect(liveAnnouncements(`Appearance is now ${target.label}.`)).toHaveLength(0);
@@ -157,13 +158,13 @@ describe("the Settings menu", () => {
     expect(marked()).toEqual([target.id]);
   });
 
-  it("marks only a confirmed choice: a refusal leaves the old mark and colors, puts every scope back and says so once", async () => {
+  it("marks only a confirmed choice: a refusal leaves the old mark and colors, preserves every scope and says so once", async () => {
     const home = await openSplash();
     const target = otherPreset(home);
     const before = SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId);
     const surfaceBefore = rootVariable(SURFACE);
     const select = home.manager.selectPreset.bind(home.manager);
-    const refused = SCOPE_IDS[2];
+    const refused = "home";
     vi.spyOn(home.manager, "selectPreset").mockImplementation((scope, presetId) =>
       scope === refused && presetId === target.id
         ? { ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] }

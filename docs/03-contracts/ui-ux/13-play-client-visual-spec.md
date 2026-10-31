@@ -35,7 +35,7 @@ This section maps **every currently registered control** to a visual home. It is
 
 **Presentation:** World title/connection; connection actions and character selection nearby; secondary settings/help in menus.
 
-**Registered features (10):** `client.game.01` World Title; `client.game.02` Connection; `client.game.03` Disconnect; `client.game.04` Reconnect; `client.game.05` Switch Character; `client.game.06` Game Settings; `client.game.07` Mute Sounds; `client.game.08` Help; `client.game.09` Toggle Side Panels; `client.game.10` Multi World.
+**Registered features (10):** `client.game.01` World Title; `client.game.02` Connection; `client.game.03` Disconnect; `client.game.04` Reconnect; `client.game.05` Switch Character; `client.game.06` Game Settings; `client.game.07` Mute Sounds; `client.game.08` Help; `client.game.09` View; `client.game.10` Multi World.
 
 ### client.transcript
 
@@ -63,7 +63,7 @@ This section maps **every currently registered control** to a visual home. It is
 
 ### client.panels
 
-**Where:** View → Panels (one contextual secondary drawer).
+**Where:** View → Channels / Tells / Vitals / Inventory / Quests / Notes / Hotbuttons / Debug (one contextual secondary drawer).
 
 **Presentation:** Channel/tells/vitals/inventory/quests/notes/hotbuttons/debug are menu selections for *one* detail drawer, not simultaneous tabs.
 
@@ -104,3 +104,9 @@ This section maps **every currently registered control** to a visual home. It is
 ## Visual audit rule for this workspace
 
 A Builder must demonstrate a discoverable route to each registered feature, with valid disabled/error states and keyboard access, without promoting every control to the main toolbar or leaving every panel visible. Existing contract-mandated tabs represent document/session or contextual mode switching; default navigation must not become a permanently stacked tab wall. Any mismatch between this map and a feature contract is resolved through an explicit indexed documentation change, not agent invention.
+
+## Shell and saved-profile decisions (2026-10-30)
+- The connected frame row contains the actual World title, Connected state, Disconnect, Find in Transcript and View. View opens one drawer at a time; the drawer title is the chosen catalog label, with Close Panel. No repeated category heading sits beside it.
+- World Library shows `No saved worlds.` only when no saved profiles exist; an empty list has no frame. Profile Name is a local text field; Save, Cancel and Favorite are local commands through the Input Manager, not new network actions. Save persists a validated profile; Cancel is the only back/cancel control. The delete dialog title is only the selected world's name, with Delete and Cancel.
+- The profile form offers Adapter choices Telnet and MudMaker, Server Host, Port and Use TLS, plus Test Connection and Connect. `Not encrypted` appears only when TLS is off. Invalid ports show `Enter a port from 1 to 65535.` beside Port; other field validation stays beside its field. These security/validation cues are necessary and are not missing-backend status text.
+- Settings contains Appearance first; its named group holds theme presets and Timestamps. Help is a Settings item. Font, size and ANSI controls await the focused Appearance view; Mapper and Automation entry points await their S08 consumers, as tracked. Current placement is not proof of connected gameplay or those later features.

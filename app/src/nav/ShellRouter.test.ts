@@ -5,6 +5,7 @@ import { APPEARANCE, SPLASH } from "../home/homeLayout";
 import { SCOPE_IDS, ThemeManager } from "../theme";
 import { createUiRuntime, loadShippedRegistry } from "../ui";
 import { SHELL_ROUTER_OWNER, registerShellRouter } from "./ShellRouter";
+import type { Destination } from "./destinations";
 import { WorkspaceNavigator } from "./WorkspaceNavigator";
 
 const registry = loadShippedRegistry();
@@ -21,7 +22,7 @@ function setup(theme: ThemeManager = new ThemeManager(themeDefaults)) {
   const stop = registerShellRouter(runtime.bus, registry, { theme, navigator });
   const dispatch = (controlId: string, value?: string | number | boolean) =>
     runtime.bus.dispatch({ actionId: actionOf(controlId), controlId, ...(value === undefined ? {} : { value }) });
-  return { runtime, theme, stop, dispatch };
+  return { runtime, theme, navigator, stop, dispatch };
 }
 
 function otherPreset(theme: ThemeManager): { id: string; label: string } {
@@ -49,13 +50,18 @@ describe("opening the Settings menu", () => {
 });
 
 describe("appearance", () => {
-  it("applies the chosen preset to every theme scope and announces nothing", async () => {
-    const { dispatch, theme } = setup();
+  const scopes = [["splash", "home"], ["create", "editor"], ["play", "client"], ["host", "host"]] as const;
+
+  it.each(scopes)("changes only %s's %s scope and stays silent", async (destination, activeScope) => {
+    const { dispatch, theme, navigator } = setup();
     const target = otherPreset(theme);
-    const result = await dispatch(APPEARANCE, target.id);
-    expect(result).toMatchObject({ status: "success" });
-    expect(result.status === "success" ? result.message : null).toBe("");
-    expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope).themeId)).toEqual(SCOPE_IDS.map(() => target.id));
+    expect(theme.selectPreset("client", target.id).ok).toBe(true);
+    const before = Object.fromEntries(SCOPE_IDS.map((scope) => [scope, theme.getSnapshot(scope).themeId]));
+    const next = theme.listPresets().find((preset) => preset.id !== before[activeScope]);
+    if (!next) throw new Error("Two presets are required.");
+    expect(await navigator.request(destination, new AbortController().signal)).toEqual({ ok: true });
+    expect(await dispatch(APPEARANCE, next.id)).toMatchObject({ status: "success", message: "" });
+    expect(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, theme.getSnapshot(scope).themeId]))).toEqual({ ...before, [activeScope]: next.id });
   });
 
   it.each([
@@ -69,33 +75,14 @@ describe("appearance", () => {
     expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope))).toEqual(before);
   });
 
-  it("puts back the scopes it already changed when a later scope refuses, and reports a recoverable error", async () => {
-    const theme = new ThemeManager(themeDefaults);
+  it.each(scopes)("preserves every scope when %s's %s preset is rejected", async (destination, activeScope) => {
+    const { dispatch, theme, navigator } = setup();
     const target = otherPreset(theme);
-    const before = SCOPE_IDS.map((scope) => theme.getSnapshot(scope).themeId);
-    const select = theme.selectPreset.bind(theme);
-    const failing = SCOPE_IDS[2];
-    vi.spyOn(theme, "selectPreset").mockImplementation((scope, presetId) =>
-      scope === failing && presetId === target.id
-        ? { ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] }
-        : select(scope, presetId),
-    );
-    const { dispatch } = setup(theme);
+    const before = SCOPE_IDS.map((scope) => theme.getSnapshot(scope));
+    const select = vi.spyOn(theme, "selectPreset").mockReturnValue({ ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] });
+    expect(await navigator.request(destination as Destination, new AbortController().signal)).toEqual({ ok: true });
     expect(await dispatch(APPEARANCE, target.id)).toMatchObject({ status: "recoverable-error", code: "appearance-not-applied" });
-    expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope).themeId)).toEqual(before);
-  });
-
-  it("says so when a scope refuses and a scope it already changed cannot be put back", async () => {
-    const theme = new ThemeManager(themeDefaults);
-    const target = otherPreset(theme);
-    const first = SCOPE_IDS[0];
-    const refused = SCOPE_IDS[2];
-    const select = theme.selectPreset.bind(theme);
-    const refusal = { ok: false, errors: [{ code: "out-of-range", token: "color.text.primary", message: "Refused for the test." }] } as const;
-    vi.spyOn(theme, "selectPreset").mockImplementation((scope, presetId) =>
-      (scope === refused && presetId === target.id) || (scope === first && presetId !== target.id) ? refusal : select(scope, presetId),
-    );
-    const { dispatch } = setup(theme);
-    expect(await dispatch(APPEARANCE, target.id)).toMatchObject({ status: "recoverable-error", code: "appearance-partly-applied" });
+    expect(select).toHaveBeenCalledExactlyOnceWith(activeScope, target.id);
+    expect(SCOPE_IDS.map((scope) => theme.getSnapshot(scope))).toEqual(before);
   });
 });

@@ -147,32 +147,47 @@ describe("Play", () => {
     act(() => sessions.open({ id: "two", worldName: "Brackwater", connected: true }));
     expect((await screen.findAllByRole("tab")).map((tab) => tab.textContent)).toEqual(expect.arrayContaining([expect.stringContaining("Ashenvale"), expect.stringContaining("Brackwater")]));
   });
+
+  it("groups the timestamp preference under Settings Appearance", async () => {
+    await open("play");
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    const appearance = await screen.findByRole("group", { name: "Appearance" });
+    expect(within(appearance).getByRole("menuitemcheckbox", { name: label("client.preferences.07") })).toBeTruthy();
+  });
 });
 
 describe("Host", () => {
-  it("shows the stopped state and Start in the frame row, with no section list until asked, and Start shows nothing", async () => {
+  it("shows the stopped state and Start in the frame row, the project selector and five bordered section choices, and Start shows nothing", async () => {
     await open("host");
     expectCatalogControls(document.body, ["host.dashboard.03", "host.dashboard.13"]);
     expect(frameRow().contains(button("host.dashboard.03"))).toBe(true);
     expect(byTestId("host.dashboard.02")?.textContent).toBe("Stopped");
     expect(screen.queryByRole("button", { name: label("host.dashboard.04") })).toBeNull();
-    expect(screen.queryByRole("radio")).toBeNull();
+    const choices = screen.getByRole("radiogroup", { name: "Host actions" });
+    expect(within(choices).getAllByRole("radio").map((choice) => choice.textContent)).toEqual(["Player Sessions", "Traffic", "Logs", "Backups", "Release"]);
+    expect(within(choices).getAllByRole("radio").every((choice) => choice.classList.contains("workspace-choice"))).toBe(true);
+    expect(within(choices).getAllByRole("radio", { checked: true })).toHaveLength(1);
+    expect(screen.getByRole("combobox", { name: label("host.navigation.07") }).children).toHaveLength(0);
     expect(screen.queryByText("No releases.")).toBeNull();
     fireEvent.click(button("host.dashboard.03"));
     await expectNothingShown("host.dashboard.03");
   });
 
-  it("switches sections from the Operations menu and warns about public exposure only for an address open to other machines", async () => {
+  it("switches primary sections with buttons, keeps only Network in Operations, and warns only for public addresses", async () => {
     await open("host");
     const choose = async (id: string): Promise<void> => {
-      fireEvent.click(button("host.dashboard.13"));
-      fireEvent.click(await screen.findByRole("menuitem", { name: label(id) }));
-      await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+      fireEvent.click(screen.getByRole("radio", { name: label(id) }));
+      await waitFor(() => expect(screen.getByRole("radio", { name: label(id) }).getAttribute("aria-checked")).toBe("true"));
+      expect(screen.getAllByRole("radio", { checked: true })).toHaveLength(1);
     };
     await choose("host.dashboard.10");
     expect(await screen.findByText("No log entries.")).toBeTruthy();
-    await choose("host.network.10");
+    fireEvent.click(button("host.dashboard.13"));
+    const operations = await screen.findByRole("menu", { name: label("host.dashboard.13") });
+    expect(within(operations).getAllByRole("menuitem").map((item) => item.textContent)).toEqual([expect.stringContaining(label("host.network.10"))]);
+    fireEvent.click(within(operations).getByRole("menuitem", { name: label("host.network.10") }));
     const bind = await screen.findByLabelText(label("host.network.01"));
+    expect(screen.queryAllByRole("radio", { checked: true })).toHaveLength(0);
     fireEvent.change(bind, { target: { value: "127.0.0.1" } });
     expect(byTestId("host.network.09")).toBeNull();
     fireEvent.change(bind, { target: { value: "0.0.0.0" } });

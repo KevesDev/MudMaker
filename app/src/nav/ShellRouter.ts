@@ -1,8 +1,9 @@
 import { FRAME_ACTION_OWNER, actionIdOf } from "../frame/frameActions";
 import { homeCopy } from "../home/homeCopy";
 import { APPEARANCE, SPLASH } from "../home/homeLayout";
-import { SCOPE_IDS, type ScopeId, type ThemeManager } from "../theme";
+import { type ThemeManager } from "../theme";
 import { openMenuHandler, type ActionBus, type ActionHandler, type ActionRegistry } from "../ui";
+import { WORKSPACE_SCOPE } from "./destinations";
 import { registerNavigatorActions } from "./navigatorActions";
 import type { WorkspaceNavigator } from "./WorkspaceNavigator";
 
@@ -21,21 +22,14 @@ export interface ShellRouterDependencies {
 export function registerShellRouter(bus: ActionBus, registry: ActionRegistry, dependencies: ShellRouterDependencies): () => void {
   const { theme, navigator } = dependencies;
 
-  /** Every scope follows the same preset; if one refuses, the scopes already changed go back so no window is left half switched. */
+  /** Appearance belongs only to the scope of the destination showing the Settings menu. */
   const changeAppearance: ActionHandler = async ({ value }) => {
     const preset = typeof value === "string" ? theme.listPresets().find((candidate) => candidate.id === value) : undefined;
     if (preset === undefined) return { status: "validation-error", code: "appearance-unknown", message: homeCopy.appearanceUnknown };
-    const previous = new Map<ScopeId, string>(SCOPE_IDS.map((scope) => [scope, theme.getSnapshot(scope).themeId]));
-    const applied: ScopeId[] = [];
-    for (const scope of SCOPE_IDS) {
-      if (!theme.selectPreset(scope, preset.id).ok) {
-        const stuck = applied.filter((changed) => !theme.selectPreset(changed, previous.get(changed) ?? "").ok);
-        if (stuck.length > 0) {
-          return { status: "recoverable-error", code: "appearance-partly-applied", message: homeCopy.appearancePartlyApplied(preset.label) };
-        }
-        return { status: "recoverable-error", code: "appearance-not-applied", message: homeCopy.appearanceNotApplied(preset.label) };
-      }
-      applied.push(scope);
+    const destination = navigator.getSnapshot().destination;
+    const scope = destination === "splash" ? "home" : WORKSPACE_SCOPE[destination];
+    if (!theme.selectPreset(scope, preset.id).ok) {
+      return { status: "recoverable-error", code: "appearance-not-applied", message: homeCopy.appearanceNotApplied(preset.label) };
     }
     return { status: "success", message: "" };
   };

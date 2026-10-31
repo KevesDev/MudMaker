@@ -249,15 +249,17 @@ describe("the loading announcement", () => {
     records.some((record) => record.target === region && [...record.addedNodes].some((node) => node.textContent === LABEL));
 
   it("is empty when it first exists and gets the words afterwards, at launch and again on a retry, as one polite region", async () => {
+    const first = deferred<AppInfo>();
     const second = deferred<AppInfo>();
     let calls = 0;
-    const home = healthyHome({ getAppInfo: () => (++calls === 1 ? Promise.reject(new Error("not yet")) : second.promise) });
+    const home = healthyHome({ getAppInfo: () => (++calls === 1 ? first.promise : second.promise) });
     const watch = watchDocument();
     unbind = renderApp(home).unbind;
     const region = loadingRegions()[0] as HTMLElement;
     expect(region.getAttribute("aria-live")).toBe("polite");
     expect(wordsAddedTo(watch.drain(), region)).toBe(true);
     expect(loadingRegions()).toEqual([region]);
+    first.reject(new Error("not yet"));
     await waitFor(visibleAlert);
     expect(region.textContent).toBe("");
     watch.drain();

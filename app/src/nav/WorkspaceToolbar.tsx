@@ -28,11 +28,12 @@ export function WorkspaceMenus({ workspace, theme }: { readonly workspace: Works
       <Menu
         opener={registry.requireControl(SPLASH.settings)}
         items={SETTINGS_ITEMS[workspace].map((id) => registry.requireControl(id))}
-        checks={SETTINGS_CHECKS[workspace].map((id) => ({ control: registry.requireControl(id), checked: id === TIMESTAMPS_SETTING && display.timestamps }))}
+        checks={SETTINGS_CHECKS[workspace].filter((id) => id !== TIMESTAMPS_SETTING).map((id) => ({ control: registry.requireControl(id), checked: false }))}
         choices={{
           control: registry.requireControl(APPEARANCE),
           options: theme.listPresets().map((preset) => ({ value: preset.id, label: preset.label })),
           value: presetId,
+          checks: workspace === "play" ? [{ control: registry.requireControl(TIMESTAMPS_SETTING), checked: display.timestamps }] : [],
         }}
         trailingGlyph={MENU_CARET}
       />

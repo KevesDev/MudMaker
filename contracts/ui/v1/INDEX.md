@@ -19,3 +19,7 @@
 
 ## Static audit
 Exactly one action owner per ActionId, catalog IDs unique, every interactive control has action + accessible label + help + relevant failure states, every passive status shows owner/safe value, all four catalog payloads validate with [control schema](ui-control.schema.json). No duplicate ThemeManager, service-bound UI primitive, unauthorized Actor/Host actions, or cross-workspace shortcut. An exhaustive live UI audit happens in **S18**, not S00.
+
+## Shell placement update (2026-10-30)
+
+The 374-element / 294-action inventory includes the five shell additions: `editor.shell.14` Build, `.15` Assets, `.16` Inspector, `host.dashboard.13` Operations and `host.network.10` Network. `editor.shell.09` and `client.game.09` are View menu openers. Host primary section IDs retain their catalog kind but render as bordered single-choice buttons; Operations only offers secondary Network access. Placement is specified in UI docs 12–15; this inventory does not imply backend implementation.

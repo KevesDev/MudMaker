@@ -3,7 +3,7 @@
 **Purpose:** a focused standalone-feeling world-building mini-app within MudMaker; edits local drafts, not remote gameplay. [Shared shell](10-visual-language-and-shared-shell.md), [Creator function contract](04-editor-workspace.md), and [Editor controls](../../../contracts/ui/v1/editor-controls.v1.json) are binding.
 
 ## Default screen
-- A **single compact top toolbar**: current project/name and accurate unsaved indicator; frequent **Save**, **Undo/Redo** and relevant **Validate/Test** actions where available; restrained contextual tools; **Settings ▾** and **Go To ▾** at the same predictable far end as Play and Host.
+- A **single compact top toolbar**: current project/name and accurate unsaved indicator; frequent **Save**, **Save All**, **Undo/Redo**, a **Build** menu (Validate, Play Test, Publish), a **View** menu and Global Search; restrained contextual tools; **Settings ▾** and **Go To ▾** at the same predictable far end as Play and Host.
 - **Settings ▾ → Appearance** (editor-scoped theme/typography) plus editor-specific preferences/layout/shortcuts. **Go To ▾ → Play, Host** while in Create (no Home or Splash entry). Current workspace is identifiable, not an active menu item.
 - **Central canvas/document dominates**: map, visual graph, script editor or other selected authoring surface. Retain existing dark continuous **graph-paper lines, never dots**, on graph/map canvas as the theme contract requires.
 - **Asset Explorer** available in a compact collapsible rail/drawer, not a full-time huge navigation tree when unneeded. Project-level switching and asset search can live in a small header/command affordance.
@@ -29,9 +29,9 @@ This section maps **every currently registered control** to a visual home. It is
 
 **Where:** Top shared Creator toolbar / active-document strip.
 
-**Presentation:** Immediate actions: Save, Undo/Redo; Validate/Test/Publish grouped as Build menu when crowded; Search/View/Help in compact menus.
+**Presentation:** Save, Save All, Undo and Redo in the shared frame row; Build contains Validate, Play Test and Publish. View contains Assets, Inspector and output views. Global Search follows; Help is in Settings.
 
-**Registered features (13):** `editor.shell.01` Save; `editor.shell.02` Save All; `editor.shell.03` Undo; `editor.shell.04` Redo; `editor.shell.05` Validate; `editor.shell.06` Play Test; `editor.shell.07` Publish; `editor.shell.08` Global Search; `editor.shell.09` View Panels; `editor.shell.10` Help; `editor.shell.11` Project Title; `editor.shell.12` Save Status; `editor.shell.13` Workspace Tabs.
+**Registered features (16):** `editor.shell.01` Save; `editor.shell.02` Save All; `editor.shell.03` Undo; `editor.shell.04` Redo; `editor.shell.05` Validate; `editor.shell.06` Play Test; `editor.shell.07` Publish; `editor.shell.08` Global Search; `editor.shell.09` View; `editor.shell.10` Help; `editor.shell.11` Project Title; `editor.shell.12` Save Status; `editor.shell.13` Workspace Tabs; `editor.shell.14` Build; `editor.shell.15` Assets; `editor.shell.16` Inspector.
 
 ### editor.assets
 
@@ -150,6 +150,6 @@ This section maps **every currently registered control** to a visual home. It is
 A Builder must demonstrate a discoverable route to each registered feature, with valid disabled/error states and keyboard access, without promoting every control to the main toolbar or leaving every panel visible. Existing contract-mandated tabs represent document/session or contextual mode switching; default navigation must not become a permanently stacked tab wall. Any mismatch between this map and a feature contract is resolved through an explicit indexed documentation change, not agent invention.
 
 ## Owner implementation decisions (2026-10-30)
-- Panel visibility is chosen with a single View Panels control that cycles through the closed state, Assets drawer, and Assets plus Inspector.
+- View is one menu: Assets toggles the drawer; Inspector is selection-dependent; Problems, Test Output, Execution Trace and Build Logs choose one bottom drawer, initially closed. Choosing the active output closes it. No Inspector is shown without a selection.
 - The graph-paper canvas is the dominant surface; its grid and snap toggles sit in the canvas strip. The theme keeps large surfaces dark and near-black; saturated palette colors are for accents, borders and focus only.
 - Empty asset folders show no placeholder text.

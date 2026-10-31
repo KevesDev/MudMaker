@@ -8,7 +8,7 @@ import { APPEARANCE, SPLASH } from "../home/homeLayout";
 import { healthyHome, renderApp, visibleText, type TestHome } from "../home/homeTestSupport";
 import { SCOPE_IDS } from "../theme";
 import { loadShippedRegistry, uiCopy } from "../ui";
-import { MENU_CARET, NAVIGATION, WORKSPACE_DESTINATIONS, type WorkspaceDestination } from "./destinations";
+import { MENU_CARET, NAVIGATION, WORKSPACE_DESTINATIONS, WORKSPACE_SCOPE, type WorkspaceDestination } from "./destinations";
 import type { HostLeaveImpact, LeaveImpact, ServiceOutcome } from "./leaveImpact";
 
 const registry = loadShippedRegistry();
@@ -179,16 +179,17 @@ describe("Go To", () => {
 });
 
 describe("Settings and Appearance", () => {
-  it.each(WORKSPACE_DESTINATIONS)("offers Appearance in %s, applies the other preset to every scope through the theme manager, and marks it", async (workspace) => {
+  it.each(WORKSPACE_DESTINATIONS)("offers Appearance in %s, changes only that scope through the theme manager, and marks it", async (workspace) => {
     const home = await openSplash();
     fireEvent.click(screen.getByRole("button", { name: label(SPLASH[workspace]) }));
     await screen.findByRole("main", { name: identityOf(workspace) });
-    const target = home.manager.listPresets().find((preset) => preset.id !== home.manager.getSnapshot("home").themeId);
+    const before = Object.fromEntries(SCOPE_IDS.map((scope) => [scope, home.manager.getSnapshot(scope).themeId]));
+    const target = home.manager.listPresets().find((preset) => preset.id !== before[WORKSPACE_SCOPE[workspace]]);
     if (!target) throw new Error("The defaults must ship at least two presets.");
     fireEvent.click(screen.getByRole("button", { name: settingsLabel }));
     const group = within(await screen.findByRole("menu", { name: settingsLabel })).getByRole("group", { name: label(APPEARANCE) });
     fireEvent.click(within(group).getByRole("menuitemradio", { name: target.label }));
-    await waitFor(() => expect(SCOPE_IDS.map((scope) => home.manager.getSnapshot(scope).themeId)).toEqual(SCOPE_IDS.map(() => target.id)));
+    await waitFor(() => expect(Object.fromEntries(SCOPE_IDS.map((scope) => [scope, home.manager.getSnapshot(scope).themeId]))).toEqual({ ...before, [WORKSPACE_SCOPE[workspace]]: target.id }));
     await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
     expect(document.activeElement).toBe(screen.getByRole("button", { name: settingsLabel }));
     fireEvent.click(screen.getByRole("button", { name: settingsLabel }));
