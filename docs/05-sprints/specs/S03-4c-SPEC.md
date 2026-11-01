@@ -1,0 +1,12 @@
+# S03.4c — Thin Rust lifecycle owner and typed app bridge
+
+**Status:** [c1 native Rust owner](S03-4c1-SPEC.md) independently PASS; c2 managed app/lossless bridge still requires exact spec before source. Native a/b independently PASS; actual engine process pushed37ecbe8. c must provide one Rust parent/pipe/process lifecycle owner, typed forwarding and real startup/shutdown readiness without a world mirror. d owns the live Inspector and real owner clicks.
+
+| Actual phase | Gate/deliverable |
+|---|---|
+| c1 Native Rust lifecycle owner | Locked existing Windows bindings + reusable codec, explicit resource/config locator, same-logon parent pipe/read-only secret mapping, real child readiness/one outstanding request/bounded shutdown; actual Rust↔native exe tests. No Tauri activation/JSON UI bridge yet |
+| c2 Managed app owner and lossless bridge | After c1 independent PASS/push: one Tauri-managed c1 owner, typed exact-value DTO bridge, real startup blocking/status/quit integration. Requires complete separate spec/commands before code; no replacement backend |
+
+This names genuine dependency/lifecycle/serialization prerequisites. Parent c stays incomplete until both independently pass and actual app connection is proven; d still owns Inspector actions and owner click script.
+
+One same medium Builder: use cached engine-control/dispatch/b3 contracts and inspect only existing app/src-tauri engine_status/startup/window-shell registration/lifecycle files, their directly relevant frontend startup caller, Cargo manifest/lock Windows bindings and reusable engine/wire-rust public API. No whole app/repo scan. Report<25lines docs/06-quality/reports/s03-4c-preflight.md exact current function/file ownership, existing conflicting process/IPC paths if any, known dependency versions/features already locked, codec public entrypoints and generated types/serde availability, dev/native-resource locator/build flow, native lifecycle test seam and precise candidate scoped test filters/commands (facts only; do NOT run them). Include startup blocking/quit events current owner and relevant existing UI/data contracts; identify genuine missing prerequisites. No proposed new technology/UI/engine redesign, build/package/tool/dependency checks or source implementation. Lead fixes named phases/interfaces/config/commands against existing docs before implementation. Usage checked before/after batch and at least once/minute,10%reserve/5%stop.

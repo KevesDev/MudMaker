@@ -192,10 +192,17 @@ pub fn encode(envelope: &pb::Envelope, policy: Policy) -> Result<Vec<u8>, Error>
     let mut frame = Vec::with_capacity(length + 4); frame.extend_from_slice(&(length as u32).to_be_bytes());
     envelope.encode(&mut frame).map_err(|_| error(ErrorCode::Protobuf, "frame", "Serialization failed"))?; Ok(frame)
 }
+pub fn frame_length(prefix: &[u8], policy: Policy) -> Result<usize, Error> {
+    policy.validate()?;
+    if prefix.len() != 4 { return Err(error(ErrorCode::Frame, "frame", "Incomplete prefix")); }
+    let length = u32::from_be_bytes(prefix.try_into().unwrap()) as usize;
+    if length == 0 || length > policy.frame_bytes { return Err(error(ErrorCode::Frame, "frame", "Zero/oversized payload")); }
+    Ok(length)
+}
 pub fn decode(frame: &[u8], policy: Policy) -> Result<pb::Envelope, Error> {
     policy.validate()?;
     if frame.len() < 4 { return Err(error(ErrorCode::Frame, "frame", "Incomplete prefix")); }
-    let length = u32::from_be_bytes(frame[..4].try_into().unwrap()) as usize;
+    let length = frame_length(&frame[..4], policy)?;
     if length == 0 || length > policy.frame_bytes || frame.len() - 4 != length { return Err(error(ErrorCode::Frame, "frame", "Zero/oversized/incomplete/trailing payload")); }
     // Pinned prost's default physical guard is100; no custom parser or disabled limit.
     let envelope = pb::Envelope::decode(&frame[4..]).map_err(|failure| error(ErrorCode::Protobuf, "frame", &failure.to_string()))?;
