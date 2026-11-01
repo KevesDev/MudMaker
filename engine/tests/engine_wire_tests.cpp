@@ -102,6 +102,15 @@ void frame_and_protobuf_failures_are_bounded() {
   auto limited = policy(); limited.frame_bytes = 1; rejected(wire::decode(encoded, limited), wire::ErrorCode::Frame);
   rejected(wire::decode(std::array<std::uint8_t, 5>{0,0,0,1,0xff}, policy()), wire::ErrorCode::Protobuf);
 }
+void structural_parse_requires_explicit_full_validation() {
+  auto message=envelope();message.mutable_protocol()->set_major(2);
+  const auto payload=message.SerializeAsString();const auto n=static_cast<std::uint32_t>(payload.size());
+  std::vector<std::uint8_t> frame{static_cast<std::uint8_t>(n>>24),static_cast<std::uint8_t>(n>>16),static_cast<std::uint8_t>(n>>8),static_cast<std::uint8_t>(n)};frame.insert(frame.end(),payload.begin(),payload.end());
+  auto parsed=take(wire::decode_frame(frame,policy()));CHECK(parsed.protocol().major()==2);
+  rejected(wire::validate_envelope(parsed,policy()),wire::ErrorCode::Version);rejected(wire::decode(frame,policy()),wire::ErrorCode::Version);
+  CHECK(take(wire::parse_policy("{\"frame_bytes\":1048576,\"protobuf_recursion\":100,\"value_depth\":32,\"value_nodes\":4096,\"text_bytes\":262144}")).value_depth==32);
+  rejected(wire::parse_policy("{\"unknown\":1}"),wire::ErrorCode::Policy);
+}
 void version_body_and_error_vocabulary_reject_unknowns() {
   auto message = envelope(); message.mutable_protocol()->set_major(2); rejected(wire::encode(message, policy()), wire::ErrorCode::Version);
   message = envelope(); message.mutable_protocol()->set_minor(1); rejected(wire::encode(message, policy()), wire::ErrorCode::Version);
@@ -229,6 +238,7 @@ int main(int argc, char** argv) {
     if (argc == 3 && std::string_view(argv[1]) == "--read-mutated") { check_mutated(argv[2]); return 0; }
     CHECK(argc == 1);
     const std::pair<const char*, void(*)()> tests[] = {
+    {"structural parsing preserves explicit full-validation gate",structural_parse_requires_explicit_full_validation},
     {"public component/field conversions and shared sibling budgets", public_component_and_value_contexts_share_existing_mapping_and_budgets},
       {"native owned kinds and deepest supported value roundtrip", native_roundtrip_preserves_owned_values_and_deepest_supported_boundary},
       {"bounded frame and malformed protobuf", frame_and_protobuf_failures_are_bounded},

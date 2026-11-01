@@ -330,6 +330,20 @@ WorldResult<WorldSuccess> World::replace_field(EntityId id, ComponentTypeId type
     return detail::change(state, id, index, detail::Change::Replace, &value);
   });
 }
+WorldResult<std::shared_ptr<const ValueSchema>> World::field_type(ComponentTypeId type, std::uint32_t revision, FieldId field) const {
+  return detail::run<std::shared_ptr<const ValueSchema>>(state_.get(), [&] {
+    const auto index = state_->binding(type, revision); const auto& bound = state_->bindings[index];
+    const auto found = bound.layout.fields.find(field);
+    if (found == bound.layout.fields.end()) detail::fail(bound.layout.list_fields.contains(field) ? WorldErrorCode::ListContextRequired : WorldErrorCode::UnknownField, "Field is unknown or needs List element context.");
+    const auto* fields = &bound.schema->fields; std::shared_ptr<const ValueSchema> result;
+    for (const auto& name : found->second) {
+      const auto member = std::find_if(fields->begin(), fields->end(), [&](const auto& candidate) { return candidate.name == name; });
+      if (member == fields->end()) detail::fail(WorldErrorCode::Unavailable, "Compiled field metadata is unavailable.");
+      result = member->type; fields = &result->fields;
+    }
+    return result;
+  });
+}
 WorldResult<EntityInspection> World::inspect(EntityId id) const {
   return detail::run<EntityInspection>(state_.get(), [&] {
     const auto& state = *state_; state.entity(id); const auto& location = state.locations[id.index]; const auto& arch = *location.archetype;

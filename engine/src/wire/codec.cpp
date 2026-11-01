@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cmath>
 #include <fstream>
+#include <functional>
+#include <map>
 #include <iterator>
 #include <limits>
 #include <set>
@@ -119,6 +121,54 @@ void inspection_ok(const pb::EntityInspection& inspection, Budget& budget) {
     value_ok(component.value(), budget, 1, component.component_type_id());
   }
 }
+void required_entity(bool present, const shared::EntityRef& ref) {
+  if (!present) fail(ErrorCode::Identity, "entity", "Entity is missing."); entity(ref, "entity");
+}
+void component_values(const google::protobuf::RepeatedPtrField<pb::ComponentValue>& values, Budget& budget) {
+  for (const auto& value : values) { component_header(value); value_ok(value.value(), budget, 1, "component"); }
+}
+void component_target(std::string_view id, std::uint32_t revision) {
+  guid_bytes(id, "component_type_id"); if (!revision) fail(ErrorCode::Value, "revision", "Revision must be positive.");
+}
+void catalog_ok(const pb::CatalogResult& catalog, Budget& budget) {
+  std::set<std::array<std::uint8_t, 16>> components; std::size_t type_count = 0;
+  if (catalog.total() < static_cast<std::uint64_t>(catalog.schemas_size()) || (catalog.has_next_offset() && catalog.next_offset() >= catalog.total())) fail(ErrorCode::Value, "catalog", "Invalid catalog page.");
+  for (const auto& schema : catalog.schemas()) {
+    if (!components.insert(guid_bytes(schema.component_type_id(), "component_type_id")).second || !schema.schema_revision() || schema.name().empty()) fail(ErrorCode::Value, "schema", "Missing/duplicate schema identity.");
+    if (schema.persistence() != pb::PERSISTENCE_TRANSIENT && schema.persistence() != pb::PERSISTENCE_PERSISTENT) fail(ErrorCode::Value, "persistence", "Unknown persistence.");
+    if (schema.placement() != pb::PLACEMENT_ARCHETYPE && schema.placement() != pb::PLACEMENT_SPARSE) fail(ErrorCode::Value, "placement", "Unknown placement.");
+    budget.text(schema.name(), "schema.name"); budget.text(schema.display(), "schema.display"); budget.text(schema.description(), "schema.description");
+    std::map<std::uint32_t, const pb::TypeInfo*> types;
+    for (const auto& type : schema.types()) {
+      if (++type_count > budget.policy.value_nodes) fail(ErrorCode::Limit, "types", "Type graph node budget exceeded.");
+      if (!type.type_id() || !types.emplace(type.type_id(), &type).second || type.kind() < pb::VALUE_KIND_BOOLEAN || type.kind() > pb::VALUE_KIND_LIST) fail(ErrorCode::Value, "type", "Unknown/duplicate type identity or kind.");
+      if ((type.kind() != pb::VALUE_KIND_RECORD && type.fields_size()) || (type.kind() == pb::VALUE_KIND_LIST ? !type.element_type_id() : type.element_type_id() != 0)) fail(ErrorCode::Value, "type", "Type shape does not match kind.");
+      const auto& c = type.constraints();
+      if ((c.has_floating_min() && !std::isfinite(c.floating_min())) || (c.has_floating_max() && !std::isfinite(c.floating_max()))) fail(ErrorCode::Value, "constraints", "Floating constraint must be finite.");
+      for (const auto& value : c.enum_values()) value_ok(value, budget, 1, "enum");
+    }
+    std::set<std::array<std::uint8_t, 16>> fields; std::map<std::uint32_t, int> visit; std::map<std::uint32_t, std::size_t> heights;
+    const auto check_field = [&](const pb::FieldInfo& field) {
+      if (!fields.insert(guid_bytes(field.field_id(), "field_id")).second || field.name().empty() || !types.contains(field.type_id())) fail(ErrorCode::Value, "field", "Unknown/duplicate field or type link.");
+      budget.text(field.name(), "field.name"); budget.text(field.display(), "field.display"); budget.text(field.description(), "field.description");
+      if (field.has_default_value()) value_ok(field.default_value(), budget, 1, "default");
+    };
+    for (const auto& field : schema.fields()) check_field(field);
+    for (const auto& type : schema.types()) for (const auto& field : type.fields()) check_field(field);
+    std::function<void(std::uint32_t, std::size_t)> walk = [&](std::uint32_t id, std::size_t depth) {
+      if (depth > budget.policy.value_depth) fail(ErrorCode::Limit, "types", "Type graph depth exceeded.");
+      const auto found = types.find(id); if (found == types.end() || visit[id] == 1) fail(ErrorCode::Value, "types", "Missing/cyclic type link.");
+      if (visit[id] == 2) { if (heights[id] > budget.policy.value_depth - depth + 1) fail(ErrorCode::Limit, "types", "Type graph depth exceeded."); return; }
+      visit[id] = 1; const auto& type = *found->second;
+      std::size_t height = 1;
+      for (const auto& field : type.fields()) { walk(field.type_id(), depth + 1); height = std::max(height, heights[field.type_id()] + 1); }
+      if (type.kind() == pb::VALUE_KIND_LIST) { walk(type.element_type_id(), depth + 1); height = std::max(height, heights[type.element_type_id()] + 1); }
+      heights[id] = height; visit[id] = 2;
+    };
+    for (const auto& field : schema.fields()) walk(field.type_id(), 1);
+    if (visit.size() != types.size()) fail(ErrorCode::Value, "types", "Unreachable type node.");
+  }
+}
 void envelope_ok(const pb::Envelope& envelope, const Policy& policy) {
   policy_ok(policy);
   if (!envelope.has_protocol() || envelope.protocol().major() != 1 || envelope.protocol().minor() != 0) fail(ErrorCode::Version, "protocol", "Only engine-control1.0 is supported.");
@@ -136,6 +186,32 @@ void envelope_ok(const pb::Envelope& envelope, const Policy& policy) {
       if (!envelope.inspect_entity().has_entity()) fail(ErrorCode::Identity, "inspect_entity", "Entity reference missing.");
       entity(envelope.inspect_entity().entity(), "inspect_entity.entity"); break;
     case pb::Envelope::kEntityInspection: inspection_ok(envelope.entity_inspection(), budget); break;
+    case pb::Envelope::kCatalogRequest: if (!envelope.catalog_request().limit()) fail(ErrorCode::Value, "limit", "Page limit must be positive."); break;
+    case pb::Envelope::kCatalogResult: catalog_ok(envelope.catalog_result(), budget); break;
+    case pb::Envelope::kListEntitiesRequest: if (!envelope.list_entities_request().limit()) fail(ErrorCode::Value, "limit", "Page limit must be positive."); break;
+    case pb::Envelope::kListEntitiesResult: {
+      const auto& page = envelope.list_entities_result();
+      if (page.total() < static_cast<std::uint64_t>(page.entities_size()) || (page.has_next_offset() && page.next_offset() >= page.total())) fail(ErrorCode::Value, "page", "Invalid entity page.");
+      for (const auto& ref : page.entities()) entity(ref, "entity"); break;
+    }
+    case pb::Envelope::kCreateEntityRequest: component_values(envelope.create_entity_request().components(), budget); break;
+    case pb::Envelope::kCreateEntityResult: required_entity(envelope.create_entity_result().has_entity(), envelope.create_entity_result().entity()); break;
+    case pb::Envelope::kDestroyEntityRequest: required_entity(envelope.destroy_entity_request().has_entity(), envelope.destroy_entity_request().entity()); break;
+    case pb::Envelope::kAddComponentRequest: {
+      const auto& r = envelope.add_component_request(); required_entity(r.has_entity(), r.entity());
+      if (!r.has_component()) fail(ErrorCode::Value, "component", "Component is missing."); component_header(r.component()); value_ok(r.component().value(), budget, 1, "component"); break;
+    }
+    case pb::Envelope::kRemoveComponentRequest: { const auto& r = envelope.remove_component_request(); required_entity(r.has_entity(), r.entity()); component_target(r.component_type_id(), r.schema_revision()); break; }
+    case pb::Envelope::kReplaceComponentRequest: {
+      const auto& r = envelope.replace_component_request(); required_entity(r.has_entity(), r.entity());
+      if (!r.has_component()) fail(ErrorCode::Value, "component", "Component is missing."); component_header(r.component()); value_ok(r.component().value(), budget, 1, "component"); break;
+    }
+    case pb::Envelope::kReplaceFieldRequest: {
+      const auto& r = envelope.replace_field_request(); required_entity(r.has_entity(), r.entity()); component_target(r.component_type_id(), r.schema_revision()); guid_bytes(r.field_id(), "field_id");
+      if (!r.has_value()) fail(ErrorCode::Value, "value", "Replacement value missing."); value_ok(r.value(), budget, 1, "value"); break;
+    }
+    case pb::Envelope::kMutationAck: required_entity(envelope.mutation_ack().has_entity(), envelope.mutation_ack().entity()); break;
+    case pb::Envelope::kShutdownRequest: case pb::Envelope::kShutdownAck: break;
     case pb::Envelope::kError: {
       const auto& error = envelope.error();
       if (error.code() < pb::MALFORMED_FRAME || error.code() > pb::INTERNAL_FAILURE) fail(ErrorCode::Envelope, "error.code", "Unknown/unspecified error kind.");
@@ -271,9 +347,13 @@ Result<ecs::SchemaValue> ConversionContext::native_value(const pb::EngineValue& 
 }
 Result<std::monostate> validate_policy(const Policy& policy) { return attempt<std::monostate>([&] { policy_ok(policy); return std::monostate{}; }); }
 Result<Policy> load_policy(const std::string& path) {
+  std::ifstream file(path, std::ios::binary);
+  if (!file) return Error{ErrorCode::Policy, "policy", "Policy file could not be opened."};
+  const std::string json{std::istreambuf_iterator<char>(file), {}}; return parse_policy(json);
+}
+Result<Policy> parse_policy(std::string_view text) {
   return attempt<Policy>([&] {
-    std::ifstream file(path, std::ios::binary); if (!file) fail(ErrorCode::Policy, "policy", "Policy file could not be opened.");
-    const std::string json{std::istreambuf_iterator<char>(file), {}};
+    const std::string json(text);
     google::protobuf::Struct object;
     if (!google::protobuf::util::JsonStringToMessage(json, &object).ok() || object.fields_size() != 5) fail(ErrorCode::Policy, "policy", "Expected five named numeric policy controls.");
     const auto read = [&](const char* key) -> std::size_t {
@@ -307,7 +387,7 @@ Result<std::vector<std::uint8_t>> encode(const pb::Envelope& envelope, const Pol
     return frame;
   });
 }
-Result<pb::Envelope> decode(std::span<const std::uint8_t> frame, const Policy& policy) {
+Result<pb::Envelope> decode_frame(std::span<const std::uint8_t> frame, const Policy& policy) {
   return attempt<pb::Envelope>([&] {
     policy_ok(policy);
     if (frame.size() < 4) fail(ErrorCode::Frame, "frame", "Incomplete four-byte frame prefix.");
@@ -317,8 +397,19 @@ Result<pb::Envelope> decode(std::span<const std::uint8_t> frame, const Policy& p
     input.SetTotalBytesLimit(static_cast<int>(policy.frame_bytes)); input.SetRecursionLimit(100);
     pb::Envelope out;
     if (!out.ParseFromCodedStream(&input) || !input.ConsumedEntireMessage()) fail(ErrorCode::Protobuf, "frame", "Malformed protobuf or physical parser recursion exceeded.");
-    envelope_ok(out, policy); return out;
+    return out;
   });
+}
+Result<std::monostate> validate_envelope(const pb::Envelope& envelope, const Policy& policy) {
+  return attempt<std::monostate>([&] { envelope_ok(envelope, policy); return std::monostate{}; });
+}
+Result<pb::Envelope> decode(std::span<const std::uint8_t> frame, const Policy& policy) {
+  auto decoded = decode_frame(frame, policy);
+  if (const auto error = std::get_if<Error>(&decoded)) return *error;
+  auto& envelope = std::get<pb::Envelope>(decoded);
+  auto checked = validate_envelope(envelope, policy);
+  if (const auto error = std::get_if<Error>(&checked)) return *error;
+  return std::move(envelope);
 }
 Result<pb::EntityInspection> wire_inspection(const NativeInspection& inspection, const Policy& policy) {
   auto created = ConversionContext::create(policy);

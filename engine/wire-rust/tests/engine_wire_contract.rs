@@ -94,3 +94,77 @@ fn independent_bounded_failure_families() {
     bounds = policy; bounds.frame_bytes = 1; assert_eq!(decode(&bytes, bounds).unwrap_err().code, ErrorCode::Frame);
     assert!(Policy::from_json("{}").is_err());
 }
+
+
+struct NativeSession {
+    child: std::process::Child,
+    policy: Policy,
+    next: u64,
+}
+impl NativeSession {
+    fn start(engine: &Path) -> Self {
+        let exe = env::var_os("MUDMAKER_CONTROL_CPP_TEST_EXE").expect("assigned real C++ control test executable");
+        let mut paths = vec![engine.join(".deps/vcpkg_installed_33_release/x64-windows-cxx20/bin")];
+        paths.extend(env::split_paths(&env::var_os("PATH").unwrap_or_default()));
+        let child = Command::new(exe).arg("--session").env("PATH", env::join_paths(paths).unwrap())
+            .stdin(std::process::Stdio::piped()).stdout(std::process::Stdio::piped()).stderr(std::process::Stdio::inherit()).spawn().unwrap();
+        Self { child, policy: Policy::load().unwrap(), next: 0 }
+    }
+    fn exchange(&mut self, body: pb::envelope::Body) -> pb::Envelope {
+        use std::io::{Read, Write};
+        self.next += 1;
+        let request = pb::Envelope { protocol: Some(pb::ProtocolVersion { major: 1, minor: 0 }), request_id: self.next,
+            connection_id: "00112233-4455-6677-8899-aabbccddeeff".into(), body: Some(body) };
+        let bytes = encode(&request, self.policy).unwrap();
+        let input = self.child.stdin.as_mut().unwrap(); input.write_all(&bytes).unwrap(); input.flush().unwrap();
+        let output = self.child.stdout.as_mut().unwrap(); let mut prefix = [0u8; 4]; output.read_exact(&mut prefix).unwrap();
+        let size = u32::from_be_bytes(prefix) as usize; assert!(size > 0 && size <= self.policy.frame_bytes);
+        let mut frame = prefix.to_vec(); frame.resize(size + prefix.len(), 0); output.read_exact(&mut frame[4..]).unwrap();
+        let reply = decode(&frame, self.policy).unwrap(); assert_eq!(reply.request_id, request.request_id); assert_eq!(reply.connection_id, request.connection_id); reply
+    }
+}
+impl Drop for NativeSession { fn drop(&mut self) { let _ = self.child.kill(); let _ = self.child.wait(); } }
+fn control_text(value: &str) -> pb::EngineValue {
+    pb::EngineValue { value: Some(Value::Primitive(mudmaker_engine_wire::mudmaker::scripting::v1::PropertyValue { value: Some(Primitive::TextValue(value.into())) })) }
+}
+#[test]
+fn actual_native_control_session_and_lossless_flat_metadata() {
+    use pb::envelope::Body;
+    let (engine, _, destination) = fixture_paths(); let mut session = NativeSession::start(&engine);
+    let hello = session.exchange(Body::Hello(pb::Hello { pairing_token: vec![0x5a; 32], min_minor: 0, max_minor: 0 }));
+    let world = match hello.body.unwrap() { Body::HelloAck(a) => { assert!(!a.engine_version.is_empty()); a.world_id }, _ => panic!("real native Ack") };
+    let cat = session.exchange(Body::CatalogRequest(pb::CatalogRequest { offset: 0, limit: 1 }));
+    let catalog = match cat.body.unwrap() { Body::CatalogResult(c) => c, _ => panic!("catalog") };
+    assert_eq!(catalog.total, 1); assert_eq!(catalog.schemas[0].name, "mudmaker.core.named"); assert_eq!(catalog.schemas[0].persistence, pb::Persistence::Persistent as i32);
+    const NAMED: &str = "efbeba2d-21cd-4df8-a757-d96e53f8380c";
+    const NAME: &str = "dea816fc-0ae4-4eac-b02a-a1596450f93a";
+    assert_eq!(catalog.schemas[0].component_type_id, NAMED); assert_eq!(catalog.schemas[0].fields[0].field_id, NAME);
+    assert!(catalog.schemas[0].fields[0].default_value.is_some()); assert!(catalog.schemas[0].fields[1].default_value.is_none());
+    let create = session.exchange(Body::CreateEntityRequest(pb::CreateEntityRequest { components: vec![pb::ComponentValue { component_type_id: NAMED.into(), schema_revision: 1, value: Some(pb::EngineValue { value: Some(Value::Record(pb::RecordValue { fields: vec![] })) }) }] }));
+    let entity = match create.body.unwrap() { Body::CreateEntityResult(r) => r.entity.unwrap(), _ => panic!("created actual entity") }; assert_eq!(entity.world_id, world);
+    let request = pb::ReplaceFieldRequest { entity: Some(entity.clone()), component_type_id: NAMED.into(), schema_revision: 1, field_id: NAME.into(), value: Some(control_text("from Rust session")) };
+    let mutation = session.exchange(Body::ReplaceFieldRequest(request.clone())); match mutation.body.unwrap() { Body::MutationAck(a) => assert_eq!(a.entity.as_ref(), Some(&entity)), _ => panic!("native mutation Ack") }
+    let inspected = session.exchange(Body::InspectEntity(pb::InspectEntity { entity: Some(entity.clone()) }));
+    let actual = match inspected.body.unwrap() { Body::EntityInspection(i) => i, _ => panic!("inspection") }; assert_eq!(actual.entity.as_ref(), Some(&entity)); assert_eq!(actual.components[0].component_type_id, NAMED);
+    let fields = record(actual.components[0].value.as_ref().unwrap()); let name = fields.fields.iter().find(|f| f.field_id == NAME).unwrap().value.as_ref().unwrap(); assert_eq!(primitive(name), &Primitive::TextValue("from Rust session".into()));
+    let mut wrong = request; wrong.value = Some(pb::EngineValue { value: Some(Value::Primitive(mudmaker_engine_wire::mudmaker::scripting::v1::PropertyValue { value: Some(Primitive::IntegerValue(7)) })) });
+    let rejection = session.exchange(Body::ReplaceFieldRequest(wrong)); match rejection.body.unwrap() { Body::Error(e) => { assert_eq!(e.native_code, "world.schema/schema.wrong_type"); assert_eq!(e.entity.as_ref(), Some(&entity)); assert_eq!(e.field_path.first().map(String::as_str), Some(NAME)); }, _ => panic!("real native schema rejection") }
+    let after = session.exchange(Body::InspectEntity(pb::InspectEntity { entity: Some(entity) })); match after.body.unwrap() { Body::EntityInspection(i) => assert_eq!(i, actual), _ => panic!("state retained") }
+    assert!(matches!(session.exchange(Body::ShutdownRequest(pb::ShutdownRequest {})).body, Some(Body::ShutdownAck(_)))); assert!(session.child.wait().unwrap().success());
+    // A real immutable native fixture exercises every kind/optional metadata, beyond the two production Text fields.
+    let executable = env::var_os("MUDMAKER_CONTROL_CPP_TEST_EXE").unwrap(); let status = Command::new(executable).arg("--write-metadata").arg(&destination).status().unwrap(); assert!(status.success());
+    let bytes = fs::read(&destination).unwrap(); let metadata = decode(&bytes, session.policy).unwrap(); let catalog = match metadata.body.as_ref().unwrap() { Body::CatalogResult(c) => c, _ => panic!("metadata file") }; let schema = &catalog.schemas[0];
+    assert_eq!(schema.fields.len(), 9); assert_eq!(schema.persistence, pb::Persistence::Persistent as i32);
+    for (index, expected) in [pb::ValueKind::Boolean, pb::ValueKind::Integer, pb::ValueKind::Floating, pb::ValueKind::Text, pb::ValueKind::Entity, pb::ValueKind::Asset, pb::ValueKind::Record, pb::ValueKind::List].iter().enumerate() {
+        assert_eq!(schema.types.iter().find(|t| t.type_id == schema.fields[index].type_id).unwrap().kind, *expected as i32);
+    }
+    let number = schema.types.iter().find(|t| t.type_id == schema.fields[1].type_id).unwrap().constraints.as_ref().unwrap(); assert_eq!(number.integer_min, Some(i64::MIN)); assert_eq!(number.integer_max, Some(i64::MAX)); assert_eq!(number.enum_values.len(), 2);
+    assert_eq!(primitive(schema.fields[3].default_value.as_ref().unwrap()), &Primitive::ExplicitNull(true)); assert!(schema.fields[8].default_value.is_none());
+    let mutate = |edit: fn(&mut pb::ComponentSchemaInfo), expected| { let mut bad = metadata.clone(); if let Some(Body::CatalogResult(c)) = &mut bad.body { edit(&mut c.schemas[0]); } assert_eq!(encode(&bad, session.policy).unwrap_err().code, expected); };
+    mutate(|s|s.fields[0].type_id=999, ErrorCode::Value); mutate(|s|s.fields[0].field_id.clear(), ErrorCode::Identity);
+    mutate(|s|s.types[0].kind=0, ErrorCode::Value); mutate(|s|s.types[0].constraints.as_mut().unwrap().floating_min=Some(f64::NAN), ErrorCode::Value);
+    mutate(|s|s.fields[0].default_value.as_mut().unwrap().value=None, ErrorCode::Value);
+    mutate(|s|{s.types[0].kind=pb::ValueKind::List as i32;s.types[0].element_type_id=s.types[0].type_id;}, ErrorCode::Value);
+    mutate(|s|s.types[1].type_id=s.types[0].type_id, ErrorCode::Value);
+    let mut small=session.policy;small.value_nodes=1;assert_eq!(encode(&metadata,small).unwrap_err().code, ErrorCode::Limit);
+}

@@ -10,6 +10,8 @@ Windows transport in S03.4b/c will be one access-restricted named pipe, no liste
 
 ## S03.4a foundation boundary
 
+**Dispatch extension:** [engine-dispatch-v1](engine-dispatch-v1.md) fixes S03.4b2 bootstrap, additive operations/metadata, real World routing and session/error semantics. Existing a schema fields/policy/frozen baseline stay unchanged; b2 approval does not claim the actual paired b3 process or shell/UI completion.
+
 **Native read/conversion prerequisite:** [S03.4b1](../05-sprints/specs/S03-4b1-SPEC.md) adds owned offset/limit live pages (not snapshots), frozen publication-order catalog pages of existing immutable handles and shared aggregate-budget component/field conversions in the existing codec. No world/schema/validator mirror or wire change. Parent b then separately specifies real bootstrap/typed dispatch and the paired executable before shell/UI work. Implementation/acceptance require actual phase evidence.
 
 This phase implements binary codecs, framing, identity/value conversion and a **small initial control schema**: Hello, HelloAck, InspectEntity request/result and structured errors. No engine process or fake inspection service is added. S03.4b must explicitly specify/add catalog, listing and mutation/shutdown messages before dispatch; these are additive schema work owned by that actual process phase, not an implied completed prerequisite. Parent S03.4 stays incomplete through a–c.

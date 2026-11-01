@@ -1,6 +1,6 @@
 # S03.4b — Real native engine process
 
-**Status:** API preflight and S03.4b1 independently PASS; b2/b3 not implemented or authorized before their exact specs. S03.4a independently passed/pushed d356b93. Parent b owns a real engine executable, bootstrap schemas, one writer loop, paired bounded control and actual World dispatch. c owns the thin Rust lifecycle/bridge; d owns real app Inspector.
+**Status:** API preflight, S03.4b1 and [b2 bootstrap/typed dispatch](S03-4b2-SPEC.md) independently PASS; b3 paired executable still requires its exact spec/implementation/audit. S03.4a independently passed/pushed d356b93. Parent b owns a real engine executable, bootstrap schemas, one writer loop, paired bounded control and actual World dispatch. c owns the thin Rust lifecycle/bridge; d owns real app Inspector.
 
 | Actual phase | Scope and dependency |
 |---|---|

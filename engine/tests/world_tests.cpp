@@ -225,9 +225,21 @@ void owned_live_pages_preserve_dense_identity_and_writer_rules() {
   retained.entities[0] = {}; CHECK(take(world.inspect_live_page(0, 1)).entities[0] == expected.back());
   CHECK(take(world.inspect(replacement)).id == replacement);
 }
+void immutable_field_type_reuses_compiled_paths_and_writer() {
+  Fixture fixture; auto& world=*fixture.world;
+  auto descriptor=take(world.field_type(id<ComponentTypeId>(1),1,id<FieldId>(4)));
+  CHECK(descriptor==schema(fixture.registry->lookup(id<ComponentTypeId>(1),1))->fields[2].type->fields[0].type);
+  rejected(world.field_type(id<ComponentTypeId>(1),2,id<FieldId>(4)),WorldErrorCode::RevisionMismatch);
+  rejected(world.field_type(id<ComponentTypeId>(99),1,id<FieldId>(4)),WorldErrorCode::UnknownComponent);
+  rejected(world.field_type(id<ComponentTypeId>(1),1,id<FieldId>(99)),WorldErrorCode::UnknownField);
+  rejected(world.field_type(id<ComponentTypeId>(1),1,id<FieldId>(6)),WorldErrorCode::ListContextRequired);
+  bool wrong=false;std::thread other([&]{auto result=world.field_type(id<ComponentTypeId>(1),1,id<FieldId>(4));auto e=std::get_if<WorldError>(&result);wrong=e&&e->code==WorldErrorCode::WrongWriter;});other.join();CHECK(wrong);
+  fixture.world.reset();fixture.registry.reset();CHECK(descriptor->kind==FieldKind::Integer&&descriptor->constraints.integer_min==std::nullopt);
+}
 }  // namespace
 int main() {
   const std::pair<const char*, void(*)()> tests[] = {
+    {"immutable field type compiled-path read", immutable_field_type_reuses_compiled_paths_and_writer},
     {"owned live pages, boundaries and stale identity", owned_live_pages_preserve_dense_identity_and_writer_rules},
     {"lifecycle and atomic typed errors", lifecycle_and_errors_preserve_world_state},
     {"typed columns, chunks, transitions and swap removal", compiled_columns_survive_growth_transitions_and_swap_removal},

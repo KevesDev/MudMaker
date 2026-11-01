@@ -60,6 +60,7 @@ class World final {
   WorldResult<WorldSuccess> replace_component(EntityId id, const ComponentValue& component);
   WorldResult<WorldSuccess> replace_field(EntityId id, ComponentTypeId type, std::uint32_t revision,
       FieldId field, const SchemaValue& value);
+  WorldResult<std::shared_ptr<const ValueSchema>> field_type(ComponentTypeId type, std::uint32_t revision, FieldId field) const;
   WorldResult<EntityInspection> inspect(EntityId id) const;
   WorldResult<std::vector<EntityId>> inspect_live(std::size_t limit) const;
   WorldResult<LiveEntityPage> inspect_live_page(std::size_t offset, std::size_t limit) const;

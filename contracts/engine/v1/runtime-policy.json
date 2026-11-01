@@ -1,0 +1,9 @@
+{
+  "schema_nodes": 4096,
+  "schema_name_bytes": 256,
+  "chunk_target_bytes": 65536,
+  "page_limit": 256,
+  "minimum_control_frame_bytes": 2048,
+  "error_text_bytes": 128,
+  "error_path_bytes": 256
+}

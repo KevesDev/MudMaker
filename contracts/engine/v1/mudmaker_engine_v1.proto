@@ -13,6 +13,20 @@ message Envelope {
     InspectEntity inspect_entity = 12;
     EntityInspection entity_inspection = 13;
     ProtocolError error = 14;
+    CatalogRequest catalog_request = 15;
+    CatalogResult catalog_result = 16;
+    ListEntitiesRequest list_entities_request = 17;
+    ListEntitiesResult list_entities_result = 18;
+    CreateEntityRequest create_entity_request = 19;
+    CreateEntityResult create_entity_result = 20;
+    DestroyEntityRequest destroy_entity_request = 21;
+    AddComponentRequest add_component_request = 22;
+    RemoveComponentRequest remove_component_request = 23;
+    ReplaceComponentRequest replace_component_request = 24;
+    ReplaceFieldRequest replace_field_request = 25;
+    MutationAck mutation_ack = 26;
+    ShutdownRequest shutdown_request = 27;
+    ShutdownAck shutdown_ack = 28;
   }
 }
 message Hello { bytes pairing_token = 1; uint32 min_minor = 2; uint32 max_minor = 3; }
@@ -52,3 +66,26 @@ message ProtocolError {
   optional uint32 schema_revision = 7;
   repeated string field_path = 8;
 }
+
+message CatalogRequest { uint64 offset = 1; uint32 limit = 2; }
+message CatalogResult { repeated ComponentSchemaInfo schemas = 1; uint64 total = 2; optional uint64 next_offset = 3; }
+message ListEntitiesRequest { uint64 offset = 1; uint32 limit = 2; }
+message ListEntitiesResult { repeated mudmaker.scripting.v1.EntityRef entities = 1; uint64 total = 2; optional uint64 next_offset = 3; }
+message CreateEntityRequest { repeated ComponentValue components = 1; }
+message CreateEntityResult { mudmaker.scripting.v1.EntityRef entity = 1; }
+message DestroyEntityRequest { mudmaker.scripting.v1.EntityRef entity = 1; }
+message AddComponentRequest { mudmaker.scripting.v1.EntityRef entity = 1; ComponentValue component = 2; }
+message RemoveComponentRequest { mudmaker.scripting.v1.EntityRef entity = 1; string component_type_id = 2; uint32 schema_revision = 3; }
+message ReplaceComponentRequest { mudmaker.scripting.v1.EntityRef entity = 1; ComponentValue component = 2; }
+message ReplaceFieldRequest { mudmaker.scripting.v1.EntityRef entity = 1; string component_type_id = 2; uint32 schema_revision = 3; string field_id = 4; EngineValue value = 5; }
+message MutationAck { mudmaker.scripting.v1.EntityRef entity = 1; }
+message ShutdownRequest {}
+message ShutdownAck {}
+enum ValueKind { VALUE_KIND_UNSPECIFIED = 0; VALUE_KIND_BOOLEAN = 1; VALUE_KIND_INTEGER = 2; VALUE_KIND_FLOATING = 3; VALUE_KIND_TEXT = 4; VALUE_KIND_ENTITY = 5; VALUE_KIND_ASSET = 6; VALUE_KIND_RECORD = 7; VALUE_KIND_LIST = 8; }
+enum Persistence { PERSISTENCE_UNSPECIFIED = 0; PERSISTENCE_TRANSIENT = 1; PERSISTENCE_PERSISTENT = 2; }
+enum Placement { PLACEMENT_UNSPECIFIED = 0; PLACEMENT_ARCHETYPE = 1; PLACEMENT_SPARSE = 2; }
+message ComponentSchemaInfo { string component_type_id = 1; uint32 schema_revision = 2; string name = 3; Persistence persistence = 4; string display = 5; string description = 6; repeated FieldInfo fields = 7; repeated TypeInfo types = 8; Placement placement = 9; }
+message FieldInfo { string field_id = 1; string name = 2; bool required = 3; EngineValue default_value = 4; string display = 5; string description = 6; uint32 type_id = 7; }
+message TypeInfo { uint32 type_id = 1; ValueKind kind = 2; bool nullable = 3; Constraints constraints = 4; repeated FieldInfo fields = 5; uint32 element_type_id = 6; }
+message Constraints { optional sint64 integer_min = 1; optional sint64 integer_max = 2; optional double floating_min = 3; optional double floating_max = 4; optional uint64 text_min_bytes = 5; optional uint64 text_max_bytes = 6; optional uint64 list_min_items = 7; optional uint64 list_max_items = 8; repeated EngineValue enum_values = 9; }
+message RuntimeSettings { uint32 schema_nodes = 1; uint32 schema_name_bytes = 2; uint64 chunk_target_bytes = 3; uint32 page_limit = 4; uint32 minimum_control_frame_bytes = 5; uint32 error_text_bytes = 6; uint32 error_path_bytes = 7; }
