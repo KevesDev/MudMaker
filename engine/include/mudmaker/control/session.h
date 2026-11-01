@@ -27,6 +27,7 @@ class ControlSession final {
   ControlSession& operator=(const ControlSession&) = delete;
   Reply receive(std::span<const std::uint8_t> frame);
   ecs::WorldId world_id() const noexcept;
+  bool ready() const noexcept;
  private:
   struct State;
   explicit ControlSession(std::unique_ptr<State> state) noexcept;

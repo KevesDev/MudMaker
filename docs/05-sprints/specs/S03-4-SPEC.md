@@ -1,6 +1,6 @@
 # S03.4 — Real engine integration and live inspector
 
-**Status:** [S03.4a codec foundation](S03-4a-SPEC.md) independently PASS; b–d require their own concrete specs before code. Parent S03.4 passes only after all four phases independently pass and the actual app workflow is demonstrated.
+**Status:** [S03.4a codec foundation](S03-4a-SPEC.md) and [b actual native process](S03-4b-SPEC.md) independently PASS. c/d require their own concrete specs before code. Parent S03.4 passes only after all four phases independently pass and the actual app workflow is demonstrated.
 
 | Phase | Concrete deliverable | Dependency and gate |
 |---|---|---|

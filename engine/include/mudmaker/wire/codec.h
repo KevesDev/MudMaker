@@ -14,6 +14,7 @@ Result<std::monostate> validate_policy(const Policy& policy);
 Result<std::vector<std::uint8_t>> encode(const pb::Envelope& envelope, const Policy& policy);
 Result<pb::Envelope> decode(std::span<const std::uint8_t> frame, const Policy& policy);
 // Structural parse alone grants no authority: validate correlation and full envelope before dispatch.
+Result<std::uint32_t> frame_length(std::span<const std::uint8_t> prefix, const Policy& policy);
 Result<pb::Envelope> decode_frame(std::span<const std::uint8_t> frame, const Policy& policy);
 Result<std::monostate> validate_envelope(const pb::Envelope& envelope, const Policy& policy);
 Result<std::array<std::uint8_t, 16>> parse_guid(std::string_view text);

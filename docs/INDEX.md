@@ -85,6 +85,7 @@
 
 - [Native process phases](05-sprints/specs/S03-4b-SPEC.md): [b1 owned native pages/shared value conversion](05-sprints/specs/S03-4b1-SPEC.md), then b2 bootstrap/typed dispatch and b3 paired executable. [Read-only API evidence](06-quality/reports/s03-4b-api-preflight.md); not process/app verification.
 - [Native bootstrap and dispatch](03-contracts/engine-dispatch-v1.md), [S03.4b2](05-sprints/specs/S03-4b2-SPEC.md): approved empty-world/Named bootstrap, additive binary operations, flat metadata, stable diagnostics; implementation and independent acceptance required.
+- [Actual paired Windows engine process](05-sprints/specs/S03-4b3-SPEC.md): independently PASS with [real-process audit](06-quality/reports/s03-4b3-audit.md), Release/normal ASan; not app/shell completion.
 
 - [Native world and mutation gateway](05-sprints/specs/S03-3-SPEC.md) — S03.3 independent audit PASS; actual hybrid storage behind one writer. S03.4 is the next real app checkpoint.
 

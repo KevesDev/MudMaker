@@ -8,6 +8,8 @@ ADR-001 requires C++20/CMake and pinned vcpkg manifests. ADR-002/003 require the
 
 Windows transport in S03.4b/c will be one access-restricted named pipe, no listening network port. Shell owns the pipe and verifies the connecting child PID; engine runs one writer loop. Use current-user access restriction and remote-client rejection. Pairing material is fresh cryptographic 32-byte data delivered through an inherited bootstrap handle, never argv, logs or the webview. A successful hello binds that launched child/connection before inspection or mutation. This is local process pairing, not a sandbox against hostile code running as the same OS user. Concrete bootstrap/deadline/shutdown commands and tests belong to the named b/c specs before their implementation.
 
+**Actual process scope:** [S03.4b3](../05-sprints/specs/S03-4b3-SPEC.md) fixes current-logon SID pipe ACL, peer PID/liveness, read-only inherited anonymous credential mapping, absolute partial-frame/Hello deadlines and completion-safe cancellation. Ready idle is not a frame timeout. c still owns the actual Rust parent; b3 native test parent does not imply shell implementation.
+
 ## S03.4a foundation boundary
 
 **Dispatch extension:** [engine-dispatch-v1](engine-dispatch-v1.md) fixes S03.4b2 bootstrap, additive operations/metadata, real World routing and session/error semantics. Existing a schema fields/policy/frozen baseline stay unchanged; b2 approval does not claim the actual paired b3 process or shell/UI completion.

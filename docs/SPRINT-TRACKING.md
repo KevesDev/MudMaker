@@ -4,7 +4,7 @@
 
 **Phase sizing rule (owner, 2026-10-29):** each phase is one small coherent unit a Builder can finish correctly in one pass. Lead splits a sprint into sub-phases (letters under the original phase number, so existing references stay valid) before dispatching it. Only S02 is split so far; later sprints are split before they start. **USER TEST** marks a point where the owner gets a precise test list.
 
-**Current:** S03 native ECS3/10; S03.4a/b1 PASS/pushed d356b93/a76c331; [b2 real bootstrap/typed dispatch](05-sprints/specs/S03-4b2-SPEC.md) independently PASS (Release/ASan3/3 each, Rust3/3). Next b3 actual paired executable, then c shell/d inspector. No app-ready claim. S02.10a/b/c required before S03 close; theme IO alone is S18.17.
+**Current:** S03 native ECS3/10; S03.4a and b1/b2/b3 independently PASS. [Actual native process audit](06-quality/reports/s03-4b3-audit.md): Release/normal ASan2/2 each,10groups/13ownedexits per profile. Next c thin Rust parent/typed bridge, then d real Inspector. No app-ready claim. S02.10a/b/c before S03 close; theme IO alone S18.17.
 
 **Owner correction verified (2026-10-31):** [app-wide Appearance, nested Settings, one Output route, explicit Inspector](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md). [Independent audit PASS](06-quality/reports/s02-owner-ui-corrections-audit.md): 563 tests / 38 files, typecheck and frontend build. Prior separate-workspace theme and selection-only Inspector rules are superseded. Phase counts unchanged; owner visual acceptance pending.
 

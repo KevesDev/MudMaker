@@ -387,11 +387,14 @@ Result<std::vector<std::uint8_t>> encode(const pb::Envelope& envelope, const Pol
     return frame;
   });
 }
+Result<std::uint32_t> frame_length(std::span<const std::uint8_t> prefix,const Policy& policy){
+ try{policy_ok(policy);if(prefix.size()!=4)fail(ErrorCode::Frame,"frame","Incomplete frame prefix.");std::uint32_t length=0;for(auto byte:prefix)length=(length<<8)|byte;if(!length||length>policy.frame_bytes)fail(ErrorCode::Frame,"frame","Zero or oversized frame length.");return length;}catch(const Rejected& error){return error.error;}
+}
 Result<pb::Envelope> decode_frame(std::span<const std::uint8_t> frame, const Policy& policy) {
   return attempt<pb::Envelope>([&] {
     policy_ok(policy);
     if (frame.size() < 4) fail(ErrorCode::Frame, "frame", "Incomplete four-byte frame prefix.");
-    std::uint32_t length = 0; for (std::size_t i = 0; i < 4; ++i) length = (length << 8) | frame[i];
+    auto parsed_length=frame_length(frame.first(4),policy);if(auto error=std::get_if<Error>(&parsed_length))throw Rejected{*error};const auto length=std::get<std::uint32_t>(parsed_length);
     if (!length || length > policy.frame_bytes || frame.size() - 4 != length) fail(ErrorCode::Frame, "frame", "Zero/oversized/incomplete/trailing frame payload.");
     google::protobuf::io::CodedInputStream input(frame.data() + 4, static_cast<int>(length));
     input.SetTotalBytesLimit(static_cast<int>(policy.frame_bytes)); input.SetRecursionLimit(100);

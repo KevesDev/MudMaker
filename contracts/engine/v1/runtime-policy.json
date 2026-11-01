@@ -5,5 +5,11 @@
   "page_limit": 256,
   "minimum_control_frame_bytes": 2048,
   "error_text_bytes": 128,
-  "error_path_bytes": 256
+  "error_path_bytes": 256,
+  "connect_timeout_ms": 10000,
+  "hello_timeout_ms": 10000,
+  "frame_io_timeout_ms": 5000,
+  "cancel_drain_timeout_ms": 1500,
+  "process_exit_timeout_ms": 5000,
+  "pipe_buffer_bytes": 65536
 }
