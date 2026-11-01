@@ -4,7 +4,7 @@
 
 **Phase sizing rule (owner, 2026-10-29):** each phase is one small coherent unit a Builder can finish correctly in one pass. Lead splits a sprint into sub-phases (letters under the original phase number, so existing references stay valid) before dispatching it. Only S02 is split so far; later sprints are split before they start. **USER TEST** marks a point where the owner gets a precise test list.
 
-**Current:** S00 and S01 complete. Decisions: [ADR records](07-decisions/ADR-RECORDS-S01.md). Next: S02 launchable application shell (launch with `npm run dev`).
+**Current:** S03 native ECS3/10. [S03.4a codec foundation](05-sprints/specs/S03-4a-SPEC.md) has Builder Release/real Rust interoperability results; ASan pre-test DLL initialization is blocked and independently undiagnosed. Debugging Tools-only prerequisite authorized; no phase PASS/push or app-readiness claim. S02.10a/b/c must finish before S03 closes; theme IO alone is deferred to S18.17.
 
 **Owner correction verified (2026-10-31):** [app-wide Appearance, nested Settings, one Output route, explicit Inspector](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md). [Independent audit PASS](06-quality/reports/s02-owner-ui-corrections-audit.md): 563 tests / 38 files, typecheck and frontend build. Prior separate-workspace theme and selection-only Inspector rules are superseded. Phase counts unchanged; owner visual acceptance pending.
 
@@ -14,9 +14,9 @@
 
 **Binding S03 close-out gate:** owner clarified S02.10a/b/c (hardware detection, fixed model catalog/recommendations, wizard screens) must be completed before the end of S03. They remain S02 work. Only theme import/export moved to polish; S03 cannot be signed off with S02.10 unfinished.
 
-**Current pickup:** S03.3 passed/pushed258aa01; engine3/10. At6%primary remaining, agents finished and work checkpointed. Pickup scheduled2026-10-31 19:15 America/Denver after reset. [S03.4 preflight](06-quality/reports/s03-4-preflight.md) has process/Protobuf dependency contract work, no code or app-readiness claim.
+**Pickup state:** [saved blocked checkpoint](06-quality/reports/s03-4a-pickup.md); engine3/10. CDB identified a null dispatch in protobuf descriptor registration during DLL attach; deeper cause unresolved. Agents/debuggee stopped at5% remaining; a-source is local/unaccepted. One-time heartbeat resume-mudmaker-after-usage-reset created for2026-11-01 00:20 America/Denver after the00:15:32 reset. Process, shell and live inspector remain explicit b/c/d phases.
 
-**Owner acceptance (2026-10-31):** compact UI appearance/feel accepted; owner authorized proceeding with sprint order. Preserve the accepted visual baseline and start S02.9c theme import/export. Separate touch/native-picker validation is not claimed.
+**Owner acceptance (2026-10-31):** compact UI appearance/feel accepted; preserve that baseline and proceed with engine sprint order. Theme import/export is deferred to S18.17. Separate touch/native-picker validation is not claimed.
 
 ## Real application and testing milestones
 
@@ -164,11 +164,11 @@
 | **S03.1 Identity allocator** | World scoped entity generations | DONE | [Independent audit PASS](06-quality/reports/s03-1-audit.md); all six named native commands, seven cases in both Release/ASan. Full 128-bit WorldId, stale/foreign/retirement checks; library scope only |
 | **S03.2 Component schema** | Typed component registry | DONE | [Independent audit PASS](06-quality/reports/s03-2-audit.md); all six named native commands, eight schema cases in Release/ASan; logical schemas/value validation only |
 | **S03.3 Mutation API** | Writer-only field mutation | DONE | [Independent audit PASS](06-quality/reports/s03-3-audit.md); six named commands, eight World cases each Release/ASan; native World library, not app-ready |
-| **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API; the launch screen engine startup check becomes blocking once the engine ships (it is only logged until then) | TODO | [Preflight](06-quality/reports/s03-4-preflight.md) complete; actual process/Protobuf bridge and then realUI slices need contract/runtime pins before code. First engine app milestone; not ready yet |
+| **S03.4 ECS live inspector** | Shell panel to create/list ECS entities, inspect typed components and test authorized mutations using real native API; engine startup becomes blocking when shipped | IN PROGRESS | [a codec foundation](05-sprints/specs/S03-4a-SPEC.md) approved; [b process/c shell/d inspector](05-sprints/specs/S03-4-SPEC.md) remain gated. First engine app milestone; not ready yet |
 | **S03.5 Query API** | Bounded entity query | TODO | — |
 | **S03.6 Revision guard** | ExpectedVersion write checks | TODO | — |
 | **S03.7 Event commit** | Atomic state plus domain event | TODO | — |
-| **S03.8 Core harness** | Lifecycle tests and metrics | TODO | — |
+| **S03.8 Lifecycle/scale gate** | [a native lifecycle/metrics; b production workload](05-sprints/specs/S03-8-SPEC.md) for hundreds/thousands of composed entities and churn | TODO | Owner scale/identity/monitoring requirement; exact budgets/commands before dispatch, no extra current-slice tests |
 | **S03.9 Authorization primitives** | Typed Account/Character/Session references, scoped capability checks and deny-safe evaluator | TODO | — |
 | **S03.10 S03.10 Generic container capability** | Add ContainerCapability to any ECS entity, acyclic single-parent custody, versioned capacity/index queries and native hierarchy tests | TODO | — |
 
@@ -279,7 +279,7 @@
 | **S07.15 Rate limits** | Per-actor, action and byte budgets | TODO | — |
 | **S07.16 Backpressure** | Bounded fair input and output queues | TODO | — |
 | **S07.17 Reconnect** | Dedupe receipts, distinguish loss of one socket from loss of final controlling session, host-stamp loss/grace/restoration and restore authorization safely | TODO | — |
-| **S07.18 Status/location protocol** | Authenticated scoped Status/Location snapshots, deltas, revision and reconnect semantics | TODO | — |
+| **S07.18 State/lifecycle replication** | [a contract; b scoped baseline/delta service; c real-client recovery](05-sprints/specs/S07-18-SPEC.md), including Status/Location, runtime spawn/despawn and reuse | TODO | Complete IDs, actor/visibility filtering and bounded telemetry; replication scope/ADR-008 gate before implementation |
 | **S07.19 CPU NPC inference supervisor** | Bundle CPU native model worker with process/resource isolation, bounded queue, timeouts, shared model, live host status and deterministic fallback; off unless installed/enabled | TODO | — |
 | **S07.20 First local NPC speech demo** | Visible real loopback world NPC replies to nearby authorized speech using persona and short room context; run actual model installed and verified through S04.17 wizard, no cloud/API, manual model provisioning or extra runtime | TODO | — |
 | **S07.21 Combat clocks and encounter service** | Per-encounter pulse/round/real-time/hybrid clock state on shared indexed WorldClock deadline service; hundreds of simultaneous encounters, fair due-job batches, cooldown/cast interruption, persistence, stale cancellation and no private threads | TODO | — |

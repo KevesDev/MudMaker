@@ -3,6 +3,8 @@
 **Status:** ECS requirement CONFIRMED; identity/storage/writer decisions in ADR-RECORDS-S01 supersede older OPEN/proposed language below. Production identity refinement is [S03.1](../05-sprints/specs/S03-1-SPEC.md): opaque cryptographic 128-bit WorldId plus uint32 index/generation, one owner, no generation wrap. Other unassigned mechanics remain proposals. **Owner:** ECS runtime. **Dependencies:** system-boundaries.
 
 ## Mandatory ECS principles
+**Binding large-world requirement:** hundreds/thousands of composed objects, safe runtime spawning, distinct template/runtime identities, monitoring and replication must be supported. [Scale/identity/replication gates](ecs-scale-and-identity-gates.md) map this owner clarification to actual sprint phases and measured acceptance; current native implementation is not production-scale verification.
+
 - Runtime game concepts are entities with identity and component composition. Behavior lives in systems or registered graph/script hooks; entities are not gameplay class inheritance trees.
 - Support builtin and creator-defined component schemas as first-class data. Schemas are inspectable, versioned and available to visual editors, runtime validation and serialization.
 - An entity may represent: player character, NPC, item, door, train, platform, train interior room, track segment, region controller, spawn point, weather controller, scheduled event or a globally scoped world service instance. Being an entity does not require rendering on map.

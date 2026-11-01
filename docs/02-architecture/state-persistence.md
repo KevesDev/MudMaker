@@ -1,6 +1,6 @@
 # Project Assets, ECS Persistence, Versioning and Restore
 
-**Status:** PROPOSED. **Owner:** persistence + schema registry. **Dependencies:** ECS, space, event contracts.
+**Status:** detailed persistence semantics PROPOSED; C++20 engine and SQLite WAL selection in ADR-RECORDS-S01 are already decided. **Owner:** persistence + schema registry. **Dependencies:** ECS, space, event contracts. [Owner scale/identity/replication gates](ecs-scale-and-identity-gates.md) require explicit durable identity/provenance semantics and real restart evidence before S04.5 passes.
 
 ## Separate three kinds of data
 1. **Project definitions (authoring):** component schemas, entity/room/exit templates, node graphs, world-system definitions, map layout/color/icons, scripts, region topology, hosting manifest. Version-controlled project package, not a live engine registry.
@@ -8,7 +8,7 @@
 3. **Ephemeral/transient state:** UI selection/focus/panel placement, current sockets, temporary caches and derived query indexes. Must rebuild safely and never masquerade as durable gameplay data.
 
 ## Schema requirements
-Every data asset has stable ID, version, validation schema, owner/scope and explicit references. Serializer must reject unknown incompatible schema versions or run reviewed migrations; never drop fields silently. Human-readable project formats are desirable, but file format (JSON vs other), binary snapshots, DB implementation and engine language are OPEN. The original v1.1 envisioned JSON + embedded SQLite, while the current Maven pom uses H2: neither is automatically approved.
+Every data asset has stable ID, version, validation schema, owner/scope and explicit references. Serializer must reject unknown incompatible schema versions or run reviewed migrations; never drop fields silently. Human-readable project formats are desirable; authoring formats, snapshot layout and migration details are selected in their S04 specs. The approved engine/storage stack is C++20 plus SQLite WAL; older Java/H2 references are historical and do not reopen those decisions.
 
 ## Save/restore semantics
 - Document transaction/snapshot atomicity and crash recovery, write-order guarantee and idempotent replay boundary.

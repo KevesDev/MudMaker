@@ -1,6 +1,6 @@
 # S03.4 — Real engine integration and live inspector
 
-**Status:** PLANNING ONLY; prerequisites are explicit phases, not hidden UI work. No implementation is approved by this outline. Parent S03.4 passes only after all four phases independently pass and the actual app workflow is demonstrated.
+**Status:** prerequisites are explicit phases, not hidden UI work. [S03.4a](S03-4a-SPEC.md) alone is approved for its scoped Builder; b–d require their own concrete specs before code. Parent S03.4 passes only after all four phases independently pass and the actual app workflow is demonstrated.
 
 | Phase | Concrete deliverable | Dependency and gate |
 |---|---|---|
@@ -18,4 +18,4 @@
 
 Each phase gets its own bounded implementation spec/read set, owner/API/dependency decisions, acceptance, exact filtered commands, one Builder and one independent scoped Auditor. Only those named commands run; no extra suites, speculative checks or unassigned prerequisite coding. Report actual errors and decisions; commit/push each passed phase to GitHub working before proceeding. No S03.4 completion from codec docs, executable presence or mocks.
 
-S02.10a/b/c remains required before S03 closes. Usage pickup rule remains around5% remaining; all current implementation is stopped until reset.
+S02.10a/b/c remains required before S03 closes. Usage pickup rule remains around5% remaining; reset confirmed and the consumed one-time pickup removed 2026-10-31.

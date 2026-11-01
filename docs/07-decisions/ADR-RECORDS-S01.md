@@ -68,6 +68,9 @@ Evidence: [spike results](../../engine/spikes/ecs-storage/results/results-2026-1
 ## Versioning
 SemVer. Pre-release `0.x` until S18. The repo-root `VERSION` file is the single source; `app/package.json`, `app/src-tauri/Cargo.toml`, `app/src-tauri/tauri.conf.json` and the engine CMake project must equal it. A check script fails the build on drift.
 
+## S03.4 local engine control refinement (Lead, 2026-10-31)
+Under the owner's delegated decisions, [engine-control v1](../03-contracts/engine-control-v1.md) applies ADR-001/002/003/005 and S01.4/6 to the shell/native boundary. Local named pipe, versioned proto3 and the existing native writer remain mandatory; remote ADR-008 stays OPEN. S03.4a pins official vcpkg baseline9a5dfef5d1a0438a7d24856a85bd60f309d355e9, C++ protobuf7.36.2/protoc36.2 and Rust prost0.14.4. The installed26.1 is not used. Initial local safety limits are explicit configuration, not measured workload promises. A Builder-reported private WorldId constructor requires a pure public byte-to-reference-value factory; allocator/namespace issuance authority remains private. Implementation and generated interoperability require the independent [a-phase gates](../05-sprints/specs/S03-4a-SPEC.md); process/lifecycle/inspector remain b/c/d, with no docs-only completion.
+
 ## Branch policy
 `master` stays at the last audited state. Each completed phase group is committed by the Lead to the **`working`** branch on `origin` after Auditor PASS.
 

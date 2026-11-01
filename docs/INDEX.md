@@ -8,6 +8,7 @@
 | Desktop, tablet, nontechnical editor workflows | [UX + platforms](01-product/ux-and-platform.md) | REQUIRED goals; PROPOSED interaction contract |
 | Module boundaries and ownership | [System boundaries](02-architecture/system-boundaries.md) | PROPOSED |
 | Entity/component/system/query semantics | [ECS core](02-architecture/ecs-core.md) | REQUIRED architecture; PROPOSED contract |
+| Large-world scale, template/runtime IDs, spawning, monitoring and replication gates | [ECS scale and identity](02-architecture/ecs-scale-and-identity-gates.md) | REQUIRED owner goals; explicit planned S03.8/S07.18 phases, not scale proof |
 | Rooms, containers, moving trains, exits, spatial graph | [Spatial / containment / transit](02-architecture/spatial-containment-transit.md) | REQUIRED scenario; PROPOSED invariants |
 | Weather, spawners, events, time and scheduling | [Time / events / world systems](02-architecture/time-events-world-systems.md) | REQUIRED features; PROPOSED mechanics |
 | Quest runtime, progression, phased NPCs, private instances | [Quest progression and phasing](02-architecture/quest-progression-and-phasing.md) | REQUIRED behavior; PROPOSED engine contract |
@@ -23,6 +24,7 @@
 | Unified code/graph runtime and API | [Scripting runtime/ABI](03-contracts/scripting-runtime-and-capabilities.md) | PROPOSED |
 | Nodes, custom scripts, execution and APIs | [Scripting + graph](03-contracts/scripting-and-graph.md) | REQUIRED capability; PROPOSED interfaces |
 | Remote protocol, sessions, hosting runtime | [Protocol + hosting](03-contracts/protocol-and-hosting.md) | PROPOSED |
+| Local shell/native engine control and codec pins | [Engine control v1](03-contracts/engine-control-v1.md) | Lead-selected S03.4 contract; implementation requires phase evidence |
 | Quest system detailed tabs and subtabs | [Quest specifications](04-features/quests/INDEX.md) | REQUIRED scope; PROPOSED contracts |
 | Clickable color/icon cells; room panel; exits | [Map editor](04-features/map-editor.md) | REQUIRED behavior; PROPOSED interaction detail |
 | ECS object/Blueprint graphs and inspectors | [Blueprint editor](04-features/blueprint-editor.md) | REQUIRED behavior; PROPOSED graph semantics |
