@@ -18,6 +18,25 @@ Result<ecs::EntityId> native_entity(const ::mudmaker::scripting::v1::EntityRef& 
 ::mudmaker::scripting::v1::EntityRef wire_entity(ecs::EntityId entity);
 struct NativeComponent { ecs::ComponentSchemaHandle schema; ecs::SchemaValue value; };
 struct NativeInspection { ecs::EntityId entity; std::vector<NativeComponent> components; };
+// One context per message: all successful siblings share aggregate node/frame-text accounting.
+// text_bytes remains per string; depth remains each value's nesting depth.
+// It owns its policy/counters; failed conversions return no value and preserve those counters.
+// Full protobuf frame size/metadata validation remains encode/decode's responsibility.
+class ConversionContext final {
+ public:
+  static Result<std::unique_ptr<ConversionContext>> create(Policy policy);
+  ~ConversionContext();
+  ConversionContext(const ConversionContext&) = delete;
+  ConversionContext& operator=(const ConversionContext&) = delete;
+  Result<pb::ComponentValue> wire_component(const NativeComponent& component);
+  Result<NativeComponent> native_component(const pb::ComponentValue& component, const ecs::ComponentRegistry& registry);
+  Result<pb::EngineValue> wire_value(const ecs::SchemaValue& value, const ecs::ValueSchema& type);
+  Result<ecs::SchemaValue> native_value(const pb::EngineValue& value, const ecs::ValueSchema& type);
+ private:
+  struct State;
+  explicit ConversionContext(std::unique_ptr<State> state) noexcept;
+  std::unique_ptr<State> state_;
+};
 Result<pb::EntityInspection> wire_inspection(const NativeInspection& inspection, const Policy& policy);
 Result<NativeInspection> native_inspection(const pb::EntityInspection& inspection, const ecs::ComponentRegistry& registry, const Policy& policy);
 Result<std::monostate> compatible_descriptors(std::span<const std::uint8_t> frozen, std::span<const std::uint8_t> current);

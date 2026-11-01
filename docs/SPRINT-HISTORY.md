@@ -87,3 +87,13 @@ Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visib
 ## 2026-11-01 — S03.4a full independent PASS and usage-control correction
 - [Full audit PASS](06-quality/reports/s03-4a-audit.md), zero unresolved scope findings. Exact maintained6.33.6/protoc33.6 package and guards, normal Release/ASan seven assertion groups each, real produced-frame Rust2/2, unchanged semantic freeze and four app-local/runtime DLL hash pairs passed independently. Earlier36 failures are historical, not repaired or equivalently covered. No disabled checks/vendor runtime patch, app/process/scale/portability claim or extra suites.
 - Final execution exhausted the remaining short window before the next Lead usage check; automatic approval review could not create the pickup timer, so it did not execute. Owner explicitly resumed after reset and required more frequent checks. Handoff now requires checks before/after each dispatch/verification batch and at most one minute while agents run, with closeout reserve before5%. Completed final audit evidence is used without reruns.
+
+## 2026-11-01 — S03.4b source API prerequisites made explicit
+- After independently passed/pushed codec foundation d356b93, bounded read-only Builder preflight found live listing prefix-only, no registry enumeration and conversion private to inspection. No source/test work in preflight.
+- Lead named b1 owned read pages/shared codec adapters, b2 real bootstrap/typed dispatch and b3 actual paired executable. Only b1 has complete approved scope/commands and implementation dispatch; later phases remain gated.
+- Live pages are explicitly not frozen snapshots; no world cap or mutation-version redesign. Frozen catalog reuses immutable handles inside its owner, and message siblings share codec budgets. ADR008/015 stay open; process/app/scale not claimed.
+
+## 2026-11-01 — S03.4b1 native control accessors independently passed
+- Same medium Builder then independent medium Auditor; exact four assigned commands passed independently, Release/normal ASan each3/3 filtered binaries with26 assertion groups/profile. Zero unresolved scoped findings, no warnings/failures/reruns.
+- Owned World pages slice existing live IDs; frozen catalog pages retain publication-order immutable handles with atomic publication rollback. One private-budget codec context reuses component/standalone conversion and existing inspection paths.
+- No identity/proto/policy/dependency/Rust/transport/UI/bootstrap changes. No frozen-world/replication/performance or app-ready claim. Parent b still needs explicitly specified b2 native bootstrap/dispatch and b3 actual paired executable.

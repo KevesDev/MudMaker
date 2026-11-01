@@ -1,0 +1,14 @@
+# S03.4b1 native control accessors audit — PASS
+- Scope: nine assigned native API/source/test files against b1, S03.2/3 and engine-control contract; zero unresolved real in-scope findings. Existing World/registry/codec remain sole owners.
+- Live pages MET: copy at most limit IDs directly from WorldState::live with subtraction-bounded offset arithmetic, total and terminal cursor. WrongWriter/zero/past-end/SIZE_MAX, owned results and stale-generation rejection are asserted. Existing inspect_live(0) remains compatible; pages make no snapshot/world-cap promise.
+- Catalog pages MET: same immutable owning handles in successful publication order, available only after freeze. Derived handle index participates in publication rollback with both maps; no descriptor clone/sort or duplicate catalog authority. Tests prove order, cursors, limits, rejected publication, metadata/absent-default versus Null and lifetime after registry destruction.
+- Shared codec conversion MET: encapsulated context reuses existing descriptor/FieldId conversion and representation validation, with cumulative node/frame-text accounting for successful siblings. Failed conversion stages counters and returns no value. Per-string text bounds/current recursive depth/frame guards remain; schema constraints/defaults/live references stay with native owners.
+- Real public conversion tests preserve nested Record/List/signed64/absence/Null/FieldIds through protobuf roundtrip, standalone scalar/List without EntityRef wrapping, aggregate component+scalar sibling rejection in both directions and failed-conversion budget rollback. Existing malformed/identity/depth32/frozen-descriptor tests pass through shared implementation.
+- Independently executed exactly once from repo root, all exit0:
+- `cmake --build engine/build/s03-wire-33-release --config Release --target mudmaker_world_tests mudmaker_component_schema_tests mudmaker_engine_wire_tests` — PASS.
+- `ctest --test-dir engine/build/s03-wire-33-release -C Release -R "^(ecs_world_mutation|ecs_component_schema|engine_wire_codec)$" --output-on-failure` — PASS3/3 (0.07s total).
+- `cmake --build engine/build/s03-wire-33-asan --config Release --target mudmaker_world_tests mudmaker_component_schema_tests mudmaker_engine_wire_tests` — PASS.
+- `ctest --test-dir engine/build/s03-wire-33-asan -C Release -R "^(ecs_world_mutation|ecs_component_schema|engine_wire_codec)$" --output-on-failure` — PASS3/3 (0.38s total); normal ASan checks retained.
+- Counts: 9 World +9 schema +8 codec assertion groups per profile, zero failed/ignored; no errors/warnings, reconfigure, repair rerun, Cargo/tool/dependency/hash check or extra suite.
+- Verdict: PASS. Source read-only; no commit or unrelated/parked edits. No process/app-ready, snapshot consistency, population/scale/performance, persistence or broader phase acceptance claim.
+- Usage checked before/after each batch: primary70%→66% remaining; weekly49% remaining. No running sessions.

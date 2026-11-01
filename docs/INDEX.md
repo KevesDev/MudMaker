@@ -83,6 +83,8 @@
 
 ## Current editor appearance and sprint execution authority
 
+- [Native process phases](05-sprints/specs/S03-4b-SPEC.md): [b1 owned native pages/shared value conversion](05-sprints/specs/S03-4b1-SPEC.md), then b2 bootstrap/typed dispatch and b3 paired executable. [Read-only API evidence](06-quality/reports/s03-4b-api-preflight.md); not process/app verification.
+
 - [Native world and mutation gateway](05-sprints/specs/S03-3-SPEC.md) — S03.3 independent audit PASS; actual hybrid storage behind one writer. S03.4 is the next real app checkpoint.
 
 - [Typed native component schema registry](05-sprints/specs/S03-2-SPEC.md) — S03.2 independent audit PASS; immutable typed schemas and real value/default validation. Next is writer/mutation preflight.

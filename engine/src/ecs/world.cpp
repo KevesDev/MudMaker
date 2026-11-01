@@ -344,4 +344,16 @@ WorldResult<std::vector<EntityId>> World::inspect_live(std::size_t limit) const 
     return std::vector<EntityId>(state_->live.begin(), state_->live.begin() + static_cast<std::ptrdiff_t>(count));
   });
 }
+WorldResult<LiveEntityPage> World::inspect_live_page(std::size_t offset, std::size_t limit) const {
+  return detail::run<LiveEntityPage>(state_.get(), [&] {
+    if (!limit) detail::fail(WorldErrorCode::InvalidArgument, "Live page limit must be positive.");
+    const auto total = state_->live.size();
+    if (offset >= total) return LiveEntityPage{{}, total, {}};
+    const auto count = std::min(limit, total - offset);
+    const auto end = offset + count;  // Both operands are bounded by the remaining live sequence.
+    return LiveEntityPage{std::vector<EntityId>(state_->live.begin() + static_cast<std::ptrdiff_t>(offset),
+        state_->live.begin() + static_cast<std::ptrdiff_t>(end)), total,
+        end < total ? std::optional<std::size_t>{end} : std::nullopt};
+  });
+}
 }  // namespace mudmaker::ecs

@@ -89,6 +89,11 @@ struct ComponentSchema {
   std::vector<FieldSchema> fields;
 };
 using ComponentSchemaHandle = std::shared_ptr<const ComponentSchema>;
+struct ComponentCatalogPage {
+  std::vector<ComponentSchemaHandle> schemas;
+  std::size_t total;
+  std::optional<std::size_t> next_offset;
+};
 struct SchemaValidationLimits {
   std::size_t schema_nodes, value_nodes, nesting_depth, text_bytes, name_bytes;
 };
@@ -97,7 +102,7 @@ enum class SchemaErrorCode {
   duplicate_id, duplicate_name, frozen, unknown_component, revision_mismatch,
   malformed_schema, cyclic_schema, limit_exceeded, invalid_constraints, invalid_default,
   wrong_type, null_not_allowed, required_field, unknown_field, out_of_range,
-  invalid_utf8, invalid_reference, enum_mismatch, resource_exhausted
+  invalid_utf8, invalid_reference, enum_mismatch, resource_exhausted, not_frozen
 };
 struct SchemaError {
   SchemaErrorCode code;
@@ -119,6 +124,7 @@ class ComponentRegistry final {
   SchemaResult<ComponentSchemaHandle> lookup(ComponentTypeId id, std::uint32_t revision) const;
   SchemaResult<ComponentSchemaHandle> lookup(std::string_view name, std::uint32_t revision) const;
   SchemaResult<SchemaValue> validate_value(ComponentTypeId id, std::uint32_t revision, const SchemaValue& value) const;
+  SchemaResult<ComponentCatalogPage> catalog_page(std::size_t offset, std::size_t limit) const;
   void freeze() noexcept { frozen_ = true; }
   bool frozen() const noexcept { return frozen_; }
   std::size_t size() const noexcept { return by_id_.size(); }
@@ -127,6 +133,7 @@ class ComponentRegistry final {
   SchemaResult<ComponentSchemaHandle> publish(const ComponentDefinition& definition, bool builtin);
   SchemaValidationLimits limits_;
   bool frozen_ = false;
+  std::vector<ComponentSchemaHandle> publication_order_;  // Derived handles only; published atomically with maps.
   std::map<ComponentTypeId, ComponentSchemaHandle> by_id_;
   std::map<std::string, ComponentSchemaHandle, std::less<>> by_name_;
 };

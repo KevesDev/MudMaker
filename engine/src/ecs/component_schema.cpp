@@ -3,6 +3,7 @@
 #include <cmath>
 #include <new>
 #include <set>
+#include <stdexcept>
 
 namespace mudmaker::ecs {
 namespace {
@@ -248,10 +249,17 @@ SchemaResult<ComponentSchemaHandle> ComponentRegistry::publish(const ComponentDe
     if (auto error = check_fields(definition.fields, ctx, 2, "$")) return *error;
     auto descriptor = std::make_shared<const ComponentSchema>(ComponentSchema{definition.id, definition.name, definition.revision, definition.persistence, definition.display, definition.description, own_fields(definition.fields)});
     by_id_.emplace(definition.id, descriptor);
-    try { by_name_.emplace(definition.name, descriptor); }
-    catch (...) { by_id_.erase(definition.id); throw; }
+    try {
+      by_name_.emplace(definition.name, descriptor);
+      publication_order_.push_back(descriptor);
+    } catch (...) {
+      by_name_.erase(definition.name);
+      by_id_.erase(definition.id);
+      throw;
+    }
     return descriptor;
   } catch (const std::bad_alloc&) { return exhausted(definition.id); }
+  catch (const std::length_error&) { return exhausted(definition.id); }
 }
 SchemaResult<ComponentSchemaHandle> ComponentRegistry::lookup(ComponentTypeId id, std::uint32_t revision) const {
   const auto found = by_id_.find(id);
@@ -277,5 +285,19 @@ SchemaResult<SchemaValue> ComponentRegistry::validate_value(ComponentTypeId id, 
     if (auto error = check_record(descriptor.fields, *record, ctx, 1, "$", {}, false)) return *error;
     return normalized_record(descriptor.fields, *record);
   } catch (const std::bad_alloc&) { return exhausted(id); }
+}
+SchemaResult<ComponentCatalogPage> ComponentRegistry::catalog_page(std::size_t offset, std::size_t limit) const {
+  if (!frozen_) return SchemaError{SchemaErrorCode::not_frozen, {}, {}, "catalog", "Catalog pages require a frozen release registry."};
+  if (!limit) return SchemaError{SchemaErrorCode::invalid_limits, {}, {}, "limit", "Catalog page limit must be positive."};
+  const auto total = publication_order_.size();
+  if (offset >= total) return ComponentCatalogPage{{}, total, {}};
+  const auto count = std::min(limit, total - offset);
+  const auto end = offset + count;
+  try {
+    return ComponentCatalogPage{std::vector<ComponentSchemaHandle>(publication_order_.begin() + static_cast<std::ptrdiff_t>(offset),
+        publication_order_.begin() + static_cast<std::ptrdiff_t>(end)), total,
+        end < total ? std::optional<std::size_t>{end} : std::nullopt};
+  } catch (const std::bad_alloc&) { return exhausted({}); }
+  catch (const std::length_error&) { return exhausted({}); }
 }
 }  // namespace mudmaker::ecs

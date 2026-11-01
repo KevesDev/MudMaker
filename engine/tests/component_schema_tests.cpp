@@ -212,9 +212,54 @@ void caller_limits_bound_schema_and_actual_default_value_processing() {
   rejected(registry->register_creator(too_big), SchemaErrorCode::limit_exceeded);
   CHECK(registry->size() == 1);
 }
+void frozen_catalog_pages_preserve_publication_order_and_owned_metadata() {
+  auto registry = take(ComponentRegistry::create(limits));
+  rejected(registry->catalog_page(0, 2), SchemaErrorCode::not_frozen);
+  std::vector<ComponentSchemaHandle> published;
+  for (const auto number : {4u, 1u, 7u, 2u, 5u}) {
+    auto definition = component(static_cast<std::uint8_t>(number), "creator.c" + std::to_string(number));
+    auto absent = field(1, "absent", FieldKind::Text); absent.display = "Optional";
+    auto null_default = field(2, "nil", FieldKind::Text); null_default.type->nullable = true;
+    null_default.default_value = SchemaValue{}; null_default.description = "Explicit nullable default";
+    definition.fields = {absent, null_default};
+    published.push_back(take(registry->register_creator(definition)));
+    if (published.size() == 2) {
+      auto duplicate = component(99, definition.name);
+      rejected(registry->register_creator(duplicate), SchemaErrorCode::duplicate_name);
+      CHECK(registry->size() == published.size());
+    }
+  }
+  registry->freeze();
+  rejected(registry->catalog_page(0, 0), SchemaErrorCode::invalid_limits);
+  rejected(registry->register_creator(component(9, "creator.late")), SchemaErrorCode::frozen);
+  std::vector<ComponentSchemaHandle> joined; std::size_t offset = 0;
+  for (;;) {
+    const auto page = take(registry->catalog_page(offset, 2));
+    CHECK(page.total == published.size() && page.schemas.size() <= 2);
+    joined.insert(joined.end(), page.schemas.begin(), page.schemas.end());
+    if (!page.next_offset) break;
+    CHECK(*page.next_offset == offset + page.schemas.size()); offset = *page.next_offset;
+  }
+  CHECK(joined == published);
+  for (const auto& handle : joined) CHECK(handle == take(registry->lookup(handle->id, handle->revision)));
+  const auto terminal = take(registry->catalog_page(published.size(), 2));
+  CHECK(terminal.schemas.empty() && !terminal.next_offset && terminal.total == published.size());
+  const auto past = take(registry->catalog_page(std::numeric_limits<std::size_t>::max(), 2));
+  CHECK(past.schemas.empty() && !past.next_offset && past.total == published.size());
+  const auto suffix = take(registry->catalog_page(1, std::numeric_limits<std::size_t>::max()));
+  CHECK(suffix.schemas.size() == published.size() - 1 && !suffix.next_offset && suffix.schemas[0] == published[1]);
+  auto retained = take(registry->catalog_page(0, 1)); joined.clear(); published.clear(); registry.reset();
+  const auto& descriptor = retained.schemas[0];
+  CHECK(descriptor->id == id<ComponentTypeId>(4) && descriptor->name == "creator.c4" && descriptor->persistence == PersistenceMode::Persistent);
+  CHECK(descriptor->fields[0].id == id<FieldId>(1) && descriptor->fields[0].display == "Optional" && !descriptor->fields[0].default_value);
+  CHECK(descriptor->fields[1].id == id<FieldId>(2) && descriptor->fields[1].type->nullable && descriptor->fields[1].default_value);
+  CHECK(std::holds_alternative<std::monostate>(descriptor->fields[1].default_value->data));
+  CHECK(descriptor->fields[1].description == "Explicit nullable default");
+}
 }  // namespace
 int main() {
   const std::pair<const char*, void(*)()> tests[] = {
+    {"frozen owned catalog publication pages", frozen_catalog_pages_preserve_publication_order_and_owned_metadata},
     {"shared registration, immutable ownership, lookup and freeze", shared_registration_ownership_lookup_and_freeze},
     {"metadata and ID rejection is atomic", metadata_and_identity_rejection_is_atomic},
     {"required/null/default nested Record/List validation", required_nullable_defaults_nested_records_and_lists},

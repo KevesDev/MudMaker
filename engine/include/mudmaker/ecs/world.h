@@ -23,10 +23,17 @@ struct EntityInspection {
   std::size_t archetype, chunk, row;
   friend bool operator==(const EntityInspection&, const EntityInspection&) = default;
 };
+// Live dense order may change between calls; this owns IDs, not a frozen snapshot.
+struct LiveEntityPage {
+  std::vector<EntityId> entities;
+  std::size_t total;
+  std::optional<std::size_t> next_offset;
+};
+
 enum class WorldErrorCode {
   WrongWriter, Unavailable, InvalidConfiguration, Identity, Schema, UnknownComponent,
   RevisionMismatch, MissingComponent, DuplicateComponent, UnknownField, ParentUnavailable,
-  ListContextRequired, InboundReferences, ResourceExhausted
+  ListContextRequired, InboundReferences, ResourceExhausted, InvalidArgument
 };
 struct WorldError {
   WorldErrorCode code;
@@ -55,6 +62,7 @@ class World final {
       FieldId field, const SchemaValue& value);
   WorldResult<EntityInspection> inspect(EntityId id) const;
   WorldResult<std::vector<EntityId>> inspect_live(std::size_t limit) const;
+  WorldResult<LiveEntityPage> inspect_live_page(std::size_t offset, std::size_t limit) const;
  private:
   explicit World(std::unique_ptr<detail::WorldState> state) noexcept;
   std::unique_ptr<detail::WorldState> state_;

@@ -177,6 +177,51 @@ void check_mutated(const std::string& path) {
   CHECK(std::get<std::int64_t>(deep->data) == 777);
   CHECK(native.entity.index == 4294967294u && native.entity.generation == 4294967295u && wire::guid(native.entity.world.bytes()) == world_guid);
 }
+void public_component_and_value_contexts_share_existing_mapping_and_budgets() {
+  Fixture fixture; const auto& original = fixture.inspection.components[0];
+  auto encoder = take(wire::ConversionContext::create(policy()));
+  auto decoder = take(wire::ConversionContext::create(policy()));
+  const auto component = take(encoder->wire_component(original));
+  epb::ComponentValue transported; CHECK(transported.ParseFromString(component.SerializeAsString()));
+  const auto native = take(decoder->native_component(transported, *fixture.registry));
+  CHECK(native.schema == original.schema && native.value == original.value);
+  bool null_seen = false, absent_seen = false;
+  for (const auto& field : transported.value().record().fields()) {
+    if (field.field_id() == wire::guid(bytes(8))) null_seen = field.value().primitive().explicit_null();
+    if (field.field_id() == wire::guid(bytes(9))) absent_seen = true;
+  }
+  CHECK(null_seen && !absent_seen);
+  const auto& fields = std::get<ecs::SchemaValue::Record>(original.value.data);
+  const auto& integer_type = *original.schema->fields[1].type;
+  const auto scalar = take(encoder->wire_value(fields.at("minimum"), integer_type));
+  epb::EngineValue scalar_transport; CHECK(scalar_transport.ParseFromString(scalar.SerializeAsString()));
+  CHECK(std::get<std::int64_t>(take(decoder->native_value(scalar_transport, integer_type)).data) == std::numeric_limits<std::int64_t>::min());
+  const auto& list_type = *original.schema->fields[10].type;
+  CHECK(take(decoder->native_value(take(encoder->wire_value(fields.at("list"), list_type)), list_type)) == fields.at("list"));
+  auto bounded = policy(); bounded.value_nodes = 2;
+  auto mixed_out = take(wire::ConversionContext::create(bounded));
+  wire::NativeComponent small{original.schema, record({{"minimum", fields.at("minimum")}})};
+  const auto small_wire = take(mixed_out->wire_component(small));
+  rejected(mixed_out->wire_value(fields.at("minimum"), integer_type), wire::ErrorCode::Limit);
+  auto mixed_in = take(wire::ConversionContext::create(bounded));
+  CHECK(take(mixed_in->native_component(small_wire, *fixture.registry)).value == small.value);
+  rejected(mixed_in->native_value(scalar_transport, integer_type), wire::ErrorCode::Limit);
+  // A rejected conversion exposes no value and does not consume successful-sibling budget.
+  auto atomic = take(wire::ConversionContext::create(bounded));
+  take(atomic->native_value(scalar_transport, integer_type));
+  epb::EngineValue malformed; rejected(atomic->native_value(malformed, integer_type), wire::ErrorCode::Value);
+  take(atomic->native_value(scalar_transport, integer_type));
+  rejected(atomic->native_value(scalar_transport, integer_type), wire::ErrorCode::Limit);
+  // text_bytes is per string, not a new aggregate text cap.
+  auto text_policy = policy(); text_policy.text_bytes = 3;
+  auto text_encoder = take(wire::ConversionContext::create(text_policy));
+  auto text_decoder = take(wire::ConversionContext::create(text_policy));
+  const auto& text_type = *original.schema->fields[0].type;
+  for (int sibling = 0; sibling < 2; ++sibling) {
+    const auto text = take(text_encoder->wire_value({std::string("abc")}, text_type));
+    CHECK(std::get<std::string>(take(text_decoder->native_value(text, text_type)).data) == "abc");
+  }
+}
 }  // namespace
 int main(int argc, char** argv) {
   try {
@@ -184,6 +229,7 @@ int main(int argc, char** argv) {
     if (argc == 3 && std::string_view(argv[1]) == "--read-mutated") { check_mutated(argv[2]); return 0; }
     CHECK(argc == 1);
     const std::pair<const char*, void(*)()> tests[] = {
+    {"public component/field conversions and shared sibling budgets", public_component_and_value_contexts_share_existing_mapping_and_budgets},
       {"native owned kinds and deepest supported value roundtrip", native_roundtrip_preserves_owned_values_and_deepest_supported_boundary},
       {"bounded frame and malformed protobuf", frame_and_protobuf_failures_are_bounded},
       {"version/body/error vocabulary", version_body_and_error_vocabulary_reject_unknowns},

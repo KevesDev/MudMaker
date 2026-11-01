@@ -8,6 +8,8 @@
 #include <iterator>
 #include <limits>
 #include <set>
+#include <new>
+#include <stdexcept>
 
 namespace mudmaker::wire {
 namespace {
@@ -101,15 +103,19 @@ void value_ok(const pb::EngineValue& value, Budget& budget, std::size_t depth, c
     default: fail(ErrorCode::Value, path, "Missing/unknown EngineValue kind.");
   }
 }
+std::array<std::uint8_t, 16> component_header(const pb::ComponentValue& component) {
+  auto id = guid_bytes(component.component_type_id(), "component_type_id");
+  if (!component.schema_revision()) fail(ErrorCode::Value, "schema_revision", "Schema revision must be positive.");
+  if (!component.has_value() || !component.value().has_record()) fail(ErrorCode::Value, "components", "Component root must be a present Record.");
+  return id;
+}
 void inspection_ok(const pb::EntityInspection& inspection, Budget& budget) {
   if (!inspection.has_entity()) fail(ErrorCode::Identity, "entity", "Inspection entity is missing.");
   entity(inspection.entity(), "entity");
   std::set<std::array<std::uint8_t, 16>> components;
   for (const auto& component : inspection.components()) {
-    const auto id = guid_bytes(component.component_type_id(), "component_type_id");
+    const auto id = component_header(component);
     if (!components.insert(id).second) fail(ErrorCode::Value, "components", "Duplicate component ID.");
-    if (!component.schema_revision()) fail(ErrorCode::Value, "schema_revision", "Schema revision must be positive.");
-    if (!component.has_value() || !component.value().has_record()) fail(ErrorCode::Value, "components", "Component root must be a present Record.");
     value_ok(component.value(), budget, 1, component.component_type_id());
   }
 }
@@ -209,6 +215,60 @@ ecs::SchemaValue from_wire(const pb::EngineValue& value, View type) {
 }
 }  // namespace
 
+struct ConversionContext::State {
+  const Policy policy;
+  Budget budget;
+  explicit State(Policy configured) : policy(configured), budget{policy} {}
+  template <typename T, typename Action> Result<T> convert(Action&& action) {
+    try {
+      Budget staged{policy, budget.nodes, budget.bytes};
+      auto output = action(staged);
+      budget.nodes = staged.nodes; budget.bytes = staged.bytes;
+      return Result<T>{std::move(output)};
+    } catch (const Rejected& failure) { return failure.error; }
+    catch (const std::bad_alloc&) { return Error{ErrorCode::Limit, "resource", "Conversion allocation failed."}; }
+    catch (const std::length_error&) { return Error{ErrorCode::Limit, "resource", "Conversion capacity is not representable."}; }
+  }
+};
+ConversionContext::ConversionContext(std::unique_ptr<State> state) noexcept : state_(std::move(state)) {}
+ConversionContext::~ConversionContext() = default;
+Result<std::unique_ptr<ConversionContext>> ConversionContext::create(Policy policy) {
+  try {
+    return attempt<std::unique_ptr<ConversionContext>>([&] {
+      policy_ok(policy);
+      return std::unique_ptr<ConversionContext>(new ConversionContext(std::make_unique<State>(policy)));
+    });
+  } catch (const std::bad_alloc&) { return Error{ErrorCode::Limit, "resource", "Conversion context allocation failed."}; }
+}
+Result<pb::ComponentValue> ConversionContext::wire_component(const NativeComponent& component) {
+  return state_->convert<pb::ComponentValue>([&](Budget& budget) {
+    if (!component.schema || !component.schema->revision) fail(ErrorCode::Value, "component", "Missing component descriptor/revision.");
+    auto id = guid(component.schema->id.bytes()); guid_bytes(id, "component_type_id");
+    if (!std::holds_alternative<ecs::SchemaValue::Record>(component.value.data)) fail(ErrorCode::Value, "component", "Component root must be a Record.");
+    auto value = to_wire(component.value, {ecs::FieldKind::Record, &component.schema->fields, nullptr}, budget, 1);
+    pb::ComponentValue out; out.set_component_type_id(id); out.set_schema_revision(component.schema->revision);
+    *out.mutable_value() = std::move(value); return out;
+  });
+}
+Result<NativeComponent> ConversionContext::native_component(const pb::ComponentValue& component, const ecs::ComponentRegistry& registry) {
+  return state_->convert<NativeComponent>([&](Budget& budget) {
+    const ecs::ComponentTypeId id(component_header(component));
+    value_ok(component.value(), budget, 1, component.component_type_id());
+    auto schema = registry.lookup(id, component.schema_revision());
+    if (!std::holds_alternative<ecs::ComponentSchemaHandle>(schema)) fail(ErrorCode::Value, "component", "Component mapping is not in the existing registry/revision.");
+    auto descriptor = std::get<ecs::ComponentSchemaHandle>(schema);
+    auto value = from_wire(component.value(), {ecs::FieldKind::Record, &descriptor->fields, nullptr});
+    return NativeComponent{std::move(descriptor), std::move(value)};
+  });
+}
+Result<pb::EngineValue> ConversionContext::wire_value(const ecs::SchemaValue& value, const ecs::ValueSchema& type) {
+  return state_->convert<pb::EngineValue>([&](Budget& budget) { return to_wire(value, view(type), budget, 1); });
+}
+Result<ecs::SchemaValue> ConversionContext::native_value(const pb::EngineValue& value, const ecs::ValueSchema& type) {
+  return state_->convert<ecs::SchemaValue>([&](Budget& budget) {
+    value_ok(value, budget, 1, "value"); return from_wire(value, view(type));
+  });
+}
 Result<std::monostate> validate_policy(const Policy& policy) { return attempt<std::monostate>([&] { policy_ok(policy); return std::monostate{}; }); }
 Result<Policy> load_policy(const std::string& path) {
   return attempt<Policy>([&] {
@@ -261,31 +321,35 @@ Result<pb::Envelope> decode(std::span<const std::uint8_t> frame, const Policy& p
   });
 }
 Result<pb::EntityInspection> wire_inspection(const NativeInspection& inspection, const Policy& policy) {
+  auto created = ConversionContext::create(policy);
+  if (const auto error = std::get_if<Error>(&created)) return *error;
+  auto context = std::move(std::get<std::unique_ptr<ConversionContext>>(created));
   return attempt<pb::EntityInspection>([&] {
-    policy_ok(policy); Budget budget{policy}; pb::EntityInspection out;
+    pb::EntityInspection out;
     auto reference = wire_entity(inspection.entity); entity(reference, "entity"); *out.mutable_entity() = std::move(reference);
     std::set<ecs::ComponentTypeId> seen;
     for (const auto& component : inspection.components) {
-      if (!component.schema || !component.schema->revision || !seen.insert(component.schema->id).second) fail(ErrorCode::Value, "component", "Missing/duplicate component descriptor.");
-      auto id = guid(component.schema->id.bytes()); guid_bytes(id, "component_type_id");
-      if (!std::holds_alternative<ecs::SchemaValue::Record>(component.value.data)) fail(ErrorCode::Value, "component", "Component root must be a Record.");
-      auto converted = to_wire(component.value, {ecs::FieldKind::Record, &component.schema->fields, nullptr}, budget, 1);
-      auto* into = out.add_components(); into->set_component_type_id(id); into->set_schema_revision(component.schema->revision); *into->mutable_value() = std::move(converted);
+      if (!component.schema || !seen.insert(component.schema->id).second) fail(ErrorCode::Value, "component", "Missing/duplicate component descriptor.");
+      auto converted = context->wire_component(component);
+      if (const auto error = std::get_if<Error>(&converted)) throw Rejected{*error};
+      *out.add_components() = std::move(std::get<pb::ComponentValue>(converted));
     }
     return out;
   });
 }
 Result<NativeInspection> native_inspection(const pb::EntityInspection& inspection, const ecs::ComponentRegistry& registry, const Policy& policy) {
+  auto created = ConversionContext::create(policy);
+  if (const auto error = std::get_if<Error>(&created)) return *error;
+  auto context = std::move(std::get<std::unique_ptr<ConversionContext>>(created));
   return attempt<NativeInspection>([&] {
-    policy_ok(policy); Budget budget{policy}; inspection_ok(inspection, budget);
+    if (!inspection.has_entity()) fail(ErrorCode::Identity, "entity", "Inspection entity is missing.");
     NativeInspection out{entity(inspection.entity(), "entity"), {}};
+    std::set<std::string_view> seen;
     for (const auto& component : inspection.components()) {
-      const ecs::ComponentTypeId id(guid_bytes(component.component_type_id(), "component_type_id"));
-      auto schema = registry.lookup(id, component.schema_revision());
-      if (!std::holds_alternative<ecs::ComponentSchemaHandle>(schema)) fail(ErrorCode::Value, "component", "Component mapping is not in the existing registry/revision.");
-      auto descriptor = std::get<ecs::ComponentSchemaHandle>(schema);
-      auto value = from_wire(component.value(), {ecs::FieldKind::Record, &descriptor->fields, nullptr});
-      out.components.push_back({std::move(descriptor), std::move(value)});
+      if (!seen.insert(component.component_type_id()).second) fail(ErrorCode::Value, "components", "Duplicate component ID.");
+      auto converted = context->native_component(component, registry);
+      if (const auto error = std::get_if<Error>(&converted)) throw Rejected{*error};
+      out.components.push_back(std::move(std::get<NativeComponent>(converted)));
     }
     return out;
   });

@@ -1,6 +1,7 @@
 #include "mudmaker/ecs/world.h"
 #include <array>
 #include <cstdio>
+#include <limits>
 #include <stdexcept>
 #include <thread>
 
@@ -187,9 +188,47 @@ void factory_rejects_identity_without_matching_storage() {
   rejected(World::create(std::move(allocator), fixture.registry, std::span(&binding, 1), {64}), WorldErrorCode::InvalidConfiguration);
   CHECK(!allocator.validate(std::get<EntityId>(identity)) && allocator.diagnostics() == before);
 }
+void owned_live_pages_preserve_dense_identity_and_writer_rules() {
+  Fixture fixture; auto& world = *fixture.world;
+  constexpr std::size_t entity_count = 7, page_size = 3;
+  std::vector<EntityId> expected;
+  for (std::size_t i = 0; i < entity_count; ++i) expected.push_back(create(world));
+  std::vector<EntityId> joined; std::size_t offset = 0;
+  for (;;) {
+    const auto page = take(world.inspect_live_page(offset, page_size));
+    CHECK(page.total == entity_count && page.entities.size() <= page_size);
+    joined.insert(joined.end(), page.entities.begin(), page.entities.end());
+    if (!page.next_offset) break;
+    CHECK(*page.next_offset == offset + page.entities.size()); offset = *page.next_offset;
+  }
+  CHECK(joined == expected);
+  const auto terminal = take(world.inspect_live_page(entity_count, page_size));
+  CHECK(terminal.entities.empty() && terminal.total == entity_count && !terminal.next_offset);
+  const auto past = take(world.inspect_live_page(std::numeric_limits<std::size_t>::max(), page_size));
+  CHECK(past.entities.empty() && past.total == entity_count && !past.next_offset);
+  const auto suffix = take(world.inspect_live_page(1, std::numeric_limits<std::size_t>::max()));
+  CHECK(suffix.entities == std::vector<EntityId>(expected.begin() + 1, expected.end()) && !suffix.next_offset);
+  rejected(world.inspect_live_page(0, 0), WorldErrorCode::InvalidArgument);
+  CHECK(take(world.inspect_live(0)).empty());
+  bool wrong_writer = false;
+  std::thread other([&] {
+    const auto page = world.inspect_live_page(0, page_size);
+    const auto error = std::get_if<WorldError>(&page);
+    wrong_writer = error && error->code == WorldErrorCode::WrongWriter;
+  }); other.join(); CHECK(wrong_writer);
+  auto retained = take(world.inspect_live_page(0, 2)); const auto stale = retained.entities[0];
+  take(world.destroy_entity(stale)); const auto replacement = create(world);
+  CHECK(replacement.world == stale.world && replacement.index == stale.index && replacement.generation != stale.generation);
+  const auto stale_error = rejected(world.inspect(stale), WorldErrorCode::Identity);
+  CHECK(stale_error.identity && stale_error.identity->code == IdentityErrorCode::stale_generation);
+  CHECK(retained.total == entity_count && retained.entities[0] == stale && retained.entities[1] == expected[1]);
+  retained.entities[0] = {}; CHECK(take(world.inspect_live_page(0, 1)).entities[0] == expected.back());
+  CHECK(take(world.inspect(replacement)).id == replacement);
+}
 }  // namespace
 int main() {
   const std::pair<const char*, void(*)()> tests[] = {
+    {"owned live pages, boundaries and stale identity", owned_live_pages_preserve_dense_identity_and_writer_rules},
     {"lifecycle and atomic typed errors", lifecycle_and_errors_preserve_world_state},
     {"typed columns, chunks, transitions and swap removal", compiled_columns_survive_growth_transitions_and_swap_removal},
     {"integrated sparse churn and reverse-index repair", sparse_churn_never_migrates_archetype_and_repairs_dense_locations},
