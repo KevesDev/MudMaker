@@ -1,0 +1,7 @@
+{
+  "frame_bytes": 1048576,
+  "protobuf_recursion": 100,
+  "value_depth": 32,
+  "value_nodes": 4096,
+  "text_bytes": 262144
+}

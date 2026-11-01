@@ -4,7 +4,7 @@
 
 **Phase sizing rule (owner, 2026-10-29):** each phase is one small coherent unit a Builder can finish correctly in one pass. Lead splits a sprint into sub-phases (letters under the original phase number, so existing references stay valid) before dispatching it. Only S02 is split so far; later sprints are split before they start. **USER TEST** marks a point where the owner gets a precise test list.
 
-**Current:** S03 native ECS3/10. [S03.4a codec foundation](05-sprints/specs/S03-4a-SPEC.md) has Builder Release/real Rust interoperability results; ASan pre-test DLL initialization is blocked and independently undiagnosed. Debugging Tools-only prerequisite authorized; no phase PASS/push or app-readiness claim. S02.10a/b/c must finish before S03 closes; theme IO alone is deferred to S18.17.
+**Current:** S03 native ECS3/10; S03.4 prerequisite a/4 independently PASS. [Codec audit](06-quality/reports/s03-4a-audit.md): selected6.33.6/protoc33.6, Release/normal ASan7 groups each, actual Rust↔C++2/2, frozen descriptor/provenance. Next b real engine process, then c shell/d inspector. No app-ready claim. S02.10a/b/c required before S03 close; theme IO alone is S18.17.
 
 **Owner correction verified (2026-10-31):** [app-wide Appearance, nested Settings, one Output route, explicit Inspector](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md). [Independent audit PASS](06-quality/reports/s02-owner-ui-corrections-audit.md): 563 tests / 38 files, typecheck and frontend build. Prior separate-workspace theme and selection-only Inspector rules are superseded. Phase counts unchanged; owner visual acceptance pending.
 
@@ -14,7 +14,7 @@
 
 **Binding S03 close-out gate:** owner clarified S02.10a/b/c (hardware detection, fixed model catalog/recommendations, wizard screens) must be completed before the end of S03. They remain S02 work. Only theme import/export moved to polish; S03 cannot be signed off with S02.10 unfinished.
 
-**Pickup state:** [saved blocked checkpoint](06-quality/reports/s03-4a-pickup.md); engine3/10. CDB identified a null dispatch in protobuf descriptor registration during DLL attach; deeper cause unresolved. Agents/debuggee stopped at5% remaining; a-source is local/unaccepted. One-time heartbeat resume-mudmaker-after-usage-reset created for2026-11-01 00:20 America/Denver after the00:15:32 reset. Process, shell and live inspector remain explicit b/c/d phases.
+**Pickup state:** reset confirmed2026-11-01; consumed heartbeat deleted. Final audit PASS was saved before quota exhaustion; timer creation then failed automatic approval review due exhausted usage and did not execute. Resumed closeout now uses completed evidence, no reruns. Historical failure artifacts retained.
 
 **Owner acceptance (2026-10-31):** compact UI appearance/feel accepted; preserve that baseline and proceed with engine sprint order. Theme import/export is deferred to S18.17. Separate touch/native-picker validation is not claimed.
 

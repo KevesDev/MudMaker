@@ -1,6 +1,6 @@
 # S03.4 — Real engine integration and live inspector
 
-**Status:** prerequisites are explicit phases, not hidden UI work. [S03.4a](S03-4a-SPEC.md) alone is approved for its scoped Builder; b–d require their own concrete specs before code. Parent S03.4 passes only after all four phases independently pass and the actual app workflow is demonstrated.
+**Status:** [S03.4a codec foundation](S03-4a-SPEC.md) independently PASS; b–d require their own concrete specs before code. Parent S03.4 passes only after all four phases independently pass and the actual app workflow is demonstrated.
 
 | Phase | Concrete deliverable | Dependency and gate |
 |---|---|---|

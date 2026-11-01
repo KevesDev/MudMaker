@@ -22,6 +22,7 @@ class IdentityDomain;
 class WorldId final {
  public:
   constexpr WorldId() noexcept = default;
+  static WorldId from_bytes(std::array<std::uint8_t, kWorldIdBytes> bytes) noexcept { return WorldId(bytes); }
   const std::array<std::uint8_t, kWorldIdBytes>& bytes() const noexcept { return bytes_; }
   friend bool operator==(const WorldId&, const WorldId&) = default;
 

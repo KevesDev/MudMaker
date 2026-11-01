@@ -1,0 +1,54 @@
+syntax = "proto3";
+package mudmaker.engine.v1;
+import "scripting/v1/mudmaker_scripting_v1.proto";
+
+message ProtocolVersion { uint32 major = 1; uint32 minor = 2; }
+message Envelope {
+  ProtocolVersion protocol = 1;
+  uint64 request_id = 2;
+  string connection_id = 3;
+  oneof body {
+    Hello hello = 10;
+    HelloAck hello_ack = 11;
+    InspectEntity inspect_entity = 12;
+    EntityInspection entity_inspection = 13;
+    ProtocolError error = 14;
+  }
+}
+message Hello { bytes pairing_token = 1; uint32 min_minor = 2; uint32 max_minor = 3; }
+message HelloAck { uint32 selected_minor = 1; string engine_version = 2; string world_id = 3; }
+message InspectEntity { mudmaker.scripting.v1.EntityRef entity = 1; }
+message EntityInspection { mudmaker.scripting.v1.EntityRef entity = 1; repeated ComponentValue components = 2; }
+message ComponentValue { string component_type_id = 1; uint32 schema_revision = 2; EngineValue value = 3; }
+message EngineValue {
+  oneof value {
+    mudmaker.scripting.v1.PropertyValue primitive = 1;
+    RecordValue record = 2;
+    ListValue list = 3;
+  }
+}
+message RecordValue { repeated RecordField fields = 1; }
+message RecordField { string field_id = 1; EngineValue value = 2; }
+message ListValue { repeated EngineValue values = 1; }
+enum ErrorCode {
+  UNSPECIFIED = 0;
+  MALFORMED_FRAME = 1;
+  MALFORMED_MESSAGE = 2;
+  UNSUPPORTED_PROTOCOL = 3;
+  UNAUTHORIZED = 4;
+  INVALID_REQUEST = 5;
+  WORLD_FAILURE = 6;
+  NOT_READY = 7;
+  SHUTTING_DOWN = 8;
+  INTERNAL_FAILURE = 9;
+}
+message ProtocolError {
+  ErrorCode code = 1;
+  string message = 2;
+  string native_code = 3;
+  optional string world_id = 4;
+  optional mudmaker.scripting.v1.EntityRef entity = 5;
+  optional string component_type_id = 6;
+  optional uint32 schema_revision = 7;
+  repeated string field_path = 8;
+}

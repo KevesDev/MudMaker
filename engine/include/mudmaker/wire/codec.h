@@ -1,0 +1,24 @@
+#pragma once
+#include "mudmaker/ecs/component_schema.h"
+#include "engine/v1/mudmaker_engine_v1.pb.h"
+
+namespace mudmaker::wire {
+namespace pb = ::mudmaker::engine::v1;
+struct Policy { std::size_t frame_bytes, protobuf_recursion, value_depth, value_nodes, text_bytes; };
+enum class ErrorCode { Policy, Frame, Protobuf, Version, Envelope, Identity, Value, Limit, Descriptor };
+struct Error { ErrorCode code; std::string path, reason; };
+template <typename T> using Result = std::variant<T, Error>;
+Result<Policy> load_policy(const std::string& path);
+Result<std::monostate> validate_policy(const Policy& policy);
+Result<std::vector<std::uint8_t>> encode(const pb::Envelope& envelope, const Policy& policy);
+Result<pb::Envelope> decode(std::span<const std::uint8_t> frame, const Policy& policy);
+Result<std::array<std::uint8_t, 16>> parse_guid(std::string_view text);
+std::string guid(std::span<const std::uint8_t, 16> bytes);
+Result<ecs::EntityId> native_entity(const ::mudmaker::scripting::v1::EntityRef& entity);
+::mudmaker::scripting::v1::EntityRef wire_entity(ecs::EntityId entity);
+struct NativeComponent { ecs::ComponentSchemaHandle schema; ecs::SchemaValue value; };
+struct NativeInspection { ecs::EntityId entity; std::vector<NativeComponent> components; };
+Result<pb::EntityInspection> wire_inspection(const NativeInspection& inspection, const Policy& policy);
+Result<NativeInspection> native_inspection(const pb::EntityInspection& inspection, const ecs::ComponentRegistry& registry, const Policy& policy);
+Result<std::monostate> compatible_descriptors(std::span<const std::uint8_t> frozen, std::span<const std::uint8_t> current);
+}  // namespace mudmaker::wire
