@@ -1,6 +1,8 @@
 /** Reads source text only: it shows that the two sides name the same commands and arguments, not that a call succeeds. */
 import { describe, expect, it } from "vitest";
-import bridgeSource from "./appInfo.ts?raw";
+import appBridgeSource from "./appInfo.ts?raw";
+import engineBridgeSource from "./engine/bridge.ts?raw";
+const bridgeSource = appBridgeSource + "\n" + engineBridgeSource;
 import shellSource from "../src-tauri/src/lib.rs?raw";
 
 const camel = (name: string): string => name.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
@@ -18,9 +20,12 @@ function bridgeCalls(bridge: string): Map<string, string[]> {
 /** Every `#[tauri::command]` function: its name and the parameters the interface supplies (injected handles and state excluded). */
 function shellCommands(shell: string): Map<string, string[]> {
   const commands = new Map<string, string[]>();
-  for (const match of shell.matchAll(/#\[tauri::command\]\s*fn\s+([a-z_]+)\s*\(([^)]*)\)/g)) {
-    const parameters = (match[2] ?? "")
-      .split(",")
+  for (const match of shell.matchAll(/#\[tauri::command\]\s*(?:async\s+)?fn\s+([a-z_]+)\s*\(([^)]*)\)/g)) {
+    const text = match[2] ?? "";
+    const parts: string[] = []; let depth = 0; let start = 0;
+    for (let i = 0; i < text.length; i++) { if (text[i] === "<") depth++; else if (text[i] === ">") depth--; else if (text[i] === "," && depth === 0) { parts.push(text.slice(start, i)); start = i + 1; } }
+    parts.push(text.slice(start));
+    const parameters = parts
       .map((parameter) => parameter.trim())
       .filter((parameter) => parameter.length > 0 && !/tauri::(AppHandle|State)/.test(parameter))
       .map((parameter) => camel(parameter.replace(/^mut\s+/, "").split(":")[0]?.trim() ?? ""));

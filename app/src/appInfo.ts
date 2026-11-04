@@ -13,21 +13,14 @@ export interface AppInfo {
   launchId: string;
 }
 
-/** Whether the game engine sidecar exists on disk where the shell expects it, with a plain sentence saying so. */
-export interface EngineStatus {
-  installed: boolean;
-  reason: string;
-}
+export { getEngineStatus, startEngine } from "./engine/bridge";
+export type { EngineStatus } from "./engine/bridge";
 
 /** One interface diagnostic as the shell log stores it: the bus record plus the startup check it belongs to, if any. */
 export type DiagnosticRecord = UiDiagnostic & { readonly check?: string; readonly attempt?: number };
 
 export function getAppInfo(): Promise<AppInfo> {
   return invoke<AppInfo>("app_info");
-}
-
-export function getEngineStatus(): Promise<EngineStatus> {
-  return invoke<EngineStatus>("engine_status");
 }
 
 export function writeDiagnostic(record: DiagnosticRecord): Promise<void> {

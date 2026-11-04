@@ -1,5 +1,5 @@
 import { CreateShell } from "../editor/CreateShell";
-import { getAppInfo, getEngineStatus, quitApp, writeDiagnostic, type DiagnosticRecord } from "../appInfo";
+import { getAppInfo, startEngine, quitApp, writeDiagnostic, type DiagnosticRecord } from "../appInfo";
 import { loadFrameRegistry } from "../frame/frameRegistry";
 import { HostWorkspace } from "../host/HostWorkspace";
 import { tauriWindowShell, type WindowShell } from "../frame/windowShell";
@@ -36,7 +36,7 @@ function reportLogFailure(failure: unknown): void {
 /** The real shell, catalogs and theme manager for this window. */
 export const productionDependencies: HomeDependencies = {
   getAppInfo,
-  getEngineStatus,
+  startEngine,
   loadRegistry: loadShippedRegistry,
   theme: themeManager,
   requireEngine: STARTUP_REQUIRES_ENGINE,

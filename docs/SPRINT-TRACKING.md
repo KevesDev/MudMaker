@@ -4,7 +4,7 @@
 
 **Phase sizing rule (owner, 2026-10-29):** each phase is one small coherent unit a Builder can finish correctly in one pass. Lead splits a sprint into sub-phases (letters under the original phase number, so existing references stay valid) before dispatching it. Only S02 is split so far; later sprints are split before they start. **USER TEST** marks a point where the owner gets a precise test list.
 
-**Current:** S03 native ECS3/10; S03.4a/b and [c1 Rust owner](05-sprints/specs/S03-4c1-SPEC.md) independently PASS (real-process5/5;406 baseline packages preserved+17 additions). Next [c2 managed app/exact-value bridge](05-sprints/specs/S03-4c-SPEC.md), then d real Inspector. No app-ready claim. S02.10a/b/c before S03 close; theme IO alone S18.17.
+**Current:** S03 native ECS3/10; S03.4a/b/c1 accepted/pushed. S03.4c2 independently PASS: Rust5/5, frontend44/44, typecheck and one live Tauri/native Ack startup verified; [audit](06-quality/reports/s03-4c2-audit.md). Commit/push closeout next, then d real Inspector. App connection is verified; Inspector operations are not yet wired. S02.10a/b/c before S03close; themeIO alone S18.17.
 
 **Owner correction verified (2026-10-31):** [app-wide Appearance, nested Settings, one Output route, explicit Inspector](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md). [Independent audit PASS](06-quality/reports/s02-owner-ui-corrections-audit.md): 563 tests / 38 files, typecheck and frontend build. Prior separate-workspace theme and selection-only Inspector rules are superseded. Phase counts unchanged; owner visual acceptance pending.
 

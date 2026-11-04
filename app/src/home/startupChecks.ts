@@ -26,7 +26,7 @@ export type HomeDiagnostic = StartupDiagnostic | UiDiagnostic;
 
 export interface StartupDependencies {
   readonly getAppInfo: () => Promise<AppInfo>;
-  readonly getEngineStatus: () => Promise<EngineStatus>;
+  readonly startEngine: () => Promise<EngineStatus>;
   readonly loadRegistry: () => ActionRegistry;
   readonly theme: ThemeManager;
   /** Whether a missing game engine fails the launch; see STARTUP_REQUIRES_ENGINE. */
@@ -186,10 +186,10 @@ export async function runStartupChecks(dependencies: StartupDependencies, attemp
     {
       id: "engine",
       failureCode: "startup-engine-failed",
-      work: dependencies.getEngineStatus,
+      work: dependencies.startEngine,
       judge: (status) => {
-        if (status.installed) return { status: "passed", code: "startup-engine-installed", detail: status.reason };
-        return { status: dependencies.requireEngine ? "failed" : "attention", code: "startup-engine-missing", detail: status.reason };
+        if (status.state === "ready" && status.worldId !== undefined) return { status: "passed", code: "startup-engine-ready", detail: `Native engine ready for ${status.worldId}.` };
+        return { status: dependencies.requireEngine ? "failed" : "attention", code: "startup-engine-not-ready", detail: status.failure?.message ?? `Engine state: ${status.state}.` };
       },
     },
     dependencies,

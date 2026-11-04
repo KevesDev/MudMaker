@@ -1,5 +1,7 @@
 # Handoff to Codex (temporary Lead) — read this first
 
+**Latest accepted gate, 2026-11-03:** S03.4c2 independently PASS; [audit](06-quality/reports/s03-4c2-audit.md). Rust5/5, frontend44/44, typecheck, and one live Tauri app/native Ack with matching startup diagnostic verified. App25604/native53124 kept running; receipt target/c2-dev-20261103-180814. Commit/push closeout precedes d Inspector; no Inspector-operation claim yet. Older unaccepted pickup notes below are historical. Consumed timer deleted; usage monitoring remains mandatory. S03 remains3/10, S02.10a/b/c still required before close.
+
 **Written:** 2026-10-30 by the Claude Lead, because the Claude weekly token limit is nearly spent. Codex acts as **temporary Lead** until the Claude limit resets, then hands back. Same governance, same standards. Read [CLAUDE.md](../CLAUDE.md) and [AGENTS.md](../AGENTS.md) (they apply to you as written; "Claude" there means whichever Lead is active) plus this file. **The owner's rules below override anything older.**
 
 ## 0. The owner and how to work with them
@@ -39,6 +41,8 @@ Lead plans, writes the spec, dispatches, commits. Builder implements one scoped 
 **Agent hygiene lessons:** a subagent can hand back only once per run; if a resumed agent's report does not arrive, read the final assistant text from its output file (bounded). Do not use Python text-mode writes on tracked files (they flip LF to CRLF; `presetDocument.test.ts` requires `theme-presets.md` to stay LF); write with `newline=''` or normal edit tools. Quote exact strings when editing JSON or docs. Keep each Builder prompt self-contained.
 
 ## 4. Status (accepted shell; S03 native ECS is current)
+
+**Current usage pickup, 2026-11-01:** all agents/sessions stopped; timer resume-mudmaker-after-usage-reset CREATED14:30Denver after14:25:15reset. [c2 unaccepted pickup](06-quality/reports/s03-4c2-pickup.md) overrides older current-action notes. Latest accepted/pushed36557ac (nativeb337ecbe8,c1Rustowner5/5). Localc2 Rustbridge5/5; frontendone stale ENGINE_MISSING.reason assertion remains (startupChecks.test.ts:51), other assigned files passed. Typecheck/devlaunch/actualappReady/independentAuditor NOTDONE. NoSourcecommit/PASS/appclaim. Resume exact bounded test repair then onlyremainingnamedgates; no extrasuites/nativebuild/toolchecks. Preserveunrelated/parked;Leadsourceboundary/10%reserve/5%timer mandatory.
 
 **Latest Rust result, 2026-11-01:** [c1 independent PASS](06-quality/reports/s03-4c1-audit.md),5/5 actual Rust-parent/native-process cases, all406 baseline package keys preserved+17required additions. Native b3 pushed37ecbe8. One EngineOwner/worker, exact admission/readiness/death/shutdown; no World mirror. App activation/status/startup/quit and lossless DTO remain c2; Inspector d. No app-ready claim. All c1 agents/sessions finished at close. Usage37%primary/29%weekly; monitor10%reserve/5%pickup rule.
 

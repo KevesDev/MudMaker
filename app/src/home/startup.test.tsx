@@ -74,7 +74,7 @@ describe("when a check that trying again can fix fails", () => {
   /** The raw text of each failure, which must reach the log and never the screen. */
   const FAILURES = [
     ["the shell does not answer", "Application", "the shell is gone", () => ({ getAppInfo: () => Promise.reject(new Error("the shell is gone")) })],
-    ["the engine check cannot run", "Game engine", "no folder", () => ({ getEngineStatus: () => Promise.reject(new Error("no folder")) })],
+    ["the engine check cannot run", "Game engine", "no folder", () => ({ startEngine: () => Promise.reject(new Error("no folder")) })],
   ] as const;
 
   async function openFailed(home: TestHome): Promise<HTMLElement> {
@@ -186,15 +186,15 @@ describe("when a check that trying again can fix fails", () => {
 
 describe("when the game engine is not installed", () => {
   it("opens the launch screen and only logs a warning while the engine is not required", async () => {
-    const home = healthyHome({ requireEngine: false });
+    const home = healthyHome({ requireEngine: false, startEngine: () => Promise.resolve({ state: "stopped" }) });
     await open(home);
     expect(await screen.findByRole("heading", { name: "MudMaker", level: 1 })).toBeTruthy();
     expect(visibleAlert).toThrow();
-    expect(startupRecords(home.records).filter((record) => record.severity === "warning").map((record) => record.code)).toEqual(["startup-engine-missing"]);
+    expect(startupRecords(home.records).filter((record) => record.severity === "warning").map((record) => record.code)).toEqual(["startup-engine-not-ready"]);
   });
 
   it("shows the plain failure screen with Retry, naming the game engine, when the engine is required", async () => {
-    const home = healthyHome({ requireEngine: true });
+    const home = healthyHome({ requireEngine: true, startEngine: () => Promise.resolve({ state: "stopped" }) });
     await open(home);
     const alert = await waitFor(visibleAlert);
     expect(alert.textContent).toBe("MudMaker could not start: Game engine.");
@@ -202,7 +202,7 @@ describe("when the game engine is not installed", () => {
     expect(screen.getByRole("button", { name: "Retry" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "MudMaker", level: 1 })).toBeNull();
     expect(breaksCopyRules(copyOnScreen())).toBe(false);
-    expect(startupRecords(home.records).filter((record) => record.severity === "error").map((record) => record.code)).toEqual(["startup-engine-missing"]);
+    expect(startupRecords(home.records).filter((record) => record.severity === "error").map((record) => record.code)).toEqual(["startup-engine-not-ready"]);
   });
 });
 

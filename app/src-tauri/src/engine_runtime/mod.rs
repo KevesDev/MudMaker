@@ -59,6 +59,7 @@ impl EngineOwner{
   Ok(owner)
  }
 
+ pub fn policy(&self)->mudmaker_engine_wire::Policy{self.configuration.policy}
  pub fn status(&self)->Status{match self.core.exit_code(){Ok(Some(code))=>{let mut state=self.core.status.lock().unwrap_or_else(|e|e.into_inner());let failed=state.lifecycle==Lifecycle::Ready||state.lifecycle==Lifecycle::Starting;if let Some(error)=state.failure.as_mut(){if error.raw_exit.is_none(){error.raw_exit=Some(code);}}drop(state);if failed{self.core.fail(self.core.child_failure());}},Err(error)=>self.core.fail(error),_=>{}}self.core.status.lock().unwrap_or_else(|e|e.into_inner()).clone()}
  /// The admission limit is exactly one, including a completed but uncollected reply.
  pub fn try_request(&self,request:Request)->Result<PendingRequest>{

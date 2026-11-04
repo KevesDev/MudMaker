@@ -29,7 +29,9 @@ export const SHELL_INFO: AppInfo = {
   launchId: "launch-test-1",
 };
 
-export const ENGINE_MISSING: EngineStatus = { installed: false, reason: "The game engine is not installed in this build." };
+/** Mocked Tauri boundary only; native process proof is in Rust bridge integration. */
+export const ENGINE_MISSING: EngineStatus = { state: "stopped" };
+export const ENGINE_READY: EngineStatus = { state: "ready", worldId: "00112233-4455-6677-8899-aabbccddeeff" };
 
 export interface TestHome {
   readonly dependencies: HomeDependencies;
@@ -47,10 +49,10 @@ export function healthyHome(overrides: Partial<HomeDependencies> = {}): TestHome
   const windowShell = fakeWindowShell();
   const dependencies: HomeDependencies = {
     getAppInfo: () => Promise.resolve(SHELL_INFO),
-    getEngineStatus: () => Promise.resolve(ENGINE_MISSING),
+    startEngine: () => Promise.resolve(ENGINE_READY),
     loadRegistry: loadShippedRegistry,
     theme: manager,
-    requireEngine: false,
+    requireEngine: true,
     quit,
     windowShell,
     loadFrameRegistry,

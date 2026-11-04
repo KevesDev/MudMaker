@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { ActionRegistry, CatalogLoadError } from "../ui";
 import { fixtureSources } from "../ui/testSupport";
-import { ENGINE_MISSING, SHELL_INFO, healthyHome, startupRecords } from "./homeTestSupport";
+import { ENGINE_READY, SHELL_INFO, healthyHome, startupRecords } from "./homeTestSupport";
 import { runStartupChecks, type CheckId, type StartupReport } from "./startupChecks";
 import { STARTUP_REQUIRES_ENGINE } from "./startupConfig";
 
@@ -20,11 +20,11 @@ function invalidCatalogError(): CatalogLoadError {
 }
 
 describe("startup checks", () => {
-  it("run in a fixed order and pass on a healthy install, treating a missing engine as a warning and not a failure", async () => {
+  it("run in a fixed order and pass when the native boundary reports ready", async () => {
     const home = healthyHome();
     const report = await runStartupChecks(home.dependencies, ATTEMPT);
     expect(report.results.map((result) => result.id)).toEqual(["shell", "catalogs", "theme", "engine"]);
-    expect(report.results.map((result) => result.status)).toEqual(["passed", "passed", "passed", "attention"]);
+    expect(report.results.map((result) => result.status)).toEqual(["passed", "passed", "passed", "passed"]);
     if (!report.ok) throw new Error("A healthy install must start.");
     expect(report.info).toEqual(SHELL_INFO);
     expect(report.registry.control("home.splash.04")?.label).toBe("Create");
@@ -39,7 +39,7 @@ describe("startup checks", () => {
       ["shell", "info", "startup-shell-passed"],
       ["catalogs", "info", "startup-catalogs-passed"],
       ["theme", "info", "startup-theme-passed"],
-      ["engine", "warning", "startup-engine-missing"],
+      ["engine", "info", "startup-engine-ready"],
     ]);
     for (const record of records) {
       expect(record.correlation, record.check).toEqual({ launchId: SHELL_INFO.launchId });
@@ -48,39 +48,39 @@ describe("startup checks", () => {
     }
     const preset = home.manager.listPresets().find((candidate) => candidate.id === home.manager.getSnapshot("home").themeId);
     expect(records[2]?.detail).toContain(preset?.label ?? "no preset found");
-    expect(records[3]?.detail).toBe(ENGINE_MISSING.reason);
+    expect(records[3]?.detail).toBe(`Native engine ready for ${ENGINE_READY.worldId}.`);
     expect(records[0]?.detail).toContain(`${SHELL_INFO.name} ${SHELL_INFO.version} build ${SHELL_INFO.buildId}`);
   });
 
-  it("does not require the game engine by default", () => {
-    expect(STARTUP_REQUIRES_ENGINE).toBe(false);
+  it("requires an actual ready engine by default", () => {
+    expect(STARTUP_REQUIRES_ENGINE).toBe(true);
   });
 
   describe("when the game engine is not installed", () => {
     const engineRecords = (home: ReturnType<typeof healthyHome>) => startupRecords(home.records).filter((record) => record.check === "engine");
 
     it("still starts and logs a warning when the engine is not required", async () => {
-      const home = healthyHome({ requireEngine: false });
+      const home = healthyHome({ requireEngine: false, startEngine: () => Promise.resolve({ state: "stopped" }) });
       const report = await runStartupChecks(home.dependencies, ATTEMPT);
       expect(report.ok).toBe(true);
       expect(report.results.find((result) => result.id === "engine")?.status).toBe("attention");
-      expect(engineRecords(home)).toEqual([expect.objectContaining({ severity: "warning", code: "startup-engine-missing" })]);
+      expect(engineRecords(home)).toEqual([expect.objectContaining({ severity: "warning", code: "startup-engine-not-ready" })]);
     });
 
     it("fails the launch with a retryable failure and logs an error when the engine is required", async () => {
-      const home = healthyHome({ requireEngine: true });
+      const home = healthyHome({ requireEngine: true, startEngine: () => Promise.resolve({ state: "stopped" }) });
       const report = await runStartupChecks(home.dependencies, ATTEMPT);
       expect(report.ok).toBe(false);
       expect(failuresOf(report)).toEqual(["engine"]);
       expect(report.ok ? null : report.registry?.control("home.splash.13")?.label).toBe("Retry");
-      expect(engineRecords(home)).toEqual([expect.objectContaining({ severity: "error", code: "startup-engine-missing" })]);
+      expect(engineRecords(home)).toEqual([expect.objectContaining({ severity: "error", code: "startup-engine-not-ready" })]);
     });
 
     it.each([true, false])("passes with an info record when it is installed and required is %s", async (requireEngine) => {
-      const home = healthyHome({ requireEngine, getEngineStatus: () => Promise.resolve({ installed: true, reason: "The game engine is installed." }) });
+      const home = healthyHome({ requireEngine, startEngine: () => Promise.resolve({ state: "ready", worldId: "00112233-4455-6677-8899-aabbccddeeff" }) });
       const report = await runStartupChecks(home.dependencies, ATTEMPT);
       expect(report.ok).toBe(true);
-      expect(engineRecords(home)).toEqual([expect.objectContaining({ severity: "info", code: "startup-engine-installed" })]);
+      expect(engineRecords(home)).toEqual([expect.objectContaining({ severity: "info", code: "startup-engine-ready" })]);
     });
   });
 
@@ -88,10 +88,10 @@ describe("startup checks", () => {
     const home = healthyHome();
     const snapshot = vi.spyOn(home.manager, "getSnapshot");
     const getAppInfo = vi.spyOn(home.dependencies, "getAppInfo");
-    const getEngineStatus = vi.spyOn(home.dependencies, "getEngineStatus");
+    const startEngine = vi.spyOn(home.dependencies, "startEngine");
     await runStartupChecks(home.dependencies, ATTEMPT);
     expect(getAppInfo).toHaveBeenCalledTimes(1);
-    expect(getEngineStatus).toHaveBeenCalledTimes(1);
+    expect(startEngine).toHaveBeenCalledTimes(1);
     expect(snapshot).toHaveBeenCalledWith("home");
   });
 
@@ -132,7 +132,7 @@ describe("startup checks", () => {
       check: "engine",
       code: "startup-engine-failed",
       raw: "no folder",
-      break: () => ({ getEngineStatus: () => Promise.reject({ code: "engine_status_unavailable", message: "no folder" }) }),
+      break: () => ({ startEngine: () => Promise.reject({ code: "engine_status_unavailable", message: "no folder" }) }),
     },
   ];
 
@@ -170,7 +170,7 @@ describe("startup checks", () => {
   });
 
   it("stamps every record after the shell has answered with the launch id, and leaves it to the shell when the shell never answered", async () => {
-    const later = healthyHome({ getEngineStatus: () => Promise.reject(new Error("down")) });
+    const later = healthyHome({ startEngine: () => Promise.reject(new Error("down")) });
     await runStartupChecks(later.dependencies, ATTEMPT);
     expect(later.records.map((record) => record.correlation)).toEqual(later.records.map(() => ({ launchId: SHELL_INFO.launchId })));
     const first = healthyHome({ getAppInfo: () => Promise.reject(new Error("down")) });
@@ -181,7 +181,7 @@ describe("startup checks", () => {
   it("reports every failed check when several fail", async () => {
     const home = healthyHome({
       getAppInfo: () => Promise.reject(new Error("down")),
-      getEngineStatus: () => Promise.reject(new Error("down")),
+      startEngine: () => Promise.reject(new Error("down")),
     });
     const report = await runStartupChecks(home.dependencies, ATTEMPT);
     expect(failuresOf(report)).toEqual(["shell", "engine"]);

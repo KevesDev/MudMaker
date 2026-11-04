@@ -1,4 +1,6 @@
 #[cfg(windows)]
+pub mod engine_bridge;
+#[cfg(windows)]
 pub mod engine_runtime;
 pub mod diagnostic_log;
 pub mod preferences;
@@ -10,7 +12,8 @@ use diagnostic_log::DiagnosticInput;
 use serde::Serialize;
 use std::collections::hash_map::RandomState;
 use std::hash::{BuildHasher, Hasher};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
+use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::Manager;
 
@@ -47,53 +50,9 @@ pub fn collect_app_info(launch_id: &str) -> AppInfo {
     }
 }
 
-/// File name, without the platform suffix, of the game engine sidecar. The location is a placeholder
-/// beside the application binary until the engine is packaged; this is the only place that names it.
-const ENGINE_SIDECAR_STEM: &str = "mudmaker-engine";
-
+/// Safe app-level diagnostic failure; no raw engine payload is exposed.
 #[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct EngineStatus {
-    pub installed: bool,
-    pub reason: String,
-}
-
-/// Structured failure the interface can show and log: a stable code plus a safe sentence.
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct ShellError {
-    pub code: &'static str,
-    pub message: String,
-}
-
-fn engine_sidecar_path(directory: &Path) -> PathBuf {
-    directory.join(format!("{ENGINE_SIDECAR_STEM}{}", std::env::consts::EXE_SUFFIX))
-}
-
-/// Reads the disk: the engine counts as installed only when the sidecar is a regular file.
-pub fn check_engine(directory: &Path) -> EngineStatus {
-    if engine_sidecar_path(directory).is_file() {
-        EngineStatus {
-            installed: true,
-            reason: "The game engine is installed.".to_string(),
-        }
-    } else {
-        EngineStatus {
-            installed: false,
-            reason: "The game engine is not installed in this build.".to_string(),
-        }
-    }
-}
-
-fn application_directory() -> Result<PathBuf, ShellError> {
-    let unavailable = |detail: String| ShellError {
-        code: "engine_status_unavailable",
-        message: format!("The location of MudMaker could not be found. {detail}"),
-    };
-    let executable = std::env::current_exe().map_err(|error| unavailable(error.to_string()))?;
-    executable
-        .parent()
-        .map(Path::to_path_buf)
-        .ok_or_else(|| unavailable("The application has no folder.".to_string()))
-}
+pub struct ShellError { pub code: &'static str, pub message: String }
 
 #[tauri::command]
 fn app_info(launch: tauri::State<LaunchId>) -> AppInfo {
@@ -101,8 +60,15 @@ fn app_info(launch: tauri::State<LaunchId>) -> AppInfo {
 }
 
 #[tauri::command]
-fn engine_status() -> Result<EngineStatus, ShellError> {
-    Ok(check_engine(&application_directory()?))
+fn engine_status(bridge:tauri::State<Arc<engine_bridge::Managed>>)->engine_bridge::Status{bridge.status()}
+#[tauri::command]
+async fn engine_start(app:tauri::AppHandle,bridge:tauri::State<'_,Arc<engine_bridge::Managed>>)->engine_bridge::Result<engine_bridge::Status>{
+ let locator=if cfg!(debug_assertions){engine_runtime::Locator::Development}else{engine_runtime::Locator::Resources(app.path().resource_dir().map_err(|_|engine_bridge::Failure::new("engine_resources"))?)};
+ match bridge.inner().begin(locator)?{engine_bridge::Start::Ready(status)=>Ok(status),engine_bridge::Start::Launch(ticket)=>tauri::async_runtime::spawn_blocking(move||ticket.run()).await.map_err(|_|engine_bridge::Failure::new("engine_start_worker"))?}
+}
+#[tauri::command]
+async fn engine_request(bridge:tauri::State<'_,Arc<engine_bridge::Managed>>,request:engine_bridge::RequestDto)->engine_bridge::Result<engine_bridge::Response>{
+ let admitted=bridge.admit(request)?;tauri::async_runtime::spawn_blocking(move||admitted.wait()).await.map_err(|_|engine_bridge::Failure::new("engine_request_worker"))?
 }
 
 /// Milliseconds since the Unix epoch, or None when the system clock is set before it.
@@ -143,8 +109,11 @@ fn write_preferences(app: tauri::AppHandle, document: serde_json::Value) -> Resu
 }
 
 #[tauri::command]
-fn quit_app(app: tauri::AppHandle) {
+async fn quit_app(app: tauri::AppHandle,bridge:tauri::State<'_,Arc<engine_bridge::Managed>>) -> Result<(),ShellError> {
+    let bridge=bridge.inner().clone();
+    let _=tauri::async_runtime::spawn_blocking(move||bridge.shutdown(engine_runtime::ShutdownMode::Graceful)).await;
     app.exit(0);
+    Ok(())
 }
 
 /// Label Tauri gives the one window declared in tauri.conf.json.
@@ -153,6 +122,7 @@ const MAIN_WINDOW_LABEL: &str = "main";
 pub fn run() {
     tauri::Builder::default()
         .manage(LaunchId(new_launch_id()))
+        .manage(Arc::new(engine_bridge::Managed::default()))
         .setup(|app| {
             let launch_id = app.state::<LaunchId>().0.clone();
             match app.get_webview_window(MAIN_WINDOW_LABEL) {
@@ -168,16 +138,15 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![app_info, engine_status, write_diagnostic, read_preferences, write_preferences, quit_app])
-        .run(tauri::generate_context!())
-        .expect("MudMaker could not start the application window");
+        .invoke_handler(tauri::generate_handler![app_info, engine_status, engine_start, engine_request, write_diagnostic, read_preferences, write_preferences, quit_app])
+        .build(tauri::generate_context!())
+        .expect("MudMaker could not start the application window")
+        .run(|app,event|{if matches!(event,tauri::RunEvent::Exit){app.state::<Arc<engine_bridge::Managed>>().shutdown(engine_runtime::ShutdownMode::Immediate);}});
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_scratch::Scratch;
-    use std::fs;
 
     #[test]
     fn app_info_reports_package_version_build_id_and_the_launch_id() {
@@ -204,28 +173,4 @@ mod tests {
         assert!(now_ms().expect("the clock can be read") > YEAR_2020_MS);
     }
 
-    #[test]
-    fn engine_status_reports_installed_when_the_sidecar_file_exists() {
-        let scratch = Scratch::new("engine-found");
-        fs::write(engine_sidecar_path(&scratch.0), b"engine").expect("the sidecar can be written");
-        let status = check_engine(&scratch.0);
-        assert!(status.installed);
-        assert_eq!(status.reason, "The game engine is installed.");
-    }
-
-    #[test]
-    fn engine_status_reports_not_installed_when_the_folder_has_no_sidecar() {
-        let scratch = Scratch::new("engine-missing");
-        fs::write(scratch.0.join("something-else"), b"x").expect("a neighbouring file can be written");
-        let status = check_engine(&scratch.0);
-        assert!(!status.installed);
-        assert_eq!(status.reason, "The game engine is not installed in this build.");
-    }
-
-    #[test]
-    fn engine_status_does_not_count_a_folder_with_the_sidecar_name() {
-        let scratch = Scratch::new("engine-folder");
-        fs::create_dir(engine_sidecar_path(&scratch.0)).expect("the folder can be created");
-        assert!(!check_engine(&scratch.0).installed);
-    }
 }

@@ -134,3 +134,14 @@ Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visib
 - Offline resolver attempted four unrelated downgrades; rejected lock saved, accepted baseline restored, normal closure resolution preserved all406 baseline package name/version/source keys and added only17 required packages. Named same-pinned Windows constant feature and UTF16 error conversion compile repairs verified, no warnings.
 - Independent scoped Auditor passed exact locked engine_runtime module gate5/5 (32filtered,0ignored), six real children. Graceful0/unexpected+immediate1067 assertions and retained Drop wait passed; stderr raw exits captured by passing harness, no per-child artifact claimed. Undrainable I/O/worker fail-stop source-reviewed, not fault-injected.
 - No native rebuild/CTest/frontend/full suite/packaging or app activation. Next c2 one Tauri-managed owner/lossless DTO/startup/quit path before d actual Inspector. Source commit/push follows this independent pass.
+
+## 2026-11-01 — S03.4c2 app activation/lossless bridge scope approved
+- c1 independently passed/pushed36557ac. Lead fixed one managed owner and explicit engine_start/Retry, side-effect-free actual engine_status, typed engine_request, accepted quit/final-exit cleanup through existing owners. No new visual controls or host-start claim.
+- Contract fixes all Value/schema/error DTOs with signed64/u64 canonical decimal strings, absent/default/Null and full identities preserved, shared policy bounds before recursive conversion; native remains binary protobuf/sole World authority.
+- Exact locked Rust bridge filter, four frontend files/typecheck and one clean actual npm run dev startup assigned to same medium Builder; independent scoped audit/push before Inspector d. No additional dependencies, native rebuild/full suite/package checks. Starting35% primary/29% weekly; stop/retain unaccepted checkpoint if verification cannot fit reserve.
+
+## 2026-11-03 — S03.4c2 managed app bridge independently passed
+- One existing Rust owner is managed by Tauri for explicit start/Retry, actual liveness, bounded typed requests and accepted quit/final-exit cleanup. Native World remains authority; signed64/u64 cross the webview boundary as exact decimal strings.
+- Independent acceptance: Rust5/5, four frontend files44/44 and typecheck PASS. One dev launch proved live app25604/native53124 with matching Ack/startup World641fc27f-8b1f-c7aa-2246-11c800c6cdeb; app retained. Receipt target/c2-dev-20261103-180814; report docs/06-quality/reports/s03-4c2-audit.md.
+- Fixed stale healthy-start expectations and test-hook/parser issues; Auditor also caught a corrupted em-dash regex in the shared fixture, restored exactly before independent gates. No production fallback or assertion weakening. Inspector operations remain d; S03 stays3/10. No package/scale/security claim.
+
