@@ -21,6 +21,8 @@ export interface InspectorSectionDescriptor {
   readonly id: string;
   readonly label: string;
   readonly fields: readonly InspectorFieldDescriptor[];
+  /** Already-labelled shared controls, laid out inside this same collapsible group. */
+  readonly content?: ReactNode;
 }
 
 export interface InspectorProps {
@@ -29,9 +31,13 @@ export interface InspectorProps {
   readonly visible?: boolean;
 }
 
-/** Whether there is anything to show. A section without fields is not shown; explicit visibility can still show registered panel chrome. */
+function sectionHasContent(section: InspectorSectionDescriptor): boolean {
+  return section.fields.length > 0 || (section.content !== undefined && section.content !== null && section.content !== false);
+}
+
+/** Whether supplied fields or composed content exist; explicit visibility can still show registered panel chrome. */
 export function inspectorHasContent(sections: readonly InspectorSectionDescriptor[]): boolean {
-  return sections.some((section) => section.fields.length > 0);
+  return sections.some(sectionHasContent);
 }
 
 function requireUnique(kind: string, ids: readonly string[]): void {
@@ -78,6 +84,7 @@ function Section({ section, rootId }: { readonly section: InspectorSectionDescri
         {section.fields.map((field) => (
           <Field key={field.id} field={field} rootId={`${rootId}-${section.id}`} />
         ))}
+        {section.content}
       </div>
     </section>
   );
@@ -97,7 +104,7 @@ export function Inspector({ described, sections, visible = false }: InspectorPro
     <section aria-label={name} data-region={REGION.inspector} className="editor-inspector">
       {visible && !inspectorHasContent(sections) ? <h2 className="editor-section-heading" {...("testId" in described ? { "data-testid": described.testId } : {})}>{name}</h2> : null}
       {sections
-        .filter((section) => section.fields.length > 0)
+        .filter(sectionHasContent)
         .map((section) => (
           <Section key={section.id} section={section} rootId={rootId} />
         ))}

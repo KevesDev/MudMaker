@@ -1,0 +1,17 @@
+# S03.4d1 Builder checkpoint
+- Status: Builder gates passed; independent audit pending. Shared prerequisite only, no live Inspector/runtime claim.
+- Base: accepted c2 `5f5ed4c`; existing dev app/native intentionally retained, no launch/stop/process operation.
+- Production owners: `app/src/ui/primitives/TextField.tsx`, `app/src/editor/Inspector.tsx`; `EditorShell.tsx` unchanged (existing descriptor forwarding suffices).
+- TextField selects real native textarea from registered `control.kind === "textarea"`; shared label/change/error/readonly/state binding unchanged; no new prop/router/inline key dispatcher.
+- InspectorSectionDescriptor adds optional `content?: ReactNode`, inside existing collapsible group after legacy fields; content-only sections participate in existing visibility/split path.
+- Tests changed only `app/src/ui/primitives/primitives.test.tsx`, `app/src/editor/Inspector.test.tsx`, `app/src/editor/EditorShell.test.tsx`.
+- Coverage: single-line IME suppresses premature Enter commit, confirmed Enter still dispatches once; textarea retains multiline draft/error/readonly semantics and dispatches no action.
+- Composition: one native accessible label per shared field, adjacent error association, legacy rows retained, group collapse preserves field instance/draft/focus; content-only Inspector opens existing EditorShell split.
+- From app: `npx vitest run src/ui/primitives/primitives.test.tsx src/editor/Inspector.test.tsx src/editor/EditorShell.test.tsx --maxWorkers=2` initially 113/114 (primitives97, EditorShell7 passed; Inspector9/10).
+- Finding: new Inspector test incorrectly expected jsdom to synthesize native click from Enter; no production failure proven.
+- Lead-approved test-only repair asserts uncancelled Enter then models native click; collapse/retained field/error/focus assertions preserved.
+- From app: `npx vitest run src/editor/Inspector.test.tsx --maxWorkers=2` passed10/10; passed files not repeated; final distinct scope114/114.
+- From app: `npx tsc --noEmit` exit0.
+- Limits: jsdom proves handler/default-event contract, not real browser newline insertion, native keyboard activation, pixels or screen-reader output; no live object exercise in d1.
+- No new catalog controls/counts, dependencies, styles, native/bridge changes, commits or unrelated-file edits; authored writes UTF8/LF. Lead owns contract/status docs.
+- Stopped after report; remaining48% primary/31%weekly at final gate.

@@ -5,7 +5,8 @@ import { SPLASH } from "../home/homeLayout";
 import { healthyHome, renderApp } from "../home/homeTestSupport";
 import { NAVIGATION } from "../nav/destinations";
 import { REGION, focusableWithin, loadShippedRegistry } from "../ui";
-import { createTestUi, renderWithUi } from "../ui/testSupport";
+import { createTestUi, NAME, renderWithUi } from "../ui/testSupport";
+import { TextField } from "../ui/primitives/TextField";
 import { DockPanel } from "./DockPanel";
 import { CreateShell } from "./CreateShell";
 import { EditorShell } from "./EditorShell";
@@ -73,6 +74,14 @@ describe("keyboard regions of the Create workspace", () => {
 });
 
 describe("the shell with features mounted into it", () => {
+  it("opens the existing Inspector split for a content-only section with one shared field label", () => {
+    const ui = createTestUi();
+    renderWithUi(ui, <EditorShell surface={<p>Work</p>} inspector={{ described: described("editor.inspector.01"), sections: [{ id: "shared", label: "Identity", fields: [], content: <TextField control={ui.control(NAME)} value="draft" onValueChange={() => undefined} /> }] }} />);
+    expect(screen.getByRole("region", { name: described("editor.inspector.01").label })).toBeTruthy();
+    expect(screen.getByRole("separator")).toBeTruthy();
+    expect((screen.getByRole("textbox", { name: "Project Name" }) as HTMLInputElement).labels).toHaveLength(1);
+    expect(screen.getByRole("button", { name: "Identity" }).getAttribute("aria-expanded")).toBe("true");
+  });
   const sections = [{ id: "id", label: "Identity", fields: [{ id: "name", label: "Name", control: ({ id }: { id: string }) => <input id={id} /> }] }];
 
   function mountShell(withInspector: boolean) {

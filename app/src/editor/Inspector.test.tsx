@@ -1,6 +1,7 @@
-import { cleanup, fireEvent, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createTestUi, renderWithUi } from "../ui/testSupport";
+import { createTestUi, NAME, renderWithUi } from "../ui/testSupport";
+import { TextField } from "../ui/primitives/TextField";
 import { Inspector, inspectorHasContent, type InspectorFieldDescriptor, type InspectorSectionDescriptor } from "./Inspector";
 import { described } from "./editorTestSupport";
 
@@ -45,6 +46,28 @@ describe("an inspector with nothing to show", () => {
 });
 
 describe("typed field rows", () => {
+  it("composes an already-labelled shared field once alongside legacy rows, preserving errors and keyboard group focus", () => {
+    const ui = createTestUi();
+    const sections = [{ id: "shared", label: "Identity", fields: [textField("kind", "Type")], content: <TextField control={ui.control(NAME)} value="typed draft" onValueChange={() => undefined} error="Rejected draft" /> }];
+    renderWithUi(ui, <Inspector described={inspector} sections={sections} />);
+    const field = screen.getByRole("textbox", { name: "Project Name", description: "Rejected draft" }) as HTMLInputElement;
+    expect(field.labels).toHaveLength(1);
+    expect(field.getAttribute("aria-invalid")).toBe("true");
+    expect(field.value).toBe("typed draft");
+    expect(screen.getByLabelText("Type")).toBeTruthy();
+    const toggle = screen.getByRole("button", { name: "Identity" });
+    act(() => toggle.focus());
+    // jsdom does not synthesize the native button click from an uncancelled Enter.
+    expect(fireEvent.keyDown(toggle, { key: "Enter" })).toBe(true);
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(document.activeElement).toBe(toggle);
+    expect(screen.queryByRole("textbox", { name: "Project Name" })).toBeNull();
+    expect(fireEvent.keyDown(toggle, { key: "Enter" })).toBe(true);
+    fireEvent.click(toggle);
+    expect(screen.getByRole("textbox", { name: "Project Name" })).toBe(field);
+    expect(field.value).toBe("typed draft");
+  });
   it("names the region from the catalog and gives each field its label, control and nothing else when valid", () => {
     mount([{ id: "id", label: "Identity", fields: [textField("name", "Name"), textField("kind", "Type")] }]);
     expect(screen.getByRole("region", { name: inspector.label })).toBeTruthy();

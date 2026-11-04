@@ -145,3 +145,8 @@ Append only when a sprint is truly VERIFIED: date, sprint, PR/commit, user-visib
 - Independent acceptance: Rust5/5, four frontend files44/44 and typecheck PASS. One dev launch proved live app25604/native53124 with matching Ack/startup World641fc27f-8b1f-c7aa-2246-11c800c6cdeb; app retained. Receipt target/c2-dev-20261103-180814; report docs/06-quality/reports/s03-4c2-audit.md.
 - Fixed stale healthy-start expectations and test-hook/parser issues; Auditor also caught a corrupted em-dash regex in the shared fixture, restored exactly before independent gates. No production fallback or assertion weakening. Inspector operations remain d; S03 stays3/10. No package/scale/security claim.
 
+
+## 2026-11-03 — S03.4d1 shared Inspector prerequisite passed
+- Existing TextField now renders a real textarea for registered multiline controls through the same input binding. Optional Inspector section content supports exactly one shared field label; legacy descriptors remain compatible.
+- Independent114/114 scoped tests and typecheck PASS, no unresolved findings. Builder repaired one jsdom-native-click assumption in a test only. Real browser keyboard/pixel/runtime object evidence remains d2; no app restart/native changes in d1.
+

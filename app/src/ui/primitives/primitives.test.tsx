@@ -17,6 +17,8 @@ import { TextField } from "./TextField";
 import { Toast } from "./Toast";
 import { Toolbar } from "./Toolbar";
 import { UiProvider } from "../UiProvider";
+import { loadShippedRegistry } from "../index";
+import { createUiRuntime } from "../runtime";
 
 const settle = (): Promise<void> => new Promise((resolve) => setTimeout(resolve));
 /** Activates a menu opener and waits for the owner's answer, which is what opens the menu. */
@@ -254,6 +256,57 @@ describe("fields and switches", () => {
     const [value, setValue] = useState(initial);
     return <TextField control={ui.control(NAME)} value={value} onValueChange={setValue} constraints="Use up to 40 characters." />;
   }
+
+  it("keeps single-line IME Enter from committing until composition ends", async () => {
+    renderWithUi(ui, <Host initial="" />);
+    const field = screen.getByRole("textbox", { name: "Project Name" });
+    act(() => field.focus());
+    fireEvent.compositionStart(field);
+    fireEvent.change(field, { target: { value: "名前" } });
+    expect(fireEvent.keyDown(field, { key: "Enter", isComposing: true })).toBe(true);
+    await settle();
+    expect(requests).toEqual([]);
+    fireEvent.compositionEnd(field);
+    expect(fireEvent.keyDown(field, { key: "Enter" })).toBe(false);
+    await settle();
+    expect(requests).toEqual([{ actionId: "ui.test.rename", controlId: NAME, correlation: {}, value: "名前" }]);
+  });
+
+  it("uses the catalog textarea for multiline drafts, native newline and IME without dispatch, retaining adjacent errors and readonly state", async () => {
+    const registry = loadShippedRegistry();
+    const control = registry.requireControl("editor.inspector.03");
+    const diagnostics = vi.fn();
+    const runtime = createUiRuntime({ registry, document, diagnostics });
+    const handled = vi.fn(async (): Promise<ActionOutcome> => ({ status: "success" }));
+    runtime.bus.registerHandler(EDITOR, "ui.editor.fieldDescription", handled);
+    function MultilineOwner() {
+      const [value, setValue] = useState("");
+      return <TextField control={control} value={value} onValueChange={setValue} constraints="Description constraint" error="Description rejected" />;
+    }
+    render(<UiProvider runtime={runtime}><MultilineOwner /></UiProvider>);
+    const field = screen.getByRole("textbox", { name: control.label, description: /Description constraint\s*Description rejected/ });
+    expect(field).toBeInstanceOf(HTMLTextAreaElement);
+    act(() => field.focus());
+    expect(document.activeElement).toBe(field);
+    fireEvent.compositionStart(field);
+    fireEvent.change(field, { target: { value: "説明" } });
+    expect(fireEvent.keyDown(field, { key: "Enter", isComposing: true })).toBe(true);
+    fireEvent.compositionEnd(field);
+    // jsdom does not insert native newlines: prove Enter is uncancelled, then supply its resulting change.
+    expect(fireEvent.keyDown(field, { key: "Enter" })).toBe(true);
+    fireEvent.change(field, { target: { value: "説明\nsecond line" } });
+    await settle();
+    expect((field as HTMLTextAreaElement).value).toBe("説明\nsecond line");
+    expect(field.getAttribute("aria-invalid")).toBe("true");
+    expect(field.parentElement?.querySelector("[role=alert]")?.textContent).toBe("Description rejected");
+    expect((field as HTMLTextAreaElement).labels).toHaveLength(1);
+    expect(handled).not.toHaveBeenCalled();
+    act(() => runtime.bus.setDisabled(control.id, "Read only"));
+    expect((field as HTMLTextAreaElement).readOnly).toBe(true);
+    fireEvent.change(field, { target: { value: "discarded" } });
+    expect((field as HTMLTextAreaElement).value).toBe("説明\nsecond line");
+    expect(diagnostics).not.toHaveBeenCalled();
+  });
 
   it("keeps what the user typed when the entry is rejected, and renders the reason next to the field", async () => {
     outcome = { status: "validation-error", code: "E-NAME", message: "That name is already used." };

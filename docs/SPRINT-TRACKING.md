@@ -4,7 +4,7 @@
 
 **Phase sizing rule (owner, 2026-10-29):** each phase is one small coherent unit a Builder can finish correctly in one pass. Lead splits a sprint into sub-phases (letters under the original phase number, so existing references stay valid) before dispatching it. Only S02 is split so far; later sprints are split before they start. **USER TEST** marks a point where the owner gets a precise test list.
 
-**Current:** S03 native ECS3/10; S03.4a/b/c1 accepted/pushed. S03.4c2 independently PASS: Rust5/5, frontend44/44, typecheck and one live Tauri/native Ack startup verified; [audit](06-quality/reports/s03-4c2-audit.md). Commit/push closeout next, then d real Inspector. App connection is verified; Inspector operations are not yet wired. S02.10a/b/c before S03close; themeIO alone S18.17.
+**Current:** S03 native ECS3/10; S03.4c2 independently PASS/pushed5f5ed4c: Rust5/5, frontend44/44, typecheck and live app/native startup. [d1 shared field prerequisite](05-sprints/specs/S03-4d1-SPEC.md) then d2 live Inspector; [preflight](06-quality/reports/s03-4d-preflight.md). App connection verified, Inspector operations not yet wired. S02.10a/b/c before S03close; themeIO alone S18.17.
 
 **Owner correction verified (2026-10-31):** [app-wide Appearance, nested Settings, one Output route, explicit Inspector](05-sprints/specs/S02-OWNER-UI-CORRECTIONS-SPEC.md). [Independent audit PASS](06-quality/reports/s02-owner-ui-corrections-audit.md): 563 tests / 38 files, typecheck and frontend build. Prior separate-workspace theme and selection-only Inspector rules are superseded. Phase counts unchanged; owner visual acceptance pending.
 
@@ -158,6 +158,8 @@
 **Owner close-out dependency:** complete and independently pass S02.10a/b/c before S03 sign-off, while retaining their canonical S02 IDs and status. Engine implementation may continue in the meantime.
 
 **S03.4 explicit prerequisite phases:** [integration phase plan](05-sprints/specs/S03-4-SPEC.md): 4a contract/pinned codecs → 4b native engine process → 4c shell lifecycle/typed bridge → 4d real inspector. Each needs scoped spec, existing-design review, one Builder, independent audit and push. Parent S03.4 remains incomplete until all pass; subphase planning does not increase verified counts.
+
+**Inspector phases:** d1 shared multiline/label composition prerequisite (independent PASS,114tests/typecheck, [audit](06-quality/reports/s03-4d1-audit.md)); d2 actual registered runtime create/list/inspect/mutate/error workflow ([spec](05-sprints/specs/S03-4d2-SPEC.md), requires d1 push). Existing draft actions must not be repurposed for live mutations.
 
 | Phase | Deliverable | Status | Evidence |
 |---|---|---|---|

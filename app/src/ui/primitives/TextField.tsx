@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, type ChangeEvent } from "react";
 import type { ControlDescriptor } from "../actions/types";
 import { StateText, useControlBinding } from "./shared";
 import { Tooltip } from "./Tooltip";
@@ -17,7 +17,8 @@ export interface TextFieldProps {
 }
 
 /**
- * Single-line field. Enter commits through the input manager; typed text is never cleared
+ * Catalog textarea controls retain native multiline editing; single-line Enter commits through the input manager.
+ * Typed text is never cleared
  * by an error, because the value belongs to the owner and only changes through onValueChange.
  */
 export function TextField({ control, value, onValueChange, type = "text", constraints, inputMode, error, colorPickerValue }: TextFieldProps) {
@@ -30,25 +31,25 @@ export function TextField({ control, value, onValueChange, type = "text", constr
     [constraints === undefined ? null : hintId, showsMessage || error !== undefined ? messageId : null, attributes["aria-describedby"] ?? null]
       .filter((id) => id !== null)
       .join(" ") || undefined;
+  const entryProps = {
+    id: inputId,
+    inputMode,
+    className: "ui-control ui-hit ui-input",
+    value,
+    readOnly: disabled,
+    "aria-invalid": runtime.state === "validation-error" || error !== undefined ? true as const : undefined,
+    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (!disabled) onValueChange(event.currentTarget.value);
+    },
+    ...attributes,
+    "aria-describedby": describedBy,
+  };
   return (
     <span className="ui-anchor ui-field">
       <label htmlFor={inputId} className="ui-label">
         {control.label}
       </label>
-      <input
-        id={inputId}
-        type={type}
-        inputMode={inputMode}
-        className="ui-control ui-hit ui-input"
-        value={value}
-        readOnly={disabled}
-        aria-invalid={runtime.state === "validation-error" || error !== undefined ? true : undefined}
-        onChange={(event) => {
-          if (!disabled) onValueChange(event.currentTarget.value);
-        }}
-        {...attributes}
-        aria-describedby={describedBy}
-      />
+      {control.kind === "textarea" ? <textarea {...entryProps} /> : <input type={type} {...entryProps} />}
       {colorPickerValue === undefined ? null : <input type="color" className="ui-control ui-hit ui-input" aria-label={`${control.label} color`} value={colorPickerValue} disabled={disabled} onChange={(event) => onValueChange(event.currentTarget.value)} {...attributes} />}
       {constraints === undefined ? null : (
         <span id={hintId} className="ui-hint">
